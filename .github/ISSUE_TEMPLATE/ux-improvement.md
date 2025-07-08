@@ -1,6 +1,6 @@
 ---
-name: 'UX Improvement'
-about: UX Improvement Template
+name: "UX Improvement"
+about: "UX Improvement Template"
 title: "주제"
 labels: "UX Improvement"
 assignees: ''
