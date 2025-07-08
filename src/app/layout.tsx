@@ -1,8 +1,9 @@
-import { QueryClientProvider } from '@tanstack/react-query';
 import './globals.css';
 
+import { QueryClientProvider } from '@tanstack/react-query';
 import type { Metadata } from 'next';
 import { ReactNode } from 'react';
+
 import { queryClient } from '@/shared/libs/queryClient';
 
 export const metadata: Metadata = {
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="ko">
+    <html lang='ko'>
       <body>
         <QueryClientProvider client={queryClient}>
           {children}
