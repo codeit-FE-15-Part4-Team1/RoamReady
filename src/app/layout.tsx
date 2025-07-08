@@ -1,10 +1,10 @@
 import './globals.css';
 
-import { QueryClientProvider } from '@tanstack/react-query';
 import type { Metadata } from 'next';
+import localFont from 'next/font/local';
 import { ReactNode } from 'react';
 
-import { queryClient } from '@/shared/libs/queryClient';
+import ClientProviders from './_components/ClientProvider';
 
 export const metadata: Metadata = {
   title: {
@@ -15,13 +15,18 @@ export const metadata: Metadata = {
   keywords: ['여행', '예약', 'RoamReady'],
 };
 
+const pretendard = localFont({
+  src: '../../public/fonts/PretendardVariable.woff2',
+  display: 'swap',
+  variable: '--font-pretendard',
+  weight: '100 900',
+});
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang='ko'>
-      <body>
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
+      <body className={pretendard.className}>
+        <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
   );

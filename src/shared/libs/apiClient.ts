@@ -6,38 +6,52 @@ import ky from 'ky';
  * - `prefixUrl`은 환경 변수 `NEXT_PUBLIC_API_BASE_URL`을 기본 API 주소로 사용합니다.
  * - `timeout`은 요청 제한 시간을 10,000ms (10초)로 설정합니다.
  * - 모든 요청에 `'Content-Type': 'application/json'` 헤더를 기본으로 포함합니다.
+ * - `beforeError` 훅을 통해 모든 HTTP 오류를 통합 처리합니다.
  * - 필요 시 `credentials` 옵션을 주석 해제하여 쿠키 등 인증 정보를 포함할 수 있습니다.
  *
  * ### 사용 예시
  *
  * ```ts
- * // 1. 일반 GET 요청 (경로만)
  * const users = await apiClient.get('users').json();
- *
- * // 2. GET 요청 + 쿼리 스트링
- * const filteredUsers = await apiClient.get('users', {
- *   searchParams: { role: 'admin', active: 'true' },
- * }).json();
- *
- * // 3. POST 요청 + JSON 바디
- * const newUser = await apiClient.post('users', {
- *   json: { name: 'John Doe', email: 'john@example.com' },
- * }).json();
- *
- * // 4. 요청 헤더 추가 지정
- * const dataWithAuth = await apiClient.get('profile', {
- *   headers: { Authorization: 'Bearer TOKEN_HERE' },
- * }).json();
+ * const data = await apiClient.post('login', { json: { email, password } }).json();
  * ```
- *
- * @constant
- * @type {ky}
  */
 export const apiClient = ky.create({
-  prefixUrl: process.env.NEXT_PUBLIC_API_BASE_URL, // 기본 API 주소
-  timeout: 10000, // 10초 타임아웃
+  prefixUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+  timeout: 10000,
   headers: {
-    'Content-Type': 'application/json', // JSON 요청 기본 헤더
+    'Content-Type': 'application/json',
   },
   // credentials: 'include', // 인증 쿠키 필요 시 활성화
+
+  hooks: {
+    /**
+     * HTTP 에러가 발생했을 때 실행되는 훅입니다.
+     * 에러 내용을 통일된 형태로 변환하거나 로깅할 수 있습니다.
+     */
+    beforeError: [
+      async (error) => {
+        const { response } = error;
+
+        try {
+          const errorBody = await response.clone().json();
+
+          // 에러 응답 내 message 필드가 있으면 메시지 포함시킴
+          if (errorBody?.message) {
+            error.name = 'APIError';
+            error.message = errorBody.message;
+          }
+        } catch {
+          // JSON 파싱 실패시 무시 (text 또는 빈 응답일 수 있음)
+        }
+
+        // 예: 토큰 만료 시 강제 로그아웃 처리도 가능
+        // if (response.status === 401) {
+        //   logoutUser(); // 클라이언트 전용 logout 함수 등 호출
+        // }
+
+        return error;
+      },
+    ],
+  },
 });
