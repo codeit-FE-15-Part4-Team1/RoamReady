@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links: []
+
+pull_request_templates:
+  - name: 작업 PR (develop)
+    description: 기능 개발, 버그 수정 등 develop 브랜치로 보내는 PR
+    filename: to-develop.md
+
+  - name: 배포 PR (main)
+    description: 릴리스를 위해 main 브랜치로 보내는 PR
+    filename: to-main.md
