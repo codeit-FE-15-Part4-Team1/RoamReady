@@ -1,6 +1,6 @@
 ---
-name: 'TIL '
-about: TIL Template
+name: "TIL"
+about: "TIL Template"
 title: "주제"
 labels: "TIL"
 assignees: ''
