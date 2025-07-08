@@ -1,3 +1,12 @@
+---
+name: 'UX Improvement'
+about: UX Improvement Template
+title: "주제"
+labels: "UX Improvement"
+assignees: ''
+
+---
+
 ## 🎯 개선 목표 (What needs improvement?)
 <!-- 어떤 UX 불편, 문제를 개선하고 싶은가요? -->
 
