@@ -1,6 +1,6 @@
 ---
-name: Trouble Shooting
-about: Trouble Shooting Template
+name: "Trouble Shooting"
+about: "Trouble Shooting Template"
 title: 주제
 labels: "Trouble Shooting"
 assignees: ''
