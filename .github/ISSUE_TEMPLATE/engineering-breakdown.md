@@ -1,3 +1,12 @@
+---
+name: "Engineering Breakdown"
+about: "Engineering Breakdown Template"
+title: 주제
+labels: "Engineering Breakdown"
+assignees: ''
+
+---
+
 ## 1. ✨ 설계 배경 및 목적
 <!--
 - 왜 이 구조/기능이 필요했는지
