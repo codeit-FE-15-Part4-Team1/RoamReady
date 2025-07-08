@@ -5,6 +5,7 @@
 |   Feat   |   Fix   |   Chore    |   Style  |   Docs  |  Refactor  |   Perf   |      Test     |      CI     |     Build    |
 -->
 ## 📝 구현 내용
+- 
 
 
 ## ⏰ 구현 예정기간
@@ -15,6 +16,15 @@
 2025.07.10 ~  2025.07.12
 
 ## ✅ TO-DO
-- [ ] 
+- [ ] 할 일 1
 
 ## 💡기타
+- 
+
+## 👻 이슈 브랜치 생성 전 확인사항
+
+- [ ] Assigness에 본인을 등록했나요?
+- [ ] 제목을 형식에 맞게 작성했나요?
+- [ ] 라벨을 설정했나요?
+- [ ] Projects의 status, start date, end date 등을 작성했나요?
+- [ ] Relationships에 해당 Sprint 기간을 연동했나요?
