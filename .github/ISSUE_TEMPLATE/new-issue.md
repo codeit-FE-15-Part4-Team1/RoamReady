@@ -1,3 +1,12 @@
+---
+name: "New Issue"
+about: "New Issue Template"
+title: "제목"
+labels: "New Issue"
+assignees: ''
+
+---
+
 <!--
 이슈 제목은 이 이슈의 주된 기능을 앞에 붙여서 작성해주세요. 라벨에는 모든 기능을 선택해주세요.
 예시 : Feat: 이슈 제목
