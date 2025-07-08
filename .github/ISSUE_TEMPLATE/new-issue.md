@@ -36,4 +36,5 @@ assignees: ''
 - [ ] 제목을 형식에 맞게 작성했나요?
 - [ ] 라벨을 설정했나요?
 - [ ] Projects의 status, start date, end date 등을 작성했나요?
-- [ ] Relationships에 해당 Sprint 기간을 연동했나요?
+- [ ] Milestone에 해당 Sprint를 연동했나요?
+- [ ] Relationships에 해당 Sprint를 연동했나요?
