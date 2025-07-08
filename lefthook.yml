@@ -1,0 +1,40 @@
+# lefthook.yml
+
+# lefthook이 관리하는 Git hook을 명시적으로 지정할 수 있습니다.
+# 지정하지 않으면 commands가 설정된 모든 hook이 활성화됩니다.
+# hooks:
+#  pre-commit:
+#  commit-msg:
+
+# pre-commit: 커밋이 생성되기 전에 실행됩니다.
+# lint-staged와 동일한 기능을 수행합니다.
+pre-commit:
+  # commands는 병렬로 실행됩니다.
+  commands:
+    # 'lint'라는 이름의 command
+    lint:
+      # glob 패턴에 해당하는 스테이징된 파일에 대해서만 아래 run 명령어를 실행합니다.
+      # {staged_files}는 lefthook에서 제공하는 플레이스홀더입니다.
+      glob: "*.{js,jsx,ts,tsx}"
+      run: pnpm eslint --fix {staged_files}
+
+    # 'format'이라는 이름의 command
+    format:
+      # Prettier는 더 많은 파일 타입을 대상으로 실행합니다.
+      glob: "*.{js,jsx,ts,tsx,json,css,md}"
+      run: pnpm prettier --write {staged_files}
+
+    # 'type-check'라는 이름의 command
+    # 타입스크립트 오류는 프로젝트 전체에서 발생할 수 있으므로,
+    # 스테이징된 파일만이 아닌 전체 프로젝트를 대상으로 검사합니다.
+    type-check:
+      run: pnpm tsc --noEmit
+
+# commit-msg: 커밋 메시지를 작성한 후, 커밋이 최종 완료되기 전에 실행됩니다.
+# commitlint를 실행하기에 가장 적합한 hook입니다.
+commit-msg:
+  commands:
+    commitlint:
+      # {1}은 lefthook에서 제공하는 플레이스홀더로,
+      # commit-msg hook에 전달되는 첫 번째 인자(커밋 메시지 파일 경로)를 의미합니다.
+      run: pnpm commitlint --edit {1}
