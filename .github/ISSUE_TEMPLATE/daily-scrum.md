@@ -1,6 +1,6 @@
 ---
-name: Daily Scrum
-about: Daily Scrum Template
+name: "Daily Scrum"
+about: "Daily Scrum Template"
 title: "[07-DD] 데일리 스크럼 - 본인이름"
 labels: "Daily Scrum"
 assignees: ''
