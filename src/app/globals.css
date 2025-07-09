@@ -2,11 +2,22 @@
 
 @layer base {
   html {
-    font-size: 62.5%;
+    word-break: keep-all;
+    font-size: 62.5%; /* 10px = 1rem */
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--color-brand-2);
+    outline-offset: 2px;
   }
 }
 
 @theme {
+  --breakpoint-tablet: 640px;
+  --breakpoint-desktop: 1024px;
+
+  --spacing: 0.1rem; /* 1px = 0.1rem (root font-size is 10px) */
+
   --color-white: #ffffff;
   --color-black: #000000;
 
@@ -30,4 +41,47 @@
 
   /* System */
   --color-red: #ff2727;
+
+  /* Font Size */
+  --text-10: 1rem;
+  --text-11: 1.1rem;
+  --text-12: 1.2rem;
+  --text-13: 1.3rem;
+  --text-14: 1.4rem;
+  --text-15: 1.5rem;
+  --text-16: 1.6rem;
+  --text-17: 1.7rem;
+  --text-18: 1.8rem;
+  --text-19: 1.9rem;
+  --text-20: 2rem;
+  --text-21: 2.1rem;
+  --text-22: 2.2rem;
+  --text-23: 2.3rem;
+  --text-24: 2.4rem;
+  --text-25: 2.5rem;
+  --text-26: 2.6rem;
+  --text-27: 2.7rem;
+  --text-28: 2.8rem;
+  --text-29: 2.9rem;
+  --text-30: 3rem;
+  --text-31: 3.1rem;
+  --text-32: 3.2rem;
+  --text-33: 3.3rem;
+  --text-34: 3.4rem;
+  --text-35: 3.5rem;
+  --text-36: 3.6rem;
+  --text-37: 3.7rem;
+  --text-38: 3.8rem;
+  --text-39: 3.9rem;
+  --text-40: 4rem;
+  --text-41: 4.1rem;
+  --text-42: 4.2rem;
+  --text-43: 4.3rem;
+  --text-44: 4.4rem;
+  --text-45: 4.5rem;
+  --text-46: 4.6rem;
+  --text-47: 4.7rem;
+  --text-48: 4.8rem;
+  --text-49: 4.9rem;
+  --text-50: 5rem;
 }

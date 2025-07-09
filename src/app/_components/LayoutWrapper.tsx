@@ -11,7 +11,7 @@ export default function LayoutWrapper({ children, withHeader }: Props) {
   return (
     <div className='min-h-[100dvh] min-w-[100dvw]'>
       {withHeader && <Header />}
-      <div className='mx-auto max-w-[120rem] px-[2.4rem] md:px-[3rem] lg:px-[4rem]'>
+      <div className='tablet:px-32 desktop:px-40 desktop:text-40 text-14 mx-auto max-w-1200 px-24'>
         {children}
       </div>
     </div>
