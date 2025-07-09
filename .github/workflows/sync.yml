@@ -1,0 +1,96 @@
+name: Sync to Forked Repository
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  sync:
+    name: Sync to forked repository
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout current branch
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.AUTO_ACTIONS }}
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Get current branch
+        id: branch
+        run: |
+          CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          echo "branch=$CURRENT_BRANCH" >> $GITHUB_OUTPUT
+          echo "🌿 Current branch: $CURRENT_BRANCH"
+
+      - name: Add forked repository remote
+        run: |
+          # Remove if exists to avoid conflicts
+          git remote remove forked-repo 2>/dev/null || true
+          git remote add forked-repo https://x-access-token:${{ secrets.AUTO_ACTIONS }}@github.com/Yongmin0423/RoamReady.git
+          echo "🔗 Added forked repository remote"
+
+      - name: Check if target branch exists
+        id: check_branch
+        run: |
+          if git ls-remote --heads forked-repo ${{ steps.branch.outputs.branch }} | grep -q ${{ steps.branch.outputs.branch }}; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "✅ Target branch exists in forked repository"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "🆕 Target branch does not exist in forked repository"
+          fi
+
+      - name: Sync to forked repository
+        run: |
+          echo "🚀 Starting synchronization..."
+
+          if [ "${{ steps.check_branch.outputs.exists }}" == "true" ]; then
+            # Branch exists, check if force push is needed
+            LOCAL_COMMIT=$(git rev-parse HEAD)
+            REMOTE_COMMIT=$(git ls-remote forked-repo ${{ steps.branch.outputs.branch }} | cut -f1)
+            
+            if [ "$LOCAL_COMMIT" != "$REMOTE_COMMIT" ]; then
+              echo "📝 Changes detected. Pushing to forked repository..."
+              git push forked-repo ${{ steps.branch.outputs.branch }}
+              echo "✅ Successfully pushed changes to forked repository"
+            else
+              echo "✅ No changes to sync. Repositories are already in sync."
+            fi
+          else
+            # New branch, safe to push
+            echo "🌟 Creating new branch in forked repository..."
+            git push forked-repo ${{ steps.branch.outputs.branch }}
+            echo "✅ Successfully created new branch in forked repository"
+          fi
+
+      - name: Verify synchronization
+        run: |
+          LOCAL_COMMIT=$(git rev-parse HEAD)
+          REMOTE_COMMIT=$(git ls-remote forked-repo ${{ steps.branch.outputs.branch }} | cut -f1)
+
+          if [ "$LOCAL_COMMIT" == "$REMOTE_COMMIT" ]; then
+            echo "## 🎉 Synchronization Summary"
+            echo "**Status**: ✅ Success"
+            echo "**Branch**: ${{ steps.branch.outputs.branch }}"
+            echo "**Commit**: $LOCAL_COMMIT"
+            echo "**Message**: ${{ github.event.head_commit.message }}"
+          else
+            echo "❌ Synchronization failed!"
+            echo "**Local commit**: $LOCAL_COMMIT"
+            echo "**Remote commit**: $REMOTE_COMMIT"
+            exit 1
+          fi
+
+      - name: Clean up
+        if: always()
+        run: |
+          git remote remove forked-repo 2>/dev/null || true
+          echo "🧹 Cleanup completed"
