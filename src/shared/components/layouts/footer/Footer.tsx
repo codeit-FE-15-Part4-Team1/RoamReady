@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Github } from 'lucide-react';
+
 import GitHubLogo from '../../../../../public/icons/github-logo';
 
 export default function Footer() {
