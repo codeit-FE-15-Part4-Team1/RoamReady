@@ -2,8 +2,9 @@
 
 import { ReactNode } from 'react';
 
-import { useDropdownContext } from './DropdownContext';
 import { cn } from '@/shared/libs/cn';
+
+import { useDropdownContext } from './DropdownContext';
 
 /**
  * DropdownMenu
