@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
-import Header from '@/shared/components/layouts/header/Header';
 import Footer from '@/shared/components/layouts/footer/Footer';
+import Header from '@/shared/components/layouts/header/Header';
 
 type Props = {
   children: ReactNode;
