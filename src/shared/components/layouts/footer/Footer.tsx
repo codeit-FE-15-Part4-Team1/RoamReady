@@ -1,6 +1,5 @@
 import Image from 'next/image';
-
-import GitHubLogo from '../../../../../public/icons/github-logo';
+import GitHubLogo from '../../icons/github-logo';
 
 /**
  * Footer 컴포넌트
