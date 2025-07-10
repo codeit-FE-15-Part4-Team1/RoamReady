@@ -1,4 +1,5 @@
 import Image from 'next/image';
+
 import GitHubLogo from '../../icons/github-logo';
 
 /**
