@@ -3,6 +3,10 @@ import { createContext, useContext, useState } from 'react';
 
 import { cn } from '../libs/cn';
 
+/**
+ * SelectBox 컴포넌트의 Context 타입 정의
+ */
+
 interface SelectContextValue {
   value?: string;
   onValueChange?: (value: string) => void;
@@ -11,11 +15,19 @@ interface SelectContextValue {
   disabled?: boolean;
 }
 
+/**
+ * SelectBox 컴포넌트의 Props 타입 정의
+ */
 interface SelectBoxProps {
+  /** 현재 선택된 값 */
   value?: string;
+  /** 값이 변경될 때 호출되는 콜백 함수 */
   onValueChange?: (value: string) => void;
+  /** SelectBox의 자식 컴포넌트들 */
   children: React.ReactNode;
+  /** 추가 CSS 클래스명 */
   className?: string;
+  /** 전체 SelectBox 비활성화 여부 */
   disabled?: boolean;
 }
 
@@ -31,7 +43,20 @@ const useSelectContext = () => {
   return context;
 };
 
-// 트리거 컴포넌트
+/**
+ * SelectBox의 트리거 버튼 컴포넌트
+ * 클릭하면 드롭다운이 열리거나 닫힙니다.
+ *
+ * @param children - 트리거 내부에 표시될 내용 (보통 SelectValue)
+ * @param className - 추가 CSS 클래스명
+ *
+ * @example
+ * ```tsx
+ * <SelectBox.Trigger>
+ *   <SelectBox.Value placeholder="선택하세요" />
+ * </SelectBox.Trigger>
+ * ```
+ */
 const SelectTrigger = ({
   children,
   className,
@@ -61,6 +86,17 @@ const SelectTrigger = ({
   );
 };
 
+/**
+ * 현재 선택된 값 또는 placeholder를 표시하는 컴포넌트
+ *
+ * @param placeholder - 값이 선택되지 않았을 때 표시할 텍스트
+ * @param className - 추가 CSS 클래스명
+ *
+ * @example
+ * ```tsx
+ * <SelectBox.Value placeholder="카테고리를 선택하세요" />
+ * ```
+ */
 const SelectValue = ({
   placeholder = '선택해주세요.',
   className,
@@ -76,6 +112,21 @@ const SelectValue = ({
   );
 };
 
+/**
+ * 드롭다운 컨텐츠 컨테이너 컴포넌트
+ * SelectItem들을 포함하며, 백드롭 클릭 시 드롭다운이 닫힙니다.
+ *
+ * @param children - 드롭다운 내부에 표시될 SelectItem들
+ * @param className - 추가 CSS 클래스명
+ *
+ * @example
+ * ```tsx
+ * <SelectBox.Content>
+ *   <SelectBox.Item value="option1">옵션 1</SelectBox.Item>
+ *   <SelectBox.Item value="option2">옵션 2</SelectBox.Item>
+ * </SelectBox.Content>
+ * ```
+ */
 const SelectContent = ({
   children,
   className,
@@ -111,6 +162,20 @@ const SelectContent = ({
   );
 };
 
+/**
+ * 개별 선택 옵션 컴포넌트
+ * 클릭 시 해당 값으로 선택되고 드롭다운이 닫힙니다.
+ *
+ * @param value - 선택 시 설정될 값
+ * @param children - 옵션에 표시될 내용
+ * @param className - 추가 CSS 클래스명
+ *
+ * @example
+ * ```tsx
+ * <SelectBox.Item value="travel">🧳 여행</SelectBox.Item>
+ * <SelectBox.Item value="food">🍽️ 음식</SelectBox.Item>
+ * ```
+ */
 const SelectItem = ({
   value,
   children,
@@ -143,7 +208,69 @@ const SelectItem = ({
   );
 };
 
-// 컨테이너 컴포넌트
+/**
+ * shadcn 스타일의 합성 컴포넌트 패턴을 사용한 SelectBox
+ * 드롭다운 선택 UI를 제공하며, Context API를 통해 상태를 관리합니다.
+ *
+ * @param value - 현재 선택된 값
+ * @param onValueChange - 값 변경 시 호출되는 콜백 함수
+ * @param children - SelectBox의 자식 컴포넌트들 (Trigger, Content 등)
+ * @param className - 추가 CSS 클래스명
+ * @param disabled - 전체 SelectBox 비활성화 여부
+ *
+ * @example
+ * // 기본 사용법
+ * ```tsx
+ * const [category, setCategory] = useState('');
+ *
+ * <SelectBox value={category} onValueChange={setCategory}>
+ *   <SelectBox.Trigger>
+ *     <SelectBox.Value placeholder="카테고리를 선택하세요" />
+ *   </SelectBox.Trigger>
+ *   <SelectBox.Content>
+ *     <SelectBox.Item value="travel">여행</SelectBox.Item>
+ *     <SelectBox.Item value="food">음식</SelectBox.Item>
+ *     <SelectBox.Item value="culture">문화</SelectBox.Item>
+ *   </SelectBox.Content>
+ * </SelectBox>
+ * ```
+ *
+ * @example
+ * // disabled 상태
+ * ```tsx
+ * <SelectBox disabled value={value} onValueChange={setValue}>
+ *   <SelectBox.Trigger>
+ *     <SelectBox.Value placeholder="비활성화됨" />
+ *   </SelectBox.Trigger>
+ *   <SelectBox.Content>
+ *     <SelectBox.Item value="option1">옵션 1</SelectBox.Item>
+ *   </SelectBox.Content>
+ * </SelectBox>
+ * ```
+ *
+ * @example
+ * // 동적 데이터 사용
+ * ```tsx
+ * const options = [
+ *   { value: 'seoul', label: '서울' },
+ *   { value: 'busan', label: '부산' },
+ *   { value: 'jeju', label: '제주도' }
+ * ];
+ *
+ * <SelectBox value={location} onValueChange={setLocation}>
+ *   <SelectBox.Trigger>
+ *     <SelectBox.Value placeholder="지역 선택" />
+ *   </SelectBox.Trigger>
+ *   <SelectBox.Content>
+ *     {options.map((option) => (
+ *       <SelectBox.Item key={option.value} value={option.value}>
+ *         {option.label}
+ *       </SelectBox.Item>
+ *     ))}
+ *   </SelectBox.Content>
+ * </SelectBox>
+ * ```
+ */
 export default function SelectBox({
   value,
   onValueChange,
@@ -168,7 +295,10 @@ export default function SelectBox({
   );
 }
 
-// 컴포넌트 합치기
+/**
+ * 합성 컴포넌트 패턴을 위한 서브 컴포넌트들을 메인 컴포넌트에 연결
+ * 이를 통해 SelectBox.Trigger, SelectBox.Value 등의 사용이 가능해집니다.
+ */
 SelectBox.Trigger = SelectTrigger;
 SelectBox.Value = SelectValue;
 SelectBox.Content = SelectContent;
