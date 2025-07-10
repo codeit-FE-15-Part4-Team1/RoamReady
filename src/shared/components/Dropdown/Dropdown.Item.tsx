@@ -47,7 +47,7 @@ export default function DropdownItem({
     <li className='h-fit w-fit'>
       <button
         className={cn(
-          'hover:bg-brand-1 text-13 z-30 block h-[4.5rem] w-[8rem] cursor-pointer rounded-[1.2rem] font-medium',
+          'hover:bg-brand-1 text-13 z-30 block h-45 w-80 cursor-pointer rounded-[1.2rem] font-medium',
           itemClassName,
         )}
         type='button'
