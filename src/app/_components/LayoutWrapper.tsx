@@ -5,17 +5,17 @@ import Header from '@/shared/components/layouts/header/Header';
 
 type Props = {
   children: ReactNode;
-  withHeader?: boolean;
+  withLayout?: boolean;
 };
 
-export default function LayoutWrapper({ children, withHeader }: Props) {
+export default function LayoutWrapper({ children, withLayout }: Props) {
   return (
     <div className='min-h-[100dvh] min-w-[100dvw]'>
-      {withHeader && <Header />}
+      {withLayout && <Header />}
       <div className='tablet:px-32 desktop:px-40 desktop:text-40 text-14 mx-auto min-h-screen max-w-1200 px-24'>
         {children}
       </div>
-      {withHeader && <Footer />}
+      {withLayout && <Footer />}
     </div>
   );
 }
