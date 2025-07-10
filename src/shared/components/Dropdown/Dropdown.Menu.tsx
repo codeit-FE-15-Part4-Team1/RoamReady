@@ -6,6 +6,15 @@ import { cn } from '@/shared/libs/cn';
 
 import { useDropdownContext } from './DropdownContext';
 
+type Direction = 'bottomRight' | 'bottomLeft' | 'leftTop' | 'rightTop';
+
+const directionClass: Record<Direction, string> = {
+  bottomRight: 'left-0',
+  bottomLeft: 'right-0',
+  leftTop: 'top-full right-full -translate-y-1/2',
+  rightTop: 'top-full left-full -translate-y-1/2',
+};
+
 /**
  * DropdownMenu
  *
@@ -15,6 +24,7 @@ import { useDropdownContext } from './DropdownContext';
  *
  * @param {ReactNode} props.children - 드롭다운 메뉴에 들어갈 내용 (보통 `DropdownItem` 컴포넌트들)
  * @param {string} props.menuClassName - 메뉴 컨테이너에 추가로 적용할 클래스명 (선택사항)
+ * @param {string} props.direction - (기본값: bottomLeft) Trigger 기준 드롭다운 위치 bottomRight, bottomLeft, leftTop, rightTop 4가지 위치 제공 (선택사항)
  *
  * @example
  * ```tsx
@@ -29,22 +39,27 @@ import { useDropdownContext } from './DropdownContext';
 export default function DropdownMenu({
   children,
   menuClassName,
+  direction = 'bottomLeft',
 }: {
   children: ReactNode;
   menuClassName?: string;
+  direction?: Direction;
 }) {
   const { isOpen } = useDropdownContext();
 
   if (!isOpen) return null;
 
+  const positionClass = directionClass[direction];
+
   return (
-    <div
+    <ul
       className={cn(
-        'absolute right-0 z-9999 flex flex-col content-center justify-around rounded-[1.3rem] border border-gray-200 bg-white p-3 shadow-lg',
+        'absolute z-9999 flex flex-col content-center justify-around rounded-[1.3rem] border border-gray-200 bg-white p-3 shadow-lg',
+        positionClass,
         menuClassName,
       )}
     >
       {children}
-    </div>
+    </ul>
   );
 }

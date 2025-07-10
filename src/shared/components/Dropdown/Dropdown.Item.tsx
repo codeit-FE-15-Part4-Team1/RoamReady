@@ -44,15 +44,17 @@ export default function DropdownItem({
   };
 
   return (
-    <button
-      className={cn(
-        'hover:bg-brand-1 md:text-10 z-30 h-[3.6rem] w-[9.1rem] cursor-pointer rounded-[1.2rem] text-sm font-medium md:h-[4.5rem] md:w-[9.1rem]',
-        itemClassName,
-      )}
-      type='button'
-      onClick={handleClick}
-    >
-      {children}
-    </button>
+    <li className='h-fit w-fit'>
+      <button
+        className={cn(
+          'hover:bg-brand-1 text-13 z-30 block h-[4.5rem] w-[8rem] cursor-pointer rounded-[1.2rem] font-medium',
+          itemClassName,
+        )}
+        type='button'
+        onClick={handleClick}
+      >
+        {children}
+      </button>
+    </li>
   );
 }
