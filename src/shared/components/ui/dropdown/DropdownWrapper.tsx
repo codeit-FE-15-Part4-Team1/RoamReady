@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactNode, useEffect, useRef, useState } from 'react';
+
 import { DropdownContext } from './DropdownContext';
 
 /**
