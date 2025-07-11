@@ -29,7 +29,7 @@ export default function DropdownWrapper({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // 외부 클릭 시 드롭다운 닫기
+  // 외부 클릭 또는 키보드 입력 시 드롭다운 닫기
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -39,9 +39,24 @@ export default function DropdownWrapper({ children }: { children: ReactNode }) {
         setIsOpen(false);
       }
     };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // 드롭다운이 열려 있는 경우에만 반응
+      if (!isOpen) return;
+
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
+
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
 
   return (
     <DropdownContext.Provider value={{ isOpen, setIsOpen, dropdownRef }}>

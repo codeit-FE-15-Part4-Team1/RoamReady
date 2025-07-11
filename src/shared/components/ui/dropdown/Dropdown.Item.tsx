@@ -1,9 +1,8 @@
 'use client';
 
-import { MouseEvent, ReactNode } from 'react';
+import { ReactNode, MouseEvent } from 'react';
 
 import { cn } from '@/shared/libs/cn';
-
 import { useDropdownContext } from './DropdownContext';
 
 /**
@@ -62,7 +61,7 @@ export default function DropdownItem({
   };
 
   return (
-    <li className='h-fit w-fit'>
+    <li className='h-fit w-fit' role='menuitem'>
       <button
         className={cn(
           'hover:bg-brand-1 text-13 z-30 block h-45 w-80 cursor-pointer rounded-[1.2rem] font-medium',
