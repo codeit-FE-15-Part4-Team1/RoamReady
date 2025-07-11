@@ -1,8 +1,10 @@
 'use client';
 
-import { ChangeEvent, ReactNode } from 'react';
-import { InputContext, InputContextProps } from './context';
+import { ReactNode } from 'react';
+
 import { cn } from '@/shared/libs/cn';
+
+import { InputContext, InputContextProps } from './context';
 
 /**
  * @interface RootProps

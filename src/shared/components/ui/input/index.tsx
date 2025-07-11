@@ -1,7 +1,7 @@
-import Root from './Root';
 import Field from './Field';
-import Label from './Label';
 import Helper from './Helper';
+import Label from './Label';
+import Root from './Root';
 
 const Input = {
   Root,

@@ -1,11 +1,13 @@
-import { cn } from '@/shared/libs/cn';
-import { useInputContext } from './context';
 import {
   ChangeEvent,
   InputHTMLAttributes,
   ReactNode,
   TextareaHTMLAttributes,
 } from 'react';
+
+import { cn } from '@/shared/libs/cn';
+
+import { useInputContext } from './context';
 
 /**
  * @description

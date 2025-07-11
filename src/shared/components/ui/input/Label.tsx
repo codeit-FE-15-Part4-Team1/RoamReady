@@ -1,6 +1,8 @@
 import { ReactNode } from 'react';
-import { useInputContext } from './context';
+
 import { cn } from '@/shared/libs/cn';
+
+import { useInputContext } from './context';
 
 /**
  * @interface LabelProps
