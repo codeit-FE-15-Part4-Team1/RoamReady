@@ -11,7 +11,7 @@ export default function PopoverTrigger({
   onClick,
   ...props
 }: PopoverTriggerProps) {
-  const { isOpen, setIsOpen } = usePopover();
+  const { isOpen, setIsOpen, triggerRef } = usePopover();
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     setIsOpen(!isOpen);
@@ -19,7 +19,7 @@ export default function PopoverTrigger({
   };
 
   return (
-    <button onClick={handleClick} {...props}>
+    <button ref={triggerRef} onClick={handleClick} {...props}>
       {children}
     </button>
   );
