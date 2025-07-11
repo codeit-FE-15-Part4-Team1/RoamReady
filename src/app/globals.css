@@ -10,6 +10,10 @@
     outline: 2px solid var(--color-brand-2);
     outline-offset: 2px;
   }
+
+  body[data-dialog-open='true'] {
+    overflow: hidden;
+  }
 }
 
 @theme {
@@ -84,4 +88,70 @@
   --text-48: 4.8rem;
   --text-49: 4.9rem;
   --text-50: 5rem;
+}
+
+@layer components {
+  .dialog-overlay {
+    @apply fixed inset-0 z-50 bg-black/50;
+  }
+
+  .dialog-overlay[data-state='open'] {
+    animation: fadeIn 150ms ease-out;
+  }
+
+  .dialog-overlay[data-state='closed'] {
+    animation: fadeOut 150ms ease-in;
+  }
+
+  .dialog-content {
+    @apply fixed top-1/2 left-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-6 shadow-lg;
+  }
+
+  .dialog-content[data-state='open'] {
+    animation: slideIn 150ms ease-out;
+  }
+
+  .dialog-content[data-state='closed'] {
+    animation: slideOut 150ms ease-in;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
 }
