@@ -3,7 +3,6 @@
 import { ReactNode } from 'react';
 
 import { cn } from '@/shared/libs/cn';
-
 import { useDropdownContext } from './DropdownContext';
 
 type Direction = 'bottomRight' | 'bottomLeft' | 'leftTop' | 'rightTop';
@@ -14,6 +13,28 @@ const directionClass: Record<Direction, string> = {
   leftTop: 'top-full right-full -translate-y-1/2',
   rightTop: 'top-full left-full -translate-y-1/2',
 };
+
+/**
+ * DropdownMenuProps
+ *
+ * DropdownMenu 컴포넌트의 prop 타입 정의입니다.
+ */
+interface DropdownMenuProps {
+  /**
+   * 드롭다운 메뉴에 들어갈 내용 (보통 DropdownItem 컴포넌트들)
+   */
+  children: ReactNode;
+
+  /**
+   * 메뉴 컨테이너에 추가로 적용할 클래스명 (선택사항)
+   */
+  menuClassName?: string;
+
+  /**
+   * 드롭다운 메뉴의 위치 지정 (기본값: bottomLeft)
+   */
+  direction?: Direction;
+}
 
 /**
  * DropdownMenu
@@ -40,11 +61,7 @@ export default function DropdownMenu({
   children,
   menuClassName,
   direction = 'bottomLeft',
-}: {
-  children: ReactNode;
-  menuClassName?: string;
-  direction?: Direction;
-}) {
+}: DropdownMenuProps) {
   const { isOpen } = useDropdownContext();
 
   if (!isOpen) return null;

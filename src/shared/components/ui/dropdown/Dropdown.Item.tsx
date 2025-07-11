@@ -1,10 +1,31 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, MouseEvent } from 'react';
 
 import { cn } from '@/shared/libs/cn';
-
 import { useDropdownContext } from './DropdownContext';
+
+/**
+ * DropdownItemProps
+ *
+ * DropdownItem 컴포넌트의 prop 타입 정의입니다.
+ */
+interface DropdownItemProps {
+  /**
+   * 버튼 안에 들어갈 콘텐츠
+   */
+  children: string | ReactNode;
+
+  /**
+   * 버튼 클릭 시 실행될 함수
+   */
+  onClick: () => void;
+
+  /**
+   * 버튼에 추가로 적용할 클래스명 (선택사항)
+   */
+  itemClassName?: string;
+}
 
 /**
  * DropdownItem
@@ -29,14 +50,10 @@ export default function DropdownItem({
   children,
   onClick,
   itemClassName,
-}: {
-  children: string | ReactNode;
-  onClick: () => void;
-  itemClassName?: string;
-}) {
+}: DropdownItemProps) {
   const { setIsOpen } = useDropdownContext();
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
     onClick();
