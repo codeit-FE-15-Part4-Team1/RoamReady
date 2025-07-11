@@ -234,42 +234,6 @@ const SelectItem = ({
  *   </SelectBox.Content>
  * </SelectBox>
  * ```
- *
- * @example
- * // disabled 상태
- * ```tsx
- * <SelectBox disabled value={value} onValueChange={setValue}>
- *   <SelectBox.Trigger>
- *     <SelectBox.Value placeholder="비활성화됨" />
- *   </SelectBox.Trigger>
- *   <SelectBox.Content>
- *     <SelectBox.Item value="option1">옵션 1</SelectBox.Item>
- *   </SelectBox.Content>
- * </SelectBox>
- * ```
- *
- * @example
- * // 동적 데이터 사용
- * ```tsx
- * const options = [
- *   { value: 'seoul', label: '서울' },
- *   { value: 'busan', label: '부산' },
- *   { value: 'jeju', label: '제주도' }
- * ];
- *
- * <SelectBox value={location} onValueChange={setLocation}>
- *   <SelectBox.Trigger>
- *     <SelectBox.Value placeholder="지역 선택" />
- *   </SelectBox.Trigger>
- *   <SelectBox.Content>
- *     {options.map((option) => (
- *       <SelectBox.Item key={option.value} value={option.value}>
- *         {option.label}
- *       </SelectBox.Item>
- *     ))}
- *   </SelectBox.Content>
- * </SelectBox>
- * ```
  */
 export default function SelectBox({
   value,
