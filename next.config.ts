@@ -2,7 +2,10 @@ import type { NextConfig } from 'next';
 
 const pageExtensions = ['tsx', 'ts', 'jsx', 'js'];
 
-if (process.env.NODE_ENV === 'development') {
+if (
+  process.env.NODE_ENV === 'development' ||
+  process.env.VERCEL_ENV === 'preview'
+) {
   pageExtensions.unshift('dev.tsx');
 }
 
