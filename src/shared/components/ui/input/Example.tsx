@@ -1,11 +1,13 @@
 'use client';
 
-import { useState } from 'react';
-import Input from '.';
-import { useImagePreview } from '@/shared/hooks/useImagePreview';
-import Image from 'next/image';
-import { cn } from '@/shared/libs/cn';
 import { Eye, Search } from 'lucide-react';
+import Image from 'next/image';
+import { useState } from 'react';
+
+import { useImagePreview } from '@/shared/hooks/useImagePreview';
+import { cn } from '@/shared/libs/cn';
+
+import Input from '.';
 
 /**
  * @component Example
