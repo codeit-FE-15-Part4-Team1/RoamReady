@@ -1,0 +1,6 @@
+blank_issues_enabled: false
+pull_request_templates:
+  - name: 배포 PR 템플릿
+    path: PULL_REQUEST_TEMPLATE/deploy.md
+  - name: 개발 PR 템플릿
+    path: PULL_REQUEST_TEMPLATE/develop.md
