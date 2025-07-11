@@ -15,14 +15,18 @@ pre-commit:
     lint:
       # glob 패턴에 해당하는 스테이징된 파일에 대해서만 아래 run 명령어를 실행합니다.
       # {staged_files}는 lefthook에서 제공하는 플레이스홀더입니다.
-      glob: "*.{js,jsx,ts,tsx}"
-      run: pnpm eslint --fix {staged_files}
+      glob: '*.{js,jsx,ts,tsx}'
+      run: |
+        pnpm eslint --fix {staged_files}
+        git add {staged_files}
 
     # 'format'이라는 이름의 command
     format:
       # Prettier는 더 많은 파일 타입을 대상으로 실행합니다.
-      glob: "*.{js,jsx,ts,tsx,json,css,md}"
-      run: pnpm prettier --write {staged_files}
+      glob: '*.{js,jsx,ts,tsx,json,css,md}'
+      run: |
+        pnpm prettier --write {staged_files}
+        git add {staged_files}
 
     # 'type-check'라는 이름의 command
     # 타입스크립트 오류는 프로젝트 전체에서 발생할 수 있으므로,
