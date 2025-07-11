@@ -76,6 +76,8 @@ export default function DropdownMenu({
         positionClass,
         menuClassName,
       )}
+      role='menu'
+      aria-orientation='vertical'
     >
       {children}
     </ul>
