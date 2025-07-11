@@ -1,6 +1,6 @@
 'use client';
 
-import { MouseEvent,ReactNode } from 'react';
+import { MouseEvent, ReactNode } from 'react';
 
 import { cn } from '@/shared/libs/cn';
 
