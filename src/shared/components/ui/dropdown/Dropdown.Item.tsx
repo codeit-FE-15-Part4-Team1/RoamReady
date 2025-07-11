@@ -1,8 +1,9 @@
 'use client';
 
-import { ReactNode, MouseEvent } from 'react';
+import { MouseEvent,ReactNode } from 'react';
 
 import { cn } from '@/shared/libs/cn';
+
 import { useDropdownContext } from './DropdownContext';
 
 /**
