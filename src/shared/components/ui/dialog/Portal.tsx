@@ -1,8 +1,10 @@
 'use client';
 
-import { createPortal } from 'react-dom';
-import { useDialogStore } from '@/shared/store/dialog.store';
 import { ReactNode, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+
+import { useDialogStore } from '@/shared/store/dialog.store';
+
 import { useDialogContext } from './Root';
 
 /**
