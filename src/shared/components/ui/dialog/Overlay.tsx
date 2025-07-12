@@ -1,8 +1,10 @@
 'use client';
 
-import { useDialogStore } from '@/shared/store/dialog.store';
-import { useDialogContext } from './Root';
 import { ReactNode } from 'react';
+
+import { useDialogStore } from '@/shared/store/dialog.store';
+
+import { useDialogContext } from './Root';
 
 /**
  * Dialog 오버레이 컴포넌트
