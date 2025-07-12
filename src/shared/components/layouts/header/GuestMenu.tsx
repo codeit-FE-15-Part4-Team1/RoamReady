@@ -3,13 +3,13 @@ import Link from 'next/link';
 import { ROUTES } from '@/shared/constants/route';
 
 /**
- * GestMenu 컴포넌트 입니다.
+ * GuestMenu 컴포넌트 입니다.
  *
  * 로그인되지 않은 사용자를 위한 메뉴 컴포넌트입니다.
  * '로그인'과 '회원가입' 페이지로 이동할 수 있는 링크를 제공합니다.
  *
  */
-export default function GestMenu() {
+export default function GuestMenu() {
   return (
     <div className='text-14 flex cursor-pointer gap-20 font-medium'>
       <Link href={ROUTES.Login} className='hover:text-gray-200'>

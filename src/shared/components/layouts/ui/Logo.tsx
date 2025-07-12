@@ -22,7 +22,7 @@ import { cn } from '@/shared/libs/cn';
  */
 export default function Logo({
   className,
-  src,
+  src = '/logos/logo-3-black.svg',
 }: {
   className?: string;
   src?: string;
@@ -35,7 +35,7 @@ export default function Logo({
           className,
         )}
       >
-        <Image src={src ? src : '/logos/logo-3-black.svg'} fill alt='Logo' />
+        <Image src={src} fill alt='Logo' />
       </div>
     </Link>
   );

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Logo from '../ui/Logo';
 import AuthMenu from './AuthMenu';
 import GestMenu from './GuestMenu';
+import GuestMenu from './GuestMenu';
 
 export default function Header() {
   const [isLogin] = useState(true);
@@ -13,7 +14,7 @@ export default function Header() {
     <header className='border-b border-gray-50'>
       <div className='tablet:px-32 desktop:px-40 desktop:text-40 text-14 mx-auto flex w-full max-w-1200 items-center justify-between px-24'>
         <Logo />
-        <div>{isLogin ? <AuthMenu /> : <GestMenu />}</div>
+        <div>{isLogin ? <AuthMenu /> : <GuestMenu />}</div>
       </div>
     </header>
   );
