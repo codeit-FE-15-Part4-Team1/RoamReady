@@ -1,4 +1,4 @@
-import React from 'react';
+import { cloneElement, isValidElement, MouseEvent, ReactElement } from 'react';
 
 import { cn } from '../libs/cn';
 
@@ -8,7 +8,7 @@ import { cn } from '../libs/cn';
  */
 const buttonVariants = {
   /** 모든 버튼에 공통으로 적용되는 기본 스타일 */
-  base: 'w-fit h-fit border rounded-2xl flex items-center justify-center',
+  base: 'w-fit h-fit border rounded-2xl flex items-center justify-center cursor-pointer',
 
   /** 버튼 스타일 variant */
   variants: {
@@ -149,6 +149,11 @@ interface ButtonProps extends React.ComponentProps<'button'> {
  *   <Link href="/dashboard">대시보드로 이동</Link>
  * </Button>
  *
+ * // asChild + disabled 조합 (Radix UI 방식)
+ * <Button asChild disabled>
+ *   <Link href="/dashboard" aria-disabled="true">비활성화된 링크</Link>
+ * </Button>
+ *
  * // 아이콘과 함께 사용
  * <Button variant="primary">
  *   <Icon className="w-4 h-4 mr-2" />
@@ -169,16 +174,33 @@ export default function Button({
   ...props
 }: ButtonProps) {
   // asChild 속성이 존재하고 자식 요소가 유효한 react 요소인지 확인
-  if (asChild && React.isValidElement(children)) {
-    const childProps = children.props as React.HTMLAttributes<HTMLElement>; // 자식 요소의 속성을 가져오기 위해 사용
-    return React.cloneElement(children, {
+  if (asChild && isValidElement(children)) {
+    // Slot 패턴: React 타입 시스템 한계로 인한 최소한의 타입 단언 (any가 lint 규칙으로 불가능)
+    const child = children as ReactElement<{
+      className?: string;
+      onClick?: (e: MouseEvent) => void;
+      [key: string]: unknown; // lint에서 any를 금지하고 있어서 유연한 처리를 위해해
+    }>;
+
+    return cloneElement(child, {
       ...props,
+      // disabled 상태 자동 처리
+      onClick: (e: MouseEvent) => {
+        // disabled 상태일 때 클릭 이벤트 차단
+        if (props.disabled) {
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+        // disabled가 아닐 때만 기존 onClick 실행
+        child.props.onClick?.(e);
+      },
       className: cn(
         getButtonClasses(variant, size, selected, props.disabled), // 버튼 클래스 반환 함수
         className, // 추가 클래스 속성
-        childProps.className, // 자식 요소의 클래스 속성
+        child.props.className, // 자식 요소의 클래스 속성
       ),
-    } as React.HTMLAttributes<HTMLElement>); //타입을 추론할 수 있도록 타입 캐스팅
+    });
   }
 
   return (

@@ -172,6 +172,128 @@ export default function ButtonTestPage() {
             </div>
           </div>
         </div>
+
+        {/* AsChild + Disabled Combinations */}
+        <div className='rounded-xl bg-white p-8 shadow-sm'>
+          <h2 className='mb-6 text-2xl font-semibold text-gray-900'>
+            AsChild + Disabled 조합 (자동 처리)
+          </h2>
+          <div className='grid gap-6 md:grid-cols-2'>
+            {/* Next.js Link Examples */}
+            <div>
+              <h3 className='mb-4 text-lg font-medium text-gray-800'>
+                Next.js Link
+              </h3>
+              <div className='space-y-3'>
+                <div>
+                  <div className='mb-2 text-sm text-gray-600'>활성화 상태</div>
+                  <Button asChild variant='primary' size='small'>
+                    <Link href='/activities'>활성화된 링크</Link>
+                  </Button>
+                </div>
+
+                <div>
+                  <div className='mb-2 text-sm text-gray-600'>
+                    비활성화 상태 (자동 처리)
+                  </div>
+                  <Button asChild variant='primary' size='small' disabled>
+                    <Link href='/activities' aria-disabled='true'>
+                      비활성화된 링크
+                    </Link>
+                  </Button>
+                </div>
+
+                <div>
+                  <div className='mb-2 text-sm text-gray-600'>
+                    조건부 렌더링 방식 (권장)
+                  </div>
+                  {false ? (
+                    <Button asChild variant='primary' size='small'>
+                      <Link href='/activities'>조건부 링크</Link>
+                    </Button>
+                  ) : (
+                    <Button variant='primary' size='small' disabled>
+                      조건부 링크
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Regular a tag Examples */}
+            <div>
+              <h3 className='mb-4 text-lg font-medium text-gray-800'>
+                일반 a 태그
+              </h3>
+              <div className='space-y-3'>
+                <div>
+                  <div className='mb-2 text-sm text-gray-600'>활성화 상태</div>
+                  <Button asChild variant='outline' size='small'>
+                    <a
+                      href='https://example.com'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
+                      외부 링크
+                    </a>
+                  </Button>
+                </div>
+
+                <div>
+                  <div className='mb-2 text-sm text-gray-600'>
+                    비활성화 상태 (자동 처리)
+                  </div>
+                  <Button asChild variant='outline' size='small' disabled>
+                    <a
+                      href='https://example.com'
+                      aria-disabled='true'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
+                      비활성화된 외부 링크
+                    </a>
+                  </Button>
+                </div>
+
+                <div>
+                  <div className='mb-2 text-sm text-gray-600'>
+                    onClick 핸들러가 있는 경우
+                  </div>
+                  <Button asChild variant='ghost' size='small' disabled>
+                    <a
+                      href='https://example.com'
+                      onClick={() => alert('클릭됨!')}
+                      aria-disabled='true'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
+                      onClick 핸들러 테스트
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className='mt-6 rounded-lg bg-blue-50 p-4'>
+            <h4 className='mb-2 font-medium text-blue-900'>
+              🎉 자동 disabled 처리 기능 (Radix UI 방식)
+            </h4>
+            <ul className='space-y-1 text-sm text-blue-800'>
+              <li>
+                • <code>disabled</code> prop만 전달하면 자동으로 처리됩니다
+              </li>
+              <li>• 링크 이동과 onClick 핸들러 모두 자동으로 방지됩니다</li>
+              <li>
+                • <code>aria-disabled</code> 속성은 사용자가 직접 추가해야
+                합니다
+              </li>
+              <li>
+                • 수동으로 preventDefault나 조건부 처리를 할 필요가 없습니다
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   );
