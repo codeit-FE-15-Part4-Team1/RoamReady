@@ -174,7 +174,7 @@ export default function PopoverTestPage() {
           </h2>
           <div className='relative h-96 rounded-lg border-2 border-dashed border-gray-300'>
             {/* 좌상단 */}
-            <div className='absolute top-4 left-4'>
+            <div className='absolute left-4 top-4'>
               <Popover>
                 <PopoverTrigger className='rounded bg-orange-500 px-3 py-2 text-white'>
                   좌상단
@@ -186,7 +186,7 @@ export default function PopoverTestPage() {
             </div>
 
             {/* 우상단 */}
-            <div className='absolute top-4 right-4'>
+            <div className='absolute right-4 top-4'>
               <Popover>
                 <PopoverTrigger className='rounded bg-pink-500 px-3 py-2 text-white'>
                   우상단
@@ -198,7 +198,7 @@ export default function PopoverTestPage() {
             </div>
 
             {/* 중앙 */}
-            <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+            <div className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2'>
               <Popover>
                 <PopoverTrigger className='rounded bg-indigo-500 px-3 py-2 text-white'>
                   중앙
@@ -222,7 +222,7 @@ export default function PopoverTestPage() {
             </div>
 
             {/* 우하단 */}
-            <div className='absolute right-4 bottom-4'>
+            <div className='absolute bottom-4 right-4'>
               <Popover>
                 <PopoverTrigger className='rounded bg-yellow-500 px-3 py-2 text-white'>
                   우하단
@@ -295,7 +295,7 @@ export default function PopoverTestPage() {
                 긴 콘텐츠 (top-center)
               </PopoverTrigger>
               <PopoverContent position='top-center'>
-                <div className='w-80 space-y-3'>
+                <div className='space-y-3'>
                   <h3 className='font-semibold'>긴 콘텐츠 테스트</h3>
                   <p className='text-sm text-gray-600'>
                     이것은 상당히 긴 콘텐츠입니다. Popover가 trigger 위쪽에
@@ -360,6 +360,155 @@ export default function PopoverTestPage() {
                 </PopoverTrigger>
                 <PopoverContent position='right-center'>
                   오른쪽으로도 정확하게!
+                </PopoverContent>
+              </Popover>
+            </div>
+          </div>
+        </section>
+
+        {/* 스크롤 및 max-height 테스트 */}
+        <section className='rounded-xl bg-white p-8 shadow-sm'>
+          <h2 className='mb-6 text-2xl font-semibold text-gray-900'>
+            스크롤 및 max-height 테스트
+          </h2>
+          <div className='space-y-4'>
+            <p className='text-gray-600'>
+              max-h-100 (400px) 설정으로 긴 콘텐츠가 스크롤되는지
+              테스트해보세요.
+            </p>
+            <div className='flex gap-4'>
+              {/* 매우 긴 콘텐츠 */}
+              <Popover>
+                <PopoverTrigger className='rounded-lg bg-purple-500 px-4 py-2 text-white hover:bg-purple-600'>
+                  매우 긴 콘텐츠 테스트
+                </PopoverTrigger>
+                <PopoverContent position='bottom-center'>
+                  <div className='w-80 space-y-4'>
+                    <h3 className='text-lg font-semibold'>매우 긴 콘텐츠</h3>
+                    <p className='text-sm text-gray-600'>
+                      이것은 popover의 max-height 제한을 테스트하기 위한 매우 긴
+                      콘텐츠입니다.
+                    </p>
+                    <div className='space-y-2'>
+                      <div className='rounded bg-gray-100 p-3'>
+                        <h4 className='font-medium'>항목 1</h4>
+                        <p className='text-sm text-gray-600'>
+                          첫 번째 항목에 대한 설명입니다.
+                        </p>
+                      </div>
+                      <div className='rounded bg-gray-100 p-3'>
+                        <h4 className='font-medium'>항목 2</h4>
+                        <p className='text-sm text-gray-600'>
+                          두 번째 항목에 대한 설명입니다.
+                        </p>
+                      </div>
+                      <div className='rounded bg-gray-100 p-3'>
+                        <h4 className='font-medium'>항목 3</h4>
+                        <p className='text-sm text-gray-600'>
+                          세 번째 항목에 대한 설명입니다.
+                        </p>
+                      </div>
+                      <div className='rounded bg-gray-100 p-3'>
+                        <h4 className='font-medium'>항목 4</h4>
+                        <p className='text-sm text-gray-600'>
+                          네 번째 항목에 대한 설명입니다.
+                        </p>
+                      </div>
+                      <div className='rounded bg-gray-100 p-3'>
+                        <h4 className='font-medium'>항목 5</h4>
+                        <p className='text-sm text-gray-600'>
+                          다섯 번째 항목에 대한 설명입니다.
+                        </p>
+                      </div>
+                      <div className='rounded bg-gray-100 p-3'>
+                        <h4 className='font-medium'>항목 6</h4>
+                        <p className='text-sm text-gray-600'>
+                          여섯 번째 항목에 대한 설명입니다.
+                        </p>
+                      </div>
+                      <div className='rounded bg-gray-100 p-3'>
+                        <h4 className='font-medium'>항목 7</h4>
+                        <p className='text-sm text-gray-600'>
+                          일곱 번째 항목에 대한 설명입니다.
+                        </p>
+                      </div>
+                      <div className='rounded bg-gray-100 p-3'>
+                        <h4 className='font-medium'>항목 8</h4>
+                        <p className='text-sm text-gray-600'>
+                          여덟 번째 항목에 대한 설명입니다.
+                        </p>
+                      </div>
+                      <div className='rounded bg-gray-100 p-3'>
+                        <h4 className='font-medium'>항목 9</h4>
+                        <p className='text-sm text-gray-600'>
+                          아홉 번째 항목에 대한 설명입니다.
+                        </p>
+                      </div>
+                      <div className='rounded bg-gray-100 p-3'>
+                        <h4 className='font-medium'>항목 10</h4>
+                        <p className='text-sm text-gray-600'>
+                          열 번째 항목에 대한 설명입니다.
+                        </p>
+                      </div>
+                    </div>
+                    <div className='flex gap-2'>
+                      <button className='rounded bg-blue-500 px-3 py-1 text-sm text-white'>
+                        확인
+                      </button>
+                      <button className='rounded bg-gray-300 px-3 py-1 text-sm text-gray-700'>
+                        취소
+                      </button>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+
+              {/* 긴 리스트 */}
+              <Popover>
+                <PopoverTrigger className='rounded-lg bg-indigo-500 px-4 py-2 text-white hover:bg-indigo-600'>
+                  긴 리스트 테스트
+                </PopoverTrigger>
+                <PopoverContent position='bottom-center'>
+                  <div className='w-64 space-y-2'>
+                    <h3 className='font-semibold'>사용자 목록</h3>
+                    <div className='space-y-1'>
+                      {Array.from({ length: 20 }, (_, i) => (
+                        <div
+                          key={i}
+                          className='flex items-center justify-between rounded px-2 py-1 hover:bg-gray-50'
+                        >
+                          <span className='text-sm'>사용자 {i + 1}</span>
+                          <button className='text-xs text-blue-500 hover:underline'>
+                            선택
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+
+              {/* 스크롤 없는 적당한 크기 */}
+              <Popover>
+                <PopoverTrigger className='rounded-lg bg-green-500 px-4 py-2 text-white hover:bg-green-600'>
+                  적당한 크기 테스트
+                </PopoverTrigger>
+                <PopoverContent position='bottom-center'>
+                  <div className='w-64 space-y-3'>
+                    <h3 className='font-semibold'>적당한 크기</h3>
+                    <p className='text-sm text-gray-600'>
+                      이 콘텐츠는 max-height 제한에 걸리지 않아서 스크롤이
+                      생기지 않습니다.
+                    </p>
+                    <div className='flex gap-2'>
+                      <button className='rounded bg-blue-500 px-3 py-1 text-sm text-white'>
+                        확인
+                      </button>
+                      <button className='rounded bg-gray-300 px-3 py-1 text-sm text-gray-700'>
+                        취소
+                      </button>
+                    </div>
+                  </div>
                 </PopoverContent>
               </Popover>
             </div>
