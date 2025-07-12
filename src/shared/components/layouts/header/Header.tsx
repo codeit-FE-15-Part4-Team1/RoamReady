@@ -4,7 +4,6 @@ import { useState } from 'react';
 
 import Logo from '../ui/Logo';
 import AuthMenu from './AuthMenu';
-import GestMenu from './GuestMenu';
 import GuestMenu from './GuestMenu';
 
 export default function Header() {
