@@ -1,6 +1,7 @@
 'use client';
 
-import { ReactNode, createContext, useContext, useId } from 'react';
+import { createContext, ReactNode, useContext, useId } from 'react';
+
 import { useDialogStore } from '@/shared/store/dialog.store';
 
 /**
