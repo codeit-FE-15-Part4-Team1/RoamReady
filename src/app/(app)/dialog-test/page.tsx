@@ -3,7 +3,7 @@
 import { ReactNode } from 'react';
 
 import { CodeBlock } from '@/shared/components/ui/code-block';
-import { Dialog } from '@/shared/components/ui/Dialog';
+import { Dialog } from '@/shared/components/ui/dialog';
 
 // 비동기 작업 시뮬레이션 함수들
 const simulateAsyncSuccess = (message: string, delay: number = 2000) => {
