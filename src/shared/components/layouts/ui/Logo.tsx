@@ -1,7 +1,8 @@
-import { ROUTES } from '@/shared/constants/route';
-import { cn } from '@/shared/libs/cn';
 import Image from 'next/image';
 import Link from 'next/link';
+
+import { ROUTES } from '@/shared/constants/route';
+import { cn } from '@/shared/libs/cn';
 
 /**
  * Logo 컴포넌트 입니다.

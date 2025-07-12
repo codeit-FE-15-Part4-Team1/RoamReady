@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 
-import GestMenu from './GuestMenu';
-import AuthMenu from './AuthMenu';
 import Logo from '../ui/Logo';
+import AuthMenu from './AuthMenu';
+import GestMenu from './GuestMenu';
 
 export default function Header() {
   const [isLogin] = useState(true);

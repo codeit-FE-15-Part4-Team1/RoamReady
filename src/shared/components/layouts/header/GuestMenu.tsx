@@ -1,5 +1,6 @@
-import { ROUTES } from '@/shared/constants/route';
 import Link from 'next/link';
+
+import { ROUTES } from '@/shared/constants/route';
 
 /**
  * GestMenu 컴포넌트 입니다.
