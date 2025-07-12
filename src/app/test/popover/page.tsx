@@ -1,8 +1,8 @@
 'use client';
 
 import {
+  Popover,
   PopoverContent,
-  PopoverRoot,
   PopoverTrigger,
 } from '@/shared/components/ui/popover';
 
@@ -31,32 +31,32 @@ export default function PopoverTestPage() {
               Bottom 위치
             </h3>
             <div className='flex flex-wrap gap-4'>
-              <PopoverRoot>
+              <Popover>
                 <PopoverTrigger className='rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600'>
                   bottom-start
                 </PopoverTrigger>
                 <PopoverContent position='bottom-start'>
                   <p>bottom-start: 아래쪽, 왼쪽 끝 정렬</p>
                 </PopoverContent>
-              </PopoverRoot>
+              </Popover>
 
-              <PopoverRoot>
+              <Popover>
                 <PopoverTrigger className='rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700'>
                   bottom-center
                 </PopoverTrigger>
                 <PopoverContent position='bottom-center'>
                   <p>bottom-center: 아래쪽, 중앙 정렬</p>
                 </PopoverContent>
-              </PopoverRoot>
+              </Popover>
 
-              <PopoverRoot>
+              <Popover>
                 <PopoverTrigger className='rounded-lg bg-blue-700 px-4 py-2 text-white hover:bg-blue-800'>
                   bottom-end
                 </PopoverTrigger>
                 <PopoverContent position='bottom-end'>
                   <p>bottom-end: 아래쪽, 오른쪽 끝 정렬</p>
                 </PopoverContent>
-              </PopoverRoot>
+              </Popover>
             </div>
           </div>
 
@@ -64,32 +64,32 @@ export default function PopoverTestPage() {
           <div className='mb-8'>
             <h3 className='mb-4 text-lg font-medium text-gray-700'>Top 위치</h3>
             <div className='flex flex-wrap gap-4'>
-              <PopoverRoot>
+              <Popover>
                 <PopoverTrigger className='rounded-lg bg-green-500 px-4 py-2 text-white hover:bg-green-600'>
                   top-start
                 </PopoverTrigger>
                 <PopoverContent position='top-start'>
                   <p>top-start: 위쪽, 왼쪽 끝 정렬</p>
                 </PopoverContent>
-              </PopoverRoot>
+              </Popover>
 
-              <PopoverRoot>
+              <Popover>
                 <PopoverTrigger className='rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700'>
                   top-center
                 </PopoverTrigger>
                 <PopoverContent position='top-center'>
                   <p>top-center: 위쪽, 중앙 정렬</p>
                 </PopoverContent>
-              </PopoverRoot>
+              </Popover>
 
-              <PopoverRoot>
+              <Popover>
                 <PopoverTrigger className='rounded-lg bg-green-700 px-4 py-2 text-white hover:bg-green-800'>
                   top-end
                 </PopoverTrigger>
                 <PopoverContent position='top-end'>
                   <p>top-end: 위쪽, 오른쪽 끝 정렬</p>
                 </PopoverContent>
-              </PopoverRoot>
+              </Popover>
             </div>
           </div>
 
@@ -101,32 +101,32 @@ export default function PopoverTestPage() {
                 Left 위치
               </h3>
               <div className='space-y-4'>
-                <PopoverRoot>
+                <Popover>
                   <PopoverTrigger className='w-full rounded-lg bg-purple-500 px-4 py-2 text-white hover:bg-purple-600'>
                     left-start
                   </PopoverTrigger>
                   <PopoverContent position='left-start'>
                     <p>left-start: 왼쪽, 위쪽 끝 정렬</p>
                   </PopoverContent>
-                </PopoverRoot>
+                </Popover>
 
-                <PopoverRoot>
+                <Popover>
                   <PopoverTrigger className='w-full rounded-lg bg-purple-600 px-4 py-2 text-white hover:bg-purple-700'>
                     left-center
                   </PopoverTrigger>
                   <PopoverContent position='left-center'>
                     <p>left-center: 왼쪽, 중앙 정렬</p>
                   </PopoverContent>
-                </PopoverRoot>
+                </Popover>
 
-                <PopoverRoot>
+                <Popover>
                   <PopoverTrigger className='w-full rounded-lg bg-purple-700 px-4 py-2 text-white hover:bg-purple-800'>
                     left-end
                   </PopoverTrigger>
                   <PopoverContent position='left-end'>
                     <p>left-end: 왼쪽, 아래쪽 끝 정렬</p>
                   </PopoverContent>
-                </PopoverRoot>
+                </Popover>
               </div>
             </div>
 
@@ -136,32 +136,32 @@ export default function PopoverTestPage() {
                 Right 위치
               </h3>
               <div className='space-y-4'>
-                <PopoverRoot>
+                <Popover>
                   <PopoverTrigger className='w-full rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-600'>
                     right-start
                   </PopoverTrigger>
                   <PopoverContent position='right-start'>
                     <p>right-start: 오른쪽, 위쪽 끝 정렬</p>
                   </PopoverContent>
-                </PopoverRoot>
+                </Popover>
 
-                <PopoverRoot>
+                <Popover>
                   <PopoverTrigger className='w-full rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700'>
                     right-center
                   </PopoverTrigger>
                   <PopoverContent position='right-center'>
                     <p>right-center: 오른쪽, 중앙 정렬</p>
                   </PopoverContent>
-                </PopoverRoot>
+                </Popover>
 
-                <PopoverRoot>
+                <Popover>
                   <PopoverTrigger className='w-full rounded-lg bg-red-700 px-4 py-2 text-white hover:bg-red-800'>
                     right-end
                   </PopoverTrigger>
                   <PopoverContent position='right-end'>
                     <p>right-end: 오른쪽, 아래쪽 끝 정렬</p>
                   </PopoverContent>
-                </PopoverRoot>
+                </Popover>
               </div>
             </div>
           </div>
@@ -175,62 +175,62 @@ export default function PopoverTestPage() {
           <div className='relative h-96 rounded-lg border-2 border-dashed border-gray-300'>
             {/* 좌상단 */}
             <div className='absolute top-4 left-4'>
-              <PopoverRoot>
+              <Popover>
                 <PopoverTrigger className='rounded bg-orange-500 px-3 py-2 text-white'>
                   좌상단
                 </PopoverTrigger>
                 <PopoverContent position='bottom-start'>
                   좌상단에서 아래로
                 </PopoverContent>
-              </PopoverRoot>
+              </Popover>
             </div>
 
             {/* 우상단 */}
             <div className='absolute top-4 right-4'>
-              <PopoverRoot>
+              <Popover>
                 <PopoverTrigger className='rounded bg-pink-500 px-3 py-2 text-white'>
                   우상단
                 </PopoverTrigger>
                 <PopoverContent position='left-start'>
                   우상단에서 왼쪽으로
                 </PopoverContent>
-              </PopoverRoot>
+              </Popover>
             </div>
 
             {/* 중앙 */}
             <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
-              <PopoverRoot>
+              <Popover>
                 <PopoverTrigger className='rounded bg-indigo-500 px-3 py-2 text-white'>
                   중앙
                 </PopoverTrigger>
                 <PopoverContent position='bottom-center'>
                   중앙에서 아래로
                 </PopoverContent>
-              </PopoverRoot>
+              </Popover>
             </div>
 
             {/* 좌하단 */}
             <div className='absolute bottom-4 left-4'>
-              <PopoverRoot>
+              <Popover>
                 <PopoverTrigger className='rounded bg-teal-500 px-3 py-2 text-white'>
                   좌하단
                 </PopoverTrigger>
                 <PopoverContent position='top-start'>
                   좌하단에서 위로
                 </PopoverContent>
-              </PopoverRoot>
+              </Popover>
             </div>
 
             {/* 우하단 */}
             <div className='absolute right-4 bottom-4'>
-              <PopoverRoot>
+              <Popover>
                 <PopoverTrigger className='rounded bg-yellow-500 px-3 py-2 text-white'>
                   우하단
                 </PopoverTrigger>
                 <PopoverContent position='top-end'>
                   우하단에서 위로
                 </PopoverContent>
-              </PopoverRoot>
+              </Popover>
             </div>
           </div>
         </section>
@@ -242,7 +242,7 @@ export default function PopoverTestPage() {
           </h2>
           <div className='flex flex-wrap gap-4'>
             {/* 폼이 있는 팝오버 */}
-            <PopoverRoot>
+            <Popover>
               <PopoverTrigger className='rounded-lg bg-emerald-500 px-4 py-2 text-white hover:bg-emerald-600'>
                 폼 팝오버 (right-center)
               </PopoverTrigger>
@@ -266,10 +266,10 @@ export default function PopoverTestPage() {
                   </div>
                 </div>
               </PopoverContent>
-            </PopoverRoot>
+            </Popover>
 
             {/* 메뉴 팝오버 */}
-            <PopoverRoot>
+            <Popover>
               <PopoverTrigger className='rounded-lg bg-violet-500 px-4 py-2 text-white hover:bg-violet-600'>
                 메뉴 팝오버 (bottom-center)
               </PopoverTrigger>
@@ -287,10 +287,10 @@ export default function PopoverTestPage() {
                   </button>
                 </div>
               </PopoverContent>
-            </PopoverRoot>
+            </Popover>
 
             {/* 긴 콘텐츠 팝오버 */}
-            <PopoverRoot>
+            <Popover>
               <PopoverTrigger className='rounded-lg bg-cyan-500 px-4 py-2 text-white hover:bg-cyan-600'>
                 긴 콘텐츠 (top-center)
               </PopoverTrigger>
@@ -312,7 +312,7 @@ export default function PopoverTestPage() {
                   </div>
                 </div>
               </PopoverContent>
-            </PopoverRoot>
+            </Popover>
           </div>
         </section>
 
@@ -327,41 +327,41 @@ export default function PopoverTestPage() {
               상관없이 정확한 위치에 나타나야 합니다.
             </p>
             <div className='flex gap-4'>
-              <PopoverRoot>
+              <Popover>
                 <PopoverTrigger className='rounded-lg bg-rose-500 px-4 py-2 text-white hover:bg-rose-600'>
                   스크롤 테스트 1
                 </PopoverTrigger>
                 <PopoverContent position='bottom-center'>
                   스크롤 후에도 정확한 위치!
                 </PopoverContent>
-              </PopoverRoot>
+              </Popover>
 
-              <PopoverRoot>
+              <Popover>
                 <PopoverTrigger className='rounded-lg bg-amber-500 px-4 py-2 text-white hover:bg-amber-600'>
                   스크롤 테스트 2
                 </PopoverTrigger>
                 <PopoverContent position='top-center'>
                   위쪽으로도 정확하게!
                 </PopoverContent>
-              </PopoverRoot>
+              </Popover>
 
-              <PopoverRoot>
+              <Popover>
                 <PopoverTrigger className='rounded-lg bg-lime-500 px-4 py-2 text-white hover:bg-lime-600'>
                   스크롤 테스트 3
                 </PopoverTrigger>
                 <PopoverContent position='left-center'>
                   왼쪽으로도 정확하게!
                 </PopoverContent>
-              </PopoverRoot>
+              </Popover>
 
-              <PopoverRoot>
+              <Popover>
                 <PopoverTrigger className='rounded-lg bg-sky-500 px-4 py-2 text-white hover:bg-sky-600'>
                   스크롤 테스트 4
                 </PopoverTrigger>
                 <PopoverContent position='right-center'>
                   오른쪽으로도 정확하게!
                 </PopoverContent>
-              </PopoverRoot>
+              </Popover>
             </div>
           </div>
         </section>

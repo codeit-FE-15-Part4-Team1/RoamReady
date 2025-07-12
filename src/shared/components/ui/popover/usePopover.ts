@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { PopoverContext } from './PopoverRoot';
+import { PopoverContext } from './Popover';
 
 export const usePopover = () => {
   const context = useContext(PopoverContext);
