@@ -4,15 +4,13 @@ import { X } from 'lucide-react';
 import { ReactNode, useEffect, useRef } from 'react';
 
 import { cn } from '@/shared/libs/cn';
-import { useDialogStore } from '@/shared/store/dialog.store';
 
 import { DialogOverlay } from './Overlay';
 import { DialogPortal } from './Portal';
 import { useDialogContext } from './Root';
 
 /**
- * Dialog 변형별 패딩 스타일 매핑
- * 각 Dialog 타입에 맞는 적절한 내부 여백을 제공합니다.
+ * Dialog variant별 패딩 스타일 매핑
  */
 const DIALOG_PADDING_CLASSNAME = {
   complete: 'px-[30px] py-[34px] md:px-[40px] md:py-[40px]',
@@ -21,7 +19,7 @@ const DIALOG_PADDING_CLASSNAME = {
 };
 
 /**
- * Dialog 변형 타입
+ * Dialog variant 타입
  * Dialog의 용도에 따른 스타일 변형을 정의합니다.
  */
 type DialogVariantsType = 'complete' | 'cancel' | 'review';
@@ -31,8 +29,8 @@ type DialogVariantsType = 'complete' | 'cancel' | 'review';
  */
 interface DialogContentProps {
   /**
-   * Dialog의 변형 타입
-   * 변형에 따라 다른 패딩과 스타일이 적용됩니다.
+   * Dialog의 variant 타입
+   * variant에 따라 다른 패딩과 스타일이 적용됩니다.
    *
    * - 'complete': 완료/성공 알림용 Dialog
    * - 'cancel': 취소 확인용 Dialog
@@ -45,37 +43,37 @@ interface DialogContentProps {
 }
 
 /**
- * Dialog 콘텐츠 컴포넌트
+ * Dialog Content 컴포넌트
  *
- * Dialog의 실제 콘텐츠를 렌더링하고 접근성과 사용성을 위한
+ * Dialog 몸체 역할을 합니다.
+ * Dialog 내부에 들어갈 요소를 렌더링하고, 접근성과 사용성을 위한
  * 포커스 트랩, 키보드 탐색, 스타일링을 관리합니다.
  *
  * **주요 기능:**
- * - 🎯 **포커스 트랩**: 모달 외부로 Tab 이동 완전 차단
- * - ⌨️ **키보드 탐색**: Tab/Shift+Tab으로 모달 내부 순환
+ * - 🎯 **포커스 트랩**: Dialog 외부로 Tab 이동 완전 차단
+ * - ⌨️ **키보드 탐색**: Tab/Shift+Tab으로 Dialog 내부 탐색 가능
  * - 🔐 **접근성 강화**: inert 속성과 tabindex 조작으로 이중 보호
  * - 🖱️ **마우스 이벤트 차단**: focusin 이벤트로 외부 포커스 시도 차단
- * - 🎨 **변형별 스타일링**: complete, cancel, review 변형 지원
- * - ❌ **닫기 버튼**: review 변형에 X 버튼 자동 추가
+ * - 🎨 **variant별 스타일링**: complete, cancel, review variant 지원
+ * - ❌ **닫기 버튼**: review variant에 X 버튼 자동 추가
  * - 🔄 **DOM 마운트 대기**: 안정적인 포커스 트랩을 위한 지연 로딩
  *
  * **포커스 트랩 동작:**
- * 1. 모달이 열리면 DOM 마운트를 기다림
+ * 1. Dialog가 열리면 DOM 마운트를 기다림
  * 2. body 자식들에 inert 속성 적용 (브라우저 네이티브)
  * 3. 모든 외부 요소에 tabindex="-1" 설정 (호환성 보장)
- * 4. 모달 내 첫 번째 focusable 요소로 포커스 이동
- * 5. Tab/Shift+Tab 이벤트를 가로채서 모달 내부에서만 순환
+ * 4. Dialog 내 첫 번째 focusable 요소로 포커스 이동
+ * 5. Tab/Shift+Tab 이벤트를 가로채서 Dialog 내부에서만 순환
  * 6. focusin 이벤트로 외부 포커스 시도를 실시간 차단
- * 7. 모달 닫힐 때 모든 설정을 원상복구
+ * 7. Dialog 닫힐 때 모든 설정을 원상복구
  *
  * **지원하는 키보드 단축키:**
  * - `Tab`: 다음 focusable 요소로 이동
  * - `Shift + Tab`: 이전 focusable 요소로 이동
- * - `Escape`: 모달 닫기
+ * - `Escape`: Dialog 닫기
  *
- * @param props - DialogContent 컴포넌트의 props
- * @param props.variant - Dialog 변형 타입 (스타일 결정)
- * @param props.children - Dialog 내부에 렌더링될 콘텐츠
+ * @param variant - Dialog variant 타입 (스타일 결정)
+ * @param children - Dialog 내부에 렌더링될 콘텐츠
  *
  * @example
  * ```tsx
@@ -118,44 +116,48 @@ interface DialogContentProps {
  * ```
  */
 export function DialogContent({ variant, children }: DialogContentProps) {
-  const { modalId } = useDialogContext();
-  const { close, isOpen } = useDialogStore();
+  const { isOpen, close, loading, setVariant } = useDialogContext();
+
+  // Dialog Content 참조용 ref
   const dialogRef = useRef<HTMLDivElement>(null);
 
-  // 1. cleanup 함수 관리 개선
+  // cleanup 함수 관리용 ref
   const cleanupRef = useRef<(() => void) | null>(null);
+
+  // variant를 Context에 설정
+  useEffect(() => {
+    setVariant(variant);
+  }, [variant, setVariant]);
 
   /**
    * 포커스 트랩 및 접근성 관리
    *
-   * 모달이 열린 상태에서 포커스가 모달 외부로 나가지 않도록
-   * 다층 보호 시스템을 구현합니다.
+   * Dialog가 열린 상태에서 포커스가 Dialog 외부로 나가지 않도록 합니다.
    *
    * **보호 계층:**
-   * 1. **inert 속성**: 브라우저 네이티브 비활성화 (최신 브라우저)
-   * 2. **tabindex 조작**: 모든 외부 요소를 비활성화 (호환성 보장)
-   * 3. **키보드 이벤트 가로채기**: Tab 키를 완전히 제어
+   * 1. **inert 속성**: 브라우저 네이티브 비활성화
+   * 2. **tabindex 조작**: 모든 외부 요소를 비활성화
+   * 3. **키보드 이벤트 인터셉트**: Tab 키 제어
    * 4. **focusin 이벤트 차단**: 마우스 클릭 등으로 인한 포커스 이동 방지
    *
-   * **DOM 마운트 대기 로직:**
+   * **DOM 마운트 대기:**
    * dialogRef.current가 실제로 DOM에 마운트될 때까지 10ms마다
-   * 재시도하여 안정적인 포커스 트랩을 보장합니다.
+   * 재시도하여 포커스 트랩을 보장합니다.
    *
    * **cleanup 처리:**
    * 컴포넌트 언마운트 시 모든 inert 속성과 tabindex를 원상복구하여
    * 메모리 누수와 의도치 않은 부작용을 방지합니다.
    */
-  const isModalOpen = isOpen(modalId);
   useEffect(() => {
     // Dialog가 실제로 열려있는지 확인
-    if (!isModalOpen) {
+    if (!isOpen) {
       return;
     }
 
     /**
      * DOM 마운트 대기 및 포커스 트랩 설정
      *
-     * React의 렌더링 사이클과 Portal의 특성상 dialogRef.current가
+     * React 렌더링 사이클과 Portal 특성상 dialogRef.current가
      * 즉시 사용 가능하지 않을 수 있어 재귀적으로 대기합니다.
      */
     const waitForDialog = () => {
@@ -165,7 +167,7 @@ export function DialogContent({ variant, children }: DialogContentProps) {
         return;
       }
 
-      // 1. body의 직접 자식들을 inert로 만들기 (최신 브라우저 지원)
+      // 1. body의 직접 자식들을 inert로 만들기
       const bodyChildren = Array.from(document.body.children);
       const elementsToMakeInert: Element[] = [];
 
@@ -180,7 +182,7 @@ export function DialogContent({ variant, children }: DialogContentProps) {
         }
       });
 
-      // 2. 모든 focusable 요소를 찾아서 tabindex 조작 (호환성 보장)
+      // 2. 모든 focusable 요소를 찾아서 tabindex 조작
       const allFocusableElements = document.querySelectorAll(
         'a[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])',
       );
@@ -198,7 +200,7 @@ export function DialogContent({ variant, children }: DialogContentProps) {
         }
       });
 
-      // 3. 모달 내부의 첫 번째 focusable 요소로 포커스 이동
+      // 3. Dialog 내부의 첫 번째 focusable 요소로 포커스 이동
       const modalFocusableElements = dialog.querySelectorAll(
         'a[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])',
       );
@@ -217,12 +219,18 @@ export function DialogContent({ variant, children }: DialogContentProps) {
       /**
        * 키보드 이벤트 핸들러
        *
-       * Tab과 Escape 키를 가로채서 모달 내부에서만 탐색이
+       * Tab과 Escape 키를 가로채서 Dialog 내부에서만 탐색이
        * 이루어지도록 제어합니다.
        */
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'Escape') {
-          close(modalId);
+          // 로딩 중일 때는 ESC 키로 닫기 차단
+          if (loading) {
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
+          close();
           return;
         }
 
@@ -286,7 +294,7 @@ export function DialogContent({ variant, children }: DialogContentProps) {
       /**
        * focusin 이벤트 핸들러
        *
-       * 마우스 클릭이나 기타 방법으로 모달 외부 요소에
+       * 마우스 클릭이나 기타 방법으로 Dialog 외부 요소에
        * 포커스가 이동하려는 시도를 실시간으로 차단합니다.
        */
       const handleFocusIn = (e: FocusEvent) => {
@@ -355,7 +363,7 @@ export function DialogContent({ variant, children }: DialogContentProps) {
         cleanupRef.current();
       }
     };
-  }, [close, modalId, isModalOpen]);
+  }, [close, isOpen, loading]);
 
   /**
    * Content 클릭 시 이벤트 전파 방지
@@ -369,13 +377,25 @@ export function DialogContent({ variant, children }: DialogContentProps) {
   const handleCloseKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      close(modalId);
+      // 로딩 중일 때는 닫기 차단
+      if (loading) {
+        return;
+      }
+      close();
     }
+  };
+
+  // X 버튼 클릭 핸들러
+  const handleCloseClick = () => {
+    // 로딩 중일 때는 닫기 차단
+    if (loading) {
+      return;
+    }
+    close();
   };
 
   return (
     <DialogPortal>
-      {/* Portal wrapper가 전체 화면을 덮고 클릭을 감지 */}
       <DialogOverlay>
         <div
           ref={dialogRef}
@@ -388,17 +408,24 @@ export function DialogContent({ variant, children }: DialogContentProps) {
           aria-modal='true'
           onClick={handleContentClick}
         >
-          {/* review 변형에만 X 닫기 버튼 표시 */}
+          {/* review variant에만 X 닫기 버튼 표시 */}
           {variant === 'review' && (
             <X
-              className='absolute top-25 right-25 cursor-pointer text-gray-600 transition-colors hover:text-gray-900'
-              onClick={() => close(modalId)}
+              className={cn(
+                'absolute top-25 right-25 transition-colors',
+                loading
+                  ? 'cursor-not-allowed text-gray-400'
+                  : 'cursor-pointer text-gray-600 hover:text-gray-900',
+              )}
+              onClick={handleCloseClick}
               onKeyDown={handleCloseKeyDown}
-              tabIndex={0}
+              tabIndex={loading ? -1 : 0}
               role='button'
-              aria-label='모달 닫기'
+              aria-label='Dialog 닫기'
+              aria-disabled={loading}
             />
           )}
+
           {children}
         </div>
       </DialogOverlay>
