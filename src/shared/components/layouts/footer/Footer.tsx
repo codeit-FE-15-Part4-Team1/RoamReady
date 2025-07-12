@@ -3,13 +3,10 @@ import Image from 'next/image';
 import GitHubLogo from '../../icons/github-logo';
 
 /**
- * Footer 컴포넌트
+ * Renders the footer section for the RoamReady service.
  *
- * RoamReady 서비스의 하단 정보를 보여주는 푸터 영역입니다.
- * 로고, 브랜드 슬로건, GitHub 링크, 팀원 정보를 포함합니다.
- *
- * - 좌측: 로고와 브랜드 문구, 저작권 표기
- * - 우측: GitHub 저장소 링크 및 팀원 이름
+ * Displays the service logo, brand slogan, copyright,
+ * a link to the GitHub repository, and team member names in a responsive layout.
  *
  * @example
  * ```tsx

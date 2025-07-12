@@ -1,3 +1,9 @@
+/**
+ * Renders the GitHub logo as an SVG React component.
+ *
+ * @param color - Optional fill color for the logo. Defaults to black (`'#000'`).
+ * @returns The SVG element representing the GitHub logo.
+ */
 export default function GitHubLogo({ color = '#000' }: { color?: string }) {
   return (
     <svg

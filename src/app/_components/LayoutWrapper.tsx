@@ -8,6 +8,13 @@ type Props = {
   hasFullLayout?: boolean;
 };
 
+/**
+ * Provides a responsive page layout with optional header and footer sections.
+ *
+ * Renders its children within a styled container. If `hasFullLayout` is true, a header is displayed above and a footer below the main content.
+ *
+ * @param hasFullLayout - If true, includes the header and footer in the layout
+ */
 export default function LayoutWrapper({ children, hasFullLayout }: Props) {
   return (
     <div className='flex min-h-screen flex-col justify-between'>
