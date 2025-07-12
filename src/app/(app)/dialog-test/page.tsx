@@ -490,7 +490,8 @@ export default function page() {
                 <tr>
                   <td className='py-2 text-gray-700'>variant</td>
                   <td className='py-2 text-gray-600'>
-                    'complete' | 'cancel' | 'review'
+                    &apos;complete&apos; | &apos;cancel&apos; |
+                    &apos;review&apos;
                   </td>
                   <td className='py-2 text-gray-600'>-</td>
                   <td className='py-2 text-gray-600'>푸터 스타일 타입</td>

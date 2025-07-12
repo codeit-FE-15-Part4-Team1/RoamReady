@@ -66,5 +66,26 @@ export function DialogTrigger({ children }: DialogTriggerProps) {
     open();
   };
 
-  return <div onClick={handleClick}>{children}</div>;
+  /**
+   * 키보드 이벤트 핸들러
+   * 접근성을 위해 Enter 키와 Space 키로 Dialog 열기 기능 제공
+   */
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      open();
+    }
+  };
+
+  return (
+    <div
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      role='button'
+      tabIndex={0}
+      aria-label='Dialog 열기'
+    >
+      {children}
+    </div>
+  );
 }

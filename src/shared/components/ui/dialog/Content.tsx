@@ -373,6 +373,15 @@ export function DialogContent({ variant, children }: DialogContentProps) {
     e.stopPropagation();
   };
 
+  /**
+   * Content 키보드 이벤트 핸들러
+   * 접근성을 위해 키보드 이벤트도 처리합니다.
+   */
+  const handleContentKeyDown = (e: React.KeyboardEvent) => {
+    // 이벤트 전파 방지는 클릭 이벤트에서만 필요하므로 여기서는 아무것도 하지 않음
+    e.stopPropagation();
+  };
+
   // 3. 접근성 개선
   const handleCloseKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -407,6 +416,7 @@ export function DialogContent({ variant, children }: DialogContentProps) {
           role='dialog'
           aria-modal='true'
           onClick={handleContentClick}
+          onKeyDown={handleContentKeyDown}
         >
           {/* review variant에만 X 닫기 버튼 표시 */}
           {variant === 'review' && (

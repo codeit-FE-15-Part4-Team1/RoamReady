@@ -51,6 +51,20 @@ export function DialogOverlay({ children }: { children: ReactNode }) {
   };
 
   /**
+   * 키보드 이벤트 핸들러
+   * 접근성을 위해 Escape 키로 Dialog 닫기 기능 제공
+   */
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      // 로딩 중이거나 cancel variant일 때는 Escape 키로 닫기 차단
+      if (loading || variant === 'cancel') {
+        return;
+      }
+      close();
+    }
+  };
+
+  /**
    * variant별 스타일 설정
    * - complete: backdrop 없이 black/50만 적용
    * - cancel, review: backdrop blur 효과 적용
@@ -63,7 +77,14 @@ export function DialogOverlay({ children }: { children: ReactNode }) {
   );
 
   return (
-    <div className={overlayStyles} onClick={handleOverlayClick}>
+    <div
+      className={overlayStyles}
+      onClick={handleOverlayClick}
+      onKeyDown={handleKeyDown}
+      role='button'
+      tabIndex={0}
+      aria-label='Dialog 닫기'
+    >
       {children}
     </div>
   );
