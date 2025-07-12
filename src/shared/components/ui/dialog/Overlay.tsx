@@ -2,62 +2,68 @@
 
 import { ReactNode } from 'react';
 
-import { useDialogStore } from '@/shared/store/dialog.store';
+import { cn } from '@/shared/libs/cn';
 
 import { useDialogContext } from './Root';
 
 /**
- * Dialog 오버레이 컴포넌트
+ * Dialog Overlay 컴포넌트
  *
- * 모달 배경에 어두운 오버레이를 렌더링하여 콘텐츠를 강조하고
- * 클릭 시 모달을 닫는 기능을 제공합니다.
+ * Dialog 배경에 어두운 오버레이를 렌더링하여 콘텐츠를 강조하고
+ * 클릭 시 Dialog를 닫는 기능을 제공합니다.
+ * @internal 이 컴포넌트는 Dialog 내부에서만 사용되며 직접 사용하지 마세요.
  *
  * **주요 기능:**
  * - 반투명 배경 오버레이 (검은색 50% 투명도)
  * - 백드롭 블러 효과 적용
- * - 오버레이 클릭 시 모달 닫기 (백드롭 클릭)
- * - 전체 화면을 덮는 고정 위치 스타일
- *
- * **스타일 특징:**
- * - `fixed inset-0`: 전체 뷰포트를 덮음
- * - `bg-black/50`: 검은색 50% 투명도
- * - `backdrop-blur-md`: 배경 블러 효과
- *
- * **UX 고려사항:**
- * - 백드롭 클릭으로 모달을 닫을 수 있어 사용자 경험을 개선
- * - 모달 콘텐츠와 배경을 명확히 구분하여 집중도 향상
- *
- * @returns {JSX.Element} 오버레이 div 요소
+ * - 오버레이 클릭 시 Dialog 닫기 (백드롭 클릭)
+ * - 전체 화면을 덮는 fixed 스타일
+ * - Context API 기반 상태 관리
  *
  * @example
  * ```tsx
- * // DialogContent 내부에서 자동으로 렌더링됩니다
+ * // DialogPortal 내부에서 자동으로 렌더링됩니다
  * <DialogPortal>
- *   <DialogOverlay />
- *     <div className="modal-content">
- *   </div>
+ *   <DialogOverlay>
+ *   <div className="dialog-content">
+ *       ...
+ *     </div>
+ *   </DialogOverlay>
  * </DialogPortal>
  * ```
  *
- * @internal 이 컴포넌트는 Dialog 시스템 내부에서만 사용되며 직접 사용하지 마세요.
+ * @returns {JSX.Element} 오버레이 div 요소
  */
 export function DialogOverlay({ children }: { children: ReactNode }) {
-  const { modalId } = useDialogContext();
-  const { close } = useDialogStore();
+  const { close, loading, variant } = useDialogContext();
 
   /**
    * 오버레이 클릭 핸들러 (백드롭 클릭)
-   * 사용자가 모달 외부 영역을 클릭했을 때 모달을 닫습니다.
+   * 사용자가 Dialog 외부 영역을 클릭했을 때 Dialog를 닫습니다.
+   * 로딩 중일 때나 cancel variant일 때는 백드롭 클릭으로 닫기를 차단합니다.
    */
   const handleOverlayClick = () => {
-    close(modalId);
+    // 로딩 중이거나 cancel variant일 때는 백드롭 클릭으로 닫기 차단
+    if (loading || variant === 'cancel') {
+      return;
+    }
+    close();
   };
 
+  /**
+   * variant별 스타일 설정
+   * - complete: backdrop 없이 black/50만 적용
+   * - cancel, review: backdrop blur 효과 적용
+   */
+  const overlayStyles = cn(
+    'fixed inset-0 z-40 flex items-center justify-center bg-black/50',
+    variant === 'complete' || variant === 'review'
+      ? '' // backdrop 없음
+      : 'backdrop-blur-md', // backdrop blur 효과
+  );
+
   return (
-    <div
-      className='fixed inset-0 z-40 flex items-center justify-center bg-black/50 backdrop-blur-md'
-      onClick={handleOverlayClick}
-    >
+    <div className={overlayStyles} onClick={handleOverlayClick}>
       {children}
     </div>
   );
