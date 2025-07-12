@@ -45,7 +45,7 @@ interface HelperProps {
  * </Input.Root>
  * ```
  */
-function Helper({ children, className }: HelperProps) {
+export default function Helper({ children, className }: HelperProps) {
   const { isError, type, maxLength, currentLength } = useInputContext();
   const isTextArea = type === 'textarea';
   return (
@@ -76,5 +76,3 @@ function Helper({ children, className }: HelperProps) {
     </>
   );
 }
-
-export default Helper;

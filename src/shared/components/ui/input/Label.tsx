@@ -37,7 +37,7 @@ interface LabelProps {
  * </Input.Root>
  * ```
  */
-function Label({ children, className }: LabelProps) {
+export default function Label({ children, className }: LabelProps) {
   const { id, required } = useInputContext();
 
   return (
@@ -50,5 +50,3 @@ function Label({ children, className }: LabelProps) {
     </label>
   );
 }
-
-export default Label;

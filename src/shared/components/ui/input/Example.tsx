@@ -25,7 +25,7 @@ import Input from '.';
 export default function Example() {
   const [textValue, setTextValue] = useState('');
   const [textareaValue, setTextareaValue] = useState('');
-  const { previewUrl, handleFileChange } = useImagePreview();
+  const { file, previewUrl, handleFileChange } = useImagePreview();
   const group = 'rounded-lg border border-gray-300 px-20 py-15';
 
   return (
@@ -115,27 +115,28 @@ export default function Example() {
       {/* 이미지 업로드 예시 */}
       <div className='flex flex-col gap-3'>
         <h2 className='font-size-15 font-semibold'>File Input</h2>
-        <Input.Root id='file-example' type='file' className={group}>
+        <Input.Root
+          id='file-example'
+          type='file'
+          fileName={file?.name}
+          className={group}
+          handleFileChange={handleFileChange}
+          // fallbackMessage='이미지를 업로드하세요'
+        >
           <Input.Label>이미지</Input.Label>
-          <Input.Field
-            onChange={handleFileChange}
-            accept='image/*'
-            placeholder='이미지를 업로드하세요'
-          />
+          <Input.Trigger className='relative flex h-120 w-120 flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300'>
+            {previewUrl && (
+              <Image
+                src={previewUrl}
+                alt='Image preview'
+                fill
+                className='object-cover'
+              />
+            )}
+          </Input.Trigger>
+          <Input.Field accept='image/*' />
         </Input.Root>
       </div>
-
-      {/* 훅에서 제공하는 URL로 이미지 미리보기 렌더링 */}
-      {previewUrl && (
-        <div className='relative mt-4 h-100 w-100'>
-          <Image
-            src={previewUrl}
-            alt='Image preview'
-            fill
-            className='rounded-lg object-cover'
-          />
-        </div>
-      )}
 
       {/* 비활성화된 입력 예시 */}
       <div className='flex flex-col gap-3'>

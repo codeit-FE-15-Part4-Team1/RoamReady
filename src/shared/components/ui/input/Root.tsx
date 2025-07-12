@@ -48,7 +48,7 @@ interface RootProps extends InputContextProps {
  * </Input.Root>
  * ```
  */
-function Root({
+export default function Root({
   children,
   id,
   type,
@@ -60,6 +60,7 @@ function Root({
   handleFileChange,
   maxLength,
   currentLength,
+  fallbackMessage,
 }: RootProps) {
   return (
     <InputContext.Provider
@@ -73,6 +74,7 @@ function Root({
         handleFileChange,
         maxLength,
         currentLength,
+        fallbackMessage,
       }}
     >
       <div role='group' className={cn('flex flex-col gap-10', className)}>
@@ -81,5 +83,3 @@ function Root({
     </InputContext.Provider>
   );
 }
-
-export default Root;

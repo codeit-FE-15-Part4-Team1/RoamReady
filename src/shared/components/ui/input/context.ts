@@ -19,6 +19,7 @@ import {
  * @property {(e: ChangeEvent<HTMLInputElement>) => void} [handleFileChange] - 파일 업로드용 이벤트 핸들러
  * @property {number} [maxLength] - 입력 필드의 최대 길이 (textarea에 사용)
  * @property {number} [currentLength] - 현재 입력된 문자열의 길이 (textarea에 사용)
+ * @property {string} [fallbackMessage] - 파일 업로드 `Trigger`에 표시할 기본 안내 메시지 (ex. '이미지를 업로드하세요')
  */
 export interface InputContextProps {
   id: string;
@@ -30,6 +31,7 @@ export interface InputContextProps {
   handleFileChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   maxLength?: number;
   currentLength?: number;
+  fallbackMessage?: string;
 }
 
 /**

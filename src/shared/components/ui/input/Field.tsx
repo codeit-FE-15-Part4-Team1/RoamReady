@@ -54,17 +54,9 @@ interface FieldProps extends BaseFieldProps {
  * @example
  * <Example>과 test/input에서 다양한 입력 필드 예시를 확인할 수 있습니다.
  */
-function Field(props: FieldProps) {
-  const {
-    id,
-    type,
-    required,
-    disabled,
-    isError,
-    fileName,
-    handleFileChange,
-    maxLength,
-  } = useInputContext();
+export default function Field(props: FieldProps) {
+  const { id, type, required, disabled, isError, handleFileChange, maxLength } =
+    useInputContext();
   const baseStyle = cn(
     'cursor-pointer font-size-16 w-full rounded border rounded-2xl px-20 py-16',
     isError ? 'border-red' : 'border-gray-100',
@@ -97,28 +89,15 @@ function Field(props: FieldProps) {
 
   if (type === 'file') {
     return (
-      <label
-        htmlFor={id}
-        className={cn(
-          baseStyle,
-          'font-size-16',
-          'flex items-center',
-          !fileName ? 'text-gray-400' : 'text-gray-950',
-          className,
-        )}
-      >
-        <span>{fileName || placeholder || '파일을 선택하세요'}</span>
-
-        <input
-          id={id}
-          type='file'
-          required={required}
-          disabled={disabled}
-          onChange={handleFileChange}
-          className='hidden'
-          {...rest}
-        />
-      </label>
+      <input
+        id={id}
+        type='file'
+        required={required}
+        disabled={disabled}
+        onChange={handleFileChange}
+        className='hidden'
+        {...rest}
+      />
     );
   }
 
@@ -148,5 +127,3 @@ function Field(props: FieldProps) {
     </div>
   );
 }
-
-export default Field;
