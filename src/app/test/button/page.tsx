@@ -6,17 +6,28 @@ import { useState } from 'react';
 import Button from '@/shared/components/Button';
 export default function ButtonTestPage() {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleTimeSelect = (time: string) => {
     setSelectedTime(selectedTime === time ? null : time);
   };
 
-  const handleReservation = () => {
+  const handleReservation = async () => {
     if (selectedTime) {
+      setIsLoading(true);
+      // API 호출 시뮬레이션
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      setIsLoading(false);
       alert(`예약 완료: ${selectedTime}`);
     } else {
       alert('시간을 선택해주세요');
     }
+  };
+
+  const handleLoadingDemo = async () => {
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    setIsLoading(false);
   };
 
   return (
@@ -93,6 +104,70 @@ export default function ButtonTestPage() {
           </div>
         </div>
 
+        {/* Loading State */}
+        <div className='rounded-xl bg-white p-8 shadow-sm'>
+          <h2 className='mb-6 text-2xl font-semibold text-gray-900'>
+            Loading State
+          </h2>
+          <div className='space-y-6'>
+            <div>
+              <div className='mb-3 text-sm font-medium text-gray-700'>
+                다양한 variant별 loading 상태
+              </div>
+              <div className='flex flex-wrap gap-3'>
+                <Button loading>Default</Button>
+                <Button variant='outline' loading>
+                  Outline
+                </Button>
+                <Button variant='ghost' loading>
+                  Ghost
+                </Button>
+                <Button variant='primary' loading>
+                  Primary
+                </Button>
+              </div>
+            </div>
+
+            <div>
+              <div className='mb-3 text-sm font-medium text-gray-700'>
+                크기별 loading 상태
+              </div>
+              <div className='flex flex-wrap items-center gap-3'>
+                <Button size='small' loading>
+                  Small Loading
+                </Button>
+                <Button size='medium' loading>
+                  Medium Loading
+                </Button>
+                <Button size='large' loading>
+                  Large Loading
+                </Button>
+              </div>
+            </div>
+
+            <div>
+              <div className='mb-3 text-sm font-medium text-gray-700'>
+                Interactive Loading Demo
+              </div>
+              <div className='flex gap-3'>
+                <Button
+                  variant='primary'
+                  onClick={handleLoadingDemo}
+                  loading={isLoading}
+                >
+                  {isLoading ? '로딩 중...' : '3초 로딩 테스트'}
+                </Button>
+                <Button
+                  variant='outline'
+                  onClick={() => setIsLoading(!isLoading)}
+                >
+                  {isLoading ? '로딩 중지' : '로딩 시작'}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Time Selection Example */}
         <div className='rounded-xl bg-white p-8 shadow-sm'>
           <h2 className='mb-6 text-2xl font-semibold text-gray-900'>
@@ -125,9 +200,10 @@ export default function ButtonTestPage() {
                 variant='primary'
                 onClick={handleReservation}
                 disabled={!selectedTime}
+                loading={isLoading}
                 className='w-full'
               >
-                예약하기
+                {isLoading ? '예약 처리 중...' : '예약하기'}
               </Button>
             </div>
           </div>
@@ -176,7 +252,7 @@ export default function ButtonTestPage() {
         {/* AsChild + Disabled Combinations */}
         <div className='rounded-xl bg-white p-8 shadow-sm'>
           <h2 className='mb-6 text-2xl font-semibold text-gray-900'>
-            AsChild + Disabled 조합 (자동 처리)
+            AsChild + Disabled 조합
           </h2>
           <div className='grid gap-6 md:grid-cols-2'>
             {/* Next.js Link Examples */}
@@ -281,12 +357,13 @@ export default function ButtonTestPage() {
             </h4>
             <ul className='space-y-1 text-sm text-blue-800'>
               <li>
-                • <code>disabled</code> prop만 전달하면 자동으로 처리됩니다
+                • <code>disabled</code> 또는 <code>loading</code> prop만
+                전달하면 자동으로 처리됩니다
               </li>
               <li>• 링크 이동과 onClick 핸들러 모두 자동으로 방지됩니다</li>
               <li>
-                • <code>aria-disabled</code> 속성은 사용자가 직접 추가해야
-                합니다
+                • <code>aria-disabled</code> 및 <code>aria-busy</code> 속성은
+                사용자가 직접 추가해야 합니다
               </li>
               <li>
                 • 수동으로 preventDefault나 조건부 처리를 할 필요가 없습니다
