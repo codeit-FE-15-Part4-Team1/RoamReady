@@ -1,7 +1,9 @@
 'use client';
 
 import { ReactNode } from 'react';
+
 import { useDialogStore } from '@/shared/store/dialog.store';
+
 import { useDialogContext } from './Root';
 
 /**
