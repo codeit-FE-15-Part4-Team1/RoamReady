@@ -20,7 +20,7 @@ export default function AuthMenu() {
         <div className='h-30 w-30 rounded-full bg-black' />
 
         {/* 유저 이름 */}
-        <span className='text-14'>닉네임</span>
+        <span className='font-size-14'>닉네임</span>
       </div>
     </div>
   );

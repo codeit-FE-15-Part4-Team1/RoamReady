@@ -11,7 +11,7 @@ import { ROUTES } from '@/shared/constants/route';
  */
 export default function GuestMenu() {
   return (
-    <div className='text-14 flex cursor-pointer gap-20 font-medium'>
+    <div className='font-size-14 flex cursor-pointer gap-20 font-medium'>
       <Link href={ROUTES.Login} className='hover:text-gray-200'>
         로그인
       </Link>
