@@ -1,7 +1,8 @@
 'use client';
 
-import Dropdown from '@/shared/components/ui/dropdown';
 import { EllipsisVertical } from 'lucide-react';
+
+import Dropdown from '@/shared/components/ui/dropdown';
 
 export default function DropdownTestPage() {
   return (
