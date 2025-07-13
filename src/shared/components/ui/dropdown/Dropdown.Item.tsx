@@ -70,6 +70,7 @@ export default function DropdownItem({
         )}
         type='button'
         onClick={handleClick}
+        tabIndex={-1}
       >
         {children}
       </button>
