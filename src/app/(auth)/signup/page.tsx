@@ -1,3 +1,84 @@
-export default function SignupPage() {
-  return <div>SignupPage</div>;
+'use client';
+import Link from 'next/link';
+
+import Kakao from '@/shared/assets/images/kakao-btn-sm.svg';
+import Logo from '@/shared/assets/logos/logo-symbol.svg';
+import LogoText from '@/shared/assets/logos/logo-text-oneline.svg';
+import Button from '@/shared/components/Button';
+import Input from '@/shared/components/ui/input';
+
+export default function SignUpPage() {
+  return (
+    <div className='font-size-16 flex w-full max-w-640 flex-col items-center justify-center gap-30'>
+      <div className='flex flex-col items-center gap-23'>
+        <Logo className='text-brand-2 h-144 w-144' />
+        <LogoText className='text-brand-2 h-31 w-255' />
+      </div>
+
+      <form className='flex w-full flex-col gap-20'>
+        <Input.Root id='email' type='email'>
+          <Input.Label>이메일</Input.Label>
+          <Input.Field
+            id='email'
+            type='email'
+            placeholder='이메일 주소를 작성해주세요'
+          />
+        </Input.Root>
+
+        <Input.Root id='username' type='email'>
+          <Input.Label>닉네임</Input.Label>
+          <Input.Field
+            id='username'
+            type='text'
+            placeholder='닉네임을 작성해주세요'
+          />
+        </Input.Root>
+
+        <Input.Root id='password' type='password'>
+          <Input.Label>비밀번호</Input.Label>
+          <Input.Field
+            id='password'
+            type='password'
+            placeholder='비밀번호를 작성해주세요'
+          />
+        </Input.Root>
+
+        <Button
+          type='submit'
+          variant='primary'
+          size='large'
+          className='mt-10 w-full'
+          // loading={isSubmitting}
+        >
+          로그인
+        </Button>
+      </form>
+
+      <div className='relative flex w-full items-center'>
+        <div className='w-full border-t border-gray-100' />
+        <span className='text-gray-550 absolute left-1/2 -translate-x-1/2 bg-white px-7.5'>
+          or
+        </span>
+      </div>
+
+      <Button
+        variant='primary'
+        size='large'
+        className='bg-kakao hover:bg-kakao/80 w-full'
+      >
+        <div className='relative flex w-full items-center justify-center gap-0.5'>
+          <Kakao className='h-24 w-24' />
+          <span className='text-gray-700'>카카오 로그인</span>
+        </div>
+      </Button>
+
+      <div className='flex justify-center gap-4'>
+        <span>아직 계정이 없으신가요?</span>
+        {/* //! 경로 상수화 */}
+        <Link href='/signup' className='text-brand-2 hover:underline'>
+          회원가입
+        </Link>
+      </div>
+    </div>
+  );
 }

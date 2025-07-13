@@ -57,8 +57,16 @@ interface FieldProps extends BaseFieldProps {
  * <Example>과 test/input에서 다양한 입력 필드 예시를 확인할 수 있습니다.
  */
 export default function Field(props: FieldProps) {
-  const { id, type, required, disabled, isError, handleFileChange, maxLength } =
-    useInputContext();
+  const {
+    id,
+    type,
+    required,
+    disabled,
+    isError,
+    handleFileChange,
+    maxLength,
+    isPasswordVisible,
+  } = useInputContext();
   const baseStyle = cn(
     'cursor-pointer font-size-16 w-full rounded border rounded-2xl px-20 py-16',
     isError ? 'border-red' : 'border-gray-100',
@@ -72,6 +80,8 @@ export default function Field(props: FieldProps) {
     value,
     ...rest
   } = props;
+
+  const inputType = type === 'password' && isPasswordVisible ? 'text' : type;
 
   if (type === 'textarea') {
     return (
@@ -112,7 +122,7 @@ export default function Field(props: FieldProps) {
       )}
       <input
         id={id}
-        type={type}
+        type={inputType}
         placeholder={placeholder}
         required={required}
         disabled={disabled}
