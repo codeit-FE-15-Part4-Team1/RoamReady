@@ -1,6 +1,7 @@
 'use client';
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useEffect } from 'react';
 
 import { cn } from '@/shared/libs/cn';
 
@@ -51,6 +52,20 @@ export default function Pagination({
   pageRange = 5,
   className,
 }: PaginationProps) {
+  // 키보드 방향키 접근성: ← → 키로 페이지 전환
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft' && currentPage > 1) {
+        onPageChange(currentPage - 1);
+      } else if (e.key === 'ArrowRight' && currentPage < totalPages) {
+        onPageChange(currentPage + 1);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentPage, totalPages, onPageChange]);
+
   // 입력값 검증
   if (totalPages < 1) {
     throw new Error('totalPages는 최소 1 이상이어야 합니다');
