@@ -18,39 +18,38 @@ export default function SignUpPage() {
       <form className='flex w-full flex-col gap-20'>
         <Input.Root id='email' type='email'>
           <Input.Label>이메일</Input.Label>
-          <Input.Field
-            id='email'
-            type='email'
-            placeholder='이메일 주소를 작성해주세요'
-          />
+          <Input.Field placeholder='이메일 주소를 작성해주세요' />
         </Input.Root>
 
-        <Input.Root id='username' type='email'>
+        <Input.Root id='username' type='text'>
           <Input.Label>닉네임</Input.Label>
-          <Input.Field
-            id='username'
-            type='text'
-            placeholder='닉네임을 작성해주세요'
-          />
+          <Input.Field placeholder='닉네임을 작성해주세요' />
         </Input.Root>
 
         <Input.Root id='password' type='password'>
           <Input.Label>비밀번호</Input.Label>
           <Input.Field
-            id='password'
-            type='password'
-            placeholder='비밀번호를 작성해주세요'
+            placeholder='비밀번호를 입력해주세요'
+            rightIcon={<Input.Trigger triggerType='password-toggle' />}
+          />
+        </Input.Root>
+
+        <Input.Root id='password-confirm' type='password'>
+          <Input.Label>비밀번호 확인</Input.Label>
+          <Input.Field
+            placeholder='비밀번호를 다시 입력해주세요'
+            rightIcon={<Input.Trigger triggerType='password-toggle' />}
           />
         </Input.Root>
 
         <Button
           type='submit'
           variant='primary'
-          size='large'
-          className='mt-10 w-full'
+          size='small'
+          className='mt-10 w-full py-17.5'
           // loading={isSubmitting}
         >
-          로그인
+          회원가입
         </Button>
       </form>
 
@@ -63,20 +62,20 @@ export default function SignUpPage() {
 
       <Button
         variant='primary'
-        size='large'
-        className='bg-kakao hover:bg-kakao/80 w-full'
+        size='small'
+        className='bg-kakao hover:bg-kakao/80 w-full py-17.5'
       >
         <div className='relative flex w-full items-center justify-center gap-0.5'>
           <Kakao className='h-24 w-24' />
-          <span className='text-gray-700'>카카오 로그인</span>
+          <span className='text-gray-700'>카카오 회원가입</span>
         </div>
       </Button>
 
       <div className='flex justify-center gap-4'>
-        <span>아직 계정이 없으신가요?</span>
+        <span className='text-gray-400'>이미 회원이신가요?</span>
         {/* //! 경로 상수화 */}
-        <Link href='/signup' className='text-brand-2 hover:underline'>
-          회원가입
+        <Link href='/signin' className='text-brand-2 hover:underline'>
+          로그인
         </Link>
       </div>
     </div>

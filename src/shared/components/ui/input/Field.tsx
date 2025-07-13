@@ -68,7 +68,7 @@ export default function Field(props: FieldProps) {
     isPasswordVisible,
   } = useInputContext();
   const baseStyle = cn(
-    'cursor-pointer font-size-16 w-full rounded border rounded-2xl px-20 py-16',
+    'cursor-pointer font-size-16 w-full rounded border rounded-2xl px-20 py-17.5',
     isError ? 'border-red' : 'border-gray-100',
   );
   const {

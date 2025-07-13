@@ -33,27 +33,22 @@ export default function SignInPage() {
       <form className='flex w-full flex-col gap-20'>
         <Input.Root id='email' type='email'>
           <Input.Label>이메일</Input.Label>
-          <Input.Field
-            id='email'
-            type='email'
-            placeholder='이메일 주소를 작성해주세요'
-          />
+          <Input.Field placeholder='이메일 주소를 작성해주세요' />
         </Input.Root>
 
         <Input.Root id='password' type='password'>
           <Input.Label>비밀번호</Input.Label>
           <Input.Field
-            id='password'
-            type='password'
-            placeholder='비밀번호를 작성해주세요'
+            placeholder='비밀번호를 입력해주세요'
+            rightIcon={<Input.Trigger triggerType='password-toggle' />}
           />
         </Input.Root>
 
         <Button
           type='submit'
           variant='primary'
-          size='large'
-          className='mt-10 w-full'
+          size='small'
+          className='mt-10 w-full py-17.5'
           // loading={isSubmitting}
         >
           <span>로그인</span>
@@ -69,8 +64,8 @@ export default function SignInPage() {
 
       <Button
         variant='primary'
-        size='large'
-        className='bg-kakao hover:bg-kakao/80 w-full'
+        size='small'
+        className='bg-kakao hover:bg-kakao/80 w-full py-17.5'
       >
         <div className='relative flex w-full items-center justify-center gap-0.5'>
           <Kakao className='h-24 w-24' />
