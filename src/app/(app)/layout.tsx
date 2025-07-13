@@ -1,7 +1,16 @@
 import { ReactNode } from 'react';
 
-import LayoutWrapper from '../_components/LayoutWrapper';
+import Footer from '@/shared/components/layouts/footer/Footer';
+import Header from '@/shared/components/layouts/header/Header';
 
 export default function AppLayout({ children }: { children: ReactNode }) {
-  return <LayoutWrapper hasFullLayout>{children}</LayoutWrapper>;
+  return (
+    <div className='flex min-h-screen flex-col justify-between'>
+      <Header />
+      <div className='tablet:px-32 desktop:px-40 desktop:text-40 text-14 mx-auto max-w-1200 px-24'>
+        {children}
+      </div>
+      <Footer />
+    </div>
+  );
 }
