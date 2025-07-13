@@ -11,12 +11,14 @@ import { cn } from '@/shared/libs/cn';
  * @property totalPages - 전체 페이지 수
  * @property onPageChange - 페이지 변경 시 호출되는 콜백 함수
  * @property pageRange - 보여줄 페이지 버튼의 수 (기본값: 5)
+ * @property className - 페이지 버튼 추가적인 커스터마이징 스타일을 위한 클래스 이름
  */
 type PaginationProps = {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
   pageRange?: number; // default: 5
+  className?: string;
 };
 
 /**
@@ -47,7 +49,19 @@ export default function Pagination({
   totalPages,
   onPageChange,
   pageRange = 5,
+  className,
 }: PaginationProps) {
+  // 입력값 검증
+  if (totalPages < 1) {
+    throw new Error('totalPages는 최소 1 이상이어야 합니다');
+  }
+  if (currentPage < 1 || currentPage > totalPages) {
+    throw new Error(`currentPage는 1과 ${totalPages} 사이의 값이어야 합니다`);
+  }
+  if (pageRange < 1) {
+    throw new Error('pageRange는 최소 1 이상이어야 합니다');
+  }
+
   const generatePages = () => {
     const pages: (number | 'dots')[] = [];
 
@@ -58,16 +72,22 @@ export default function Pagination({
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
 
-    const startThreshold = 3;
-    const endThreshold = totalPages - 2;
+    const halfRange = Math.floor(pageRange / 2);
+    const startThreshold = halfRange + 1;
+    const endThreshold = totalPages - halfRange;
 
     if (currentPage <= startThreshold) {
       // 앞쪽에 있을 경우
-      pages.push(1, 2, 3, 4, 5, 'dots', totalPages);
+      for (let i = 1; i <= pageRange; i++) {
+        pages.push(i);
+      }
+      if (totalPages > pageRange) {
+        pages.push('dots', totalPages);
+      }
     } else if (currentPage >= endThreshold) {
       // 뒤쪽에 있을 경우
       pages.push(1, 'dots');
-      for (let i = totalPages - 4; i <= totalPages; i++) {
+      for (let i = totalPages - (pageRange - 1); i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
@@ -107,7 +127,7 @@ export default function Pagination({
           page === 'dots' ? (
             <div
               key={`dots-${i}`}
-              className='text-15 text-center text-gray-400 select-none'
+              className='font-size-15 text-center text-gray-400 select-none'
               aria-hidden
             >
               ...
@@ -120,7 +140,8 @@ export default function Pagination({
                 'flex h-24 w-24 cursor-pointer items-center justify-center text-[15px]',
                 page === currentPage
                   ? 'border-brand-2 border-b-2 font-bold text-gray-950'
-                  : 'text-gray-400 hover:text-gray-950',
+                  : 'hover:border-brand-2 text-gray-400 hover:border-b-2 hover:text-gray-950',
+                className,
               )}
               aria-label={`${page}페이지`}
             >
