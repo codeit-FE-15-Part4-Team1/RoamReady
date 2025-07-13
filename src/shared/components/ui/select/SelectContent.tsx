@@ -41,7 +41,7 @@ export default function SelectContent({
       {isOpen && (
         <div
           className={cn(
-            'absolute top-full right-0 left-0 z-100 mt-1 max-h-[30rem] max-w-[40rem] overflow-y-auto rounded border bg-white shadow-lg transition-all duration-300',
+            'absolute top-full right-0 left-0 z-100 mt-1 max-h-[30rem] overflow-y-auto rounded border bg-white shadow-lg transition-all duration-300',
             className,
           )}
         >
