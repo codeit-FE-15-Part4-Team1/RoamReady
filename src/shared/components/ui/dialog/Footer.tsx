@@ -114,7 +114,6 @@ export function DialogFooter({ children, variant }: DialogFooterProps) {
     loadingButtonIndex,
     setLoading,
     setLoadingButtonIndex,
-    setError,
   } = useDialogContext();
   const footerClassName = cn(FOOTER_VARIANT_STYLES[variant]);
 
@@ -134,7 +133,6 @@ export function DialogFooter({ children, variant }: DialogFooterProps) {
         if (originalOnClick) {
           setLoading(true);
           setLoadingButtonIndex(buttonIndex);
-          setError(null);
 
           // 원래 onClick 함수 실행
           const result = originalOnClick(event);
@@ -148,13 +146,8 @@ export function DialogFooter({ children, variant }: DialogFooterProps) {
         // 성공시 자동으로 Dialog 닫기 (핸들러가 없어도 닫힘)
         close();
       } catch (error: unknown) {
-        // 실패시 에러 메시지 설정, Dialog는 열어둠
+        // 실패시 에러 로깅, Dialog는 열어둠
         console.error('Dialog 작업 오류:', error);
-        const errorMessage =
-          error instanceof Error
-            ? error.message
-            : '작업 처리 중 오류가 발생했습니다.';
-        setError(errorMessage);
       } finally {
         setLoading(false);
         setLoadingButtonIndex(-1);
@@ -208,6 +201,7 @@ export function DialogFooter({ children, variant }: DialogFooterProps) {
         ),
         disabled: isDisabled,
         'aria-disabled': isDisabled,
+        'aria-busy': loading && loadingButtonIndex === index,
         children: getButtonContent(element.props.children, index),
       });
     }
