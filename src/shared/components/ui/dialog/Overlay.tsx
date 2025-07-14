@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { KeyboardEvent, ReactNode } from 'react';
 
 import { cn } from '@/shared/libs/cn';
 
@@ -54,7 +54,7 @@ export function DialogOverlay({ children }: { children: ReactNode }) {
    * 키보드 이벤트 핸들러
    * 접근성을 위해 Escape 키로 Dialog 닫기 기능 제공
    */
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLElement>) => {
     if (e.key === 'Escape') {
       // 로딩 중이거나 cancel variant일 때는 Escape 키로 닫기 차단
       if (loading || variant === 'cancel') {
