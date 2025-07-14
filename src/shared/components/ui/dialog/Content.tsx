@@ -161,9 +161,17 @@ export function DialogContent({ variant, children }: DialogContentProps) {
      * 즉시 사용 가능하지 않을 수 있어 재귀적으로 대기합니다.
      */
     const waitForDialog = () => {
+      const maxRetry = 100; // 1초 제한 (100 * 10ms)
+      let retryCount = 0;
+
       const dialog = dialogRef.current;
       if (!dialog) {
+        if (retryCount >= maxRetry) {
+          console.error('Dialog DOM 마운트 대기 시간 초과');
+          return;
+        }
         setTimeout(waitForDialog, 10); // 10ms 후 재시도
+        retryCount++;
         return;
       }
 
