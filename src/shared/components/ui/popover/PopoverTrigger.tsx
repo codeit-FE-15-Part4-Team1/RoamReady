@@ -1,4 +1,6 @@
 'use client';
+import { ReactNode } from 'react';
+
 import { cn } from '@/shared/libs/cn';
 
 import { usePopover } from './usePopover';
@@ -12,7 +14,7 @@ import { usePopover } from './usePopover';
 interface PopoverTriggerProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /** 트리거 버튼 내부에 표시될 컨텐츠 */
-  children: React.ReactNode;
+  children: ReactNode;
   /**
    * 추가 CSS 클래스명 (기본 스타일과 병합됨)
    * @optional

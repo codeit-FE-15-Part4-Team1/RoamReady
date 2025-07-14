@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { ReactNode, useEffect, useLayoutEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { cn } from '@/shared/libs/cn';
@@ -37,7 +37,7 @@ type PopoverPosition =
  */
 interface PopoverContentProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Popover 내부에 표시될 컨텐츠 */
-  children: React.ReactNode;
+  children: ReactNode;
   /**
    * Popover가 표시될 위치
    * @default 'bottom-center'
