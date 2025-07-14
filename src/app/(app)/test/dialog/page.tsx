@@ -54,7 +54,7 @@ function CancelDialogContent() {
       </p>
       <Dialog.Footer variant='cancel'>
         <button
-          className='aria- flex-1 rounded-[8px] bg-gray-100 px-[16px] py-[12px] text-[14px] font-medium text-gray-700 transition-colors hover:bg-gray-200 disabled:opacity-50 disabled:hover:bg-gray-100 aria-disabled:opacity-50 aria-disabled:hover:bg-gray-100 md:text-[16px]'
+          className='flex-1 rounded-[8px] bg-gray-100 px-[16px] py-[12px] text-[14px] font-medium text-gray-700 transition-colors hover:bg-gray-200 disabled:opacity-50 disabled:hover:bg-gray-100 aria-disabled:opacity-50 aria-disabled:hover:bg-gray-100 md:text-[16px]'
           onClick={() => {
             console.log('취소됨');
           }}
@@ -62,7 +62,7 @@ function CancelDialogContent() {
           취소
         </button>
         <button
-          className='bg-red hover:bg-red/90 disabled:hover:bg-red aria-disabled:hover:bg-red aria- flex-1 rounded-[8px] px-[16px] py-[12px] text-[14px] font-medium text-white transition-colors disabled:opacity-50 aria-disabled:opacity-50 md:text-[16px]'
+          className='bg-red hover:bg-red/90 disabled:hover:bg-red aria-disabled:hover:bg-red flex-1 rounded-[8px] px-[16px] py-[12px] text-[14px] font-medium text-white transition-colors disabled:opacity-50 aria-disabled:opacity-50 md:text-[16px]'
           onClick={async () => {
             await simulateAsyncSuccess('계정 삭제', 1500);
           }}
@@ -107,7 +107,7 @@ function ReviewDialogContent() {
 
       <Dialog.Footer variant='review'>
         <button
-          className='bg-brand-2 hover:bg-brand-2/90 disabled:hover:bg-brand-2 aria-disabled:hover:bg-brand-2 aria- w-full rounded-[8px] px-[16px] py-[12px] text-[14px] font-medium text-white transition-colors disabled:opacity-50 aria-disabled:opacity-50 md:text-[16px]'
+          className='bg-brand-2 hover:bg-brand-2/90 disabled:hover:bg-brand-2 aria-disabled:hover:bg-brand-2 w-full rounded-[8px] px-[16px] py-[12px] text-[14px] font-medium text-white transition-colors disabled:opacity-50 aria-disabled:opacity-50 md:text-[16px]'
           onClick={async () => {
             await simulateAsyncSuccess('리뷰 제출', 1500);
           }}
@@ -131,7 +131,7 @@ function AsyncSuccessDialogContent() {
       </p>
       <Dialog.Footer variant='complete'>
         <button
-          className='aria- w-[130px] rounded-[8px] bg-green-500 px-[16px] py-[12px] text-[14px] font-medium text-white transition-colors hover:bg-green-600 disabled:opacity-50 disabled:hover:bg-green-500 aria-disabled:opacity-50 aria-disabled:hover:bg-green-500 md:w-[160px] md:text-[16px]'
+          className='w-[130px] rounded-[8px] bg-green-500 px-[16px] py-[12px] text-[14px] font-medium text-white transition-colors hover:bg-green-600 disabled:opacity-50 disabled:hover:bg-green-500 aria-disabled:opacity-50 aria-disabled:hover:bg-green-500 md:w-[160px] md:text-[16px]'
           onClick={async () => {
             await simulateAsyncSuccess('비동기 작업 성공', 2000);
           }}
@@ -154,7 +154,7 @@ function AsyncFailureDialogContent() {
       </p>
       <Dialog.Footer variant='complete'>
         <button
-          className='aria- w-[130px] rounded-[8px] bg-red-500 px-[16px] py-[12px] text-[14px] font-medium text-white transition-colors hover:bg-red-600 disabled:opacity-50 disabled:hover:bg-red-500 aria-disabled:opacity-50 aria-disabled:hover:bg-red-500 md:w-[160px] md:text-[16px]'
+          className='w-[130px] rounded-[8px] bg-red-500 px-[16px] py-[12px] text-[14px] font-medium text-white transition-colors hover:bg-red-600 disabled:opacity-50 disabled:hover:bg-red-500 aria-disabled:opacity-50 aria-disabled:hover:bg-red-500 md:w-[160px] md:text-[16px]'
           onClick={async () => {
             await simulateAsyncFailure('비동기 작업 실패', 2000);
           }}
@@ -177,7 +177,7 @@ function SyncDialogContent() {
       </p>
       <Dialog.Footer variant='complete'>
         <button
-          className='aria- w-[130px] rounded-[8px] bg-blue-500 px-[16px] py-[12px] text-[14px] font-medium text-white transition-colors hover:bg-blue-600 disabled:opacity-50 disabled:hover:bg-blue-500 aria-disabled:opacity-50 aria-disabled:hover:bg-blue-500 md:w-[160px] md:text-[16px]'
+          className='w-[130px] rounded-[8px] bg-blue-500 px-[16px] py-[12px] text-[14px] font-medium text-white transition-colors hover:bg-blue-600 disabled:opacity-50 disabled:hover:bg-blue-500 aria-disabled:opacity-50 aria-disabled:hover:bg-blue-500 md:w-[160px] md:text-[16px]'
           onClick={() => {
             console.log('✅ 동기 작업 즉시 완료');
           }}
@@ -197,7 +197,7 @@ function Code({ children }: { children: ReactNode }) {
   );
 }
 
-export default function page() {
+export default function DialogTestPage() {
   return (
     <main className='flex min-h-screen flex-col gap-20 p-24'>
       {/* 헤더 */}
