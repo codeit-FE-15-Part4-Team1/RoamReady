@@ -64,7 +64,7 @@ export default function SignInPage() {
 
       <Button
         variant='primary'
-        size='small'
+        size='large'
         className='bg-kakao hover:bg-kakao/80 w-full py-17.5'
       >
         <div className='relative flex w-full items-center justify-center gap-0.5'>

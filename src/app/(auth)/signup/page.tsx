@@ -45,7 +45,7 @@ export default function SignUpPage() {
         <Button
           type='submit'
           variant='primary'
-          size='small'
+          size='large'
           className='mt-10 w-full py-17.5'
           // loading={isSubmitting}
         >
