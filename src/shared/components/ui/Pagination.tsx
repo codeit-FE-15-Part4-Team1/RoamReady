@@ -124,6 +124,7 @@ export default function Pagination({
       <div className='mx-auto grid auto-cols-[40px] grid-flow-col items-center gap-5'>
         {/* 이전 페이지 버튼 */}
         <button
+          type='button'
           disabled={currentPage === 1}
           onClick={() => onPageChange(currentPage - 1)}
           className={cn(
@@ -149,6 +150,7 @@ export default function Pagination({
             </div>
           ) : (
             <button
+              type='button'
               key={page}
               onClick={() => onPageChange(page)}
               className={cn(
@@ -167,6 +169,7 @@ export default function Pagination({
 
         {/* 다음 페이지 버튼 */}
         <button
+          type='button'
           disabled={currentPage === totalPages}
           onClick={() => onPageChange(currentPage + 1)}
           className={cn(
