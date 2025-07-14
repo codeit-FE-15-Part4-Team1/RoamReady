@@ -1,5 +1,5 @@
 import type { NextConfig } from 'next';
-import type { RuleSetRule } from 'webpack';
+import type { RuleSetCondition,RuleSetRule } from 'webpack';
 
 const pageExtensions = ['tsx', 'ts', 'jsx', 'js'];
 
@@ -26,9 +26,26 @@ const nextConfig: NextConfig = {
   },
 
   webpack(config) {
-    const fileLoaderRule = config.module.rules.find((rule: RuleSetRule) =>
-      rule.test?.toString().includes('.svg'),
-    );
+    const fileLoaderRule = config.module.rules.find(
+      (rule: RuleSetRule) =>
+        rule.test instanceof RegExp && rule.test.test('.svg'),
+    ) as RuleSetRule | undefined;
+
+    if (!fileLoaderRule) return config;
+
+    // resourceQuery가 객체이고 'not' 속성이 있는지 확인
+    const query = fileLoaderRule.resourceQuery;
+    let existingNotConditions: RuleSetCondition[] = [];
+
+    if (typeof query === 'object' && query !== null && 'not' in query) {
+      const not = (query as { not?: RuleSetCondition | RuleSetCondition[] })
+        .not;
+      if (Array.isArray(not)) {
+        existingNotConditions = not;
+      } else if (not) {
+        existingNotConditions = [not];
+      }
+    }
 
     config.module.rules.push(
       {
@@ -38,14 +55,9 @@ const nextConfig: NextConfig = {
       },
       {
         test: /\.svg$/i,
-        issuer: fileLoaderRule?.issuer,
+        issuer: fileLoaderRule.issuer,
         resourceQuery: {
-          not: [
-            ...(Array.isArray(fileLoaderRule?.resourceQuery?.not)
-              ? fileLoaderRule.resourceQuery.not
-              : []),
-            /url/,
-          ],
+          not: [...existingNotConditions, /url/],
         },
         use: [
           {
@@ -59,9 +71,7 @@ const nextConfig: NextConfig = {
       },
     );
 
-    if (fileLoaderRule) {
-      fileLoaderRule.exclude = /\.svg$/i;
-    }
+    fileLoaderRule.exclude = /\.svg$/i;
 
     return config;
   },
