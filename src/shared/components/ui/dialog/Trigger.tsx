@@ -1,6 +1,16 @@
 'use client';
 
-import { ReactNode } from 'react';
+import {
+  cloneElement,
+  isValidElement,
+  KeyboardEvent,
+  MouseEvent,
+  ReactElement,
+  ReactNode,
+  useCallback,
+} from 'react';
+
+import { cn } from '@/shared/libs/cn';
 
 import { useDialogContext } from './Root';
 
@@ -10,6 +20,25 @@ import { useDialogContext } from './Root';
 interface DialogTriggerProps {
   /** 트리거로 사용될 자식 요소 (버튼, 링크, 카드 등) */
   children: ReactNode;
+  /** 비활성화 여부 */
+  disabled?: boolean;
+  /** 클래스 이름 */
+  className?: string;
+}
+
+/**
+ * 클릭 가능한 요소의 기본 props 타입
+ */
+interface ClickableElementProps {
+  onClick?: (event: MouseEvent<HTMLElement>) => void;
+  onKeyDown?: (event: KeyboardEvent<HTMLElement>) => void;
+  role?: string;
+  tabIndex?: number;
+  'aria-label'?: string;
+  'aria-haspopup'?: string;
+  'aria-expanded'?: boolean;
+  disabled?: boolean;
+  className?: string;
 }
 
 /**
@@ -22,15 +51,20 @@ interface DialogTriggerProps {
  * **주요 기능:**
  * - 자동 상태 관리 (컨텍스트에서 가져옴)
  * - 클릭 이벤트 자동 연결
+ * - 기존 이벤트 핸들러 보존 및 합성
  * - 임의의 자식 요소를 트리거로 사용 가능
  * - Context API를 통한 상태 관리
+ * - 성능 최적화된 이벤트 핸들러
  *
  * **접근성 고려사항:**
- * - 자식 요소가 적절한 ARIA 속성을 가지도록 해야 합니다
+ * - aria-haspopup="dialog" 자동 추가
+ * - aria-expanded로 dialog 상태 표시
+ * - 기존 ARIA 속성 보존
  * - 키보드 접근이 가능한 요소(button, a 등)를 children으로 사용하는 것을 권장합니다
  *
  * @param props - DialogTrigger 컴포넌트의 props
  * @param props.children - 트리거로 사용될 자식 요소
+ * @param props.disabled - 비활성화 여부 (선택사항)
  *
  * @example
  * ```tsx
@@ -55,37 +89,93 @@ interface DialogTriggerProps {
  * </Dialog.Trigger>
  * ```
  */
-export function DialogTrigger({ children }: DialogTriggerProps) {
-  const { open } = useDialogContext();
+export function DialogTrigger({
+  children,
+  disabled = false,
+  className,
+}: DialogTriggerProps) {
+  const { open, isOpen } = useDialogContext();
 
   /**
    * 트리거 클릭 핸들러
    * 컨텍스트에서 가져온 open 함수를 사용하여 Dialog를 엽니다.
+   * 기존 onClick 핸들러가 있다면 함께 실행합니다.
    */
-  const handleClick = () => {
-    open();
-  };
+  const handleClick = useCallback(
+    (originalHandler?: (event: MouseEvent<HTMLElement>) => void) =>
+      (event: MouseEvent<HTMLElement>) => {
+        if (disabled) return;
+
+        // 기존 핸들러가 있다면 먼저 실행
+        originalHandler?.(event);
+
+        // event가 취소되지 않았다면 dialog 열기
+        if (!event.defaultPrevented) {
+          open();
+        }
+      },
+    [open, disabled],
+  );
 
   /**
    * 키보드 이벤트 핸들러
    * 접근성을 위해 Enter 키와 Space 키로 Dialog 열기 기능 제공
+   * 기존 onKeyDown 핸들러가 있다면 함께 실행합니다.
    */
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      open();
-    }
-  };
+  const handleKeyDown = useCallback(
+    (originalHandler?: (event: KeyboardEvent<HTMLElement>) => void) =>
+      (event: KeyboardEvent<HTMLElement>) => {
+        if (disabled) return;
 
+        // 기존 핸들러가 있다면 먼저 실행
+        originalHandler?.(event);
+
+        // event가 취소되지 않았고 적절한 키가 눌렸다면 dialog 열기
+        if (
+          !event.defaultPrevented &&
+          (event.key === 'Enter' || event.key === ' ')
+        ) {
+          event.preventDefault();
+          open();
+        }
+      },
+    [open, disabled],
+  );
+
+  // React 요소인 경우 props를 복제하여 이벤트 핸들러 추가
+  if (isValidElement(children)) {
+    const element = children as ReactElement<ClickableElementProps>;
+    const existingOnClick = element.props.onClick;
+    const existingOnKeyDown = element.props.onKeyDown;
+    const existingRole = element.props.role;
+    const existingAriaLabel = element.props['aria-label'];
+
+    return cloneElement(element, {
+      onClick: handleClick(existingOnClick),
+      onKeyDown: handleKeyDown(existingOnKeyDown),
+      role: existingRole || 'button',
+      tabIndex: element.props.tabIndex ?? 0,
+      'aria-label': existingAriaLabel || 'Dialog 열기',
+      'aria-haspopup': 'dialog',
+      'aria-expanded': isOpen,
+      disabled: disabled || element.props.disabled,
+    });
+  }
+
+  // React 요소가 아닌 경우 button으로 래핑
   return (
-    <div
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
+    <button
+      onClick={handleClick()}
+      onKeyDown={handleKeyDown()}
       role='button'
-      tabIndex={0}
+      tabIndex={disabled ? -1 : 0}
       aria-label='Dialog 열기'
+      aria-haspopup='dialog'
+      aria-expanded={isOpen}
+      aria-disabled={disabled}
+      className={cn(disabled && 'cursor-not-allowed opacity-60', className)}
     >
       {children}
-    </div>
+    </button>
   );
 }
