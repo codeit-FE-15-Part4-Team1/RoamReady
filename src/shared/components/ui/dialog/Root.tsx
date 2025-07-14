@@ -24,16 +24,12 @@ interface DialogContextValue {
   loading: boolean;
   /** 현재 로딩 중인 버튼의 인덱스 (-1은 로딩 중인 버튼 없음) */
   loadingButtonIndex: number;
-  /** 에러 메시지 */
-  error: string | null;
   /** Dialog variant */
   variant: DialogVariant | null;
   /** 로딩 상태 설정 함수 */
   setLoading: (loading: boolean) => void;
   /** 로딩 중인 버튼 인덱스 설정 함수 */
   setLoadingButtonIndex: (index: number) => void;
-  /** 에러 상태 설정 함수 */
-  setError: (error: string | null) => void;
   /** variant 설정 함수 */
   setVariant: (variant: DialogVariant) => void;
 }
@@ -50,12 +46,12 @@ const DialogContext = createContext<DialogContextValue | null>(null);
  * Dialog 컨텍스트를 사용하는 커스텀 훅
  *
  * @throws {Error} Dialog.Root 외부에서 사용될 경우 에러를 발생시킵니다.
- * @returns {DialogContextValue} Dialog 컨텍스트 값 (isOpen, open, close, loading, error 등 포함)
+ * @returns {DialogContextValue} Dialog 컨텍스트 값 (isOpen, open, close, loading 등 포함)
  *
  * @example
  * ```tsx
  * function MyDialogComponent() {
- *   const { isOpen, open, close, loading, error } = useDialogContext();
+ *   const { isOpen, open, close, loading } = useDialogContext();
  *   // 상태 및 함수들 사용...
  * }
  * ```
@@ -89,7 +85,7 @@ interface DialogRootProps {
  * **주요 기능:**
  * - isOpen 상태 관리 (useState 사용)
  * - open, close 함수 제공
- * - loading, error 상태 관리 (비동기 작업 지원)
+ * - loading 상태 관리 (비동기 작업 지원)
  * - 컨텍스트를 통한 상태 공유
  *
  * @param props - DialogRoot 컴포넌트의 props
@@ -126,20 +122,17 @@ export function DialogRoot({ children, defaultOpen = false }: DialogRootProps) {
   // 비동기 작업 상태 관리
   const [loading, setLoading] = useState(false);
   const [loadingButtonIndex, setLoadingButtonIndex] = useState(-1);
-  const [error, setError] = useState<string | null>(null);
   const [variant, setVariant] = useState<DialogVariant | null>(null);
 
   // Dialog 액션 함수들
   const open = () => {
     setIsOpen(true);
-    setError(null); // Dialog 열 때 에러 초기화
   };
 
   const close = () => {
     setIsOpen(false);
     setLoading(false); // Dialog 닫을 때 로딩 초기화
     setLoadingButtonIndex(-1); // Dialog 닫을 때 로딩 버튼 인덱스 초기화
-    setError(null); // Dialog 닫을 때 에러 초기화
   };
 
   return (
@@ -150,11 +143,9 @@ export function DialogRoot({ children, defaultOpen = false }: DialogRootProps) {
         close,
         loading,
         loadingButtonIndex,
-        error,
         variant,
         setLoading,
         setLoadingButtonIndex,
-        setError,
         setVariant,
       }}
     >
