@@ -1,7 +1,7 @@
 import { KeyboardEvent, ReactNode, useEffect, useRef } from 'react';
 
 import { cn } from '../../../libs/cn';
-import { useSelect } from './useSelect';
+import { useSelect } from './SelectContext';
 
 /**
  * 개별 선택 옵션 컴포넌트

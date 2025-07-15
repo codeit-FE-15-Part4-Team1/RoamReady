@@ -2,13 +2,7 @@
 
 import { useState } from 'react';
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/shared/components/ui/select';
+import Select from '@/shared/components/ui/select';
 
 export default function SelectTestPage() {
   const [basicValue, setBasicValue] = useState('');
@@ -31,16 +25,16 @@ export default function SelectTestPage() {
               <label className='mb-2 block text-sm font-medium'>
                 기본 셀렉트 (선택된 값: {basicValue || '없음'})
               </label>
-              <Select value={basicValue} onValueChange={setBasicValue}>
-                <SelectTrigger className='w-full max-w-md'>
-                  <SelectValue placeholder='옵션을 선택하세요' />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='option1'>옵션 1</SelectItem>
-                  <SelectItem value='option2'>옵션 2</SelectItem>
-                  <SelectItem value='option3'>옵션 3</SelectItem>
-                </SelectContent>
-              </Select>
+              <Select.Root value={basicValue} onValueChange={setBasicValue}>
+                <Select.Trigger className='w-full max-w-md'>
+                  <Select.Value placeholder='옵션을 선택하세요' />
+                </Select.Trigger>
+                <Select.Content>
+                  <Select.Item value='option1'>옵션 1</Select.Item>
+                  <Select.Item value='option2'>옵션 2</Select.Item>
+                  <Select.Item value='option3'>옵션 3</Select.Item>
+                </Select.Content>
+              </Select.Root>
             </div>
           </div>
         </section>
@@ -53,19 +47,24 @@ export default function SelectTestPage() {
               <label className='mb-2 block text-sm font-medium'>
                 카테고리 선택 (선택된 값: {categoryValue || '없음'})
               </label>
-              <Select value={categoryValue} onValueChange={setCategoryValue}>
-                <SelectTrigger className='w-full max-w-md'>
-                  <SelectValue placeholder='카테고리를 선택하세요' />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='여행'>🧳 여행</SelectItem>
-                  <SelectItem value='음식'>🍽️ 음식</SelectItem>
-                  <SelectItem value='문화'>🎭 문화</SelectItem>
-                  <SelectItem value='스포츠'>⚽ 스포츠</SelectItem>
-                  <SelectItem value='엔터테인먼트'>🎬 엔터테인먼트</SelectItem>
-                  <SelectItem value='education'>📚 교육</SelectItem>
-                </SelectContent>
-              </Select>
+              <Select.Root
+                value={categoryValue}
+                onValueChange={setCategoryValue}
+              >
+                <Select.Trigger className='w-full max-w-md'>
+                  <Select.Value placeholder='카테고리를 선택하세요' />
+                </Select.Trigger>
+                <Select.Content>
+                  <Select.Item value='여행'>🧳 여행</Select.Item>
+                  <Select.Item value='음식'>🍽️ 음식</Select.Item>
+                  <Select.Item value='문화'>🎭 문화</Select.Item>
+                  <Select.Item value='스포츠'>⚽ 스포츠</Select.Item>
+                  <Select.Item value='엔터테인먼트'>
+                    🎬 엔터테인먼트
+                  </Select.Item>
+                  <Select.Item value='education'>📚 교육</Select.Item>
+                </Select.Content>
+              </Select.Root>
             </div>
           </div>
         </section>
@@ -78,20 +77,20 @@ export default function SelectTestPage() {
               <label className='mb-2 block text-sm font-medium'>
                 비활성화된 셀렉트 (값: {disabledValue})
               </label>
-              <Select
+              <Select.Root
                 value={disabledValue}
                 onValueChange={setDisabledValue}
                 disabled
               >
-                <SelectTrigger className='w-full max-w-md'>
-                  <SelectValue placeholder='비활성화됨' />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='option1'>옵션 1</SelectItem>
-                  <SelectItem value='option2'>옵션 2</SelectItem>
-                  <SelectItem value='option3'>옵션 3</SelectItem>
-                </SelectContent>
-              </Select>
+                <Select.Trigger className='w-full max-w-md'>
+                  <Select.Value placeholder='비활성화됨' />
+                </Select.Trigger>
+                <Select.Content>
+                  <Select.Item value='option1'>옵션 1</Select.Item>
+                  <Select.Item value='option2'>옵션 2</Select.Item>
+                  <Select.Item value='option3'>옵션 3</Select.Item>
+                </Select.Content>
+              </Select.Root>
             </div>
           </div>
         </section>
@@ -104,45 +103,45 @@ export default function SelectTestPage() {
               <label className='mb-2 block text-sm font-medium'>
                 지역 선택 (선택된 값: {multiSelectValue1 || '없음'})
               </label>
-              <Select
+              <Select.Root
                 value={multiSelectValue1}
                 onValueChange={setMultiSelectValue1}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder='지역을 선택하세요' />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='서울'>서울</SelectItem>
-                  <SelectItem value='부산'>부산</SelectItem>
-                  <SelectItem value='대구'>대구</SelectItem>
-                  <SelectItem value='인천'>인천</SelectItem>
-                  <SelectItem value='광주'>광주</SelectItem>
-                  <SelectItem value='대전'>대전</SelectItem>
-                  <SelectItem value='울산'>울산</SelectItem>
-                </SelectContent>
-              </Select>
+                <Select.Trigger>
+                  <Select.Value placeholder='지역을 선택하세요' />
+                </Select.Trigger>
+                <Select.Content>
+                  <Select.Item value='서울'>서울</Select.Item>
+                  <Select.Item value='부산'>부산</Select.Item>
+                  <Select.Item value='대구'>대구</Select.Item>
+                  <Select.Item value='인천'>인천</Select.Item>
+                  <Select.Item value='광주'>광주</Select.Item>
+                  <Select.Item value='대전'>대전</Select.Item>
+                  <Select.Item value='울산'>울산</Select.Item>
+                </Select.Content>
+              </Select.Root>
             </div>
 
             <div>
               <label className='mb-2 block text-sm font-medium'>
                 언어 선택 (선택된 값: {multiSelectValue2 || '없음'})
               </label>
-              <Select
+              <Select.Root
                 value={multiSelectValue2}
                 onValueChange={setMultiSelectValue2}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder='언어를 선택하세요' />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='한국어'>한국어</SelectItem>
-                  <SelectItem value='English'>English</SelectItem>
-                  <SelectItem value='日本語'>日本語</SelectItem>
-                  <SelectItem value='中文'>中文</SelectItem>
-                  <SelectItem value='Español'>Español</SelectItem>
-                  <SelectItem value='Français'>Français</SelectItem>
-                </SelectContent>
-              </Select>
+                <Select.Trigger>
+                  <Select.Value placeholder='언어를 선택하세요' />
+                </Select.Trigger>
+                <Select.Content>
+                  <Select.Item value='한국어'>한국어</Select.Item>
+                  <Select.Item value='English'>English</Select.Item>
+                  <Select.Item value='日本語'>日本語</Select.Item>
+                  <Select.Item value='中文'>中文</Select.Item>
+                  <Select.Item value='Español'>Español</Select.Item>
+                  <Select.Item value='Français'>Français</Select.Item>
+                </Select.Content>
+              </Select.Root>
             </div>
           </div>
         </section>
@@ -155,31 +154,31 @@ export default function SelectTestPage() {
               <label className='mb-2 block text-sm font-medium'>
                 커스텀 스타일링 (선택된 값: {customValue || '없음'})
               </label>
-              <Select value={customValue} onValueChange={setCustomValue}>
-                <SelectTrigger className='w-full max-w-md border-blue-200 bg-blue-50 hover:border-blue-300'>
-                  <SelectValue placeholder='커스텀 스타일 적용' />
-                </SelectTrigger>
-                <SelectContent className='bg-blue-50'>
-                  <SelectItem
+              <Select.Root value={customValue} onValueChange={setCustomValue}>
+                <Select.Trigger className='w-full max-w-md border-blue-200 bg-blue-50 hover:border-blue-300'>
+                  <Select.Value placeholder='커스텀 스타일 적용' />
+                </Select.Trigger>
+                <Select.Content className='bg-blue-50'>
+                  <Select.Item
                     value='커스텀 옵션 1'
                     className='hover:bg-blue-100'
                   >
                     커스텀 옵션 1
-                  </SelectItem>
-                  <SelectItem
+                  </Select.Item>
+                  <Select.Item
                     value='커스텀 옵션 2'
                     className='hover:bg-blue-100'
                   >
                     커스텀 옵션 2
-                  </SelectItem>
-                  <SelectItem
+                  </Select.Item>
+                  <Select.Item
                     value='커스텀 옵션 3'
                     className='hover:bg-blue-100'
                   >
                     커스텀 옵션 3
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+                  </Select.Item>
+                </Select.Content>
+              </Select.Root>
             </div>
           </div>
         </section>

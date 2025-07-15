@@ -1,5 +1,5 @@
 import { cn } from '../../../libs/cn';
-import { useSelect } from './useSelect';
+import { useSelect } from './SelectContext';
 
 /**
  * 현재 선택된 값 또는 placeholder를 표시하는 컴포넌트

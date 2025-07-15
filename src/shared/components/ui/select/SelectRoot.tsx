@@ -1,7 +1,7 @@
 import { ReactNode, useState } from 'react';
 
 import { cn } from '../../../libs/cn';
-import { SelectContext } from './useSelect';
+import { SelectContext } from './SelectContext';
 
 /**
  * SelectBox 컴포넌트의 Props 타입 정의
@@ -48,7 +48,7 @@ interface SelectProps {
  * </Select>
  * ```
  */
-export default function Select({
+export default function SelectRoot({
   value,
   onValueChange,
   children,

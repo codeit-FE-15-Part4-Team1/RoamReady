@@ -1,7 +1,7 @@
 import { ReactNode, useEffect } from 'react';
 
 import { cn } from '../../../libs/cn';
-import { useSelect } from './useSelect';
+import { useSelect } from './SelectContext';
 
 /**
  * 드롭다운 컨텐츠 컨테이너 컴포넌트

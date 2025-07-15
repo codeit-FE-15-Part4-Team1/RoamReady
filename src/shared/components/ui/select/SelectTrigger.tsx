@@ -2,7 +2,7 @@ import { ChevronDownIcon } from 'lucide-react';
 import { ReactNode } from 'react';
 
 import { cn } from '../../../libs/cn';
-import { useSelect } from './useSelect';
+import { useSelect } from './SelectContext';
 
 /**
  * SelectBox의 트리거 버튼 컴포넌트
