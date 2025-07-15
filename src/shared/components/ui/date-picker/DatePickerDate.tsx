@@ -69,7 +69,8 @@ export default function DatePickerDate({
               {
                 'cursor-not-allowed text-gray-100': isDisabled,
                 'text-gray-800': !isDisabled && !isSelected && !isToday,
-                'bg-brand-2 text-white': isSelected,
+                'bg-brand-2 text-white': isSelected && isCurrentMonth,
+                'text-gray-100': isSelected && !isCurrentMonth,
                 'border-brand-2 border-2':
                   isToday && !isSelected && !isDisabled,
                 'hover:bg-brand-1 hover:text-brand-2':
