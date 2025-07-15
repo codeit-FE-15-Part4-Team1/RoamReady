@@ -65,7 +65,7 @@ export const DatePickerDateGrid = ({
               'mx-auto flex cursor-pointer items-center justify-center rounded-full transition',
               buttonSizeClass,
               {
-                'cursor-not-allowed text-gray-300': isDisabled,
+                'cursor-not-allowed text-gray-100': isDisabled,
                 'text-gray-800': !isDisabled && !isSelected && !isToday,
                 'bg-brand-2 text-white': isSelected,
                 'border-brand-2 border-2':
