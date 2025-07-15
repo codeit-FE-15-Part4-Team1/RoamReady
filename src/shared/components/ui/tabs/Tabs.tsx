@@ -49,7 +49,6 @@ export default function Tabs({
 
   /**
    * 탭 값이 변경될 때 호출되는 핸들러
-   * controlled/uncontrolled 모드를 모두 지원합니다.
    *
    * @param newValue - 새로 선택된 탭의 값
    */
