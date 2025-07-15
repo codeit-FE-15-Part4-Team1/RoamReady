@@ -58,9 +58,9 @@ export default function TabsTrigger({
       data-value={value}
       onClick={() => onValueChange?.(value)}
       className={cn(
-        'py-5text-black border-b border-b-white px-10',
+        'border-b border-b-white px-10 py-5 text-black',
         isSelected
-          ? 'text-brand-2 border-b-brand-2 border-md font-semibold'
+          ? 'text-brand-2 border-b-brand-2 border font-semibold'
           : 'text-gray-500',
         className,
       )}
