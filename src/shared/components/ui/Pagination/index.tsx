@@ -14,13 +14,13 @@ import { cn } from '@/shared/libs/cn';
  * @property pageRange - 보여줄 페이지 버튼의 수 (기본값: 5)
  * @property className - 페이지 버튼 추가적인 커스터마이징 스타일을 위한 클래스 이름
  */
-type PaginationProps = {
+interface PaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
   pageRange?: number; // default: 5
   className?: string;
-};
+}
 
 /**
  * 페이지네이션 컴포넌트
@@ -61,26 +61,28 @@ export default function Pagination({
         onPageChange(currentPage + 1);
       }
     };
-
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [currentPage, totalPages, onPageChange]);
 
-  // 입력값 검증
+  // 입력값 검증 및 에러 상태 처리
   if (totalPages < 1) {
-    throw new Error('totalPages는 최소 1 이상이어야 합니다');
+    console.error('totalPages는 최소 1 이상이어야 합니다');
+    return null;
   }
   if (currentPage < 1 || currentPage > totalPages) {
-    throw new Error(`currentPage는 1과 ${totalPages} 사이의 값이어야 합니다`);
+    console.error(`currentPage는 1과 ${totalPages} 사이의 값이어야 합니다`);
+    return null;
   }
   if (pageRange < 1) {
-    throw new Error('pageRange는 최소 1 이상이어야 합니다');
+    console.error('pageRange는 최소 1 이상이어야 합니다');
+    return null;
   }
 
   const generatePages = () => {
     const pages: (number | 'dots')[] = [];
 
-    const alwaysVisibleCount = pageRange; // 5개 고정
+    const alwaysVisibleCount = pageRange;
 
     // 전체 페이지 수가 적으면 모든 페이지를 표시
     if (totalPages <= alwaysVisibleCount) {
