@@ -7,6 +7,7 @@ import z from 'zod';
 /**
  * @schema tokenRefreshResponseSchema
  * @description 액세스 및 리프레시 토큰 재발급 응답 스키마입니다.
+ * @note 향후 중복 제거를 위해 tokenPairSchema 등으로 분리 가능성 있습니다.
  */
 export const tokenRefreshResponseSchema = z.object({
   refreshToken: z.string(),
