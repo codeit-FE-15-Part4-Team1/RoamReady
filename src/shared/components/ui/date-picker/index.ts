@@ -5,7 +5,7 @@ import DatePickerWeek from './DatePickerWeek';
 
 export const DatePicker = {
   Root: DatePickerRoot,
-  Header: DatePickerMonth,
-  WeekDays: DatePickerWeek,
-  DateGrid: DatePickerDate,
+  Month: DatePickerMonth,
+  Week: DatePickerWeek,
+  Date: DatePickerDate,
 };

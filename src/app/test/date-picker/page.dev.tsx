@@ -42,9 +42,9 @@ export default function DatePickerTestPage() {
             onDateClick={(date) => setSelectedDateL1(date)}
             size='l'
           >
-            <DatePicker.Header />
-            <DatePicker.WeekDays />
-            <DatePicker.DateGrid reservableDates={reservableDates} />
+            <DatePicker.Month />
+            <DatePicker.Week />
+            <DatePicker.Date reservableDates={reservableDates} />
           </DatePicker.Root>
           <div className='font-size-13 mt-2 text-gray-600'>
             선택된 날짜:{' '}
@@ -66,9 +66,9 @@ export default function DatePickerTestPage() {
             onDateClick={(date) => setSelectedDateL2(date)}
             size='l'
           >
-            <DatePicker.Header />
-            <DatePicker.WeekDays />
-            <DatePicker.DateGrid />
+            <DatePicker.Month />
+            <DatePicker.Week />
+            <DatePicker.Date />
           </DatePicker.Root>
           <div className='font-size-13 mt-2 text-gray-600'>
             선택된 날짜:{' '}
@@ -114,9 +114,9 @@ export default function DatePickerTestPage() {
                   }}
                   size='s'
                 >
-                  <DatePicker.Header />
-                  <DatePicker.WeekDays />
-                  <DatePicker.DateGrid />
+                  <DatePicker.Month />
+                  <DatePicker.Week />
+                  <DatePicker.Date />
                 </DatePicker.Root>
               </div>
             )}
