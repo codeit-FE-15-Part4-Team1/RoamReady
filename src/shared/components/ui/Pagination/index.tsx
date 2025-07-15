@@ -55,21 +55,17 @@ export default function Pagination({
   // 각 페이지 번호 버튼에 대한 참조를 저장하는 Map
   const pageButtonMapRef = useRef<Map<number, HTMLButtonElement>>(new Map());
 
-  // 입력값 검증 및 에러 상태 처리
-  if (totalPages < 1) {
-    console.error('totalPages는 최소 1 이상이어야 합니다');
-    return null;
-  }
-  if (currentPage < 1 || currentPage > totalPages) {
-    console.error(`currentPage는 1과 ${totalPages} 사이의 값이어야 합니다`);
-    return null;
-  }
-  if (pageRange < 1) {
-    console.error('pageRange는 최소 1 이상이어야 합니다');
-    return null;
-  }
+  // 유효성 검사: totalPages, currentPage, pageRange가 올바른지 확인
+  const isInvalid =
+    totalPages < 1 ||
+    currentPage < 1 ||
+    currentPage > totalPages ||
+    pageRange < 1;
 
   const pages = useMemo(() => {
+    // 입력값 검증
+    if (isInvalid) return [];
+
     const pages: (number | 'dots')[] = [];
 
     const alwaysVisibleCount = pageRange;
@@ -111,6 +107,8 @@ export default function Pagination({
 
   // 키보드 방향키 접근성: ← → 키로 페이지 전환
   useEffect(() => {
+    if (isInvalid) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       let nextPage = currentPage;
 
@@ -134,6 +132,30 @@ export default function Pagination({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [currentPage, totalPages, onPageChange, pages]);
+
+  // 페이지 번호별 버튼 요소를 Map에 등록하거나 해제하는 ref 콜백
+  const getPageButtonRefCallback =
+    (page: number, map: Map<number, HTMLButtonElement>) =>
+    (el: HTMLButtonElement | null) => {
+      if (el) {
+        // 버튼이 마운트되면 해당 page 번호에 매핑
+        map.set(page, el);
+      } else {
+        // 버튼이 언마운트되면 Map에서 제거하여 메모리 누수 방지
+        map.delete(page);
+      }
+    };
+
+  // 유효성 검사 메시지 출력 및 종료
+  if (isInvalid) {
+    if (totalPages < 1) console.error('totalPages는 최소 1 이상이어야 합니다');
+    else if (currentPage < 1 || currentPage > totalPages)
+      console.error(`currentPage는 1과 ${totalPages} 사이의 값이어야 합니다`);
+    else if (pageRange < 1)
+      console.error('pageRange는 최소 1 이상이어야 합니다');
+
+    return null;
+  }
 
   return (
     <div className='flex flex-col'>
@@ -167,11 +189,7 @@ export default function Pagination({
           ) : (
             <button
               // 각 숫자 버튼에 ref 저장 (Map으로 관리)
-              ref={(el) => {
-                if (el && typeof page === 'number') {
-                  pageButtonMapRef.current.set(page, el);
-                }
-              }}
+              ref={getPageButtonRefCallback(page, pageButtonMapRef.current)}
               type='button'
               key={page}
               onClick={() => onPageChange(page)}
