@@ -28,9 +28,7 @@ export const DatePickerDateGrid = ({
   const reservableSet = new Set(reservableDates ?? []);
 
   const sizeClass =
-    size === 's'
-      ? 'gap-3 font-size-10 w-150 min-h-150'
-      : 'gap-5 font-size-16 w-300 min-h-300';
+    size === 's' ? 'gap-3 font-size-10 ' : 'gap-5 font-size-16 ';
   const buttonSizeClass = size === 's' ? 'h-20 w-20 font-size-10' : 'h-40 w-40';
 
   return (
