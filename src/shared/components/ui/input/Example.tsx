@@ -2,46 +2,82 @@
 
 import { Search } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { Control, useFormContext } from 'react-hook-form';
 
+import Button from '@/shared/components/Button';
 import { useImagePreview } from '@/shared/hooks/useImagePreview';
 import { cn } from '@/shared/libs/cn';
 
 import Input from '.';
 
+interface FormValues {
+  textExample: string;
+  textExampleHalf: string;
+  password: string;
+  email: string;
+  comment: string;
+  profileImage?: FileList;
+  disabledExample: string;
+  searchExample: string;
+  numberExample: number;
+}
+
+interface ExampleProps {
+  onSubmit?: (e?: React.BaseSyntheticEvent) => void;
+  isSubmitting?: boolean;
+  control: Control<FormValues>;
+}
+
 /**
  * @component Example
  * @description
  * `Input` 컴포넌트의 다양한 사용 예시를 보여주는 데모용 UI입니다.
+ * 이 컴포넌트는 **부모 컴포넌트(예: `InputTestPage`)로부터 `react-hook-form`의 폼 컨텍스트를 제공받아 사용**합니다.
+ *
+ * 폼 관련 로직(`useFormContext`를 통한 상태 접근, `useImagePreview` 훅 사용 등)은 부모가 `FormProvider`를 통해 제공하는
+ * 컨텍스트를 기반으로 동작합니다.
+ *
  * 텍스트, 비밀번호, 텍스트에리어, 숫자, 파일 업로드, 에러 상태, 검색, 비활성화 등의
  * 다양한 입력 필드를 실제로 어떻게 구성하고 사용하는지를 시각적으로 확인할 수 있습니다.
  *
- * 미리보기 기능을 위해 `useImagePreview` 훅을 활용하여 이미지 파일 업로드 시
- * 업로드된 파일의 브라우저 URL을 생성하고 즉시 미리보기를 제공합니다.
+ * @param {ExampleProps} props - Example 컴포넌트에 전달되는 속성
+ * @param {function} [props.onSubmit] - 폼 제출 시 호출될 콜백 함수 (부모로부터 `handleSubmit`을 통해 전달받음).
+ * @param {boolean} [props.isSubmitting] - 폼 제출 중인지 여부 (부모로부터 전달받음).
+ * @param {Control<any>} props.control - `react-hook-form`의 `control` 객체로, `useImagePreview`와 같은 훅에 전달됩니다. (부모로부터 전달받음).
+ *
+ * @returns {JSX.Element} Input 컴포넌트들의 다양한 예시를 포함하는 폼 요소.
  *
  * @see src/app/test/input
- *
  */
-export default function Example() {
-  const [textValue, setTextValue] = useState('');
-  const [textareaValue, setTextareaValue] = useState('');
-  const { file, previewUrl, handleFileChange } = useImagePreview();
+export default function Example({
+  onSubmit,
+  isSubmitting,
+  control,
+}: ExampleProps) {
+  // `useFormContext`를 사용하여 부모로부터 제공된 폼 컨텍스트에 접근합니다.
+  const {
+    formState: { errors },
+  } = useFormContext();
+
+  // `useImagePreview` 훅에 `control` 객체를 전달합니다.
+  const { previewUrl } = useImagePreview('profileImage', control);
   const group = 'rounded-lg border border-gray-300 px-20 py-15';
 
   return (
-    <div className='flex flex-col gap-40 p-30'>
+    <form onSubmit={onSubmit} className='flex flex-col gap-40 p-30'>
       <h1 className='font-size-20 font-bold'>Input Component Examples</h1>
 
       {/* 텍스트 입력 예시 */}
       <div className='flex flex-col gap-3'>
         <h2 className='font-size-15 font-semibold'>Text Input</h2>
-        <Input.Root id='text-example' type='text' className={group}>
+        <Input.Root
+          id='text-example'
+          name='textExample'
+          type='text'
+          className={group}
+        >
           <Input.Label>이름</Input.Label>
-          <Input.Field
-            placeholder='이름을 입력하세요'
-            value={textValue}
-            onChange={(e) => setTextValue(e.target.value)}
-          />
+          <Input.Field placeholder='이름을 입력하세요' />
           <Input.Helper>안내 메시지</Input.Helper>
         </Input.Root>
       </div>
@@ -51,22 +87,24 @@ export default function Example() {
         <h2 className='font-size-15 font-semibold'>Text Input (Half Width)</h2>
         <Input.Root
           id='text-example-half'
+          name='textExampleHalf'
           type='text'
           className={cn('w-1/2', group)}
         >
           <Input.Label>이름</Input.Label>
-          <Input.Field
-            placeholder='이름을 입력하세요'
-            value={textValue}
-            onChange={(e) => setTextValue(e.target.value)}
-          />
+          <Input.Field placeholder='이름을 입력하세요' />
         </Input.Root>
       </div>
 
       {/* 비밀번호 입력 예시 */}
       <div className='flex flex-col gap-3'>
         <h2 className='font-size-15 font-semibold'>Password Input</h2>
-        <Input.Root id='password' type='password'>
+        <Input.Root
+          id='password'
+          name='password'
+          type='password'
+          className={group}
+        >
           <Input.Label>비밀번호</Input.Label>
           <Input.Field
             placeholder='비밀번호를 입력해주세요'
@@ -78,10 +116,15 @@ export default function Example() {
       {/* 에러 상태의 텍스트 입력 예시 */}
       <div className='flex flex-col gap-3'>
         <h2 className='font-size-15 font-semibold'>Text Input with Error</h2>
-        <Input.Root id='error-example' type='text' className={group} isError>
+        <Input.Root
+          id='error-example'
+          name='email'
+          type='text'
+          className={group}
+        >
           <Input.Label>Email</Input.Label>
           <Input.Field placeholder='Email을 입력하세요' />
-          <Input.Helper>유효하지 않은 이메일입니다.</Input.Helper>
+          <Input.Helper />
         </Input.Root>
       </div>
 
@@ -90,19 +133,14 @@ export default function Example() {
         <h2 className='font-size-15 font-semibold'>Textarea</h2>
         <Input.Root
           id='textarea-example'
+          name='comment'
           type='textarea'
           className={group}
           required
           maxLength={100}
-          currentLength={textareaValue.length}
         >
           <Input.Label>댓글</Input.Label>
-          <Input.Field
-            placeholder='댓글을 입력하세요'
-            rows={4}
-            value={textareaValue}
-            onChange={(e) => setTextareaValue(e.target.value)}
-          />
+          <Input.Field placeholder='댓글을 입력하세요' rows={4} />
           <Input.Helper />
         </Input.Root>
       </div>
@@ -113,10 +151,8 @@ export default function Example() {
         <Input.Root
           id='file-example'
           type='file'
-          fileName={file?.name}
+          name='profileImage'
           className={group}
-          handleFileChange={handleFileChange}
-          // fallbackMessage='이미지를 업로드하세요'
         >
           <Input.Label>이미지</Input.Label>
           <Input.Trigger
@@ -133,6 +169,7 @@ export default function Example() {
             )}
           </Input.Trigger>
           <Input.Field accept='image/*' />
+          <Input.Helper />
         </Input.Root>
       </div>
 
@@ -142,6 +179,7 @@ export default function Example() {
         <Input.Root
           id='disabled-example'
           type='text'
+          name='disabledExample'
           className={group}
           disabled
         >
@@ -153,7 +191,12 @@ export default function Example() {
       {/* 검색 입력 예시 */}
       <div className='flex flex-col gap-3'>
         <h2 className='font-size-15 font-semibold'>Search Input</h2>
-        <Input.Root id='search-example' type='search' className={group}>
+        <Input.Root
+          id='search-example'
+          type='search'
+          name='searchExample'
+          className={group}
+        >
           <Input.Label>검색</Input.Label>
           <Input.Field
             placeholder='비밀번호를 입력하세요'
@@ -166,11 +209,24 @@ export default function Example() {
       {/* 숫자 입력 예시 */}
       <div className='flex flex-col gap-3'>
         <h2 className='font-size-15 font-semibold'>Number Input</h2>
-        <Input.Root id='number-example' type='number' className={group}>
+        <Input.Root
+          id='number-example'
+          type='number'
+          name='numberExample'
+          className={group}
+        >
           <Input.Label>숫자(가격)</Input.Label>
           <Input.Field placeholder='가격을 입력하세요' />
         </Input.Root>
       </div>
-    </div>
+
+      <Button
+        type='submit'
+        disabled={isSubmitting}
+        className='font-size-16 px-50 py-30'
+      >
+        제출
+      </Button>
+    </form>
   );
 }

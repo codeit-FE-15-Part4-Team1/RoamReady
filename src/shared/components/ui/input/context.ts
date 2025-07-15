@@ -1,29 +1,28 @@
 'use client';
 
-import {
-  ChangeEvent,
-  createContext,
-  HTMLInputTypeAttribute,
-  useContext,
-} from 'react';
+import { createContext, HTMLInputTypeAttribute, useContext } from 'react';
+import { FieldErrors, UseFormRegisterReturn } from 'react-hook-form';
 
 /**
  * @interface InputContextProps
  * @description
  * `InputContext`를 통해 하위 컴포넌트들에게 전달되는 입력 상태 정보입니다.
+ * 이 속성들은 주로 `Input.Root` 컴포넌트에서 `react-hook-form`의 상태를 기반으로 파생되거나 직접 제공됩니다.
  *
- * @property {string} id - 연결될 입력 요소의 ID
- * @property {HTMLInputTypeAttribute | 'textarea'} type - 입력 필드 타입 (예: 'text', 'password', 'file', 'textarea' 등)
- * @property {boolean} [required] - 필수 입력 여부
- * @property {boolean} [disabled] - 비활성화 여부
- * @property {boolean} [isError] - 에러 상태 여부
- * @property {string} [fileName] - 업로드된 파일 이름 (type이 'file'일 때 사용)
- * @property {(e: ChangeEvent<HTMLInputElement>) => void} [handleFileChange] - 파일 업로드용 이벤트 핸들러
- * @property {number} [maxLength] - 입력 필드의 최대 길이 (textarea에 사용)
- * @property {number} [currentLength] - 현재 입력된 문자열의 길이 (textarea에 사용)
- * @property {string} [fallbackMessage] - 파일 업로드 `Trigger`에 표시할 기본 안내 메시지 (ex. '이미지를 업로드하세요')
- * @property {boolean} isPasswordVisible - 비밀번호 가시성 상태
- * @property {() => void} togglePasswordVisibility - 비밀번호 가시성을 토글하는 함수
+ * @property {string} id - 연결될 입력 요소의 HTML `id` 속성입니다. (`Input.Root`에서 고유하게 생성되거나 prop으로 전달받음)
+ * @property {HTMLInputTypeAttribute | 'textarea'} type - 입력 필드의 타입입니다 (예: 'text', 'password', 'file', 'textarea' 등). (`Input.Root`의 prop으로 전달받음)
+ * @property {boolean} [required] - 입력 필드의 필수 여부입니다. (`Input.Root`의 prop으로 전달받음)
+ * @property {boolean} [disabled] - 입력 필드의 비활성화 여부입니다. (`Input.Root`의 prop으로 전달받음)
+ * @property {boolean} [isError] - 입력 필드의 에러 상태 여부입니다. (`Input.Root`에서 `errors` 객체를 기반으로 파생됨)
+ * @property {string} [name] - `react-hook-form`에 등록된 필드의 이름입니다. (`Input.Root`의 prop으로 필수로 전달받음)
+ * @property {FieldErrors} [errors] - `react-hook-form`의 `formState.errors` 객체입니다. (`Input.Root`에서 `useFormContext`를 통해 제공)
+ * @property {UseFormRegisterReturn} [register] - `react-hook-form`의 `register(name)` 호출 결과 객체입니다. (`Input.Root`에서 `useFormContext`를 통해 생성하여 제공)
+ * @property {string} [fileName] - `type`이 'file'일 때 선택된 파일의 이름입니다. (`Input.Root`에서 `useWatch`를 통해 파생됨)
+ * @property {number} [maxLength] - 입력 필드의 최대 길이(문자 수)입니다. (`Input.Root`의 prop으로 전달받음)
+ * @property {number} [currentLength] - 현재 입력된 문자열의 길이입니다. (`Input.Root`에서 `useWatch`를 통해 파생됨)
+ * @property {string} [fallbackMessage] - 파일 업로드 `Trigger`에 표시할 기본 안내 메시지입니다. (`Input.Root`의 prop으로 전달받음)
+ * @property {boolean} isPasswordVisible - 비밀번호 입력 필드의 가시성 상태입니다. (`Input.Root`에서 관리하는 내부 상태)
+ * @property {() => void} togglePasswordVisibility - 비밀번호 가시성을 토글하는 함수입니다. (`Input.Root`에서 관리하는 내부 함수)
  */
 export interface InputContextProps {
   id: string;
@@ -31,8 +30,10 @@ export interface InputContextProps {
   required?: boolean;
   disabled?: boolean;
   isError?: boolean;
+  name?: string;
+  errors?: FieldErrors;
+  register?: UseFormRegisterReturn;
   fileName?: string;
-  handleFileChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   maxLength?: number;
   currentLength?: number;
   fallbackMessage?: string;
@@ -59,6 +60,7 @@ export const InputContext = createContext<InputContextProps | null>(null);
  *
  * @example
  * ```tsx
+ * Input.Root의 자식 컴포넌트 내부에서 사용
  * const { id, type, required, isError, isPasswordVisible, togglePasswordVisibility } = useInputContext();
  * ```
  */

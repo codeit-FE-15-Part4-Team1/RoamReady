@@ -1,6 +1,8 @@
+//! 이 파일은 수정 예정입니다.
+
+import { AUTH_ENDPOINTS, USER_ENDPOINTS } from '@/shared/constants/endpoints';
 import { apiClient } from '@/shared/libs/apiClient';
 
-import { AUTH_ENDPOINTS, USER_ENDPOINTS } from '../constants/endpoints';
 import type { SigninRequest, SignupRequest } from '../schemas/request';
 import type { SigninResponse, SignupResponse } from '../schemas/response';
 

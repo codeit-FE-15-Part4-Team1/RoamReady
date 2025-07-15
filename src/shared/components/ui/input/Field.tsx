@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  ChangeEvent,
-  InputHTMLAttributes,
-  ReactNode,
-  TextareaHTMLAttributes,
-} from 'react';
+import { InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from 'react';
 
 import { cn } from '@/shared/libs/cn';
 
@@ -13,23 +8,29 @@ import { useInputContext } from './context';
 
 /**
  * @description
- * `<input>`과 `<textarea>`에서 공통으로 사용할 수 있는 기본 속성 타입입니다.
- * `onChange`는 제거되어 별도로 정의합니다.
+ * `<input>`과 `<textarea>`에서 공통으로 사용할 수 있는 기본 HTML 속성 타입입니다.
+ * `react-hook-form`의 `register` 함수가 `onChange`, `name`, `ref`, `value` 속성을 관리하므로,
+ * 이 속성들은 `BaseFieldProps`에서 제외됩니다.
  */
-type BaseFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'> &
-  Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'onChange'>;
+type BaseFieldProps = Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'onChange' | 'name' | 'ref' | 'value'
+> &
+  Omit<
+    TextareaHTMLAttributes<HTMLTextAreaElement>,
+    'onChange' | 'name' | 'ref' | 'value'
+  >;
 
 /**
  * @interface FieldProps
  * @description
- * `Field` 컴포넌트에 전달되는 props입니다.
+ * `Input.Field` 컴포넌트에 전달되는 props입니다.
  *
- * @property {ReactNode} [leftIcon] - 입력창 왼쪽에 표시할 아이콘 요소
- * @property {ReactNode} [rightIcon] - 입력창 오른쪽에 표시할 아이콘 요소
- * @property {(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void} [onChange] - 값 변경 시 호출되는 핸들러
+ * @property {ReactNode} [leftIcon] - 입력창 왼쪽에 표시할 아이콘 요소입니다.
+ * @property {ReactNode} [rightIcon] - 입력창 오른쪽에 표시할 아이콘 요소입니다.
+ * (참고: `register` 및 `onChange`는 `InputContext`를 통해 `Input.Root`에서 제공되므로 직접적인 prop이 아닙니다.)
  */
 interface FieldProps extends BaseFieldProps {
-  onChange?: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
 }
@@ -37,24 +38,41 @@ interface FieldProps extends BaseFieldProps {
 /**
  * @component Field
  * @description
- * `<input>`, `<textarea>`, `<input type="file">`를 포함한 다양한 입력 타입을 지원하는 컴포넌트입니다.
- * `Input.Root` 내부에서 context를 통해 전달된 `id`, `type`, `required`, `disabled`, `isError` 등의 정보를 기반으로
- * 입력 UI를 렌더링하며, 아이콘 삽입 및 스타일 커스터마이징을 지원합니다.
+ * `<input>`, `<textarea>`, `<input type="file">`를 포함한 다양한 입력 타입을 지원하는 핵심 필드 컴포넌트입니다.
+ * `Input.Root` 내부에서 사용되며, `useInputContext` 훅을 통해 `Input.Root`에서 제공하는
+ * `id`, `type`, `required`, `disabled`, `isError`, `maxLength`, `isPasswordVisible`,
+ * 그리고 `react-hook-form`의 `register` 객체 등의 정보를 자동으로 가져와 사용합니다.
+ *
+ * `register` 객체를 내부 `<input>`/`<textarea>` 요소에 스프레드(`{...register}`)함으로써,
+ * `react-hook-form`이 필드의 값, 유효성 검사, 변경 이벤트(`onChange`), 포커스(`onBlur`), 참조(`ref`) 등을 자동으로 관리합니다.
  *
  * 타입에 따라 다음과 같이 렌더링됩니다:
- * - `text`, `password`, `email` 등: 기본 `<input>` 요소
+ * - `text`, `password`, `email` 등: 표준 `<input>` 요소
  * - `textarea`: 크기 조절이 불가능한 `<textarea>` 요소
- * - `file`: 사용자 친화적인 `<label>` 기반 커스텀 파일 업로더 UI
+ * - `file`: 숨겨진 `<input type="file">` 요소 (대체 UI는 `Input.Trigger`가 제공)
  *
- * @param {FieldProps} props - 입력 필드에 적용할 속성
- * @param {ReactNode} [props.leftIcon] - 입력창 왼쪽에 표시할 아이콘 요소
- * @param {ReactNode} [props.rightIcon] - 입력창 오른쪽에 표시할 아이콘 요소
- * @param {(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void} [props.onChange] - 입력 값 변경 시 호출될 핸들러
- *
- * @returns {JSX.Element} 조건에 따라 알맞은 입력 컴포넌트를 렌더링합니다.
+ * @param {FieldProps} props - 입력 필드에 적용할 속성입니다.
+ * @returns {JSX.Element} 조건에 따라 알맞은 HTML 입력 요소를 렌더링합니다.
  *
  * @example
- * <Example>과 test/input에서 다양한 입력 필드 예시를 확인할 수 있습니다.
+ * ```tsx
+ * Input.Root 내부에서 Input.Field 사용 (register 등은 Context에서 자동 연결)
+ * <Input.Root name="userEmail" id="email-field" type="email" required>
+ * <Input.Label>이메일</Input.Label>
+ * <Input.Field placeholder="이메일 주소를 입력하세요" />
+ * <Input.Helper />
+ * </Input.Root>
+ *
+ * 비밀번호 필드와 오른쪽 아이콘 (트리거) 예시
+ * <Input.Root name="userPassword" id="password-field" type="password">
+ * <Input.Label>비밀번호</Input.Label>
+ * <Input.Field
+ * placeholder="비밀번호를 입력해주세요"
+ * rightIcon={<Input.Trigger triggerType="password-toggle" />}
+ * />
+ * <Input.Helper />
+ * </Input.Root>
+ * ```
  */
 export default function Field(props: FieldProps) {
   const {
@@ -63,23 +81,18 @@ export default function Field(props: FieldProps) {
     required,
     disabled,
     isError,
-    handleFileChange,
     maxLength,
     isPasswordVisible,
+    register,
   } = useInputContext();
+
+  const { className, placeholder, leftIcon, rightIcon, ...rest } = props;
+
   const baseStyle = cn(
-    'cursor-pointer font-size-16 w-full rounded border rounded-2xl px-20 py-17.5',
+    'font-size-16 w-full rounded border rounded-2xl px-20 py-17.5',
     isError ? 'border-red' : 'border-gray-100',
+    disabled ? 'cursor-not-allowed' : 'cursor-text',
   );
-  const {
-    className,
-    placeholder,
-    leftIcon,
-    rightIcon,
-    onChange,
-    value,
-    ...rest
-  } = props;
 
   const inputType = type === 'password' && isPasswordVisible ? 'text' : type;
 
@@ -90,11 +103,10 @@ export default function Field(props: FieldProps) {
         placeholder={placeholder}
         required={required}
         disabled={disabled}
-        onChange={onChange}
-        value={value}
         maxLength={maxLength}
-        {...rest}
         className={cn(baseStyle, 'resize-none', className)}
+        {...register}
+        {...rest}
       />
     );
   }
@@ -106,8 +118,8 @@ export default function Field(props: FieldProps) {
         type='file'
         required={required}
         disabled={disabled}
-        onChange={handleFileChange}
         className='hidden'
+        {...register}
         {...rest}
       />
     );
@@ -126,10 +138,9 @@ export default function Field(props: FieldProps) {
         placeholder={placeholder}
         required={required}
         disabled={disabled}
-        onChange={onChange}
-        value={value}
-        {...rest}
         className={cn(baseStyle, className)}
+        {...register}
+        {...rest}
       />
       {rightIcon && (
         <div className='absolute top-1/2 right-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center'>

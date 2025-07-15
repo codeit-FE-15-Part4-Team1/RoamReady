@@ -6,6 +6,7 @@ import Logo from '@/shared/assets/logos/logo-symbol.svg';
 import LogoText from '@/shared/assets/logos/logo-text-oneline.svg';
 import Button from '@/shared/components/Button';
 import Input from '@/shared/components/ui/input';
+import { AUTH_ROUTES } from '@/shared/constants/routes';
 
 export default function SignUpPage() {
   return (
@@ -16,17 +17,17 @@ export default function SignUpPage() {
       </div>
 
       <form className='flex w-full flex-col gap-20'>
-        <Input.Root id='email' type='email'>
+        <Input.Root id='email' name='email' type='email'>
           <Input.Label>이메일</Input.Label>
           <Input.Field placeholder='이메일 주소를 작성해주세요' />
         </Input.Root>
 
-        <Input.Root id='username' type='text'>
+        <Input.Root id='username' name='username' type='text'>
           <Input.Label>닉네임</Input.Label>
           <Input.Field placeholder='닉네임을 작성해주세요' />
         </Input.Root>
 
-        <Input.Root id='password' type='password'>
+        <Input.Root id='password' name='password' type='password'>
           <Input.Label>비밀번호</Input.Label>
           <Input.Field
             placeholder='비밀번호를 입력해주세요'
@@ -34,7 +35,11 @@ export default function SignUpPage() {
           />
         </Input.Root>
 
-        <Input.Root id='password-confirm' type='password'>
+        <Input.Root
+          id='password-confirm'
+          name='passwordConfirm'
+          type='password'
+        >
           <Input.Label>비밀번호 확인</Input.Label>
           <Input.Field
             placeholder='비밀번호를 다시 입력해주세요'
@@ -73,8 +78,10 @@ export default function SignUpPage() {
 
       <div className='flex justify-center gap-4'>
         <span className='text-gray-400'>이미 회원이신가요?</span>
-        {/* //! 경로 상수화 */}
-        <Link href='/signin' className='text-brand-2 hover:underline'>
+        <Link
+          href={AUTH_ROUTES.SIGNIN}
+          className='text-brand-2 hover:underline'
+        >
           로그인
         </Link>
       </div>
