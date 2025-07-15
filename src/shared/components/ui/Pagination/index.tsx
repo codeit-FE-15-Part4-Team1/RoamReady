@@ -1,7 +1,7 @@
 'use client';
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { cn } from '@/shared/libs/cn';
 
@@ -52,18 +52,8 @@ export default function Pagination({
   pageRange = 5,
   className,
 }: PaginationProps) {
-  // 키보드 방향키 접근성: ← → 키로 페이지 전환
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft' && currentPage > 1) {
-        onPageChange(currentPage - 1);
-      } else if (e.key === 'ArrowRight' && currentPage < totalPages) {
-        onPageChange(currentPage + 1);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentPage, totalPages, onPageChange]);
+  // 각 페이지 번호 버튼에 대한 참조를 저장하는 Map
+  const pageButtonMapRef = useRef<Map<number, HTMLButtonElement>>(new Map());
 
   // 입력값 검증 및 에러 상태 처리
   if (totalPages < 1) {
@@ -79,7 +69,7 @@ export default function Pagination({
     return null;
   }
 
-  const generatePages = () => {
+  const pages = useMemo(() => {
     const pages: (number | 'dots')[] = [];
 
     const alwaysVisibleCount = pageRange;
@@ -117,9 +107,33 @@ export default function Pagination({
     }
 
     return pages;
-  };
+  }, [currentPage, totalPages, pageRange]);
 
-  const pages = generatePages();
+  // 키보드 방향키 접근성: ← → 키로 페이지 전환
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      let nextPage = currentPage;
+
+      if (e.key === 'ArrowLeft' && currentPage > 1) {
+        nextPage = currentPage - 1;
+      } else if (e.key === 'ArrowRight' && currentPage < totalPages) {
+        nextPage = currentPage + 1;
+      } else {
+        return;
+      }
+
+      onPageChange(nextPage);
+
+      // 페이지 전환 직후 DOM이 갱신되기 때문에,
+      // 포커스를 안정적으로 이동시키기 위해 렌더링이 완료된 후 실행되도록 requestAnimationFrame 사용
+      requestAnimationFrame(() => {
+        pageButtonMapRef.current.get(nextPage)?.focus();
+      });
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentPage, totalPages, onPageChange, pages]);
 
   return (
     <div className='flex flex-col'>
@@ -152,6 +166,12 @@ export default function Pagination({
             </div>
           ) : (
             <button
+              // 각 숫자 버튼에 ref 저장 (Map으로 관리)
+              ref={(el) => {
+                if (el && typeof page === 'number') {
+                  pageButtonMapRef.current.set(page, el);
+                }
+              }}
               type='button'
               key={page}
               onClick={() => onPageChange(page)}
