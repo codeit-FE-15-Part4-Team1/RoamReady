@@ -35,13 +35,15 @@ export default function SelectContent({
           className='fixed inset-0 z-90'
           onClick={() => setIsOpen(false)}
           role='presentation'
+          aria-hidden='true'
         />
       )}
       {/* 드롭다운 */}
       {isOpen && (
         <div
+          role='listbox'
           className={cn(
-            'absolute top-full right-0 left-0 z-100 mt-1 max-h-[30rem] overflow-y-auto rounded border bg-white shadow-lg transition-all duration-300',
+            'absolute top-full right-0 left-0 z-100 mt-1 max-h-[30rem] overflow-y-auto rounded-2xl border border-gray-100 bg-white shadow-lg transition-all duration-300',
             className,
           )}
         >

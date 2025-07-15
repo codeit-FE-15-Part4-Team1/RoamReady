@@ -26,11 +26,16 @@ export default function SelectTrigger({
   className?: string;
 }) {
   const { isOpen, setIsOpen, disabled } = useSelect();
+
   return (
     <button
       disabled={disabled}
+      role='button'
+      aria-expanded={isOpen}
+      aria-haspopup='listbox'
+      aria-label='옵션 선택'
       className={cn(
-        'border-black-100 flex w-full cursor-pointer items-center justify-between rounded-2xl border-2 border-black px-24 py-12 text-gray-400 transition-colors',
+        'flex w-full cursor-pointer items-center justify-between rounded-2xl border border-gray-100 px-12 py-6 text-gray-400 transition-colors',
         disabled && 'cursor-not-allowed opacity-50',
         className,
       )}
@@ -42,6 +47,7 @@ export default function SelectTrigger({
           'size-20 text-black transition-transform duration-200',
           isOpen && 'rotate-180',
         )}
+        aria-hidden='true'
       />
     </button>
   );

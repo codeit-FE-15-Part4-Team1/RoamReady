@@ -26,7 +26,13 @@ export default function SelectItem({
   children: ReactNode;
   className?: string;
 }) {
-  const { onValueChange, setIsOpen, disabled } = useSelect();
+  const {
+    value: selectedValue,
+    onValueChange,
+    setIsOpen,
+    disabled,
+  } = useSelect();
+  const isSelected = selectedValue === value;
 
   const handleClick = () => {
     if (disabled) return;
@@ -36,11 +42,14 @@ export default function SelectItem({
 
   return (
     <button
+      role='option'
+      aria-selected={isSelected}
       onClick={handleClick}
       disabled={disabled}
       className={cn(
         'h-fit w-full cursor-pointer px-12 py-6 text-left transition-colors hover:bg-gray-100',
         disabled && 'cursor-not-allowed opacity-50 hover:bg-transparent',
+        isSelected && 'bg-gray-50',
         className,
       )}
     >
