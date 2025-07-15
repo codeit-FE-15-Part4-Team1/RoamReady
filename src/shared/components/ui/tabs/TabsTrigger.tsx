@@ -60,7 +60,7 @@ export default function TabsTrigger({
       className={cn(
         'border-b border-b-white px-10 py-5 text-black',
         isSelected
-          ? 'text-brand-2 border-b-brand-2 border font-semibold'
+          ? 'text-brand-2 border-b-brand-2 border-b-2 font-semibold'
           : 'text-gray-500',
         className,
       )}
