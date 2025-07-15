@@ -5,7 +5,7 @@ interface DirectionIconProps extends IconsProps {
 }
 
 /**
- * 날카로운 화살표 아이콘
+ * 날카로운 화살표 아이콘 ( ▼ )
  *
  * @component
  * @param {number|string} [size=12] - 아이콘의 크기
