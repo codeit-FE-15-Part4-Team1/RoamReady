@@ -7,6 +7,7 @@ interface DatePickerContextValue {
   today: Dayjs;
   selectedDate?: Date;
   onDateClick?: (date: Date) => void;
+  size: 's' | 'l';
 }
 
 export const DatePickerContext = createContext<DatePickerContextValue | null>(

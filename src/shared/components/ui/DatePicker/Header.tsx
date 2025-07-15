@@ -1,18 +1,30 @@
 import { ReactNode } from 'react';
 
+import { cn } from '@/shared/libs/cn';
+
 import TriangleArrow from '../../icons/triangle-arrow';
 import { useDatePickerContext } from './context';
 
 export const DatePickerHeader = ({ children }: { children?: ReactNode }) => {
-  const { currentMonth, setCurrentMonth } = useDatePickerContext();
+  const { currentMonth, setCurrentMonth, size } = useDatePickerContext();
 
   return (
     <>
       {children ? (
         children
       ) : (
-        <div className='flex items-center justify-between pb-20'>
-          <div className='font-size-16 font-medium text-gray-800'>
+        <div
+          className={cn(
+            'flex items-center justify-between',
+            size === 's' ? 'pb-6' : 'pb-20',
+          )}
+        >
+          <div
+            className={cn(
+              size === 's' ? 'font-size-10' : 'font-size-16',
+              'font-medium text-gray-800',
+            )}
+          >
             {currentMonth.format('MMMM YYYY')}
           </div>
 
@@ -26,6 +38,8 @@ export const DatePickerHeader = ({ children }: { children?: ReactNode }) => {
               <TriangleArrow
                 className='text-gray-950 hover:text-gray-300'
                 direction='left'
+                width={size === 's' ? '8' : '16'}
+                height={size === 's' ? '8' : '16'}
               />
             </button>
 
@@ -36,6 +50,8 @@ export const DatePickerHeader = ({ children }: { children?: ReactNode }) => {
               <TriangleArrow
                 className='text-gray-950 hover:text-gray-300'
                 direction='right'
+                width={size === 's' ? '8' : '16'}
+                height={size === 's' ? '8' : '16'}
               />
             </button>
           </div>

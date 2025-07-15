@@ -9,7 +9,7 @@ export const DatePickerDateGrid = ({
   gridClassName?: string;
   dateButtonClassName?: string;
 }) => {
-  const { currentMonth, today, onDateClick } = useDatePickerContext();
+  const { currentMonth, today, onDateClick, size } = useDatePickerContext();
 
   const startOfMonth = currentMonth.startOf('month');
   const endOfMonth = currentMonth.endOf('month');
@@ -23,10 +23,17 @@ export const DatePickerDateGrid = ({
     date = date.add(1, 'day');
   }
 
+  const sizeClass =
+    size === 's'
+      ? 'gap-3 font-size-10 w-150 min-h-150'
+      : 'gap-5 font-size-16 w-300 min-h-300';
+  const buttonSizeClass = size === 's' ? 'h-20 w-20 font-size-10' : 'h-40 w-40';
+
   return (
     <div
       className={cn(
-        'font-size-16 grid grid-cols-7 gap-5 text-center font-medium',
+        'grid h-fit grid-cols-7 text-center font-medium',
+        sizeClass,
         gridClassName,
       )}
     >
@@ -39,7 +46,8 @@ export const DatePickerDateGrid = ({
             key={i}
             onClick={() => onDateClick?.(d.toDate())}
             className={cn(
-              'mx-auto flex h-46 w-46 cursor-pointer items-center justify-center rounded-full transition',
+              'mx-auto flex cursor-pointer items-center justify-center rounded-full transition',
+              buttonSizeClass,
               {
                 'text-gray-800': isCurrentMonth && !isToday,
                 'cursor-not-allowed text-gray-300': !isCurrentMonth,

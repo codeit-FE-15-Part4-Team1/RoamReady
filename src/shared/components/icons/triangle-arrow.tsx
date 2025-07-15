@@ -15,11 +15,11 @@ interface DirectionIconProps extends IconsProps {
  *
  * @example
  * ```tsx
- * <SharpArrowIcon direction="left" color="#999" size={10} />
+ * <TriangleArrow direction="left" color="#999" size={10} />
  * ```
  */
 
-export default function SharpArrowIcon({
+export default function TriangleArrow({
   width = '8',
   height = '12',
   direction = 'right',

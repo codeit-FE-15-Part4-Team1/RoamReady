@@ -6,12 +6,14 @@ import { DatePickerContext } from './context';
 interface DatePickerRootProps {
   selectedDate?: Date;
   onDateClick?: (date: Date) => void;
+  size?: 's' | 'l';
   children: ReactNode;
 }
 
 export const DatePickerRoot: FC<DatePickerRootProps> = ({
   selectedDate,
   onDateClick,
+  size = 'l',
   children,
 }) => {
   const [currentMonth, setCurrentMonth] = useState(dayjs());
@@ -24,6 +26,7 @@ export const DatePickerRoot: FC<DatePickerRootProps> = ({
         today: dayjs(),
         selectedDate,
         onDateClick,
+        size,
       }}
     >
       <div className='select-none'>{children}</div>

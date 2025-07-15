@@ -1,16 +1,20 @@
 import { cn } from '@/shared/libs/cn';
 
+import { useDatePickerContext } from './context';
+
 export const DatePickerWeekDays = ({
   weekClassName,
 }: {
   weekClassName?: string;
 }) => {
+  const { size } = useDatePickerContext();
   const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
   return (
     <div
       className={cn(
         'font-size-16 mb-1 grid grid-cols-7 text-center font-semibold',
+        size === 's' ? 'font-size-10' : 'font-size-16',
         weekClassName,
       )}
     >
