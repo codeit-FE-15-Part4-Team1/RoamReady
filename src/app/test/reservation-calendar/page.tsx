@@ -30,7 +30,7 @@ export default function CalendarTestPage() {
           <h2 className='mb-4 text-xl font-semibold text-gray-800'>
             ✨ 주요 기능
           </h2>
-          <div className='grid gap-6 md:grid-cols-2'>
+          <div className='grid gap-6 md:grid-cols-3'>
             <div>
               <h3 className='mb-2 font-semibold text-gray-700'>
                 📍 네비게이션
@@ -51,6 +51,16 @@ export default function CalendarTestPage() {
                 <li>• 추가 이벤트 개수 표시</li>
               </ul>
             </div>
+            <div>
+              <h3 className='mb-2 font-semibold text-gray-700'>
+                ⚡ 우선순위 정렬
+              </h3>
+              <ul className='space-y-1 text-sm text-gray-600'>
+                <li>• 완료 → 승인 → 예약 → 거절 → 취소 순</li>
+                <li>• 같은 날짜 여러 이벤트 자동 정렬</li>
+                <li>• 중요도 높은 이벤트 우선 표시</li>
+              </ul>
+            </div>
           </div>
         </div>
 
@@ -61,32 +71,34 @@ export default function CalendarTestPage() {
           </h2>
           <div className='grid grid-cols-2 gap-4 md:grid-cols-5'>
             <div className='flex items-center space-x-2'>
-              <div className='h-4 w-4 rounded bg-red-200'></div>
-              <span className='text-sm font-medium text-red-400'>
-                완료/취소
+              <div className='h-4 w-4 rounded bg-green-200'></div>
+              <span className='text-sm font-medium text-green-400'>
+                완료 (우선순위 1)
               </span>
             </div>
             <div className='flex items-center space-x-2'>
               <div className='h-4 w-4 rounded bg-blue-200'></div>
               <span className='text-sm font-medium text-blue-400'>
-                예약/승인
+                승인 (우선순위 2)
+              </span>
+            </div>
+            <div className='flex items-center space-x-2'>
+              <div className='h-4 w-4 rounded bg-purple-200'></div>
+              <span className='text-sm font-medium text-purple-400'>
+                예약 (우선순위 3)
               </span>
             </div>
             <div className='flex items-center space-x-2'>
               <div className='h-4 w-4 rounded bg-orange-200'></div>
               <span className='text-sm font-medium text-orange-400'>
-                검토/취소
+                거절 (우선순위 4)
               </span>
             </div>
             <div className='flex items-center space-x-2'>
-              <div className='h-4 w-4 rounded bg-green-200'></div>
-              <span className='text-sm font-medium text-green-400'>
-                회의/완료
+              <div className='h-4 w-4 rounded bg-red-200'></div>
+              <span className='text-sm font-medium text-red-400'>
+                취소 (우선순위 5)
               </span>
-            </div>
-            <div className='flex items-center space-x-2'>
-              <div className='h-4 w-4 rounded bg-purple-200'></div>
-              <span className='text-sm font-medium text-purple-400'>미팅</span>
             </div>
           </div>
         </div>
@@ -98,8 +110,12 @@ export default function CalendarTestPage() {
           </h3>
           <p className='text-sm text-blue-600'>
             현재 2025년 7월 14일~18일에 샘플 이벤트들이 설정되어 있습니다. 해당
-            날짜로 이동해서 이벤트 표시 기능을 확인해보세요!
+            날짜로 이동해서 이벤트 표시 및 우선순위 정렬 기능을 확인해보세요!
           </p>
+          <div className='mt-2 text-xs text-blue-500'>
+            💡 팁: 7월 15일, 16일, 17일에는 여러 이벤트가 있어서 우선순위 정렬을
+            확인할 수 있습니다.
+          </div>
         </div>
       </div>
     </div>

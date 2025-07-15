@@ -114,7 +114,7 @@ export default function ReservationCalendar() {
       <div className='flex items-center justify-center gap-15 py-20 text-3xl'>
         <button
           onClick={prevMonth}
-          className='rounded p-2 hover:bg-gray-100'
+          className='cursor-pointer rounded p-2'
           aria-label='이전 달로 이동'
         >
           &lt;
@@ -129,7 +129,7 @@ export default function ReservationCalendar() {
         </span>
         <button
           onClick={nextMonth}
-          className='rounded p-2 hover:bg-gray-100'
+          className='cursor-pointer rounded p-2'
           aria-label='다음 달로 이동'
         >
           &gt;
