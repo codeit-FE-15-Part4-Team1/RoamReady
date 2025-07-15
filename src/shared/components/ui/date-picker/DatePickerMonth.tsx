@@ -3,9 +3,13 @@ import { ReactNode } from 'react';
 import { cn } from '@/shared/libs/cn';
 
 import TriangleArrow from '../../icons/triangle-arrow';
-import { useDatePickerContext } from './context';
+import { useDatePickerContext } from './DatePickerContext';
 
-export const DatePickerHeader = ({ children }: { children?: ReactNode }) => {
+interface DatePickerMonthProps {
+  children?: ReactNode;
+}
+
+export default function DatePickerMonth({ children }: DatePickerMonthProps) {
   const { currentMonth, setCurrentMonth, size } = useDatePickerContext();
 
   return (
@@ -59,4 +63,4 @@ export const DatePickerHeader = ({ children }: { children?: ReactNode }) => {
       )}
     </>
   );
-};
+}

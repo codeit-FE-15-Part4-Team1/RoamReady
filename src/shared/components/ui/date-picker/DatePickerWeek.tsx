@@ -1,12 +1,12 @@
 import { cn } from '@/shared/libs/cn';
 
-import { useDatePickerContext } from './context';
+import { useDatePickerContext } from './DatePickerContext';
 
-export const DatePickerWeekDays = ({
-  weekClassName,
-}: {
+interface DatePickerWeekProps {
   weekClassName?: string;
-}) => {
+}
+
+export default function DatePickerWeek({ weekClassName }: DatePickerWeekProps) {
   const { size } = useDatePickerContext();
   const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
@@ -32,4 +32,4 @@ export const DatePickerWeekDays = ({
       })}
     </div>
   );
-};
+}

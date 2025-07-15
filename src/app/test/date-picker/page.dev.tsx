@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { Calendar } from 'lucide-react';
 import React, { useState } from 'react';
 
-import { DatePicker } from '@/shared/components/ui/DatePicker';
+import { DatePicker } from '@/shared/components/ui/date-picker';
 
 export default function DatePickerTestPage() {
   // 각각의 DatePicker별 상태를 따로 관리

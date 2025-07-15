@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
-import { FC, ReactNode, useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 import { cn } from '@/shared/libs/cn';
 
-import { DatePickerContext } from './context';
+import { DatePickerContext } from './DatePickerContext';
 
 interface DatePickerRootProps {
   selectedDate?: Date;
@@ -13,13 +13,13 @@ interface DatePickerRootProps {
   children: ReactNode;
 }
 
-export const DatePickerRoot: FC<DatePickerRootProps> = ({
+export default function DatePickerRoot({
   selectedDate,
   onDateClick,
   size = 'l',
   wrapperClassName,
   children,
-}) => {
+}: DatePickerRootProps) {
   const [currentMonth, setCurrentMonth] = useState(dayjs());
 
   const sizeClass = size === 's' ? 'w-150 min-h-150' : 'w-300 min-h-300';
@@ -40,4 +40,4 @@ export const DatePickerRoot: FC<DatePickerRootProps> = ({
       </div>
     </DatePickerContext.Provider>
   );
-};
+}

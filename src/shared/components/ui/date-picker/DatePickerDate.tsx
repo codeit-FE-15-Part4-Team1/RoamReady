@@ -1,15 +1,18 @@
 import { cn } from '@/shared/libs/cn';
 
-import { useDatePickerContext } from './context';
-export const DatePickerDateGrid = ({
-  gridClassName,
-  dateButtonClassName,
-  reservableDates,
-}: {
+import { useDatePickerContext } from './DatePickerContext';
+
+interface DatePickerDateProps {
   gridClassName?: string;
   dateButtonClassName?: string;
   reservableDates?: string[];
-}) => {
+}
+
+export default function DatePickerDate({
+  gridClassName,
+  dateButtonClassName,
+  reservableDates,
+}: DatePickerDateProps) {
   const { currentMonth, today, onDateClick, selectedDate, size } =
     useDatePickerContext();
 
@@ -27,8 +30,7 @@ export const DatePickerDateGrid = ({
 
   const reservableSet = new Set(reservableDates ?? []);
 
-  const sizeClass =
-    size === 's' ? 'gap-3 font-size-10 ' : 'gap-5 font-size-16 ';
+  const sizeClass = size === 's' ? 'gap-3 font-size-10' : 'gap-5 font-size-16';
   const buttonSizeClass = size === 's' ? 'h-20 w-20 font-size-10' : 'h-40 w-40';
 
   return (
@@ -82,4 +84,4 @@ export const DatePickerDateGrid = ({
       })}
     </div>
   );
-};
+}
