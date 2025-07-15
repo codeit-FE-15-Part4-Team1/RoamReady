@@ -9,6 +9,10 @@ export interface SelectContextValue {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   disabled?: boolean;
+  focusedIndex: number;
+  setFocusedIndex: (index: number) => void;
+  options: string[];
+  setOptions: (options: string[]) => void;
 }
 
 // 컨텍스트 생성

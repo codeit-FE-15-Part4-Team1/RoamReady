@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 
 import { cn } from '../../../libs/cn';
 import { useSelect } from './useSelect';
@@ -25,7 +25,15 @@ export default function SelectContent({
   children: ReactNode;
   className?: string;
 }) {
-  const { isOpen, setIsOpen } = useSelect();
+  const { isOpen, setIsOpen, setFocusedIndex } = useSelect();
+
+  useEffect(() => {
+    if (isOpen) {
+      setFocusedIndex(0); // 첫 번째 옵션을 기본으로 선택
+    } else {
+      setFocusedIndex(-1);
+    }
+  }, [isOpen, setFocusedIndex]);
 
   return (
     <>

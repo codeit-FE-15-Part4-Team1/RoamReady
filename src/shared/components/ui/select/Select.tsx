@@ -56,6 +56,8 @@ export default function Select({
   disabled,
 }: SelectProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState(0);
+  const [options, setOptions] = useState<string[]>([]);
 
   return (
     <SelectContext.Provider
@@ -65,6 +67,10 @@ export default function Select({
         isOpen,
         setIsOpen,
         disabled,
+        focusedIndex,
+        setFocusedIndex,
+        options,
+        setOptions,
       }}
     >
       <div className={cn('relative', className)}>{children}</div>
