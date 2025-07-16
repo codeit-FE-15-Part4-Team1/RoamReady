@@ -1,4 +1,4 @@
-import Bell from '@/shared/components/icons/bell';
+import Image from 'next/image';
 
 /**
  * AuthMenu 컴포넌트 입니다.
@@ -11,7 +11,7 @@ import Bell from '@/shared/components/icons/bell';
 export default function AuthMenu() {
   return (
     <div className='flex items-center justify-center gap-20'>
-      <Bell />
+      <Image src='/icons/bell.svg' alt='알림 아이콘' width={24} height={24} />
       <div className='flex items-center justify-center gap-15'>
         {/* 세로 구분선 */}
         <div className='h-20 w-1 self-center bg-gray-100' />
