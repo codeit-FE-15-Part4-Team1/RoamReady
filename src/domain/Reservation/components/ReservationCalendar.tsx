@@ -5,7 +5,15 @@ import React, { useMemo, useState } from 'react';
 
 dayjs.extend(isSameOrBefore); // 플러그인 활성화
 
-// 이벤트 타입 정의
+/**
+ * 예약 캘린더 이벤트 타입
+ * @interface Event
+ * @property id - 고유 식별자
+ * @property title - 이벤트 제목 (상태: 완료, 승인, 예약, 거절, 취소)
+ * @property date - 이벤트 날짜 (YYYY-MM-DD 형식)
+ * @property color - 표시 색상
+ * @property number - 이벤트 번호 (표시용)
+ */
 interface Event {
   id: string;
   title: string;
@@ -73,12 +81,21 @@ export default function ReservationCalendar() {
     return daysArr;
   }, [calendarStart, calendarEnd]);
 
+  /**
+   * 특정 날짜의 이벤트 목록을 반환합니다
+   * @param date - 조회할 날짜 (dayjs 객체)
+   * @returns 해당 날짜의 이벤트 배열
+   */
   const getEventsForDate = (date: dayjs.Dayjs) => {
     const formattedDate = date.format('YYYY-MM-DD');
     return eventsByDate[formattedDate] || [];
   };
 
-  // 이벤트를 우선순위에 따라 정렬
+  /**
+   * 이벤트를 우선순위에 따라 정렬합니다
+   * @param events - 정렬할 이벤트 배열
+   * @returns 우선순위 순으로 정렬된 이벤트 배열 (완료 > 승인 > 예약 > 거절 > 취소)
+   */
   const sortEventsByPriority = (events: Event[]) => {
     return events.sort((a, b) => {
       const priorityA =
@@ -89,7 +106,11 @@ export default function ReservationCalendar() {
     });
   };
 
-  // 색상 클래스 매핑
+  /**
+   * 이벤트 색상에 따른 Tailwind CSS 클래스를 반환합니다
+   * @param color - 이벤트 색상 ('red' | 'blue' | 'orange' | 'green' | 'purple')
+   * @returns Tailwind CSS 클래스 문자열
+   */
   const getColorClass = (color: string) => {
     const colorMap = {
       red: 'bg-red-200 text-red-400',
