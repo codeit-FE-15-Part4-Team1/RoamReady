@@ -7,7 +7,7 @@ import Dropdown from '@/shared/components/ui/dropdown';
 export default function DropdownTestPage() {
   return (
     <div className='mt-100 flex justify-center gap-100'>
-      <Dropdown>
+      <Dropdown.Root>
         <Dropdown.Trigger>
           <div className='bg-brand-2 h-50 w-50 rounded-full' />
         </Dropdown.Trigger>
@@ -19,8 +19,8 @@ export default function DropdownTestPage() {
             마이페이지
           </Dropdown.Item>
         </Dropdown.Menu>
-      </Dropdown>
-      <Dropdown>
+      </Dropdown.Root>
+      <Dropdown.Root>
         <Dropdown.Trigger>
           <EllipsisVertical />
         </Dropdown.Trigger>
@@ -32,7 +32,7 @@ export default function DropdownTestPage() {
             삭제하기
           </Dropdown.Item>
         </Dropdown.Menu>
-      </Dropdown>
+      </Dropdown.Root>
     </div>
   );
 }

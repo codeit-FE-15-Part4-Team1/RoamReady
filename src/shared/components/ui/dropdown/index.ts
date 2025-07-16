@@ -1,7 +1,7 @@
-import DropdownItem from './Dropdown.Item';
-import DropdownMenu from './Dropdown.Menu';
-import DropdownTrigger from './Dropdown.Trigger';
-import DropdownWrapper from './DropdownWrapper';
+import DropdownItem from './DropdownItem';
+import DropdownMenu from './DropdownMenu';
+import DropdownRoot from './DropdownRoot';
+import DropdownTrigger from './DropdownTrigger';
 
 /**
  * Dropdown 컴포넌트는 여러 하위 컴포넌트(Trigger, Menu, Item)를 포함해
@@ -10,7 +10,7 @@ import DropdownWrapper from './DropdownWrapper';
  *
  * @example
  * ```tsx
- *     <Dropdown>
+ *     <Dropdown.Root>
  *       <Dropdown.Trigger>메뉴 열기</Dropdown.Trigger>
  *       <Dropdown.Menu>
  *         <Dropdown.Item onClick={() => alert('첫 번째 아이템 클릭')}>
@@ -20,13 +20,14 @@ import DropdownWrapper from './DropdownWrapper';
  *           두 번째 아이템
  *         </Dropdown.Item>
  *       </Dropdown.Menu>
- *     </Dropdown>
+ *     </Dropdown.Root>
  * ```
  */
-const Dropdown = Object.assign(DropdownWrapper, {
+const Dropdown = {
+  Root: DropdownRoot,
   Trigger: DropdownTrigger,
   Menu: DropdownMenu,
   Item: DropdownItem,
-});
+};
 
 export default Dropdown;

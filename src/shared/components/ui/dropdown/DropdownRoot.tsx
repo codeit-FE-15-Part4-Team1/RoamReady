@@ -16,16 +16,16 @@ import { DropdownContext } from './DropdownContext';
  *
  * @example
  * ```tsx
- * <DropdownWrapper>
+ * <Dropdown.Root>
  *   <DropdownTrigger>메뉴 열기</DropdownTrigger>
  *   <DropdownMenu>
  *     <DropdownItem onClick={() => console.log('메뉴1 클릭')}>메뉴1</DropdownItem>
  *     <DropdownItem onClick={() => console.log('메뉴2 클릭')}>메뉴2</DropdownItem>
  *   </DropdownMenu>
- * </DropdownWrapper>
+ * </Dropdown.Root>
  * ```
  */
-export default function DropdownWrapper({ children }: { children: ReactNode }) {
+export default function DropdownRoot({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false); // 드롭다운 열림 상태
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null); // 현재 키보드로 포커스된 항목 인덱스
   const focusedIndexRef = useRef<number | null>(null); // 현재 focusIndex를 추적하기 위한 ref
