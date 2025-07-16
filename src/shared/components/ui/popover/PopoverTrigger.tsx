@@ -1,18 +1,17 @@
 'use client';
-import { ReactNode } from 'react';
+import { ButtonHTMLAttributes, MouseEvent, ReactNode } from 'react';
 
 import { cn } from '@/shared/libs/cn';
 
-import { usePopover } from './usePopover';
+import { usePopover } from './PopoverContext';
 
 /**
  * PopoverTrigger 컴포넌트의 Props 인터페이스
  *
  * @interface PopoverTriggerProps
- * @extends {React.ButtonHTMLAttributes<HTMLButtonElement>} HTML button 요소의 모든 속성을 상속
+ * @extends {ButtonHTMLAttributes<HTMLButtonElement>} HTML button 요소의 모든 속성을 상속
  */
-interface PopoverTriggerProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface PopoverTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** 트리거 버튼 내부에 표시될 컨텐츠 */
   children: ReactNode;
   /**
@@ -58,9 +57,9 @@ export default function PopoverTrigger({
   /**
    * 트리거 클릭 핸들러
    *
-   * @param {React.MouseEvent<HTMLButtonElement>} e - 마우스 클릭 이벤트
+   * @param {MouseEvent<HTMLButtonElement>} e - 마우스 클릭 이벤트
    */
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     setIsOpen(!isOpen);
     onClick?.(e);
   };

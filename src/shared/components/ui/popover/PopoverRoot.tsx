@@ -1,6 +1,13 @@
 'use client';
 
-import { createContext, ReactNode, RefObject, useRef, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  RefObject,
+  useId,
+  useRef,
+  useState,
+} from 'react';
 
 interface PopoverContextType {
   /** Popover의 열림/닫힘 상태 */
@@ -9,6 +16,8 @@ interface PopoverContextType {
   setIsOpen: (isOpen: boolean) => void;
   /** 트리거 요소에 대한 ref 객체 (위치 계산용) */
   triggerRef: RefObject<HTMLButtonElement | null>;
+  /** 각 Popover 인스턴스의 고유 ID */
+  popoverId: string;
 }
 
 /**
@@ -43,12 +52,15 @@ interface PopoverRootProps {
  * @param {PopoverRootProps} props - 컴포넌트 props
  * @returns {JSX.Element} Context Provider로 감싸진 children
  */
-export default function Popover({ children }: PopoverRootProps) {
+export default function PopoverRoot({ children }: PopoverRootProps) {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const popoverId = useId();
 
   return (
-    <PopoverContext.Provider value={{ isOpen, setIsOpen, triggerRef }}>
+    <PopoverContext.Provider
+      value={{ isOpen, setIsOpen, triggerRef, popoverId }}
+    >
       {children}
     </PopoverContext.Provider>
   );

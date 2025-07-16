@@ -1,5 +1,11 @@
 import { LoaderCircle } from 'lucide-react';
-import { cloneElement, isValidElement, MouseEvent, ReactElement } from 'react';
+import {
+  cloneElement,
+  ComponentProps,
+  isValidElement,
+  MouseEvent,
+  ReactElement,
+} from 'react';
 
 import { cn } from '../libs/cn';
 
@@ -100,9 +106,9 @@ function getButtonClasses(
 /**
  * Button 컴포넌트의 Props 타입 정의
  * @interface ButtonProps
- * @extends React.ComponentProps<'button'>
+ * @extends ComponentProps<'button'>
  */
-interface ButtonProps extends React.ComponentProps<'button'> {
+interface ButtonProps extends ComponentProps<'button'> {
   /**
    * 자식 요소로 렌더링할지 여부 (Slot 패턴)
    * @default false

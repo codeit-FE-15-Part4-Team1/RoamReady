@@ -1,10 +1,17 @@
 'use client';
-import { ReactNode, useEffect, useLayoutEffect, useState } from 'react';
+import {
+  HTMLAttributes,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import { createPortal } from 'react-dom';
 
 import { cn } from '@/shared/libs/cn';
 
-import { usePopover } from './usePopover';
+import { usePopover } from './PopoverContext';
 
 /**
  * Popover 컨텐츠의 위치를 정의하는 타입
@@ -33,9 +40,9 @@ type PopoverPosition =
  * PopoverContent 컴포넌트의 Props 인터페이스
  *
  * @interface PopoverContentProps
- * @extends {React.HTMLAttributes<HTMLDivElement>} HTML div 요소의 모든 속성을 상속
+ * @extends {HTMLAttributes<HTMLDivElement>} HTML div 요소의 모든 속성을 상속
  */
-interface PopoverContentProps extends React.HTMLAttributes<HTMLDivElement> {
+interface PopoverContentProps extends HTMLAttributes<HTMLDivElement> {
   /** Popover 내부에 표시될 컨텐츠 */
   children: ReactNode;
   /**
@@ -72,7 +79,7 @@ interface PopoverContentProps extends React.HTMLAttributes<HTMLDivElement> {
  * ```
  *
  * @param {PopoverContentProps} props - 컴포넌트 props
- * @returns {React.ReactPortal | null} Portal로 렌더링된 Popover 또는 null
+ * @returns {ReactPortal | null} Portal로 렌더링된 Popover 또는 null
  */
 export default function PopoverContent({
   children,
@@ -81,112 +88,146 @@ export default function PopoverContent({
   className,
   ...props
 }: PopoverContentProps) {
-  const { isOpen, setIsOpen, triggerRef } = usePopover();
+  const { isOpen, setIsOpen, triggerRef, popoverId } = usePopover();
   const [pos, setPos] = useState({
     x: 0,
     y: 0,
   });
   const [transform, setTransform] = useState('');
+  const [mounted, setMounted] = useState(false);
 
-  // 위치 계산
-  useLayoutEffect(() => {
-    if (isOpen && triggerRef.current) {
-      const rect = triggerRef.current.getBoundingClientRect();
-      let newPosition = { x: 0, y: 0 };
-      let newTransform = '';
+  // SSR 대응
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-      // position에 따른 위치 설정
-      switch (position) {
-        case 'bottom-start':
-          newPosition = {
-            y: rect.bottom + 10,
-            x: rect.left,
-          };
-          newTransform = '';
-          break;
-        case 'bottom-center':
-          newPosition = {
-            y: rect.bottom + 10,
-            x: rect.left + rect.width / 2, // trigger 중앙점
-          };
-          newTransform = 'translateX(-50%)'; // popover 중앙이 trigger 중앙에
-          break;
-        case 'bottom-end':
-          newPosition = {
-            y: rect.bottom + 10,
-            x: rect.right, // trigger 오른쪽
-          };
-          newTransform = 'translateX(-100%)'; // popover 오른쪽이 trigger 오른쪽에
-          break;
-        case 'top-start':
-          newPosition = {
-            y: rect.top - 10,
-            x: rect.left,
-          };
-          newTransform = 'translateY(-100%)'; // popover 아래쪽이 계산된 위치에
-          break;
-        case 'top-center':
-          newPosition = {
-            y: rect.top - 10,
-            x: rect.left + rect.width / 2,
-          };
-          newTransform = 'translateX(-50%) translateY(-100%)';
-          break;
-        case 'top-end':
-          newPosition = {
-            y: rect.top - 10,
-            x: rect.right,
-          };
-          newTransform = 'translateX(-100%) translateY(-100%)';
-          break;
-        case 'left-start':
-          newPosition = {
-            y: rect.top,
-            x: rect.left - 10,
-          };
-          newTransform = 'translateX(-100%)'; // popover 오른쪽이 계산된 위치에
-          break;
-        case 'left-center':
-          newPosition = {
-            y: rect.top + rect.height / 2,
-            x: rect.left - 10,
-          };
-          newTransform = 'translateX(-100%) translateY(-50%)';
-          break;
-        case 'left-end':
-          newPosition = {
-            y: rect.bottom,
-            x: rect.left - 10,
-          };
-          newTransform = 'translateX(-100%) translateY(-100%)';
-          break;
-        case 'right-start':
-          newPosition = {
-            y: rect.top,
-            x: rect.right + 10,
-          };
-          newTransform = '';
-          break;
-        case 'right-center':
-          newPosition = {
-            y: rect.top + rect.height / 2,
-            x: rect.right + 10,
-          };
-          newTransform = 'translateY(-50%)';
-          break;
-        case 'right-end':
-          newPosition = {
-            y: rect.bottom,
-            x: rect.right + 10,
-          };
-          newTransform = 'translateY(-100%)';
-          break;
-      }
+  // 위치 계산 함수를 별도로 분리
+  const calculatePosition = useCallback(() => {
+    if (!triggerRef.current) return;
 
-      setPos(newPosition);
-      setTransform(newTransform);
+    const rect = triggerRef.current.getBoundingClientRect();
+    //현대적인 방식과 구형 브라우저 모두 지원하기 위해서 사용
+    const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
+    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+    let newPosition = { x: 0, y: 0 };
+    let newTransform = '';
+
+    // position에 따른 위치 설정 scroll값을 추가하여 위치 고정 처리
+    switch (position) {
+      case 'bottom-start':
+        newPosition = {
+          y: rect.bottom + scrollY + 10,
+          x: rect.left + scrollX,
+        };
+        newTransform = '';
+        break;
+      case 'bottom-center':
+        newPosition = {
+          y: rect.bottom + scrollY + 10,
+          x: rect.left + scrollX + rect.width / 2,
+        };
+        newTransform = 'translateX(-50%)';
+        break;
+      case 'bottom-end':
+        newPosition = {
+          y: rect.bottom + scrollY + 10,
+          x: rect.right + scrollX,
+        };
+        newTransform = 'translateX(-100%)';
+        break;
+      case 'top-start':
+        newPosition = {
+          y: rect.top + scrollY - 10,
+          x: rect.left + scrollX,
+        };
+        newTransform = 'translateY(-100%)';
+        break;
+      case 'top-center':
+        newPosition = {
+          y: rect.top + scrollY - 10,
+          x: rect.left + scrollX + rect.width / 2,
+        };
+        newTransform = 'translateX(-50%) translateY(-100%)';
+        break;
+      case 'top-end':
+        newPosition = {
+          y: rect.top + scrollY - 10,
+          x: rect.right + scrollX,
+        };
+        newTransform = 'translateX(-100%) translateY(-100%)';
+        break;
+      case 'left-start':
+        newPosition = {
+          y: rect.top + scrollY,
+          x: rect.left + scrollX - 10,
+        };
+        newTransform = 'translateX(-100%)';
+        break;
+      case 'left-center':
+        newPosition = {
+          y: rect.top + scrollY + rect.height / 2,
+          x: rect.left + scrollX - 10,
+        };
+        newTransform = 'translateX(-100%) translateY(-50%)';
+        break;
+      case 'left-end':
+        newPosition = {
+          y: rect.bottom + scrollY,
+          x: rect.left + scrollX - 10,
+        };
+        newTransform = 'translateX(-100%) translateY(-100%)';
+        break;
+      case 'right-start':
+        newPosition = {
+          y: rect.top + scrollY,
+          x: rect.right + scrollX + 10,
+        };
+        newTransform = '';
+        break;
+      case 'right-center':
+        newPosition = {
+          y: rect.top + scrollY + rect.height / 2,
+          x: rect.right + scrollX + 10,
+        };
+        newTransform = 'translateY(-50%)';
+        break;
+      case 'right-end':
+        newPosition = {
+          y: rect.bottom + scrollY,
+          x: rect.right + scrollX + 10,
+        };
+        newTransform = 'translateY(-100%)';
+        break;
     }
-  }, [isOpen, position, triggerRef]);
+
+    setPos(newPosition);
+    setTransform(newTransform);
+  }, [position, triggerRef]);
+
+  // 초기 위치 계산 - 깜빡임 방지
+  useLayoutEffect(() => {
+    if (isOpen) {
+      calculatePosition();
+    }
+  }, [isOpen, calculatePosition]);
+
+  // 스크롤 이벤트 등록 - 성능 최적화
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleScroll = () => {
+      calculatePosition();
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, [isOpen, calculatePosition]);
 
   // ESC 키로 닫기 기능
   useEffect(() => {
@@ -202,40 +243,33 @@ export default function PopoverContent({
     }
   }, [isOpen, setIsOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
   // Portal로 body에 직접 렌더링
   const popoverElement = (
-    <>
-      {/* 백드롭 */}
-      <div
-        className='fixed inset-0 z-40'
-        onClick={() => setIsOpen(false)}
-        role='presentation'
-      />
-      {/* 실제 콘텐츠 */}
-      <div
-        className={cn(
-          'fixed z-50 h-fit max-h-100 w-fit max-w-2xl overflow-y-auto rounded-md border border-gray-200 bg-white p-4 shadow-lg',
-          className,
-        )}
-        id='popover-content'
-        role='dialog'
-        aria-modal='true'
-        aria-labelledby='trigger'
-        //popover 컨텐츠 위치 계산
-        style={{
-          top: pos.y,
-          left: pos.x,
-          transform: transform,
-          ...style,
-        }}
-        {...props}
-      >
-        {children}
-      </div>
-    </>
+    <div
+      className={cn(
+        'absolute z-50 h-fit max-h-100 w-fit max-w-2xl overflow-y-auto rounded-md border border-gray-200 bg-white p-4 shadow-lg',
+        className,
+      )}
+      id={`popover-content-${popoverId}`}
+      role='dialog'
+      aria-modal='true'
+      aria-labelledby={triggerRef.current?.id || undefined}
+      //popover 컨텐츠 위치 계산
+      style={{
+        top: pos.y,
+        left: pos.x,
+        transform: transform,
+        ...style,
+      }}
+      {...props}
+    >
+      {children}
+    </div>
   );
 
-  return createPortal(popoverElement, document.body);
+  return typeof document !== 'undefined'
+    ? createPortal(popoverElement, document.body)
+    : null;
 }
