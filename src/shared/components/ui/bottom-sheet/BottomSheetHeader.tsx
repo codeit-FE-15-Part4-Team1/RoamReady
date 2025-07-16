@@ -27,7 +27,12 @@ export function BottomSheetHeader({ children }: { children: ReactNode }) {
     <div className='font-size-18 tablet:font-size-20 tablet:mb-24 mb-8 flex items-center gap-8 font-bold'>
       {/* 첫 번째 스텝이 아닌 경우에만 뒤로가기 버튼 표시 */}
       {currentStep > 0 && (
-        <button onClick={goToPrevStep} className='cursor-pointer'>
+        <button
+          onClick={goToPrevStep}
+          className='cursor-pointer'
+          type='button'
+          aria-label='이전 단계로 돌아가기'
+        >
           <ArrowLeft />
         </button>
       )}
