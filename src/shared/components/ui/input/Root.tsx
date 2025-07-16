@@ -88,7 +88,7 @@ export default function Root({
   fallbackMessage,
 }: RootProps) {
   const uniqueId = useId();
-  const finalId = id || uniqueId;
+  const finalId = `input-${id}` || uniqueId;
 
   const {
     register,

@@ -25,7 +25,7 @@ const pretendard = localFont({
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang='ko'>
-      <body className={pretendard.className} suppressHydrationWarning>
+      <body className={pretendard.className}>
         <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
