@@ -51,7 +51,7 @@ function LogoSection({
             <Component className={variant.className} />
             <span className='font-size-13 text-gray-500'>{variant.label}</span>
             <code className='font-size-13 rounded px-2 py-1 text-gray-600'>
-              &lt;{title} className="{variant.className}" /&gt;
+              &lt;{title} className=&quot;{variant.className}&quot; /&gt;
             </code>
           </div>
         ))}
