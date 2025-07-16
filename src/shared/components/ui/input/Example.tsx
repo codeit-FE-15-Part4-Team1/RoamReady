@@ -2,7 +2,7 @@
 
 import { Search } from 'lucide-react';
 import Image from 'next/image';
-import { Control, useFormContext } from 'react-hook-form';
+import { Control } from 'react-hook-form';
 
 import Button from '@/shared/components/Button';
 import { useImagePreview } from '@/shared/hooks/useImagePreview';
@@ -41,25 +41,22 @@ interface ExampleProps {
  * 다양한 입력 필드를 실제로 어떻게 구성하고 사용하는지를 시각적으로 확인할 수 있습니다.
  *
  * @param {ExampleProps} props - Example 컴포넌트에 전달되는 속성
- * @param {function} [props.onSubmit] - 폼 제출 시 호출될 콜백 함수 (부모로부터 `handleSubmit`을 통해 전달받음).
- * @param {boolean} [props.isSubmitting] - 폼 제출 중인지 여부 (부모로부터 전달받음).
- * @param {Control<any>} props.control - `react-hook-form`의 `control` 객체로, `useImagePreview`와 같은 훅에 전달됩니다. (부모로부터 전달받음).
+ * @param {function(React.BaseSyntheticEvent=): void} [props.onSubmit] - 폼 제출 시 호출될 콜백 함수입니다.
+ * `react-hook-form`의 `handleSubmit`으로 래핑되어 유효성 검사 후 호출됩니다.
+ * @param {boolean} [props.isSubmitting] - 폼 제출 진행 중인지 여부를 나타내는 불리언 값입니다.
+ * 제출 버튼의 활성화/비활성화 상태를 제어하는 데 사용됩니다.
+ * @param {Control<FormValues>} props.control - `react-hook-form`의 `control` 객체입니다.
+ * `useWatch`를 사용하는 `useImagePreview`와 같은 훅에 전달되어 필드 값을 감시합니다.
  *
  * @returns {JSX.Element} Input 컴포넌트들의 다양한 예시를 포함하는 폼 요소.
  *
- * @see src/app/test/input
+ * @see {@link RoamReady/src/app/test/input/page.dev.tsx src/app/test/input/page.dev.tsx} - 이 컴포넌트의 사용 예시를 확인할 수 있는 테스트 페이지 경로
  */
 export default function Example({
   onSubmit,
   isSubmitting,
   control,
 }: ExampleProps) {
-  // `useFormContext`를 사용하여 부모로부터 제공된 폼 컨텍스트에 접근합니다.
-  const {
-    formState: { errors },
-  } = useFormContext();
-
-  // `useImagePreview` 훅에 `control` 객체를 전달합니다.
   const { previewUrl } = useImagePreview('profileImage', control);
   const group = 'rounded-lg border border-gray-300 px-20 py-15';
 

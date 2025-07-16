@@ -59,7 +59,7 @@ interface HelperProps {
  * <Input.Root name="comment" type="textarea" maxLength={100}>
  * <Input.Label>댓글</Input.Label>
  * <Input.Field rows={4} />
- * <Input.Helper /> // children 없이 사용 시, 문자 수 카운터만 표시
+ * <Input.Helper />
  * </Input.Root>
  * ```
  */

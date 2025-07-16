@@ -20,7 +20,7 @@ import { InputContext, InputContextProps } from './context';
  * @property {string} [id] - 연결될 입력 요소의 HTML `id` 속성입니다. 제공되지 않으면 `useId`로 자동 생성됩니다.
  * @property {boolean} [required] - 입력 필드의 필수 여부입니다.
  * @property {boolean} [disabled] - 입력 필드의 비활성화 여부입니다.
- * @property {number} [maxLength] - 텍스트 입력 필드(특히 `textarea`)의 최대 문자 길이입니다.
+ * @property {number} [maxLength] - 텍스트 입력 필드(`textarea`)의 최대 문자 길이입니다.
  * @property {string} [fallbackMessage] - `type`이 'file'일 때 `Input.Trigger`에 표시될 기본 안내 메시지입니다.
  * @property {boolean} [initialPasswordVisible] - `type`이 'password'일 때 비밀번호 필드의 초기 가시성(보이기/숨기기)을 설정합니다. 기본값은 `false`입니다.
  *
@@ -31,17 +31,11 @@ import { InputContext, InputContextProps } from './context';
  * - `register`: `react-hook-form`의 `register(name)` 호출 결과 객체로, 입력 요소에 필요한 속성(`name`, `onChange`, `onBlur`, `ref` 등)을 포함합니다.
  * - `currentLength`: `type`이 'textarea'일 때 `useWatch`를 통해 파생된 현재 입력된 문자열의 길이입니다.
  * - `fileName`: `type`이 'file'일 때 `useWatch`를 통해 파생된 선택된 파일의 이름입니다.
- * - `handleFileChange`: `register`가 파일 입력의 `onChange` 이벤트를 처리하므로 더 이상 직접적으로 필요하지 않습니다.
  */
 interface RootProps
   extends Omit<
     InputContextProps,
-    | 'isError'
-    | 'errors'
-    | 'register'
-    | 'currentLength'
-    | 'fileName'
-    | 'handleFileChange'
+    'isError' | 'errors' | 'register' | 'currentLength' | 'fileName'
   > {
   name: string;
   children: ReactNode;
@@ -55,7 +49,7 @@ interface RootProps
  * `Input` 컴포넌트 패밀리의 루트 역할을 하는 컨테이너 컴포넌트입니다.
  * 이 컴포넌트는 `react-hook-form`과 통합되어 특정 입력 필드(`name`으로 식별)의 폼 상태를 관리하고,
  * `InputContext`를 생성하여 `Label`, `Field`, `Trigger`, `Helper` 등 모든 자식 컴포넌트들이
- * 필요한 입력 상태(예: `id`, `type`, `isError`, `register`, `currentLength` 등)를 공유하고 접근할 수 있도록 합니다.
+ * 필요한 입력 상태(예: `id`, `type`, `register`, `currentLength` 등)를 공유하고 접근할 수 있도록 합니다.
  *
  * `Input.Root`는 `useFormContext`를 통해 `react-hook-form`의 `register`, `errors`, `control`을 가져오며,
  * 이를 기반으로 `isError`, `currentLength`, `fileName`과 같은 파생된 상태를 계산하여 Context에 제공합니다.
@@ -75,7 +69,7 @@ interface RootProps
  * </Input.Root>
  *
  * 비밀번호 입력 필드의 예시
- * <Input.Root name="password" id="user-password" type="password" initialPasswordVisible={false}>
+ * <Input.Root name="password" id="user-password" type="password" >
  * <Input.Label>비밀번호</Input.Label>
  * <Input.Field placeholder="비밀번호를 입력하세요" rightIcon={<Input.Trigger triggerType="password-toggle" />} />
  * <Input.Helper /> // react-hook-form 에러 메시지가 있다면 자동으로 표시
@@ -92,7 +86,6 @@ export default function Root({
   className = '',
   maxLength,
   fallbackMessage,
-  initialPasswordVisible = false,
 }: RootProps) {
   const uniqueId = useId();
   const finalId = id || uniqueId;
@@ -109,9 +102,7 @@ export default function Root({
 
   const isError = !!errors[name];
 
-  const [isPasswordVisible, setIsPasswordVisible] = useState(
-    initialPasswordVisible,
-  );
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
