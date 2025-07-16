@@ -1,9 +1,10 @@
 'use client';
+import Image from 'next/image';
 import Link from 'next/link';
 
-import Kakao from '@/shared/assets/images/kakao-btn-sm.svg';
-import Logo from '@/shared/assets/logos/logo-symbol.svg';
-import LogoText from '@/shared/assets/logos/logo-text-oneline.svg';
+// import Kakao from '@/shared/assets/images/kakao-btn-sm.svg';
+// import LogoText from '@/shared/assets/logos/logo-text-oneline.svg';
+// import Kakao from '/images/kakao-btn-sm.svg';
 import Button from '@/shared/components/Button';
 import Input from '@/shared/components/ui/input';
 
@@ -11,9 +12,8 @@ export default function SignInPage() {
   return (
     <div className='font-size-16 flex w-full max-w-640 flex-col items-center justify-center gap-30'>
       <div className='flex flex-col items-center gap-23'>
-        <Logo className='text-brand-2 h-144 w-144' />
-        <LogoText className='text-brand-2 h-31 w-255' />
-        {/* 
+        {/* w + aspect ratio  */}
+
         <Image
           src='/logos/logo-symbol-blue.svg'
           alt='RoamReady Logo'
@@ -26,8 +26,7 @@ export default function SignInPage() {
           alt='RoamReady Logo Text'
           width={255}
           height={31}
-        /> 
-        */}
+        />
       </div>
 
       <form className='flex w-full flex-col gap-20'>
@@ -68,7 +67,13 @@ export default function SignInPage() {
         className='bg-kakao hover:bg-kakao/80 w-full py-17.5'
       >
         <div className='relative flex w-full items-center justify-center gap-0.5'>
-          <Kakao className='h-24 w-24' />
+          {/* <Kakao className='size-24' /> */}
+          <Image
+            src='/images/kakao-btn-sm.svg'
+            alt='Kakao'
+            width={24}
+            height={24}
+          />
           <span className='text-gray-700'>카카오 로그인</span>
         </div>
       </Button>

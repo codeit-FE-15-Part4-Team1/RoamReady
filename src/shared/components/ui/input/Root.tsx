@@ -66,7 +66,7 @@ export default function Root({
   initialPasswordVisible = false,
 }: RootProps) {
   const uniqueId = useId();
-  const finalId = id || uniqueId;
+  const finalId = `input-${id}` || uniqueId;
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(
     initialPasswordVisible,
