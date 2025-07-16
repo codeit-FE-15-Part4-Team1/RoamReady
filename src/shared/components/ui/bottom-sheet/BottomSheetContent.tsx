@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence,motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import {
   Children,
   isValidElement,
@@ -86,7 +86,7 @@ export function BottomSheetContent({
   // 스텝 변경 시 이전 스텝 레퍼런스 업데이트
   useEffect(() => {
     prevStepRef.current = currentStep;
-  });
+  }, [currentStep]);
 
   return (
     <BottomSheetPortal>
