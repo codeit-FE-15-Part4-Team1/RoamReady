@@ -179,7 +179,7 @@ export default function ReservationCalendar() {
 
       {/* 날짜 그리드 */}
       <div
-        className='grid grid-cols-7'
+        className='grid auto-rows-fr grid-cols-7'
         role='grid'
         aria-labelledby='calendar-header'
       >
@@ -196,7 +196,7 @@ export default function ReservationCalendar() {
               aria-label={`${day.format('M월 D일')}${dayEvents.length > 0 ? `, ${dayEvents.length}개 이벤트` : ''}${isToday ? ', 오늘' : ''}`}
               aria-selected={isToday}
               aria-current={isToday ? 'date' : undefined}
-              className={`relative flex min-h-[7rem] cursor-pointer flex-col items-center py-4 hover:bg-gray-50 ${!isLastRow ? 'border-b-[0.05rem] border-gray-100' : ''} ${!isCurrentMonth ? 'bg-gray-200 text-gray-400 opacity-50' : ''} ${isToday ? 'border-blue-300 bg-blue-100' : ''} `}
+              className={`relative flex min-h-[7rem] cursor-pointer flex-col items-center py-12 hover:bg-gray-50 ${!isLastRow ? 'border-b-[0.05rem] border-gray-100' : ''} ${!isCurrentMonth ? 'bg-gray-200 text-gray-400 opacity-50' : ''} ${isToday ? 'border-blue-300 bg-blue-100' : ''} `}
             >
               {/* 이벤트 레드닷 */}
               {dayEvents.length > 0 && (
