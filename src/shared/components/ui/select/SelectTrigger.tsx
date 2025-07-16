@@ -73,6 +73,8 @@ export default function SelectTrigger({
             isOpen && 'rotate-180',
           )}
           onClick={() => !disabled && setIsOpen(!isOpen)}
+          role='button'
+          aria-label='옵션 선택'
           aria-hidden='true'
         />
       </div>
