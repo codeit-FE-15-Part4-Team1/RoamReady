@@ -12,7 +12,7 @@ import z from 'zod';
  */
 const baseSignupRequestSchema = z.object({
   email: z.string().email({ message: '유효한 이메일 형식이 아닙니다.' }),
-  nickname: z
+  username: z
     .string()
     .min(1, { message: '닉네임을 입력해주세요' })
     .max(10, { message: '닉네임은 10자 이하로 입력해주세요.' }),
@@ -35,6 +35,16 @@ export const signupRequestSchema = baseSignupRequestSchema.refine(
     message: '비밀번호가 일치하지 않습니다.',
   },
 );
+
+/**
+ * @typedef {Object} SignupFormValues
+ * @description
+ * `react-hook-form`의 `useForm` 훅에 사용되는 회원가입 폼의 데이터 타입입니다.
+ * 클라이언트 측 유효성 검사 스키마인 `signupRequestSchema`로부터 타입을 추론(infer)하며,
+ * `passwordConfirm` 필드를 포함하여 폼의 전체 상태를 나타냅니다.
+ * 이 타입은 주로 `useForm`의 제네릭(`useForm<SignupFormValues>`)과 `onSubmit` 핸들러의 `data` 인수에 사용됩니다.
+ */
+export type SignupFormValues = z.infer<typeof signupRequestSchema>;
 
 /**
  * @schema signupDataRequestSchema
