@@ -1,21 +1,33 @@
 import { Minus, Plus } from 'lucide-react';
 
-export default function Participation() {
+interface ParticipationProps {
+  count: number;
+  onIncrease: () => void;
+  onDecrease: () => void;
+}
+
+export default function Participation({
+  count,
+  onIncrease,
+  onDecrease,
+}: ParticipationProps) {
   return (
     <div className='flex h-40 w-140 items-center justify-around rounded-4xl border-1 border-gray-50 bg-white px-12 py-8'>
       <button
         type='button'
         aria-label='인원 수 감소'
+        onClick={onDecrease}
         className='cursor-pointer'
       >
         <Minus className='h-20 w-20 hover:text-gray-300' />
       </button>
 
-      <span className='font-size-16 test-gray-950 font-bold'>10</span>
+      <span className='font-size-16 font-bold text-gray-950'>{count}</span>
 
       <button
         type='button'
         aria-label='인원 수 증가'
+        onClick={onIncrease}
         className='cursor-pointer'
       >
         <Plus className='h-20 w-20 hover:text-gray-300' />

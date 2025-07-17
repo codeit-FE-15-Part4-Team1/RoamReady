@@ -8,10 +8,21 @@ import Participation from './Participation';
 
 export default function Reservation() {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [participantCount, setParticipantCount] = useState(1);
 
   const handleTimeSelect = (time: string) => {
     setSelectedTime(selectedTime === time ? null : time);
   };
+
+  const handleIncrease = () => {
+    setParticipantCount((prev) => Math.min(prev + 1, 10)); // 최대 10명
+  };
+
+  const handleDecrease = () => {
+    setParticipantCount((prev) => Math.max(prev - 1, 1)); // 최소 1명
+  };
+
+  const totalPrice = participantCount * 1000;
 
   return (
     <aside
@@ -43,7 +54,11 @@ export default function Reservation() {
           <h3 id='participation' className='font-size-16 font-bold'>
             참여 인원 수
           </h3>
-          <Participation />
+          <Participation
+            count={participantCount}
+            onIncrease={handleIncrease}
+            onDecrease={handleDecrease}
+          />
         </section>
 
         <section
@@ -85,7 +100,9 @@ export default function Reservation() {
               >
                 총 합계
               </h3>
-              <span className='font-size-20 text-950 font-bold'>₩1,000</span>
+              <span className='font-size-20 text-950 font-bold'>
+                ₩{totalPrice.toLocaleString()}
+              </span>
             </div>
           </section>
 
