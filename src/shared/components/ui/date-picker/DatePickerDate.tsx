@@ -85,7 +85,7 @@ export default function DatePickerDate({
       role='grid'
       aria-label='날짜 선택'
     >
-      {dateList.map((d, i) => {
+      {dateList.map((d) => {
         const dateStr = d.format('YYYY-MM-DD');
 
         // 현재 날짜인지 여부
