@@ -32,9 +32,9 @@ export interface TabsProps {
 
 export default function TabsRoot({
   children,
-  defaultValue,
   value,
   onValueChange,
+  defaultValue,
 }: TabsProps) {
   const [internalValue, setInternalValue] = useState(defaultValue);
 
@@ -56,7 +56,6 @@ export default function TabsRoot({
     <TabsContext.Provider
       value={{
         value: currentValue,
-        defaultValue,
         onValueChange: handleValueChange,
       }}
     >

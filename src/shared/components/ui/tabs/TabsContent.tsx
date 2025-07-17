@@ -40,15 +40,15 @@ export default function TabsContent({
   const { value: selectedValue } = useTabs();
   const isSelected = selectedValue === value;
 
-  // 선택되지 않은 탭의 콘텐츠는 렌더링하지 않습니다
-  if (!isSelected) return null;
-
   return (
     <div
       role='tabpanel'
       tabIndex={0}
+      // ✅ isSelected가 false일 때 hidden 속성을 추가합니다.
+      hidden={!isSelected}
       className={cn('p-10', className)}
-      data-state='active'
+      // (선택) 데이터 속성을 isSelected에 따라 동적으로 변경할 수 있습니다.
+      data-state={isSelected ? 'active' : 'inactive'}
     >
       {children}
     </div>
