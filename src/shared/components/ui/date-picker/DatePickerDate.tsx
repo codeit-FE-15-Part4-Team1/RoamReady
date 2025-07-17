@@ -1,3 +1,6 @@
+import { Dayjs } from 'dayjs';
+import { useMemo } from 'react';
+
 import { cn } from '@/shared/libs/cn';
 
 import { useDatePickerContext } from './DatePickerContext';
@@ -42,23 +45,28 @@ export default function DatePickerDate({
   const { currentMonth, today, onDateClick, selectedDate, size } =
     useDatePickerContext();
 
-  // 현재 월의 시작일과 종료일 계산
-  const startOfMonth = currentMonth.startOf('month');
-  const endOfMonth = currentMonth.endOf('month');
+  const dateList = useMemo(() => {
+    // 현재 월의 시작일과 종료일 계산
+    const startOfMonth = currentMonth.startOf('month');
+    const endOfMonth = currentMonth.endOf('month');
 
-  // 달력은 항상 "주 단위(7일)"로 표현되므로,
-  // 월의 시작일 기준으로 그 주의 '일요일'까지 확장하고,
-  // 월의 종료일 기준으로 그 주의 '토요일'까지 확장합니다.
-  const startDate = startOfMonth.startOf('week');
-  const endDate = endOfMonth.endOf('week');
+    // 달력은 항상 "주 단위(7일)"로 표현되므로,
+    // 월의 시작일 기준으로 그 주의 '일요일'까지 확장하고,
+    // 월의 종료일 기준으로 그 주의 '토요일'까지 확장합니다.
+    const startDate = startOfMonth.startOf('week');
+    const endDate = endOfMonth.endOf('week');
 
-  // startDate부터 endDate까지 하루씩 증가하며 날짜 목록 생성
-  const dateList = [];
-  let date = startDate;
-  while (date.isBefore(endDate) || date.isSame(endDate, 'day')) {
-    dateList.push(date);
-    date = date.add(1, 'day');
-  }
+    // startDate부터 endDate까지 하루씩 증가하며 날짜 목록 생성
+    const list: Dayjs[] = [];
+    let date = startDate;
+
+    while (date.isBefore(endDate) || date.isSame(endDate, 'day')) {
+      list.push(date);
+      date = date.add(1, 'day');
+    }
+
+    return list;
+  }, [currentMonth]);
 
   // 예약 가능 날짜를 빠르게 탐색할 수 있도록 Set으로 변환
   const reservableSet = new Set(reservableDates ?? []);
