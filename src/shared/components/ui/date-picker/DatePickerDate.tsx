@@ -110,7 +110,7 @@ export default function DatePickerDate({
 
         return (
           <button
-            key={i}
+            key={dateStr}
             onClick={() => {
               if (!isDisabled) onDateClick?.(d.toDate());
             }}
