@@ -12,6 +12,7 @@ export default function AuthMenu() {
   return (
     <div className='flex items-center justify-center gap-20'>
       <Image src='/icons/bell.svg' alt='알림 아이콘' width={24} height={24} />
+
       <div className='flex items-center justify-center gap-15'>
         {/* 세로 구분선 */}
         <div className='h-20 w-1 self-center bg-gray-100' />
