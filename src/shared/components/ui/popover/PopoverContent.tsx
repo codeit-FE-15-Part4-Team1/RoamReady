@@ -103,7 +103,7 @@ export default function PopoverContent({
 
   // 위치 계산 함수를 별도로 분리
   const calculatePosition = useCallback(() => {
-    if (!triggerRef.current) return;
+    if (!mounted || !triggerRef.current) return;
 
     const rect = triggerRef.current.getBoundingClientRect();
     //현대적인 방식과 구형 브라우저 모두 지원하기 위해서 사용
@@ -203,18 +203,18 @@ export default function PopoverContent({
 
     setPos(newPosition);
     setTransform(newTransform);
-  }, [position, triggerRef]);
+  }, [position, triggerRef, mounted]);
 
   // 초기 위치 계산 - 깜빡임 방지
   useLayoutEffect(() => {
-    if (isOpen) {
+    if (isOpen && mounted) {
       calculatePosition();
     }
-  }, [isOpen, calculatePosition]);
+  }, [isOpen, calculatePosition, mounted]);
 
   // 스크롤 이벤트 등록 - 성능 최적화
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || !mounted) return;
 
     const handleScroll = () => {
       calculatePosition();
@@ -227,10 +227,12 @@ export default function PopoverContent({
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
     };
-  }, [isOpen, calculatePosition]);
+  }, [isOpen, calculatePosition, mounted]);
 
   // ESC 키로 닫기 기능
   useEffect(() => {
+    if (!mounted) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setIsOpen(false);
@@ -241,7 +243,7 @@ export default function PopoverContent({
       document.addEventListener('keydown', handleKeyDown);
       return () => document.removeEventListener('keydown', handleKeyDown);
     }
-  }, [isOpen, setIsOpen]);
+  }, [isOpen, setIsOpen, mounted]);
 
   if (!isOpen || !mounted) return null;
 
