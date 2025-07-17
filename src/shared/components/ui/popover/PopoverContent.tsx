@@ -117,42 +117,42 @@ export default function PopoverContent({
     switch (position) {
       case 'bottom-start':
         newPosition = {
-          y: rect.bottom + scrollY + 10,
+          y: rect.bottom + scrollY + 5,
           x: rect.left + scrollX,
         };
         newTransform = '';
         break;
       case 'bottom-center':
         newPosition = {
-          y: rect.bottom + scrollY + 10,
+          y: rect.bottom + scrollY + 5,
           x: rect.left + scrollX + rect.width / 2,
         };
         newTransform = 'translateX(-50%)';
         break;
       case 'bottom-end':
         newPosition = {
-          y: rect.bottom + scrollY + 10,
+          y: rect.bottom + scrollY + 5,
           x: rect.right + scrollX,
         };
         newTransform = 'translateX(-100%)';
         break;
       case 'top-start':
         newPosition = {
-          y: rect.top + scrollY - 10,
+          y: rect.top + scrollY - 5,
           x: rect.left + scrollX,
         };
         newTransform = 'translateY(-100%)';
         break;
       case 'top-center':
         newPosition = {
-          y: rect.top + scrollY - 10,
+          y: rect.top + scrollY - 5,
           x: rect.left + scrollX + rect.width / 2,
         };
         newTransform = 'translateX(-50%) translateY(-100%)';
         break;
       case 'top-end':
         newPosition = {
-          y: rect.top + scrollY - 10,
+          y: rect.top + scrollY - 5,
           x: rect.right + scrollX,
         };
         newTransform = 'translateX(-100%) translateY(-100%)';
@@ -160,42 +160,42 @@ export default function PopoverContent({
       case 'left-start':
         newPosition = {
           y: rect.top + scrollY,
-          x: rect.left + scrollX - 10,
+          x: rect.left + scrollX - 5,
         };
         newTransform = 'translateX(-100%)';
         break;
       case 'left-center':
         newPosition = {
           y: rect.top + scrollY + rect.height / 2,
-          x: rect.left + scrollX - 10,
+          x: rect.left + scrollX - 5,
         };
         newTransform = 'translateX(-100%) translateY(-50%)';
         break;
       case 'left-end':
         newPosition = {
           y: rect.bottom + scrollY,
-          x: rect.left + scrollX - 10,
+          x: rect.left + scrollX - 5,
         };
         newTransform = 'translateX(-100%) translateY(-100%)';
         break;
       case 'right-start':
         newPosition = {
           y: rect.top + scrollY,
-          x: rect.right + scrollX + 10,
+          x: rect.right + scrollX + 5,
         };
         newTransform = '';
         break;
       case 'right-center':
         newPosition = {
           y: rect.top + scrollY + rect.height / 2,
-          x: rect.right + scrollX + 10,
+          x: rect.right + scrollX + 5,
         };
         newTransform = 'translateY(-50%)';
         break;
       case 'right-end':
         newPosition = {
           y: rect.bottom + scrollY,
-          x: rect.right + scrollX + 10,
+          x: rect.right + scrollX + 5,
         };
         newTransform = 'translateY(-100%)';
         break;
