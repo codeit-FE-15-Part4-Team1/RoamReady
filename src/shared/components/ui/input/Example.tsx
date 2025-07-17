@@ -1,6 +1,6 @@
 'use client';
 
-import { Eye, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -66,16 +66,11 @@ export default function Example() {
       {/* 비밀번호 입력 예시 */}
       <div className='flex flex-col gap-3'>
         <h2 className='font-size-15 font-semibold'>Password Input</h2>
-        <Input.Root id='password-example' type='password' className={group}>
+        <Input.Root id='password' type='password'>
           <Input.Label>비밀번호</Input.Label>
           <Input.Field
-            placeholder='비밀번호를 입력하세요'
-            rightIcon={
-              <button type='button'>
-                <Eye size={24} className='text-gray-400 hover:text-gray-500' />
-              </button>
-            }
-            className='pr-54'
+            placeholder='비밀번호를 입력해주세요'
+            rightIcon={<Input.Trigger triggerType='password-toggle' />}
           />
         </Input.Root>
       </div>
@@ -124,7 +119,10 @@ export default function Example() {
           // fallbackMessage='이미지를 업로드하세요'
         >
           <Input.Label>이미지</Input.Label>
-          <Input.Trigger className='relative flex h-120 w-120 flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300'>
+          <Input.Trigger
+            triggerType='file-upload'
+            className='relative flex h-120 w-120 flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300'
+          >
             {previewUrl && (
               <Image
                 src={previewUrl}
