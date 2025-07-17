@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 
 import { cn } from '@/shared/libs/cn';
 
-import { useInputContext } from './context';
+import { useInputContext } from './InputContext';
 
 /**
  * @interface LabelProps
@@ -47,7 +47,7 @@ interface LabelProps {
  * </Input.Root>
  * ```
  */
-export default function Label({ children, className }: LabelProps) {
+export default function InputLabel({ children, className }: LabelProps) {
   const { id, required } = useInputContext();
 
   return (

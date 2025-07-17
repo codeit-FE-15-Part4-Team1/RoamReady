@@ -5,7 +5,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 import { cn } from '@/shared/libs/cn';
 
-import { InputContext, InputContextProps } from './context';
+import { InputContext, InputContextProps } from './InputContext';
 
 /**
  * @interface RootProps
@@ -22,7 +22,6 @@ import { InputContext, InputContextProps } from './context';
  * @property {boolean} [disabled] - 입력 필드의 비활성화 여부입니다.
  * @property {number} [maxLength] - 텍스트 입력 필드(`textarea`)의 최대 문자 길이입니다.
  * @property {string} [fallbackMessage] - `type`이 'file'일 때 `Input.Trigger`에 표시될 기본 안내 메시지입니다.
- * @property {boolean} [initialPasswordVisible] - `type`이 'password'일 때 비밀번호 필드의 초기 가시성(보이기/숨기기)을 설정합니다. 기본값은 `false`입니다.
  *
  * ContextProps에서 제외되는 속성들:
  * 이 속성들은 `Input.Root`가 외부에서 `prop`으로 직접 받지 않으며, `react-hook-form`의 상태를 기반으로 **내부적으로 처리하거나 파생하여 `InputContext`를 통해 하위 컴포넌트에 제공**합니다.
@@ -40,7 +39,6 @@ interface RootProps
   name: string;
   children: ReactNode;
   className?: string;
-  initialPasswordVisible?: boolean;
 }
 
 /**
@@ -76,7 +74,7 @@ interface RootProps
  * </Input.Root>
  * ```
  */
-export default function Root({
+export default function InputRoot({
   children,
   id,
   name,
@@ -88,7 +86,7 @@ export default function Root({
   fallbackMessage,
 }: RootProps) {
   const uniqueId = useId();
-  const finalId = `input-${id}` || uniqueId;
+  const finalId = id ? `input-${id}` : uniqueId;
 
   const {
     register,

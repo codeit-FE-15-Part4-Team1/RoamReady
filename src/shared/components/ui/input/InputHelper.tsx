@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 
 import { cn } from '@/shared/libs/cn';
 
-import { useInputContext } from './context';
+import { useInputContext } from './InputContext';
 
 /**
  * @interface HelperProps
@@ -63,7 +63,7 @@ interface HelperProps {
  * </Input.Root>
  * ```
  */
-export default function Helper({ children, className }: HelperProps) {
+export default function InputHelper({ children, className }: HelperProps) {
   const { isError, type, maxLength, currentLength, name, errors } =
     useInputContext();
   const isTextArea = type === 'textarea';

@@ -4,7 +4,7 @@ import { InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from 'react';
 
 import { cn } from '@/shared/libs/cn';
 
-import { useInputContext } from './context';
+import { useInputContext } from './InputContext';
 
 /**
  * @description
@@ -74,7 +74,7 @@ interface FieldProps extends BaseFieldProps {
  * </Input.Root>
  * ```
  */
-export default function Field(props: FieldProps) {
+export default function InputField(props: FieldProps) {
   const {
     id,
     type,
@@ -105,8 +105,8 @@ export default function Field(props: FieldProps) {
         disabled={disabled}
         maxLength={maxLength}
         className={cn(baseStyle, 'resize-none', className)}
-        {...register}
         {...rest}
+        {...register}
       />
     );
   }
@@ -119,8 +119,8 @@ export default function Field(props: FieldProps) {
         required={required}
         disabled={disabled}
         className='hidden'
-        {...register}
         {...rest}
+        {...register}
       />
     );
   }
@@ -139,8 +139,8 @@ export default function Field(props: FieldProps) {
         required={required}
         disabled={disabled}
         className={cn(baseStyle, className)}
-        {...register}
         {...rest}
+        {...register}
       />
       {rightIcon && (
         <div className='absolute top-1/2 right-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center'>

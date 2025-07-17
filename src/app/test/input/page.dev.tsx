@@ -2,7 +2,7 @@
 
 import { FormProvider, useForm } from 'react-hook-form';
 
-import InputExample from '@/shared/components/ui/input/Example';
+import InputExample from '@/shared/components/ui/input/InputExample';
 
 interface FormValues {
   textExample: string;
