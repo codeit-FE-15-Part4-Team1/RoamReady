@@ -78,7 +78,11 @@ export default function DatePickerRoot({
         size,
       }}
     >
-      <div className={cn('select-none', sizeClass, wrapperClassName)}>
+      <div
+        role='group'
+        aria-label='날짜 선택기'
+        className={cn('select-none', sizeClass, wrapperClassName)}
+      >
         {children}
       </div>
     </DatePickerContext.Provider>

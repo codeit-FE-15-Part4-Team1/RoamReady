@@ -82,6 +82,8 @@ export default function DatePickerDate({
         sizeClass,
         gridClassName,
       )}
+      role='grid'
+      aria-label='날짜 선택'
     >
       {dateList.map((d, i) => {
         const dateStr = d.format('YYYY-MM-DD');
@@ -150,6 +152,10 @@ export default function DatePickerDate({
               },
               dateButtonClassName,
             )}
+            aria-label={`${d.format('YYYY년 MM월 DD일')}${isToday ? ' (오늘)' : ''}`}
+            aria-current={isSelected ? 'date' : undefined}
+            aria-disabled={isDisabled}
+            role='gridcell'
           >
             {d.date()}
           </button>

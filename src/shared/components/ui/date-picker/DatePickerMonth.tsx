@@ -26,12 +26,16 @@ export default function DatePickerMonth() {
         'flex items-center justify-between',
         size === 's' ? 'pb-6' : 'pb-20',
       )}
+      role='navigation'
+      aria-label='월 변경 네비게이션'
     >
       <div
         className={cn(
           size === 's' ? 'font-size-10' : 'font-size-16',
           'font-medium text-gray-800',
         )}
+        aria-live='polite'
+        aria-atomic='true'
       >
         {currentMonth.format('MMMM YYYY')}
       </div>
@@ -40,6 +44,7 @@ export default function DatePickerMonth() {
         <button
           onClick={() => setCurrentMonth((prev) => prev.subtract(1, 'month'))}
           className='cursor-pointer'
+          aria-label='이전 달 보기'
         >
           <TriangleArrow
             className='text-gray-950 hover:text-gray-300'
@@ -52,6 +57,7 @@ export default function DatePickerMonth() {
         <button
           onClick={() => setCurrentMonth((prev) => prev.add(1, 'month'))}
           className='cursor-pointer'
+          aria-label='다음 달 보기'
         >
           <TriangleArrow
             className='text-gray-950 hover:text-gray-300'

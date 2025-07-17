@@ -35,6 +35,7 @@ export default function DatePickerWeek({ weekClassName }: DatePickerWeekProps) {
         size === 's' ? 'font-size-10' : 'font-size-16',
         weekClassName,
       )}
+      role='columnheader'
     >
       {WEEKDAYS.map((day, index) => {
         let colorClass = 'text-gray-500';
@@ -43,7 +44,12 @@ export default function DatePickerWeek({ weekClassName }: DatePickerWeekProps) {
         else if (index === 6) colorClass = 'text-brand-2'; // 토요일
 
         return (
-          <div key={`${day}-${index}`} className={colorClass}>
+          <div
+            key={`${day}-${index}`}
+            className={colorClass}
+            role='columnheader'
+            aria-label={`${day}요일`}
+          >
             {day}
           </div>
         );
