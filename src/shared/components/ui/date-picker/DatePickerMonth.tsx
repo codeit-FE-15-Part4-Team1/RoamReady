@@ -42,12 +42,13 @@ export default function DatePickerMonth() {
 
       <div className='flex items-center gap-20'>
         <button
+          type='button'
           onClick={() => setCurrentMonth((prev) => prev.subtract(1, 'month'))}
           className='cursor-pointer'
           aria-label='이전 달 보기'
         >
           <TriangleArrow
-            className='text-gray-950 hover:text-gray-300'
+            className='text-gray-950 transition-colors hover:text-gray-300'
             direction='left'
             width={size === 's' ? '8' : '16'}
             height={size === 's' ? '8' : '16'}
@@ -55,6 +56,7 @@ export default function DatePickerMonth() {
         </button>
 
         <button
+          type='button'
           onClick={() => setCurrentMonth((prev) => prev.add(1, 'month'))}
           className='cursor-pointer'
           aria-label='다음 달 보기'
