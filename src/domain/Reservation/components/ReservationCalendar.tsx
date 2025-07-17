@@ -1,7 +1,12 @@
-// dayjs-calendar/Calendar.jsx
 import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'; // 반복문을 위한 플러그인
-import React, { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+
+import {
+  getColorClass,
+  sortEventsByPriority,
+  WEEKDAYS,
+} from '../utils/reservation';
 
 dayjs.extend(isSameOrBefore); // 플러그인 활성화
 
@@ -14,24 +19,13 @@ dayjs.extend(isSameOrBefore); // 플러그인 활성화
  * @property color - 표시 색상
  * @property number - 이벤트 번호 (표시용)
  */
-interface Event {
+export interface Event {
   id: string;
   title: string;
   date: string; // YYYY-MM-DD 형식
   color: 'red' | 'blue' | 'orange' | 'green' | 'purple';
   number: number;
 }
-
-export const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-
-// 이벤트 우선순위 (중요도 순)
-const PRIORITY_MAP = {
-  완료: 0,
-  승인: 1,
-  예약: 2,
-  거절: 3,
-  취소: 4,
-};
 
 // 샘플 이벤트 데이터
 const sampleEvents: Event[] = [
@@ -50,6 +44,7 @@ const sampleEvents: Event[] = [
 export default function ReservationCalendar() {
   const [currentDate, setCurrentDate] = useState(dayjs()); //현재 시간을 가져옴
   const [events] = useState<Event[]>(sampleEvents); //이벤트 데이터를 가져옴
+  const today = useMemo(() => dayjs(), []);
 
   // 이벤트 데이터를 날짜별로 그룹화하여 memoization으로 성능 최적화 (샘플 이벤트에 적용되는 내용이라 수정 실제 API 연동 시 수정 필요)
   const eventsByDate = useMemo(() => {
@@ -63,6 +58,16 @@ export default function ReservationCalendar() {
     });
     return eventMap;
   }, [events]);
+
+  /**
+   * 특정 날짜의 이벤트 목록을 반환합니다
+   * @param date - 조회할 날짜 (dayjs 객체)
+   * @returns 해당 날짜의 이벤트 배열
+   */
+  const getEventsForDate = (date: dayjs.Dayjs) => {
+    const formattedDate = date.format('YYYY-MM-DD');
+    return eventsByDate[formattedDate] || [];
+  };
 
   // 핵심: dayjs 객체와 Moment.js와 유사한 API를 사용합니다.
   const monthStart = currentDate.startOf('month'); // 현재 월의 시작 날짜
@@ -81,49 +86,14 @@ export default function ReservationCalendar() {
     return daysArr;
   }, [calendarStart, calendarEnd]);
 
-  /**
-   * 특정 날짜의 이벤트 목록을 반환합니다
-   * @param date - 조회할 날짜 (dayjs 객체)
-   * @returns 해당 날짜의 이벤트 배열
-   */
-  const getEventsForDate = (date: dayjs.Dayjs) => {
-    const formattedDate = date.format('YYYY-MM-DD');
-    return eventsByDate[formattedDate] || [];
-  };
-
-  /**
-   * 이벤트를 우선순위에 따라 정렬합니다
-   * @param events - 정렬할 이벤트 배열
-   * @returns 우선순위 순으로 정렬된 이벤트 배열 (완료 > 승인 > 예약 > 거절 > 취소)
-   */
-  const sortEventsByPriority = (events: Event[]) => {
-    return events.sort((a, b) => {
-      const priorityA =
-        PRIORITY_MAP[a.title as keyof typeof PRIORITY_MAP] ?? 999;
-      const priorityB =
-        PRIORITY_MAP[b.title as keyof typeof PRIORITY_MAP] ?? 999;
-      return priorityA - priorityB;
-    });
-  };
-
-  /**
-   * 이벤트 색상에 따른 Tailwind CSS 클래스를 반환합니다
-   * @param color - 이벤트 색상 ('red' | 'blue' | 'orange' | 'green' | 'purple')
-   * @returns Tailwind CSS 클래스 문자열
-   */
-  const getColorClass = (color: string) => {
-    const colorMap = {
-      red: 'bg-red-200 text-red-400',
-      blue: 'bg-blue-200 text-blue-400',
-      orange: 'bg-orange-200 text-orange-400',
-      green: 'bg-green-200 text-green-400',
-      purple: 'bg-purple-200 text-purple-400',
-    };
-    return colorMap[color as keyof typeof colorMap] || 'bg-gray-500';
-  };
-
-  const prevMonth = () => setCurrentDate(currentDate.subtract(1, 'month'));
-  const nextMonth = () => setCurrentDate(currentDate.add(1, 'month'));
+  const prevMonth = useCallback(
+    () => setCurrentDate((prev) => prev.subtract(1, 'month')),
+    [],
+  );
+  const nextMonth = useCallback(
+    () => setCurrentDate((prev) => prev.add(1, 'month')),
+    [],
+  );
 
   return (
     <div
@@ -132,8 +102,9 @@ export default function ReservationCalendar() {
       aria-label='예약 달력'
     >
       {/* 헤더 - 월 네비게이션 */}
-      <div className='flex items-center justify-center gap-15 py-20 text-3xl'>
+      <div className='flex items-center justify-center gap-[1.5rem] py-20 text-3xl'>
         <button
+          type='button'
           onClick={prevMonth}
           className='cursor-pointer rounded p-2'
           aria-label='이전 달로 이동'
@@ -149,6 +120,7 @@ export default function ReservationCalendar() {
           {currentDate.format('YYYY년 MM월')}
         </span>
         <button
+          type='button'
           onClick={nextMonth}
           className='cursor-pointer rounded p-2'
           aria-label='다음 달로 이동'
@@ -186,7 +158,7 @@ export default function ReservationCalendar() {
         {days.map((day, index) => {
           const dayEvents = getEventsForDate(day);
           const isCurrentMonth = day.isSame(currentDate, 'month');
-          const isToday = day.isSame(dayjs(), 'day');
+          const isToday = day.isSame(today, 'day');
           const isLastRow = index >= days.length - 7; // 마지막 줄 체크
 
           return (
@@ -200,7 +172,7 @@ export default function ReservationCalendar() {
             >
               {/* 이벤트 레드닷 */}
               {dayEvents.length > 0 && (
-                <div className='absolute top-[10%] left-3/5 size-4 rounded-full bg-red-500' />
+                <div className='absolute top-[10%] left-[60%] size-4 rounded-full bg-red-500' />
               )}
               {/* 날짜 숫자 */}
               <div
