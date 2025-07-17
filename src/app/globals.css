@@ -4,13 +4,22 @@
   font-size: --value(--font-size-*);
 }
 
+@layer utilities {
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .flex-col-center {
+    @apply flex flex-col items-center justify-center;
+  }
+}
+
 @layer base {
   html {
     word-break: keep-all;
     font-size: 62.5%; /* 10px = 1rem */
   }
-
-  *:focus-visible {
+  s *:focus-visible {
     outline: 2px solid var(--color-brand-2);
     /* outline-offset: 2px; */
   }
