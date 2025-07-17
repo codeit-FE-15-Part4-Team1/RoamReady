@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-import Logo2 from '@/app/assets/logos/logo-2';
+import Logo2 from '@/app/assets/logos/logo-text-twoline';
 
 /**
  * Footer 컴포넌트

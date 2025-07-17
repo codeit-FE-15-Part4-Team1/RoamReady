@@ -1,9 +1,9 @@
 'use client';
 
-import Logo1 from '@/app/assets/logos/logo-1';
-import Logo2 from '@/app/assets/logos/logo-2';
-import Logo3 from '@/app/assets/logos/logo-3';
+import Logo3 from '@/app/assets/logos/logo';
 import LogoSymbol from '@/app/assets/logos/logo-symbol';
+import Logo1 from '@/app/assets/logos/logo-text-oneline';
+import Logo2 from '@/app/assets/logos/logo-text-twoline';
 
 const logoVariants = [
   { label: '기본 색상', className: 'h-80 w-80' },

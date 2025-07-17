@@ -3,7 +3,7 @@
  *
  * @param className - Tailwind 또는 사용자 정의 클래스를 통해 색상 및 크기를 제어할 수 있습니다.
  * @example
- * <Logo1 className="w-32 h-6 text-black" />
+ * <LogoSymbol className="w-32 h-6 text-black" />
  */
 export default function LogoSymbol({ className }: { className?: string }) {
   return (

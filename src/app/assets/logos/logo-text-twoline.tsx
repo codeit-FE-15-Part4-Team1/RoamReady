@@ -3,9 +3,9 @@
  *
  * @param className - Tailwind 또는 사용자 정의 클래스를 통해 색상 및 크기를 제어할 수 있습니다.
  * @example
- * <Logo2 className="w-32 h-6 text-black" />
+ * <LogoTextTwoLine className="w-32 h-6 text-black" />
  */
-export default function Logo2({ className }: { className?: string }) {
+export default function LogoTextTwoLine({ className }: { className?: string }) {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
