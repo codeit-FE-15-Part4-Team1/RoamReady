@@ -1,3 +1,5 @@
+'use client';
+
 import {
   ChangeEvent,
   createContext,
@@ -20,6 +22,8 @@ import {
  * @property {number} [maxLength] - 입력 필드의 최대 길이 (textarea에 사용)
  * @property {number} [currentLength] - 현재 입력된 문자열의 길이 (textarea에 사용)
  * @property {string} [fallbackMessage] - 파일 업로드 `Trigger`에 표시할 기본 안내 메시지 (ex. '이미지를 업로드하세요')
+ * @property {boolean} isPasswordVisible - 비밀번호 가시성 상태
+ * @property {() => void} togglePasswordVisibility - 비밀번호 가시성을 토글하는 함수
  */
 export interface InputContextProps {
   id: string;
@@ -32,6 +36,8 @@ export interface InputContextProps {
   maxLength?: number;
   currentLength?: number;
   fallbackMessage?: string;
+  isPasswordVisible?: boolean;
+  togglePasswordVisibility?: () => void;
 }
 
 /**
@@ -53,7 +59,7 @@ export const InputContext = createContext<InputContextProps | null>(null);
  *
  * @example
  * ```tsx
- * const { id, type, required, isError } = useInputContext();
+ * const { id, type, required, isError, isPasswordVisible, togglePasswordVisibility } = useInputContext();
  * ```
  */
 export const useInputContext = () => {
