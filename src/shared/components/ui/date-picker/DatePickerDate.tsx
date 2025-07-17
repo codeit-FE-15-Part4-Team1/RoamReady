@@ -82,7 +82,7 @@ export default function DatePickerDate({
         const isToday = d.isSame(today, 'day');
 
         // 선택된 날짜와 일치하는지 여부
-        const isSelected = selectedDate?.getTime() === d.toDate().getTime();
+        const isSelected = selectedDate?.isSame(d, 'day');
 
         // 오늘 이전의 날짜인지 여부
         const isPast = d.isBefore(today, 'day');

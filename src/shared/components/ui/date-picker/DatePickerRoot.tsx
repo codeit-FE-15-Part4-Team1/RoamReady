@@ -53,6 +53,8 @@ export default function DatePickerRoot({
   wrapperClassName,
   children,
 }: DatePickerRootProps) {
+  const selectedDayjs = selectedDate ? dayjs(selectedDate) : undefined;
+
   const [currentMonth, setCurrentMonth] = useState(dayjs());
 
   const sizeClass = size === 's' ? 'w-150 min-h-150' : 'w-300 min-h-300';
@@ -63,7 +65,7 @@ export default function DatePickerRoot({
         currentMonth,
         setCurrentMonth,
         today: dayjs(),
-        selectedDate,
+        selectedDate: selectedDayjs,
         onDateClick,
         size,
       }}

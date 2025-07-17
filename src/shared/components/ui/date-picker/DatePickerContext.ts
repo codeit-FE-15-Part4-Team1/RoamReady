@@ -23,7 +23,7 @@ interface DatePickerContextValue {
   /**
    * 현재 선택된 날짜 (선택되지 않은 경우 undefined)
    */
-  selectedDate?: Date;
+  selectedDate?: Dayjs;
 
   /**
    * 날짜를 클릭했을 때 실행되는 콜백 함수
