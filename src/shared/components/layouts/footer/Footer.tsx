@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-import GitHubLogo from '../../icons/github-logo';
+import Logo2 from '@/app/assets/logos/logo-text-twoline';
 
 /**
  * Footer 컴포넌트
@@ -23,12 +23,7 @@ export default function Footer() {
       <div className='flex justify-between'>
         {/* 좌측 영역: 로고, 브랜드 슬로건, CopyRight sign */}
         <div className='flex flex-col gap-10'>
-          <Image
-            src='/logos/logo-2-black.svg'
-            alt='RoamReady 로고'
-            width={70}
-            height={70}
-          />
+          <Logo2 className='h-70 w-70' />
           <div className='flex flex-col gap-3'>
             <span className='text-gray-800'>
               Start your journey with RoamReady
@@ -45,7 +40,12 @@ export default function Footer() {
             rel='noopener noreferrer'
             target='_blank'
           >
-            <GitHubLogo />
+            <Image
+              src='/icons/github-logo.svg'
+              alt='GitHub Logo'
+              width={30}
+              height={30}
+            />
           </a>
           <p>김서연 | 박재현 | 송시은 | 유용민</p>
         </div>
