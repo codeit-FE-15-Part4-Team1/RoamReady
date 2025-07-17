@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 import { cn } from '@/shared/libs/cn';
 
-import { useTabs } from './useTabs';
+import { useTabs } from './ContextTabs';
 
 /**
  * TabsTrigger 컴포넌트의 props 인터페이스
@@ -31,12 +31,14 @@ interface TabsTriggerProps {
  *
  * @example
  * ```tsx
- * <TabsTrigger
- *   value="tab1"
- *   className="px-4 py-2 data-[state=active]:bg-blue-100"
- * >
- *   첫 번째 탭
- * </TabsTrigger>
+ *  <Tabs.Root defaultValue="tab1">
+ *   <Tabs.List>
+ *     <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
+ *     <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
+ *   </Tabs.List>
+ *   <Tabs.Content value="tab1">Content 1</Tabs.Content>
+ *   <Tabs.Content value="tab2">Content 2</Tabs.Content>
+ * </Tabs.Root>
  * ```
  *
  * @param props - TabsTrigger 컴포넌트의 props

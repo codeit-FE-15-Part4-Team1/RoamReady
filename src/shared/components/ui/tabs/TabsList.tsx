@@ -2,7 +2,7 @@ import { KeyboardEvent, ReactNode, useRef } from 'react';
 
 import { cn } from '@/shared/libs/cn';
 
-import { useTabs } from './useTabs';
+import { useTabs } from './ContextTabs';
 
 /**
  * TabsList 컴포넌트의 props 인터페이스
@@ -15,28 +15,20 @@ interface TabsListProps {
 }
 
 /**
- * TabsList 컴포넌트
- *
- * 탭 버튼들을 담는 컨테이너 역할을 합니다.
- * 키보드 네비게이션 기능을 제공하여 접근성을 향상시킵니다.
- *
- * **지원하는 키보드 조작:**
- * - `Arrow Right/Down`: 다음 탭으로 이동
- * - `Arrow Left/Up`: 이전 탭으로 이동
- * - `Home`: 첫 번째 탭으로 이동
- * - `End`: 마지막 탭으로 이동
- * - 순환 네비게이션: 마지막에서 첫번째로, 첫번째에서 마지막으로 이동
+ * @component Tabs.List
+ * @description
+ * 탭 버튼(Trigger)들을 감싸는 컨테이너입니다.
+ * 키보드 네비게이션(좌/우/상/하, Home/End) 및 접근성을 지원합니다.
  *
  * @example
- * ```tsx
- * <TabsList className="flex space-x-2">
- *   <TabsTrigger value="tab1">Tab 1</TabsTrigger>
- *   <TabsTrigger value="tab2">Tab 2</TabsTrigger>
- * </TabsList>
- * ```
- *
- * @param props - TabsList 컴포넌트의 props
- * @returns JSX 엘리먼트
+ * <Tabs.Root defaultValue="tab1">
+ *   <Tabs.List>
+ *     <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
+ *     <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
+ *   </Tabs.List>
+ *   <Tabs.Content value="tab1">Content 1</Tabs.Content>
+ *   <Tabs.Content value="tab2">Content 2</Tabs.Content>
+ * </Tabs.Root>
  */
 export default function TabsList({ children, className }: TabsListProps) {
   const { onValueChange } = useTabs();
@@ -105,7 +97,7 @@ export default function TabsList({ children, className }: TabsListProps) {
       nextTrigger.focus();
       // data-value 속성에서 탭의 value를 가져와서 상태를 업데이트합니다
       const value = nextTrigger.getAttribute('data-value');
-      if (value) {
+      if (value && value.trim()) {
         onValueChange?.(value);
       }
     }

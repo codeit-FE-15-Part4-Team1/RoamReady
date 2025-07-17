@@ -1,36 +1,32 @@
 /**
- * @fileoverview Tabs 컴포넌트 모듈
- *
- * 접근성을 고려한 탭 인터페이스를 제공하는 컴포넌트들의 집합입니다.
- * 키보드 네비게이션, ARIA 속성을 지원합니다.
+ * @fileoverview
+ * Tabs UI 컴포넌트 네임스페이스입니다.
+ * - Tabs.Root: 탭 상태 관리 및 Context Provider
+ * - Tabs.List: 탭 버튼 컨테이너, 키보드 네비게이션 지원
+ * - Tabs.Trigger: 탭 버튼, 클릭 시 value 변경
+ * - Tabs.Content: 탭별 내용, value가 일치할 때만 렌더링
  *
  * @example
- * ```tsx
- * import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
- *
- * function MyComponent() {
- *   return (
- *     <Tabs defaultValue="tab1">
- *       <TabsList>
- *         <TabsTrigger value="tab1">Tab 1</TabsTrigger>
- *         <TabsTrigger value="tab2">Tab 2</TabsTrigger>
- *       </TabsList>
- *       <TabsContent value="tab1">Content 1</TabsContent>
- *       <TabsContent value="tab2">Content 2</TabsContent>
- *     </Tabs>
- *   );
- * }
- * ```
+ * <Tabs.Root defaultValue="tab1">
+ *   <Tabs.List>
+ *     <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
+ *     <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
+ *   </Tabs.List>
+ *   <Tabs.Content value="tab1">Content 1</Tabs.Content>
+ *   <Tabs.Content value="tab2">Content 2</Tabs.Content>
+ * </Tabs.Root>
  */
 
-/** Tabs 루트 컴포넌트 - Context Provider 역할 */
-export { default as Tabs } from './Tabs';
+import TabsContent from './TabsContent';
+import TabsList from './TabsList';
+import TabsRoot from './TabsRoot';
+import TabsTrigger from './TabsTrigger';
 
-/** TabsContent 컴포넌트 - 탭 콘텐츠 영역 */
-export { default as TabsContent } from './TabsContent';
+const Tabs = {
+  Root: TabsRoot,
+  List: TabsList,
+  Trigger: TabsTrigger,
+  Content: TabsContent,
+};
 
-/** TabsList 컴포넌트 - 탭 버튼들의 컨테이너 + 키보드 네비게이션 */
-export { default as TabsList } from './TabsList';
-
-/** TabsTrigger 컴포넌트 - 개별 탭 버튼 */
-export { default as TabsTrigger } from './TabsTrigger';
+export default Tabs;

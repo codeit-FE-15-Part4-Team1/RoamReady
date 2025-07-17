@@ -1,10 +1,7 @@
 import { ReactNode, useState } from 'react';
 
-import { TabsContext } from './useTabs';
+import { TabsContext } from './ContextTabs';
 
-/**
- * Tabs 컴포넌트의 props 인터페이스
- */
 export interface TabsProps {
   /** 초기에 선택될 탭의 값 */
   defaultValue?: string;
@@ -17,27 +14,23 @@ export interface TabsProps {
 }
 
 /**
- * Tabs 루트 컴포넌트
- *
- * TabsList, TabsTrigger, TabsContent를 포함하는 최상위 컨테이너입니다.
- * Context Provider 역할을 하여 하위 컴포넌트들에게 탭 상태를 제공합니다.
+ * @component Tabs.Root
+ * @description
+ * 탭 UI의 최상위 컴포넌트로, 상태 관리와 Context Provider 역할을 합니다.
+ * controlled/uncontrolled 모드를 지원합니다.
  *
  * @example
- * ```tsx
- * <Tabs defaultValue="tab1">
- *   <TabsList>
- *     <TabsTrigger value="tab1">Tab 1</TabsTrigger>
- *     <TabsTrigger value="tab2">Tab 2</TabsTrigger>
- *   </TabsList>
- *   <TabsContent value="tab1">Content 1</TabsContent>
- *   <TabsContent value="tab2">Content 2</TabsContent>
- * </Tabs>
- * ```
- *
- * @param props - Tabs 컴포넌트의 props
- * @returns JSX 엘리먼트
+ * <Tabs.Root defaultValue="tab1">
+ *   <Tabs.List>
+ *     <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
+ *     <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
+ *   </Tabs.List>
+ *   <Tabs.Content value="tab1">Content 1</Tabs.Content>
+ *   <Tabs.Content value="tab2">Content 2</Tabs.Content>
+ * </Tabs.Root>
  */
-export default function Tabs({
+
+export default function TabsRoot({
   children,
   defaultValue,
   value,
@@ -67,7 +60,7 @@ export default function Tabs({
         onValueChange: handleValueChange,
       }}
     >
-      <div>{children}</div>
+      {children}
     </TabsContext.Provider>
   );
 }
