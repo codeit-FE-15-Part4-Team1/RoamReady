@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { ReactNode, useMemo, useState } from 'react';
+import { ReactNode, useEffect, useMemo, useState } from 'react';
 
 import { cn } from '@/shared/libs/cn';
 
@@ -60,6 +60,12 @@ export default function DatePickerRoot({
   const sizeClass = size === 's' ? 'w-150 min-h-150' : 'w-300 min-h-300';
 
   const today = useMemo(() => dayjs(), []);
+
+  useEffect(() => {
+    if (selectedDate) {
+      setCurrentMonth(dayjs(selectedDate));
+    }
+  }, [selectedDate]);
 
   return (
     <DatePickerContext.Provider

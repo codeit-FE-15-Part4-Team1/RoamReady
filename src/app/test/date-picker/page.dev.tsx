@@ -29,6 +29,13 @@ export default function DatePickerTestPage() {
   return (
     <main className='flex min-h-screen items-center justify-center bg-white px-4 py-10'>
       <div className='flex w-full max-w-screen-md flex-col items-center space-y-14'>
+        <button
+          onClick={() => setSelectedDateL1(new Date('2025-08-01'))}
+          className='border-brand-2 text-brand-2 hover:bg-brand-2 mt-4 rounded-md border px-4 py-1 hover:text-white'
+        >
+          📅 외부에서 8월 1일 선택하기
+        </button>
+
         {/* ✅ Large DatePicker (예약 가능 날짜 있음) */}
         <section className='flex flex-col items-center'>
           <h2 className='font-size-16 mb-10 font-bold text-gray-800'>
