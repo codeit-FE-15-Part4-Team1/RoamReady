@@ -27,7 +27,7 @@ export default function Reservation() {
   return (
     <aside
       aria-label='예약 정보'
-      className='h-850 w-400 rounded-4xl border-1 border-gray-50 bg-white p-30 shadow-[0_4px_20px_rgba(0,0,0,0.05)]'
+      className='h-fit max-h-950 w-400 rounded-4xl border-1 border-gray-50 bg-white p-30 shadow-[0_4px_20px_rgba(0,0,0,0.05)]'
     >
       <form className='flex flex-col gap-24'>
         <section aria-labelledby='pricing'>
@@ -69,25 +69,65 @@ export default function Reservation() {
             예약 가능한 시간
           </h3>
           {/* 예약 가능 시간 버튼 목록 */}
-          <div className='flex flex-col gap-10'>
-            <Button
-              type='button'
-              variant='outline'
-              selected={selectedTime === '14:00-15:00'}
-              onClick={() => handleTimeSelect('14:00-15:00')}
-              className='font-size-16 h-50 w-full border-2 font-medium text-gray-950'
-            >
-              14:00-15:00
-            </Button>
-            <Button
-              type='button'
-              variant='outline'
-              selected={selectedTime === '15:00-16:00'}
-              onClick={() => handleTimeSelect('15:00-16:00')}
-              className='font-size-16 h-50 w-full border-2 font-medium text-gray-950'
-            >
-              15:00-16:00
-            </Button>
+          <div className='relative'>
+            <div className='scrollbar-none flex max-h-200 flex-col gap-10 overflow-auto'>
+              <Button
+                type='button'
+                variant='outline'
+                selected={selectedTime === '14:00-15:00'}
+                onClick={() => handleTimeSelect('14:00-15:00')}
+                className='font-size-16 min-h-50 w-full border-2 font-medium'
+              >
+                14:00-15:00
+              </Button>
+              <Button
+                type='button'
+                variant='outline'
+                selected={selectedTime === '15:00-16:00'}
+                onClick={() => handleTimeSelect('15:00-16:00')}
+                className='font-size-16 min-h-50 w-full border-2 font-medium'
+              >
+                15:00-16:00
+              </Button>
+              <Button
+                type='button'
+                variant='outline'
+                selected={selectedTime === '14:00-15:00'}
+                onClick={() => handleTimeSelect('14:00-15:00')}
+                className='font-size-16 min-h-50 w-full border-2 font-medium'
+              >
+                14:00-15:00
+              </Button>
+              <Button
+                type='button'
+                variant='outline'
+                selected={selectedTime === '15:00-16:00'}
+                onClick={() => handleTimeSelect('15:00-16:00')}
+                className='font-size-16 min-h-50 w-full border-2 font-medium'
+              >
+                15:00-16:00
+              </Button>
+              <Button
+                type='button'
+                variant='outline'
+                selected={selectedTime === '14:00-15:00'}
+                onClick={() => handleTimeSelect('14:00-15:00')}
+                className='font-size-16 min-h-50 w-full border-2 font-medium'
+              >
+                14:00-15:00
+              </Button>
+              <Button
+                type='button'
+                variant='outline'
+                selected={selectedTime === '15:00-16:00'}
+                onClick={() => handleTimeSelect('15:00-16:00')}
+                className='font-size-16 min-h-50 w-full border-2 font-medium'
+              >
+                15:00-16:00
+              </Button>
+            </div>
+            {/* 흐림 효과 오버레이 */}
+            <div className='pointer-events-none absolute bottom-0 left-0 h-20 w-full bg-gradient-to-t from-white to-transparent' />
           </div>
         </section>
 
