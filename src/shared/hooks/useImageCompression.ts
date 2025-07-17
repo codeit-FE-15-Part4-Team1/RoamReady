@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import imageCompression from 'browser-image-compression';
+import { useState } from 'react';
 
 /**
  * useImageCompression 훅에서 이미지 압축에 사용될 옵션 객체의 타입
