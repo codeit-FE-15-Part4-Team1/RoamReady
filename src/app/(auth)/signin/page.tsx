@@ -7,6 +7,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import type { SigninRequest } from '@/domain/Auth/schemas/request';
 import { signinRequestSchema } from '@/domain/Auth/schemas/request';
 import { signin } from '@/domain/Auth/services';
+import LogoSymbol from '@/shared/assets/logos/LogoSymbol';
+import LogoTextOneLine from '@/shared/assets/logos/LogoTextOneline';
 import Button from '@/shared/components/Button';
 import Input from '@/shared/components/ui/input';
 import { AUTH_ROUTES } from '@/shared/constants/routes';
@@ -79,20 +81,8 @@ export default function SignInPage() {
     <FormProvider {...form}>
       <div className='font-size-16 flex w-full max-w-640 flex-col items-center justify-center gap-30'>
         <div className='flex flex-col items-center gap-23'>
-          {/* w + aspect ratio  */}
-          <Image
-            src='/logos/logo-symbol-blue.svg'
-            alt='RoamReady Logo'
-            width={144}
-            height={144}
-          />
-
-          <Image
-            src='/logos/logo-1-blue.svg'
-            alt='RoamReady Logo Text'
-            width={255}
-            height={31}
-          />
+          <LogoSymbol className='text-brand-2 size-144' />
+          <LogoTextOneLine className='text-brand-2 aspect-[255/31] w-255' />
         </div>
 
         <form

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import Logo from '@/shared/assets/logos/logo';
+import Logo from '@/shared/assets/logos/Logo';
 import { ROUTES } from '@/shared/constants/route';
 import { cn } from '@/shared/libs/cn';
 
