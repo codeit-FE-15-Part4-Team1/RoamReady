@@ -4,7 +4,7 @@ import { KeyboardEvent, ReactNode } from 'react';
 
 import { cn } from '@/shared/libs/cn';
 
-import { useDialogContext } from './Root';
+import { useDialogContext } from './DialogRoot';
 
 /**
  * Dialog Overlay 컴포넌트

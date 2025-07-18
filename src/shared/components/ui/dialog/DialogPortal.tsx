@@ -3,7 +3,7 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import { useDialogContext } from './Root';
+import { useDialogContext } from './DialogRoot';
 
 /**
  * DialogPortal 컴포넌트의 Props 타입

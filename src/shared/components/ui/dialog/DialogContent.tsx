@@ -5,9 +5,9 @@ import { ReactNode, useEffect, useRef } from 'react';
 
 import { cn } from '@/shared/libs/cn';
 
-import { DialogOverlay } from './Overlay';
-import { DialogPortal } from './Portal';
-import { useDialogContext } from './Root';
+import { DialogOverlay } from './DialogOverlay';
+import { DialogPortal } from './DialogPortal';
+import { useDialogContext } from './DialogRoot';
 
 /**
  * Dialog variant별 패딩 스타일 매핑

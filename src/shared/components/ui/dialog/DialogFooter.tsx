@@ -13,7 +13,7 @@ import {
 import { cn } from '@/shared/libs/cn';
 
 import { LoadingSpinner } from '../loading-spinner';
-import { useDialogContext } from './Root';
+import { useDialogContext } from './DialogRoot';
 
 /**
  * Dialog Footer variant 타입

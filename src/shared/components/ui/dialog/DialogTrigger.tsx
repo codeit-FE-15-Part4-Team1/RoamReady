@@ -12,7 +12,7 @@ import {
 
 import { cn } from '@/shared/libs/cn';
 
-import { useDialogContext } from './Root';
+import { useDialogContext } from './DialogRoot';
 
 /**
  * DialogTrigger 컴포넌트의 Props 타입

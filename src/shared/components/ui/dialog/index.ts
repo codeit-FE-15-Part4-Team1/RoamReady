@@ -4,10 +4,10 @@
  * React Context API를 사용하여 상태를 관리하고, 포커스 트랩, 스크롤 관리 등의 기능을 제공합니다.
  */
 
-import { DialogContent } from './Content';
-import { DialogFooter } from './Footer';
-import { DialogRoot } from './Root';
-import { DialogTrigger } from './Trigger';
+import { DialogContent } from './DialogContent';
+import { DialogFooter } from './DialogFooter';
+import { DialogRoot } from './DialogRoot';
+import { DialogTrigger } from './DialogTrigger';
 
 /**
  * Dialog 컴포넌트
