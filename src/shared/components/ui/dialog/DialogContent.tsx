@@ -3,6 +3,7 @@
 import { X } from 'lucide-react';
 import { ReactNode, useEffect, useRef } from 'react';
 
+import { useScrollLock } from '@/shared/hooks/useScrollLock';
 import { cn } from '@/shared/libs/cn';
 
 import { DialogOverlay } from './DialogOverlay';
@@ -123,6 +124,9 @@ export function DialogContent({ variant, children }: DialogContentProps) {
 
   // cleanup 함수 관리용 ref
   const cleanupRef = useRef<(() => void) | null>(null);
+
+  // Dialog가 열릴 때 body 스크롤 잠금
+  useScrollLock(isOpen);
 
   // variant를 Context에 설정
   useEffect(() => {
@@ -411,12 +415,12 @@ export function DialogContent({ variant, children }: DialogContentProps) {
   };
 
   return (
-    <DialogPortal>
+    <DialogPortal isOpen={isOpen}>
       <DialogOverlay>
         <div
           ref={dialogRef}
           className={cn(
-            'relative z-50 w-[320px] rounded-[20px] bg-white md:w-[400px]',
+            'relative z-50 w-fit max-w-420 min-w-320 rounded-4xl bg-white',
             DIALOG_PADDING_CLASSNAME[variant],
           )}
           tabIndex={-1}
