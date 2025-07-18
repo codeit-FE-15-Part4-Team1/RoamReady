@@ -29,34 +29,45 @@ import { ChangeEvent, useEffect, useState } from 'react';
  * ```
  */
 export const useImagePreview = () => {
-  const [file, setFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
 
-  const handleFileChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    if (e.target instanceof HTMLInputElement && e.target.files) {
-      const selectedFile = e.target.files[0];
+  const removeImage = (index: number) => {
+    const newFiles = files.filter((_, i) => i !== index);
+    setFiles(newFiles);
+  };
 
-      if (selectedFile) {
-        setFile(selectedFile);
-      } else {
-        setFile(null);
-      }
-    }
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const fileList = e.target.files;
+    if (!fileList) return;
+
+    const selectedFiles = Array.from(fileList);
+
+    setFiles((prev) => {
+      // 중복 검사 (파일명 기준)
+      const existingNames = new Set(prev.map((f) => f.name));
+      const newFiles = selectedFiles.filter((f) => !existingNames.has(f.name));
+      return [...prev, ...newFiles];
+    });
+
+    // 같은 파일 재선택을 위해 input 초기화
+    e.target.value = '';
   };
 
   useEffect(() => {
-    if (!file) {
-      setPreviewUrl(null);
+    previewUrls.forEach((url) => URL.revokeObjectURL(url));
+    if (files.length === 0) {
+      setPreviewUrls([]);
       return;
     }
 
-    const objectUrl = URL.createObjectURL(file);
-    setPreviewUrl(objectUrl);
+    const objectUrls = files.map((file) => URL.createObjectURL(file));
+    setPreviewUrls(objectUrls);
 
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [file]);
+    return () => objectUrls.forEach((url) => URL.revokeObjectURL(url));
 
-  return { file, previewUrl, handleFileChange };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [files]); // previewUrls는 files에 의해 항상 업데이트되므로 의존성 배열에 포함하지 않음
+
+  return { files, previewUrls, handleFileChange, removeImage };
 };

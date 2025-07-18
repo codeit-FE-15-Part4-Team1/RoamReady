@@ -2,11 +2,14 @@
 
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat'; // 1. 플러그인 import
-import { Minus, Plus } from 'lucide-react';
+import { Minus, Plus, X } from 'lucide-react';
+import Image from 'next/image';
 import { useState } from 'react';
 
+import Button from '@/shared/components/Button';
 import Input from '@/shared/components/ui/input';
 import Select from '@/shared/components/ui/select';
+import { useImagePreview } from '@/shared/hooks/useImagePreview';
 
 dayjs.extend(customParseFormat); // 2. dayjs에 플러그인 적용
 
@@ -52,6 +55,9 @@ export default function CreateExperiencePage() {
       endTime: '',
     },
   ]);
+  const [price, setPrice] = useState<number | null>(null);
+  const bannerPreview = useImagePreview();
+  const introPreview = useImagePreview();
 
   const addTimeSlot = () => {
     const newSlotId = crypto.randomUUID();
@@ -139,8 +145,24 @@ export default function CreateExperiencePage() {
 
         <Input.Root id='price' type='number' className='my-10'>
           <Input.Label className='font-size-16 font-bold'>가격</Input.Label>
-          <Input.Field placeholder='체험 금액을 입력해 주세요' />
+          <Input.Field
+            placeholder='체험 금액을 입력해 주세요'
+            step='1000'
+            min='0'
+            onChange={(e) => {
+              const value =
+                e.target.value === '' ? null : Number(e.target.value);
+              setPrice(value);
+            }}
+          />
         </Input.Root>
+
+        {/* --- 서식이 적용된 금액 표시 --- */}
+        {typeof price === 'number' && price > 0 && (
+          <p className='mt-4 text-gray-600'>
+            입력된 금액: {price.toLocaleString('ko-KR')}원
+          </p>
+        )}
 
         <Input.Root id='location' type='text' className='my-10'>
           <Input.Label className='font-size-16 font-bold'>주소</Input.Label>
@@ -287,6 +309,114 @@ export default function CreateExperiencePage() {
             )}
           </div>
         ))}
+        <div>
+          <Input.Root
+            id='banner'
+            type='file'
+            fileName={bannerPreview.files.map((file) => file.name).join(',')}
+            handleFileChange={bannerPreview.handleFileChange}
+            className='my-10'
+          >
+            <Input.Label className='font-size-16 font-bold'>
+              배너 이미지 등록
+            </Input.Label>
+
+            <Input.Trigger triggerType='file-upload'>
+              <div className='flex flex-wrap items-center gap-20'>
+                <label
+                  htmlFor='banner'
+                  className='cursor-pointer border border-gray-500 p-30'
+                >
+                  <Plus className='size-50' />
+                </label>
+                {bannerPreview.previewUrls.length > 0 &&
+                  bannerPreview.previewUrls.map((url, index) => (
+                    <div key={index} className='relative h-[20rem] w-[20rem]'>
+                      <button
+                        type='button'
+                        className='absolute -top-5 -right-5 z-10 cursor-pointer rounded-full border bg-black p-5 text-white'
+                      >
+                        <X
+                          className='size-20'
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            bannerPreview.removeImage(index);
+                          }}
+                        />
+                      </button>
+                      <Image
+                        src={url}
+                        alt='Image preview'
+                        width={200}
+                        height={200}
+                        className='aspect-square rounded-3xl object-cover'
+                      />
+                    </div>
+                  ))}
+              </div>
+            </Input.Trigger>
+            <Input.Field accept='image/*' multiple />
+          </Input.Root>
+        </div>
+        <div>
+          <Input.Root
+            id='intro'
+            type='file'
+            fileName={introPreview.files.map((file) => file.name).join(',')}
+            handleFileChange={introPreview.handleFileChange}
+            className='my-10'
+          >
+            <Input.Label className='font-size-16 font-bold'>
+              소개 이미지 등록
+            </Input.Label>
+
+            <Input.Trigger triggerType='file-upload'>
+              <div className='flex flex-wrap items-center gap-20'>
+                <label
+                  htmlFor='intro'
+                  className='cursor-pointer border border-gray-500 p-30'
+                >
+                  <Plus className='size-50' />
+                </label>
+                {introPreview.previewUrls.length > 0 &&
+                  introPreview.previewUrls.map((url, index) => (
+                    <div key={index} className='relative h-[20rem] w-[20rem]'>
+                      <button
+                        type='button'
+                        className='absolute -top-5 -right-5 z-10 cursor-pointer rounded-full border bg-black p-5 text-white'
+                      >
+                        <X
+                          className='size-20'
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            introPreview.removeImage(index);
+                          }}
+                        />
+                      </button>
+                      <Image
+                        src={url}
+                        alt='Image preview'
+                        width={200}
+                        height={200}
+                        className='aspect-square rounded-3xl object-cover'
+                      />
+                    </div>
+                  ))}
+              </div>
+            </Input.Trigger>
+            <Input.Field accept='image/*' multiple />
+          </Input.Root>
+        </div>
+        <div className='flex w-full justify-center'>
+          <Button
+            variant='primary'
+            size='medium'
+            className='h-40'
+            type='submit'
+          >
+            등록하기
+          </Button>
+        </div>
       </form>
     </div>
   );

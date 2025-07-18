@@ -25,7 +25,7 @@ import Input from '.';
 export default function Example() {
   const [textValue, setTextValue] = useState('');
   const [textareaValue, setTextareaValue] = useState('');
-  const { file, previewUrl, handleFileChange } = useImagePreview();
+  const { files, previewUrls, handleFileChange } = useImagePreview();
   const group = 'rounded-lg border border-gray-300 px-20 py-15';
 
   return (
@@ -113,7 +113,7 @@ export default function Example() {
         <Input.Root
           id='file-example'
           type='file'
-          fileName={file?.name}
+          fileName={files.map((file) => file.name).join(',')}
           className={group}
           handleFileChange={handleFileChange}
           // fallbackMessage='이미지를 업로드하세요'
@@ -123,9 +123,9 @@ export default function Example() {
             triggerType='file-upload'
             className='relative flex h-120 w-120 flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300'
           >
-            {previewUrl && (
+            {previewUrls.length > 0 && (
               <Image
-                src={previewUrl}
+                src={previewUrls[0]}
                 alt='Image preview'
                 fill
                 className='object-cover'
