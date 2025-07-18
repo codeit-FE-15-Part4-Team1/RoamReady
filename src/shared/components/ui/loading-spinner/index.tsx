@@ -21,12 +21,11 @@ export function LoadingSpinner({ className }: LoadingSpinnerProps) {
   return (
     <div
       className={cn(
-        'inline-block animate-spin rounded-full border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]',
+        'inline-block rounded-full border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]',
         'h-14 w-14 border-2 md:h-16 md:w-16',
         className,
       )}
       role='status'
-      aria-label='loading'
     >
       <span className='sr-only'>로딩중...</span>
     </div>

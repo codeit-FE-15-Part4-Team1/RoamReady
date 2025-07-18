@@ -1,7 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 import { CodeBlock } from '@/shared/components/ui/code-block';
 import { Dialog } from '@/shared/components/ui/dialog';
@@ -690,7 +689,7 @@ export default function DialogTestPage() {
               <CodeBlock>
                 {`<Dialog.Root>
   <Dialog.Trigger>
-    <button>Complete Dialog</button>
+    <button>Cancel Dialog</button>
   </Dialog.Trigger>
   
   <Dialog.Content variant='cancel'>

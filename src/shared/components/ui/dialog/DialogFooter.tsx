@@ -148,6 +148,9 @@ export function DialogFooter({ children, variant }: DialogFooterProps) {
       } catch (error: unknown) {
         // 실패시 에러 로깅, Dialog는 열어둠
         console.error('Dialog 작업 오류:', error);
+        // TODO: 에러 상태를 컨텍스트에 저장하거나 에러 토스트 표시
+        // setError(error);
+        // showErrorToast('작업 중 오류가 발생했습니다.');
       } finally {
         setLoading(false);
         setLoadingButtonIndex(-1);
