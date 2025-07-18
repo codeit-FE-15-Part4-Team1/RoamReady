@@ -7,7 +7,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   return (
     <div className='flex min-h-screen flex-col justify-between'>
       <Header />
-      <div className='tablet:px-32 desktop:px-40 desktop:font-size-40 font-size-14 mx-auto max-w-1200 px-24'>
+      <div className='tablet:px-32 desktop:px-40 font-size-14 mx-auto max-w-1200 px-24'>
         {children}
       </div>
       <Footer />
