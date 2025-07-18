@@ -160,10 +160,9 @@ export function DialogContent({ variant, children }: DialogContentProps) {
      * React 렌더링 사이클과 Portal 특성상 dialogRef.current가
      * 즉시 사용 가능하지 않을 수 있어 재귀적으로 대기합니다.
      */
+    let retryCount = 0;
+    const maxRetry = 100; // 1초 제한 (100 * 10ms)
     const waitForDialog = () => {
-      const maxRetry = 100; // 1초 제한 (100 * 10ms)
-      let retryCount = 0;
-
       const dialog = dialogRef.current;
       if (!dialog) {
         if (retryCount >= maxRetry) {
