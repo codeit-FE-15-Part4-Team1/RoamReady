@@ -6,7 +6,7 @@ import Button from '@/shared/components/Button';
 
 import Participation from './Participation';
 
-export default function Reservation() {
+export default function ReservationPC() {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [participantCount, setParticipantCount] = useState(1);
 
@@ -70,7 +70,7 @@ export default function Reservation() {
           </h3>
           {/* 예약 가능 시간 버튼 목록 */}
           <div className='relative'>
-            <div className='scrollbar-none flex max-h-200 flex-col gap-10 overflow-auto'>
+            <div className='scrollbar-none flex max-h-200 flex-col gap-10 overflow-y-auto'>
               <Button
                 type='button'
                 variant='outline'
