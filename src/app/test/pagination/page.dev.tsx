@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import Pagination from '@/shared/components/ui/Pagination';
+import Pagination from '@/shared/components/ui/pagination';
 
 /**
  * PaginationTestPage
