@@ -26,7 +26,7 @@ import { DialogTrigger } from './DialogTrigger';
  *
  * @example
  * ```tsx
- * // 기본 사용법
+ * // 비제어(내부 상태) 기본 사용법
  * function Component() {
  *   return (
  *     <Dialog.Root>
@@ -47,16 +47,20 @@ import { DialogTrigger } from './DialogTrigger';
  *
  * @example
  * ```tsx
- * // 페이지 로드 시 Dialog 열기
- * <Dialog.Root defaultOpen={true}>
- *   <Dialog.Trigger>
- *     <button>Dialog 열기</button>
- *   </Dialog.Trigger>
- *
- *   <Dialog.Content variant="review">
- *     <ProfileEditor />
- *   </Dialog.Content>
- * </Dialog.Root>
+ * // 제어(Controlled) 모드: 외부에서 Dialog 열림/닫힘 상태를 관리
+ * function ControlledDialog() {
+ *   const [open, setOpen] = useState(false);
+ *   return (
+ *     <Dialog.Root open={open} onOpenChange={setOpen}>
+ *       <Dialog.Trigger>
+ *         <button>Dialog 열기</button>
+ *       </Dialog.Trigger>
+ *       <Dialog.Content variant="review">
+ *         <ProfileEditor />
+ *       </Dialog.Content>
+ *     </Dialog.Root>
+ *   );
+ * }
  * ```
  */
 export const Dialog = {

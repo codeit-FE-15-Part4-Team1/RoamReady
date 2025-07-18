@@ -1,12 +1,13 @@
 'use client';
 
 import { X } from 'lucide-react';
-import { ReactNode, useEffect, useRef } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 
 import { useScrollLock } from '@/shared/hooks/useScrollLock';
 import { cn } from '@/shared/libs/cn';
 
-import { DialogOverlay } from './DialogOverlay';
+// DialogOverlay 기능을 내부로 이동(애니메이션 적용을 위해)
 import { DialogPortal } from './DialogPortal';
 import { useDialogContext } from './DialogRoot';
 
@@ -125,8 +126,20 @@ export function DialogContent({ variant, children }: DialogContentProps) {
   // cleanup 함수 관리용 ref
   const cleanupRef = useRef<(() => void) | null>(null);
 
-  // Dialog가 열릴 때 body 스크롤 잠금
-  useScrollLock(isOpen);
+  // 스크롤 락 상태 관리 (exit 애니메이션 완료 후 해제)
+  const [shouldLockScroll, setShouldLockScroll] = useState(isOpen);
+  useScrollLock(shouldLockScroll);
+
+  // isOpen 상태 변경에 따른 스크롤 락 관리
+  useEffect(() => {
+    if (isOpen) {
+      setShouldLockScroll(true);
+    } else {
+      // Dialog 닫힐 때는 exit 애니메이션 완료 후 스크롤 락 해제
+      const timer = setTimeout(() => setShouldLockScroll(false), 220);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
   // variant를 Context에 설정
   useEffect(() => {
@@ -414,42 +427,79 @@ export function DialogContent({ variant, children }: DialogContentProps) {
     close();
   };
 
-  return (
-    <DialogPortal isOpen={isOpen}>
-      <DialogOverlay>
-        <div
-          ref={dialogRef}
-          className={cn(
-            'relative z-50 w-fit max-w-420 min-w-320 rounded-4xl bg-white',
-            DIALOG_PADDING_CLASSNAME[variant],
-          )}
-          tabIndex={-1}
-          role='dialog'
-          aria-modal='true'
-          onClick={handleContentClick}
-          onKeyDown={handleContentKeyDown}
-        >
-          {/* review variant에만 X 닫기 버튼 표시 */}
-          {variant === 'review' && (
-            <X
-              className={cn(
-                'absolute top-25 right-25 transition-colors',
-                loading
-                  ? 'cursor-not-allowed text-gray-400'
-                  : 'cursor-pointer text-gray-600 hover:text-gray-900',
-              )}
-              onClick={handleCloseClick}
-              onKeyDown={handleCloseKeyDown}
-              tabIndex={loading ? -1 : 0}
-              role='button'
-              aria-label='Dialog 닫기'
-              aria-disabled={loading}
-            />
-          )}
+  // Overlay 클릭 핸들러 (기존 DialogOverlay 기능)
+  const handleOverlayClick = () => {
+    // 로딩 중이거나 cancel variant일 때는 백드롭 클릭으로 닫기 차단
+    if (loading || variant === 'cancel') {
+      return;
+    }
+    close();
+  };
 
-          {children}
-        </div>
-      </DialogOverlay>
+  return (
+    <DialogPortal>
+      <AnimatePresence mode='wait'>
+        {isOpen && (
+          <motion.div
+            className={cn(
+              'fixed inset-0 z-40 flex items-center justify-center bg-black/50',
+              variant === 'complete' || variant === 'review'
+                ? ''
+                : 'backdrop-blur-md',
+            )}
+            style={{ marginRight: 'calc(100vw - 100%)' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            onClick={handleOverlayClick}
+            role='button'
+            tabIndex={0}
+            aria-label='Dialog 닫기'
+          >
+            <motion.div
+              ref={dialogRef}
+              className={cn(
+                'relative z-50 w-fit max-w-420 min-w-320 rounded-4xl bg-white',
+                DIALOG_PADDING_CLASSNAME[variant],
+              )}
+              tabIndex={-1}
+              role='dialog'
+              aria-modal='true'
+              onClick={handleContentClick}
+              onKeyDown={handleContentKeyDown}
+              initial={{ scale: 0.96, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.96, opacity: 0 }}
+              transition={{
+                type: 'spring',
+                stiffness: 260,
+                damping: 22,
+                duration: 0.22,
+              }}
+            >
+              {/* review variant에만 X 닫기 버튼 표시 */}
+              {variant === 'review' && (
+                <X
+                  className={cn(
+                    'absolute top-25 right-25 transition-colors',
+                    loading
+                      ? 'cursor-not-allowed text-gray-400'
+                      : 'cursor-pointer text-gray-600 hover:text-gray-900',
+                  )}
+                  onClick={handleCloseClick}
+                  onKeyDown={handleCloseKeyDown}
+                  tabIndex={loading ? -1 : 0}
+                  role='button'
+                  aria-label='Dialog 닫기'
+                  aria-disabled={loading}
+                />
+              )}
+              {children}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </DialogPortal>
   );
 }

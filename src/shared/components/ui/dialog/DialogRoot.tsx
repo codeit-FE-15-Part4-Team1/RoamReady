@@ -77,6 +77,16 @@ interface DialogRootProps {
    * @default false
    */
   defaultOpen?: boolean;
+  /**
+   * 제어 모드에서 외부에서 Dialog가 열렸는지 확인하는 상태 (undefined면 비제어 모드)
+   */
+  open?: boolean;
+  /**
+   * 상태 변경 시 호출되는 콜백
+   * - 제어 모드: DialogRoot에 open 상태 변경 함수를 전달받음
+   * - 비제어 모드: 내부적으로만 사용
+   */
+  onOpenChange?: (open: boolean) => void;
 }
 
 /**
@@ -115,32 +125,44 @@ interface DialogRootProps {
  * </Dialog.Root>
  * ```
  */
-export function DialogRoot({ children, defaultOpen = false }: DialogRootProps) {
-  // Dialog 기본 상태 관리
-  const [isOpen, setIsOpen] = useState(defaultOpen);
+export function DialogRoot({
+  children,
+  defaultOpen = false,
+  open,
+  onOpenChange,
+}: DialogRootProps) {
+  // 비제어 모드에서 사용되는 열림/닫힘 상태
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
+
+  // 제어/비제어 모드 분기
+  const isControlled = open !== undefined;
+  const isOpen = isControlled ? open : uncontrolledOpen;
 
   // 비동기 작업 상태 관리
   const [loading, setLoading] = useState(false);
   const [loadingButtonIndex, setLoadingButtonIndex] = useState(-1);
   const [variant, setVariant] = useState<DialogVariant | null>(null);
 
-  // Dialog 액션 함수들
-  const open = () => {
-    setIsOpen(true);
+  // 열림/닫힘 상태 변경 핸들러
+  const handleOpenChange = (newOpen: boolean) => {
+    if (!isControlled) setUncontrolledOpen(newOpen);
+    if (isControlled) onOpenChange?.(newOpen);
+    if (!newOpen) {
+      setLoading(false);
+      setLoadingButtonIndex(-1);
+    }
   };
 
-  const close = () => {
-    setIsOpen(false);
-    setLoading(false); // Dialog 닫을 때 로딩 초기화
-    setLoadingButtonIndex(-1); // Dialog 닫을 때 로딩 버튼 인덱스 초기화
-  };
+  // Dialog 액션 함수들
+  const openDialog = () => handleOpenChange(true);
+  const closeDialog = () => handleOpenChange(false);
 
   return (
     <DialogContext.Provider
       value={{
         isOpen,
-        open,
-        close,
+        open: openDialog,
+        close: closeDialog,
         loading,
         loadingButtonIndex,
         variant,

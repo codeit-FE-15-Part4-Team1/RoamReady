@@ -6,7 +6,6 @@ import { createPortal } from 'react-dom';
 interface DialogPortalProps {
   /** Portal을 통해 document.body에 렌더링될 자식 요소들 */
   children: ReactNode;
-  isOpen: boolean;
 }
 
 /**
@@ -16,14 +15,14 @@ interface DialogPortalProps {
  * - 클라이언트에서 마운트 완료 후에만 포털 생성
  * - mounted 상태로 hydration mismatch 방지
  */
-export function DialogPortal({ children, isOpen }: DialogPortalProps) {
+export function DialogPortal({ children }: DialogPortalProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted || !isOpen) return null;
+  if (!mounted) return null;
 
   return createPortal(children, document.body);
 }

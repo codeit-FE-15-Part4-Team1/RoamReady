@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactNode } from 'react';
+import { useState } from 'react';
 
 import { CodeBlock } from '@/shared/components/ui/code-block';
 import { Dialog } from '@/shared/components/ui/dialog';
@@ -194,6 +195,41 @@ function Code({ children }: { children: ReactNode }) {
     <code className='rounded-[4px] bg-gray-100 px-2 py-1 text-[14px]'>
       {children}
     </code>
+  );
+}
+
+// --- Controlled Dialog Example ---
+function ControlledDialogExample() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div>
+      <button
+        className='rounded-[8px] bg-black px-[20px] py-[14px] text-[16px] font-medium text-white transition-colors hover:bg-gray-800'
+        onClick={() => setOpen(true)}
+      >
+        Controlled Dialog 열기
+      </button>
+      <Dialog.Root open={open} onOpenChange={setOpen}>
+        <Dialog.Content variant='complete'>
+          <div className='text-center'>
+            <h1 className='mb-4 text-[20px] font-bold text-gray-900'>
+              외부 상태로 제어되는 Dialog
+            </h1>
+            <p className='mb-6 text-gray-700'>
+              open/onOpenChange props로 외부에서 Dialog를 열고 닫을 수 있습니다.
+            </p>
+            <Dialog.Footer variant='complete'>
+              <button
+                className='w-[130px] rounded-[8px] bg-black px-[16px] py-[12px] text-[14px] font-medium text-white transition-colors hover:bg-gray-800 md:w-[160px] md:text-[16px]'
+                onClick={() => setOpen(false)}
+              >
+                닫기
+              </button>
+            </Dialog.Footer>
+          </div>
+        </Dialog.Content>
+      </Dialog.Root>
+    </div>
   );
 }
 
@@ -564,6 +600,33 @@ export default function DialogTestPage() {
         <h2 className='text-[20px] font-bold text-gray-900 md:text-[24px]'>
           4. 사용법
         </h2>
+
+        {/* Controlled Dialog Example */}
+        <div className='flex flex-1 flex-col space-y-6'>
+          <h3 className='text-[18px] font-semibold text-gray-900'>
+            4.0 Controlled(제어) Dialog
+          </h3>
+          <div className='flex gap-30'>
+            <div>
+              <ControlledDialogExample />
+            </div>
+            <div className='flex-1'>
+              <CodeBlock>
+                {`const [open, setOpen] = useState(false);
+<Dialog.Root open={open} onOpenChange={setOpen}>
+  <Dialog.Content variant="complete">
+    <div>
+      <h1>외부 상태로 제어되는 Dialog</h1>
+      <Dialog.Footer variant="complete">
+        <button onClick={() => setOpen(false)}>닫기</button>
+      </Dialog.Footer>
+    </div>
+  </Dialog.Content>
+</Dialog.Root>`}
+              </CodeBlock>
+            </div>
+          </div>
+        </div>
 
         {/* 4.1 기본 사용법 */}
         <div className='flex flex-1 flex-col justify-between space-y-6'>
