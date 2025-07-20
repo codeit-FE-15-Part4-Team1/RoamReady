@@ -1,7 +1,7 @@
 import { useCalendar } from '../../hooks/useCalendar';
 import { Event } from '../../types/event';
 import { WEEKDAYS } from '../../utils/reservation';
-import CalendarHeader from './CalnedarHeader';
+import CalendarHeader from './CalendarHeader';
 import DayCell from './DayCell';
 
 export const sampleEvents: Event[] = [
