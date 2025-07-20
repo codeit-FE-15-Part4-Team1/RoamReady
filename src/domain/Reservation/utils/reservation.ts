@@ -1,4 +1,4 @@
-import type { Event } from '../components/ReservationCalendar';
+import { Event } from '../types/event';
 
 // 요일 배열
 export const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
@@ -11,6 +11,19 @@ export const PRIORITY_MAP = {
   거절: 3,
   취소: 4,
 };
+
+export const sampleEvents: Event[] = [
+  { id: '1', title: '완료', date: '2025-07-14', color: 'green', number: 1 },
+  { id: '2', title: '예약', date: '2025-07-15', color: 'purple', number: 2 },
+  { id: '3', title: '승인', date: '2025-07-15', color: 'blue', number: 3 },
+  { id: '4', title: '거절', date: '2025-07-15', color: 'orange', number: 4 },
+  { id: '5', title: '승인', date: '2025-07-16', color: 'blue', number: 5 },
+  { id: '6', title: '거절', date: '2025-07-16', color: 'orange', number: 6 },
+  { id: '7', title: '취소', date: '2025-07-17', color: 'red', number: 7 },
+  { id: '8', title: '예약', date: '2025-07-17', color: 'purple', number: 8 },
+  { id: '9', title: '완료', date: '2025-07-17', color: 'green', number: 9 },
+  { id: '10', title: '취소', date: '2025-07-18', color: 'red', number: 10 },
+];
 
 /**
  * 이벤트 색상에 따른 Tailwind CSS 클래스를 반환합니다

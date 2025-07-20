@@ -1,6 +1,6 @@
 'use client';
 
-import ReservationCalendar from '@/domain/Reservation/components/ReservationCalendar';
+import ReservationCalendar from '@/domain/Reservation/components/reservation-calendar/ReservationCalendar';
 
 export default function CalendarTestPage() {
   return (
