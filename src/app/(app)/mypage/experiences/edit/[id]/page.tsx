@@ -6,7 +6,7 @@ import CategoryInput from '@/domain/User/components/create-activity/CategoryInpu
 import DescriptionInput from '@/domain/User/components/create-activity/DescriptionInput';
 import IntroImageInput from '@/domain/User/components/create-activity/IntroImageInput';
 import PriceInput from '@/domain/User/components/create-activity/PriceInput';
-import TimeSlotInput from '@/domain/User/components/create-activity/TimeSlotInput/index';
+import TimeSlotInput from '@/domain/User/components/create-activity/TimeSlotInput/TimeSlotInput';
 import TitleInput from '@/domain/User/components/create-activity/TitleInput';
 import Button from '@/shared/components/Button';
 
