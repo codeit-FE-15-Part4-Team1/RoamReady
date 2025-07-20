@@ -1,9 +1,9 @@
 'use client';
 
 import Logo3 from '@/shared/assets/logos/logo';
-import LogoSymbol from '@/shared/assets/logos/logo-symbol';
 import Logo1 from '@/shared/assets/logos/logo-text-oneline';
 import Logo2 from '@/shared/assets/logos/logo-text-twoline';
+import LogoSymbol from '@/shared/assets/logos/LogoSymbol';
 
 const logoVariants = [
   { label: '기본 색상', className: 'h-80 w-80' },
