@@ -1,25 +1,60 @@
 import { useCalendar } from '../../hooks/useCalendar';
-import { Event } from '../../types/event';
 import { WEEKDAYS } from '../../utils/reservation';
 import CalendarHeader from './CalendarHeader';
 import DayCell from './DayCell';
 
-export const sampleEvents: Event[] = [
-  { id: '1', title: '완료', date: '2025-07-14', color: 'green', number: 1 },
-  { id: '2', title: '예약', date: '2025-07-15', color: 'purple', number: 2 },
-  { id: '3', title: '승인', date: '2025-07-15', color: 'blue', number: 3 },
-  { id: '4', title: '거절', date: '2025-07-15', color: 'orange', number: 4 },
-  { id: '5', title: '승인', date: '2025-07-16', color: 'blue', number: 5 },
-  { id: '6', title: '거절', date: '2025-07-16', color: 'orange', number: 6 },
-  { id: '7', title: '취소', date: '2025-07-17', color: 'red', number: 7 },
-  { id: '8', title: '예약', date: '2025-07-17', color: 'purple', number: 8 },
-  { id: '9', title: '완료', date: '2025-07-17', color: 'green', number: 9 },
-  { id: '10', title: '취소', date: '2025-07-18', color: 'red', number: 10 },
+export const ReservationsData = [
+  {
+    date: '2025-07-14',
+    reservations: {
+      completed: 1,
+      confirmed: 0,
+      pending: 0,
+    },
+  },
+  {
+    date: '2025-07-15',
+    reservations: {
+      completed: 0,
+      confirmed: 2, // 예약 2건 (id 2, 8)
+      pending: 3, // 승인 3건 (id 3, 5)
+    },
+  },
+  {
+    date: '2025-07-16',
+    reservations: {
+      completed: 0,
+      confirmed: 0,
+      pending: 5, // 승인 5건 (id 5)
+    },
+  },
+  {
+    date: '2025-07-17',
+    reservations: {
+      completed: 9, // 완료 9건 (id 9)
+      confirmed: 8, // 예약 8건 (id 8)
+      pending: 0,
+    },
+  },
+  {
+    date: '2025-07-18',
+    reservations: {
+      completed: 0,
+      confirmed: 0,
+      pending: 0,
+    },
+  },
 ];
 
 export default function ReservationCalendar() {
-  const { currentDate, today, days, getEventsForDate, prevMonth, nextMonth } =
-    useCalendar(sampleEvents);
+  const {
+    currentDate,
+    today,
+    days,
+    getReservationForDate, // 함수명 변경 (단수형)
+    prevMonth,
+    nextMonth,
+  } = useCalendar(ReservationsData);
 
   return (
     <div
@@ -52,7 +87,7 @@ export default function ReservationCalendar() {
             isCurrentMonth={day.isSame(currentDate, 'month')}
             isToday={day.isSame(today, 'day')}
             isLastRow={index >= days.length - 7}
-            events={getEventsForDate(day)}
+            reservation={getReservationForDate(day)} // 배열이 아닌 단일 객체 반환
           />
         ))}
       </div>

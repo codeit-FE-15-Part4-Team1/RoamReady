@@ -251,7 +251,7 @@ export default function PopoverContent({
   const popoverElement = (
     <div
       className={cn(
-        'absolute z-50 h-fit max-h-100 w-fit max-w-2xl overflow-y-auto rounded-md border border-gray-200 bg-white p-4 shadow-lg',
+        'absolute z-50 h-fit max-h-500 w-fit max-w-2xl overflow-y-auto rounded-md border border-gray-200 bg-white p-4 shadow-lg',
         className,
       )}
       id={`popover-content-${popoverId}`}
