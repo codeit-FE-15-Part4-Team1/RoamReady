@@ -1,7 +1,9 @@
 import { ReactNode } from 'react';
 
-import LayoutWrapper from '../_components/LayoutWrapper';
-
 export default function AuthLayout({ children }: { children: ReactNode }) {
-  return <LayoutWrapper>{children}</LayoutWrapper>;
+  return (
+    <div className='flex min-h-screen items-center justify-center bg-white px-24 py-50'>
+      {children}
+    </div>
+  );
 }

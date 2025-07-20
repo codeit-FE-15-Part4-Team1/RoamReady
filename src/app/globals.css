@@ -4,12 +4,21 @@
   font-size: --value(--font-size-*);
 }
 
+@layer utilities {
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .flex-col-center {
+    @apply flex flex-col items-center justify-center;
+  }
+}
+
 @layer base {
   html {
     word-break: keep-all;
     font-size: 62.5%; /* 10px = 1rem */
   }
-
   *:focus-visible {
     outline: 2px solid var(--color-brand-2);
     /* outline-offset: 2px; */
@@ -22,8 +31,8 @@
 
   --spacing: 0.1rem; /* 1px = 0.1rem (root font-size is 10px) */
 
-  --color-white: #ffffff;
-  --color-black: #000000;
+  --color-white: #fefefe;
+  --color-black: #121212;
 
   /* Gray Scale */
   --color-gray-25: #f8f8f8;
@@ -33,6 +42,7 @@
   --color-gray-300: #b3b4bc;
   --color-gray-400: #9fa0a7;
   --color-gray-500: #84858c;
+  --color-gray-550: #79747e;
   --color-gray-600: #707177;
   --color-gray-700: #5d5d61;
   --color-gray-800: #49494c;
@@ -42,6 +52,8 @@
   /* Brand */
   --color-brand-1: #e5f3ff;
   --color-brand-2: #3d9ef2;
+
+  --color-kakao: #fee500;
 
   /* System */
   --color-red: #ff2727;

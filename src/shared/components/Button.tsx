@@ -1,5 +1,11 @@
 import { LoaderCircle } from 'lucide-react';
-import { cloneElement, isValidElement, MouseEvent, ReactElement } from 'react';
+import {
+  cloneElement,
+  ComponentProps,
+  isValidElement,
+  MouseEvent,
+  ReactElement,
+} from 'react';
 
 import { cn } from '../libs/cn';
 
@@ -29,9 +35,10 @@ const buttonVariants = {
     /** 작은 크기 - 콘텐츠에 맞춤, 작은 패딩 */
     small: 'w-fit h-fit px-10 py-5',
     /** 중간 크기 - 고정 너비/높이, 일반적인 버튼 크기 */
-    medium: 'w-120 h-40',
+
+    medium: 'w-120 h-fit',
     /** 큰 크기 - 전체 너비, 큰 높이 */
-    large: 'w-full h-40',
+    large: 'w-full h-fit',
   },
 
   /** 선택된 상태 스타일 - 브랜드 컬러 텍스트와 테두리 */
@@ -100,9 +107,9 @@ function getButtonClasses(
 /**
  * Button 컴포넌트의 Props 타입 정의
  * @interface ButtonProps
- * @extends React.ComponentProps<'button'>
+ * @extends ComponentProps<'button'>
  */
-interface ButtonProps extends React.ComponentProps<'button'> {
+interface ButtonProps extends ComponentProps<'button'> {
   /**
    * 자식 요소로 렌더링할지 여부 (Slot 패턴)
    * @default false
