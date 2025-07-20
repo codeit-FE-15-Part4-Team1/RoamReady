@@ -1,42 +1,50 @@
-import { Event } from '../types/event';
+import { Reservation, ReservationStatus } from '../types/reservation';
 
 // 요일 배열
 export const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 // 이벤트 우선순위 (중요도 순)
-export const PRIORITY_MAP = {
-  완료: 0,
-  승인: 1,
-  예약: 2,
-  거절: 3,
-  취소: 4,
+const PRIORITY_MAP: Record<ReservationStatus, number> = {
+  completed: 0,
+  pending: 1,
+  confirmed: 2,
 };
 
 /**
- * 이벤트 색상에 따른 Tailwind CSS 클래스를 반환합니다
- * @param color - 이벤트 색상 ('red' | 'blue' | 'orange' | 'green' | 'purple')
+ * 예약 상태에 따른 Tailwind CSS 클래스를 반환합니다
+ * @param status - 예약 상태 ('completed' | 'confirmed' | 'pending')
  * @returns Tailwind CSS 클래스 문자열
  */
-export const getColorClass = (color: string) => {
-  const colorMap = {
-    red: 'bg-red-200 text-red-400',
-    blue: 'bg-blue-200 text-blue-400',
-    orange: 'bg-orange-200 text-orange-400',
-    green: 'bg-green-200 text-green-400',
-    purple: 'bg-purple-200 text-purple-400',
+export const getColorClassByStatus = (status: ReservationStatus) => {
+  const statusColorMap: Record<ReservationStatus, string> = {
+    completed: 'bg-green-200 text-green-600', // 완료
+    confirmed: 'bg-purple-200 text-purple-600', // 예약
+    pending: 'bg-blue-200 text-blue-600', // 승인
   };
-  return colorMap[color as keyof typeof colorMap] || 'bg-gray-500';
+
+  return statusColorMap[status] || 'bg-gray-200 text-gray-600';
 };
 
 /**
- * 이벤트를 우선순위에 따라 정렬합니다
- * @param events - 정렬할 이벤트 배열
- * @returns 우선순위 순으로 정렬된 이벤트 배열 (완료 > 승인 > 예약 > 거절 > 취소)
+ * 예약을 우선순위에 따라 정렬합니다
+ * @param reservations - 정렬할 예약 배열
+ * @returns 우선순위 순으로 정렬된 예약 배열 (완료 > 승인 > 예약)
  */
-export const sortEventsByPriority = (events: Event[]) => {
-  return [...events].sort((a, b) => {
-    const priorityA = PRIORITY_MAP[a.title as keyof typeof PRIORITY_MAP] ?? 999;
-    const priorityB = PRIORITY_MAP[b.title as keyof typeof PRIORITY_MAP] ?? 999;
+export const sortEventsByPriority = (reservations: Reservation[]) => {
+  return [...reservations].sort((a, b) => {
+    // 각 예약에서 가장 높은 우선순위의 상태를 찾기
+    const getHighestPriority = (reservation: Reservation): number => {
+      const statuses = Object.keys(
+        reservation.reservations,
+      ) as ReservationStatus[];
+      if (statuses.length === 0) return -1;
+
+      return Math.min(...statuses.map((status) => PRIORITY_MAP[status]));
+    };
+
+    const priorityA = getHighestPriority(a);
+    const priorityB = getHighestPriority(b);
+
     return priorityA - priorityB;
   });
 };

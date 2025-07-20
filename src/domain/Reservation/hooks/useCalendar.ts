@@ -1,26 +1,24 @@
 import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
-import { Event } from '../types/event';
+import type { Reservation } from '../types/reservation';
 
 dayjs.extend(isSameOrBefore);
 
-export function useCalendar(initialEvents: Event[]) {
+export function useCalendar(initialReservations: Reservation[]) {
   const [currentDate, setCurrentDate] = useState(dayjs());
-  const [events] = useState<Event[]>(initialEvents);
+  const [reservations] = useState<Reservation[]>(initialReservations);
   const today = useMemo(() => dayjs(), []);
 
-  const eventsByDate = useMemo(() => {
-    const eventMap: Record<string, Event[]> = {};
-    events.forEach((event) => {
-      if (!eventMap[event.date]) {
-        eventMap[event.date] = [];
-      }
-      eventMap[event.date].push(event);
+  // 날짜별 예약 데이터 맵
+  const reservationsByDate = useMemo(() => {
+    const map: Record<string, Reservation> = {};
+    reservations.forEach((reservation) => {
+      map[reservation.date] = reservation;
     });
-    return eventMap;
-  }, [events]);
+    return map;
+  }, [reservations]);
 
   const days = useMemo(() => {
     const monthStart = currentDate.startOf('month');
@@ -37,28 +35,24 @@ export function useCalendar(initialEvents: Event[]) {
     return daysArr;
   }, [currentDate]);
 
-  const getEventsForDate = useCallback(
-    (date: dayjs.Dayjs) => {
-      const formattedDate = date.format('YYYY-MM-DD');
-      return eventsByDate[formattedDate] || [];
-    },
-    [eventsByDate],
-  );
+  // 특정 날짜의 예약 정보 반환 (단일 객체 또는 null)
+  const getReservationForDate = (day: dayjs.Dayjs): Reservation | null => {
+    const dateString = day.format('YYYY-MM-DD');
+    return reservationsByDate[dateString] || null;
+  };
 
-  const prevMonth = useCallback(
-    () => setCurrentDate((prev) => prev.subtract(1, 'month')),
-    [],
-  );
-  const nextMonth = useCallback(
-    () => setCurrentDate((prev) => prev.add(1, 'month')),
-    [],
-  );
+  const prevMonth = () => {
+    setCurrentDate((prev) => prev.subtract(1, 'month'));
+  };
 
+  const nextMonth = () => {
+    setCurrentDate((prev) => prev.add(1, 'month'));
+  };
   return {
     currentDate,
     today,
     days,
-    getEventsForDate,
+    getReservationForDate,
     prevMonth,
     nextMonth,
   };
