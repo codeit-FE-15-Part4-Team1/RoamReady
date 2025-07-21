@@ -17,7 +17,7 @@ import Toast from './Toast';
  * - `useEffect`와 `mounted` 상태를 사용하여 클라이언트 사이드에서만 `document` 객체에 접근하도록 처리합니다.
  * 이는 Next.js의 서버 사이드 렌더링(SSR) 환경에서 발생할 수 있는 'document is not defined' 오류를 방지합니다.
  */
-const ToastContainer = () => {
+export default function ToastContainer() {
   const toasts = useRoamReadyStore((state) => state.toasts);
 
   const [mounted, setMounted] = useState(false);
@@ -40,6 +40,4 @@ const ToastContainer = () => {
     </div>,
     portalRoot,
   );
-};
-
-export default ToastContainer;
+}

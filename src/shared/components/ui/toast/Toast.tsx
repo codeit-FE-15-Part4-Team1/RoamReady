@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-import { useToast } from '@/shared/hooks/useToast';
+import useToast from '@/shared/hooks/useToast';
 import { cn } from '@/shared/libs/cn';
 import { ToastState } from '@/shared/slices/toastSlice';
 
@@ -65,7 +65,9 @@ const typeStyles = {
  * @param {object} props - 컴포넌트 props
  * @param {ToastState} props.toast - 표시할 토스트의 상태 객체 (`id`, `message`, `type`, `duration` 포함)
  */
-const Toast = ({ toast: { id, message, type, duration } }: ToastProps) => {
+export default function Toast({
+  toast: { id, message, type, duration },
+}: ToastProps) {
   const { removeToast } = useToast();
   const [isVisible, setIsVisible] = useState(false);
   const animationDuration = 500;
@@ -150,6 +152,4 @@ const Toast = ({ toast: { id, message, type, duration } }: ToastProps) => {
       />
     </div>
   );
-};
-
-export default Toast;
+}

@@ -26,7 +26,7 @@ import { useRoamReadyStore } from '../store';
  * };
  * ```
  */
-export const useToast = () => {
+const useToast = () => {
   const { addToast, removeToast } = useRoamReadyStore();
 
   const showToast = (
@@ -48,3 +48,5 @@ export const useToast = () => {
 
   return { removeToast, showSuccess, showError, showInfo, showWarning };
 };
+
+export default useToast;

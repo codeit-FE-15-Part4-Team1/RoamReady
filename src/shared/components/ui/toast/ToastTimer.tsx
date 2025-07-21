@@ -29,7 +29,11 @@ export interface ToastTimerProps {
  * @param {boolean} props.isVisible - 토스트가 화면에 보이는지 여부. `true`일 때 타이머 애니메이션이 시작됩니다.
  * @param {string} props.color - 진행 바에 적용할 Tailwind CSS 배경색 클래스 (예: 'bg-green-500')
  */
-const ToastTimer = ({ duration, isVisible, color }: ToastTimerProps) => {
+export default function ToastTimer({
+  duration,
+  isVisible,
+  color,
+}: ToastTimerProps) {
   const [progress, setProgress] = useState(100);
 
   useEffect(() => {
@@ -64,6 +68,4 @@ const ToastTimer = ({ duration, isVisible, color }: ToastTimerProps) => {
       <div className={cn('h-full', color)} style={{ width: `${progress}%` }} />
     </div>
   );
-};
-
-export default ToastTimer;
+}
