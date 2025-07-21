@@ -48,11 +48,23 @@ export async function middleware(request: NextRequest) {
     headers.set('Authorization', `Bearer ${accessToken}`);
   }
 
+  const method = request.method;
+  const contentType = request.headers.get('content-type') || '';
+  const isMultipart = contentType.includes('multipart/form-data');
+  const isSafeToClone = !isMultipart && method !== 'GET' && method !== 'HEAD';
+
+  let rawBody: string | null = null;
+  if (isSafeToClone && request.body) {
+    rawBody = await request.text();
+  }
+
   let response = await fetch(destinationUrl, {
-    method: request.method,
+    method,
     headers,
-    body: request.body,
-    ...(request.body && { duplex: 'half' }),
+    body: isSafeToClone ? rawBody : request.body,
+    ...(request.body &&
+      !['GET', 'HEAD'].includes(method) && { duplex: 'half' }),
+    signal: AbortSignal.timeout(30000),
   });
 
   if (response.status === 401 && refreshToken) {
@@ -73,11 +85,14 @@ export async function middleware(request: NextRequest) {
       console.log('새로운 Access Token 발급 성공');
 
       headers.set('Authorization', `Bearer ${newAccessToken}`);
+
       response = await fetch(destinationUrl, {
-        method: request.method,
+        method,
         headers,
-        body: request.body,
-        ...(request.body && { duplex: 'half' }),
+        body: isSafeToClone ? rawBody : request.body,
+        ...(request.body &&
+          !['GET', 'HEAD'].includes(method) && { duplex: 'half' }),
+        signal: AbortSignal.timeout(30000),
       });
 
       const finalResponse = new NextResponse(response.body, {
@@ -91,6 +106,7 @@ export async function middleware(request: NextRequest) {
         secure: process.env.NODE_ENV === 'production',
         path: '/',
         maxAge: 60 * 60,
+        sameSite: 'lax',
       });
 
       return finalResponse;
