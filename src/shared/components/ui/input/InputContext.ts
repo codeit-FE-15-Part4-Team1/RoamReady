@@ -25,7 +25,7 @@ import { FieldErrors, UseFormRegisterReturn } from 'react-hook-form';
  * @property {() => void} togglePasswordVisibility - 비밀번호 가시성을 토글하는 함수입니다. (`Input.Root`에서 관리하는 내부 함수)
  */
 export interface InputContextProps {
-  id: string;
+  id?: string;
   type: HTMLInputTypeAttribute | 'textarea';
   required?: boolean;
   disabled?: boolean;
