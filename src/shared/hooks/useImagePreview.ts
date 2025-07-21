@@ -40,12 +40,12 @@ import { Control, FieldValues, Path, useWatch } from 'react-hook-form';
  * interface MyFormData {
  * profileImage?: FileList; // react-hook-form에서 파일 입력은 보통 FileList 타입입니다.
  * ...
- * username: string;
+ * nickname: string;
  * }
  *
  * function SignupPage() {
  * const { control, ...methods } = useForm<MyFormData>({
- * defaultValues: { profileImage: undefined, username: '' }
+ * defaultValues: { profileImage: undefined, nickname: '' }
  * });
  *
  * 'profileImage' 필드의 변화를 감시하여 미리보기 URL을 얻습니다.
@@ -54,7 +54,7 @@ import { Control, FieldValues, Path, useWatch } from 'react-hook-form';
  * return (
  * <FormProvider {...methods}>
  * <form onSubmit={methods.handleSubmit((data) => console.log(data))}>
- * <Input.Root name="username" type="text">
+ * <Input.Root name="nickname" type="text">
  * <Input.Label>사용자 이름</Input.Label>
  * <Input.Field placeholder="이름을 입력하세요" />
  * </Input.Root>
