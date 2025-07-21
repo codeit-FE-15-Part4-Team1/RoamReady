@@ -15,7 +15,7 @@ export default function TimeSlotHeader({ onAdd }: TimeSlotHeaderProps) {
     <div className='grid grid-cols-10 gap-10'>
       <Input.Root id='date-header' type='date' className='disabled col-span-6'>
         <Input.Label className='font-size-14'>날짜</Input.Label>
-        <Input.Field placeholder='날짜를 선택해 주세요' />
+        <Input.Field disabled placeholder='날짜를 선택해 주세요' />
       </Input.Root>
       <div className='col-span-3 flex items-center justify-between gap-10'>
         <div className='flex w-full flex-col gap-10'>

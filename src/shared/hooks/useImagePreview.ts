@@ -41,12 +41,15 @@ export const useImagePreview = () => {
     const fileList = e.target.files;
     if (!fileList) return;
 
+    //진짜 배열이 아니므로 배열로 변환
     const selectedFiles = Array.from(fileList);
 
     setFiles((prev) => {
-      // 중복 검사 (파일명 기준)
-      const existingNames = new Set(prev.map((f) => f.name));
-      const newFiles = selectedFiles.filter((f) => !existingNames.has(f.name));
+      // 중복 검사 (파일명 기준) Set을 활용하여 중복된 파일은 추가하지 않음
+      const existingNames = new Set(prev.map((file) => file.name));
+      const newFiles = selectedFiles.filter(
+        (file) => !existingNames.has(file.name),
+      );
       return [...prev, ...newFiles];
     });
 
@@ -54,6 +57,7 @@ export const useImagePreview = () => {
     e.target.value = '';
   };
 
+  // 파일 변경 시 미리보기 URL 업데이트
   useEffect(() => {
     previewUrls.forEach((url) => URL.revokeObjectURL(url));
     if (files.length === 0) {
