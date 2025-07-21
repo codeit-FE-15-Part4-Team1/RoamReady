@@ -1,7 +1,9 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { HTTPError } from 'ky';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import type { SigninRequest } from '@/domain/Auth/schemas/request';
@@ -11,7 +13,7 @@ import LogoSymbol from '@/shared/assets/logos/LogoSymbol';
 import LogoTextOneLine from '@/shared/assets/logos/LogoTextOneline';
 import Button from '@/shared/components/Button';
 import Input from '@/shared/components/ui/input';
-import { AUTH_ROUTES } from '@/shared/constants/routes';
+import { ROUTES } from '@/shared/constants/routes';
 
 /**
  * @component SignInPage
@@ -48,9 +50,11 @@ import { AUTH_ROUTES } from '@/shared/constants/routes';
  * - `Input.Label`, `Input.Field`, `Input.Helper` 컴포넌트들이 `Input.Root`의 자식으로 배치되어 입력 필드의 레이블, 실제 입력 필드, 그리고 유효성 검사 오류 메시지 등을 표시합니다. `Input.Helper`는 `FormProvider`로부터 `errors` 객체를 받아 자동으로 오류 메시지를 표시합니다.
  * - `비밀번호` 필드에는 `Input.Trigger`를 사용하여 비밀번호 가시성 토글 기능을 제공합니다.
  * - `로그인` 버튼은 `isSubmitting` 상태에 따라 텍스트가 '로그인 중...'으로 변경되고 비활성화됩니다.
- * - 카카오 로그인 버튼과 "아직 계정이 없으신가요?" 텍스트 및 회원가입(`AUTH_ROUTES.SIGNUP`) 링크를 포함합니다. 카카오 로그인 버튼은 일반적으로 즉시 외부 인증 페이지로 리디렉션되므로 별도의 로딩 상태를 표시하지 않습니다.
+ * - 카카오 로그인 버튼과 "아직 계정이 없으신가요?" 텍스트 및 회원가입(`ROUTES.SIGNUP`) 링크를 포함합니다. 카카오 로그인 버튼은 일반적으로 즉시 외부 인증 페이지로 리디렉션되므로 별도의 로딩 상태를 표시하지 않습니다.
  */
 export default function SignInPage() {
+  const router = useRouter();
+
   const signinDefaultValues: SigninRequest = {
     email: '',
     password: '',
@@ -69,11 +73,17 @@ export default function SignInPage() {
   const onSubmit = async (data: SigninRequest) => {
     try {
       const response = await signin(data);
-      console.log('로그인 성공:', response);
-      //TODO 성공 처리 (리다이렉트)
+      console.log('로그인 성공! 사용자 정보:', response.user);
+      router.push(ROUTES.MAIN);
     } catch (error) {
-      console.error('로그인 실패:', error);
-      //TODO 오류 처리 (사용자에게 토스트 메시지 표시)
+      console.error('로그인 요청 실패:', error);
+      if (error instanceof HTTPError) {
+        const errorResponse = await error.response.json();
+        //TODO 토스트 처리
+        alert(errorResponse.message || '로그인 중 오류가 발생했습니다.');
+      } else {
+        alert('예기치 못한 오류가 발생했습니다.');
+      }
     }
   };
 
@@ -142,10 +152,7 @@ export default function SignInPage() {
 
         <div className='flex justify-center gap-4'>
           <span className='text-gray-400'>아직 계정이 없으신가요?</span>
-          <Link
-            href={AUTH_ROUTES.SIGNUP}
-            className='text-brand-2 hover:underline'
-          >
+          <Link href={ROUTES.SIGNUP} className='text-brand-2 hover:underline'>
             회원가입
           </Link>
         </div>

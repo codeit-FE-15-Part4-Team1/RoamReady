@@ -12,7 +12,7 @@ import z from 'zod';
  */
 const baseSignupRequestSchema = z.object({
   email: z.string().email({ message: '유효한 이메일 형식이 아닙니다.' }),
-  username: z
+  nickname: z
     .string()
     .min(1, { message: '닉네임을 입력해주세요' })
     .max(10, { message: '닉네임은 10자 이하로 입력해주세요.' }),

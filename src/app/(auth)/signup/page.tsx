@@ -2,6 +2,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import type {
@@ -14,7 +15,7 @@ import LogoSymbol from '@/shared/assets/logos/LogoSymbol';
 import LogoTextOneLine from '@/shared/assets/logos/LogoTextOneline';
 import Button from '@/shared/components/Button';
 import Input from '@/shared/components/ui/input';
-import { AUTH_ROUTES } from '@/shared/constants/routes';
+import { ROUTES } from '@/shared/constants/routes';
 
 /**
  * @component SignUpPage
@@ -51,12 +52,13 @@ import { AUTH_ROUTES } from '@/shared/constants/routes';
  * - `Input.Label`, `Input.Field`, `Input.Helper` 컴포넌트들이 `Input.Root`의 자식으로 배치되어 입력 필드의 레이블, 실제 입력 필드, 그리고 유효성 검사 오류 메시지 등을 표시합니다. `Input.Helper`는 `FormProvider`로부터 `errors` 객체를 받아 자동으로 오류 메시지를 표시합니다.
  * - `비밀번호` 필드에는 `Input.Trigger`를 사용하여 비밀번호 가시성 토글 기능을 제공할 수 있습니다.
  * - `회원가입` 버튼은 `isSubmitting` 상태에 따라 텍스트가 '회원가입 중...'으로 변경되고 비활성화됩니다.
- * - "이미 계정이 있으신가요?" 텍스트 및 로그인(`AUTH_ROUTES.SIGNIN`) 링크를 포함합니다.
+ * - "이미 계정이 있으신가요?" 텍스트 및 로그인(`ROUTES.SIGNIN`) 링크를 포함합니다.
  */
 export default function SignUpPage() {
+  const router = useRouter();
   const signupDefaultValues: SignupFormValues = {
     email: '',
-    username: '',
+    nickname: '',
     password: '',
     passwordConfirm: '',
   };
@@ -75,9 +77,10 @@ export default function SignUpPage() {
     try {
       const response = await signup(data);
       console.log('회원가입 성공:', response);
-      // TODO: 성공 처리 (로그인 페이지로 리다이렉트 또는 자동 로그인)
+      router.push(ROUTES.MAIN);
     } catch (error) {
       console.error('회원가입 실패:', error);
+
       // TODO: 오류 처리 (사용자에게 토스트 메시지 표시, setError를 통한 필드별 오류 주입 등)
     }
   };
@@ -100,7 +103,7 @@ export default function SignUpPage() {
             <Input.Helper />
           </Input.Root>
 
-          <Input.Root id='username' name='username' type='text'>
+          <Input.Root id='nickname' name='nickname' type='text'>
             <Input.Label>닉네임</Input.Label>
             <Input.Field placeholder='닉네임을 작성해주세요' />
             <Input.Helper />
@@ -165,10 +168,7 @@ export default function SignUpPage() {
 
         <div className='flex justify-center gap-4'>
           <span className='text-gray-400'>이미 회원이신가요?</span>
-          <Link
-            href={AUTH_ROUTES.SIGNIN}
-            className='text-brand-2 hover:underline'
-          >
+          <Link href={ROUTES.SIGNIN} className='text-brand-2 hover:underline'>
             로그인
           </Link>
         </div>
