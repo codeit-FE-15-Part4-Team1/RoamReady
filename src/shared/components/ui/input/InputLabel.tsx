@@ -35,7 +35,7 @@ interface LabelProps {
  * @example
  * ```tsx
  * Input.Root의 id와 required prop에 따라 자동으로 라벨과 연결되고 필수 표시가 됩니다.
- * <Input.Root id="user-name" name="userName" type="text" required>
+ * <Input.Root id="nickname" name="nickname" type="text" required>
  * <Input.Label>이름</Input.Label>
  * <Input.Field placeholder="사용자 이름을 입력하세요" />
  * </Input.Root>
