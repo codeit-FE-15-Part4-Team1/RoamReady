@@ -10,12 +10,13 @@ import { cn } from '@/shared/libs/cn';
 import CustomOverlay from './CustomOverlay';
 
 // 전역 객체에 kakao 속성 추가
+/* eslint-disable @typescript-eslint/no-explicit-any */
 declare global {
-   
   interface Window {
     kakao: any;
   }
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 /**
  * KaKaoMap
