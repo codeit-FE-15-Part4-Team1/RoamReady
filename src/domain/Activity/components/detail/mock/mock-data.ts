@@ -7,7 +7,7 @@ export const activity = {
   category: '문화 · 예술',
   price: 39000,
   address: '서울특별시 마포구 성미산로 15길 22',
-  bannerImageUrl: '@\\domain\\Activity\\components\\detail\\mock\\mock-1.png',
+  bannerImageUrl: '/src/domain/Activity/components/detail/mock/mock-1.png',
   rating: 4.0,
   reviewCount: 3,
   createdAt: '2025-07-18T10:30:00.000Z',
@@ -15,19 +15,19 @@ export const activity = {
   subImages: [
     {
       id: 9489,
-      imageUrl: '@\\domain\\Activity\\components\\detail\\mock\\mock-2.png',
+      imageUrl: '/mock/mock-2.png',
     },
     {
       id: 9490,
-      imageUrl: '@\\domain\\Activity\\components\\detail\\mock\\mock-3.png',
+      imageUrl: '/mock/mock-3.jpeg',
     },
     {
       id: 9491,
-      imageUrl: '@\\domain\\Activity\\components\\detail\\mock\\mock-4.png',
+      imageUrl: '/mock/mock-4.png',
     },
     {
       id: 9492,
-      imageUrl: '@\\domain\\Activity\\components\\detail\\mock\\mock-5.png',
+      imageUrl: '/mock/mock-5.png',
     },
   ],
   schedules: [
