@@ -21,11 +21,9 @@ export default function ActivityDetailPage() {
         <ReviewSection review={reviews} />
       </div>
 
-      <div className='desktop:w-full flex flex-col gap-38'>
-        <div className='sticky top-60 flex flex-col gap-38'>
-          <ActivitySummary activity={activity} review={reviews} />
-          <ReservationPC activity={activity} />
-        </div>
+      <div className='flex flex-col gap-38'>
+        <ActivitySummary activity={activity} review={reviews} />
+        <ReservationPC activity={activity} />
       </div>
     </div>
   );
