@@ -11,6 +11,7 @@ import CustomOverlay from './CustomOverlay';
 
 // 전역 객체에 kakao 속성 추가
 declare global {
+   
   interface Window {
     kakao: any;
   }
