@@ -1,7 +1,7 @@
 import { Star } from 'lucide-react';
 
-import { Review } from '../../types/detail/types';
-import { getTimeAgo } from '../../utils/getTimeAgo';
+import { Review } from '../../../types/detail/types';
+import { getTimeAgo } from '../../../utils/getTimeAgo';
 
 /**
  * ReviewCard 컴포넌트

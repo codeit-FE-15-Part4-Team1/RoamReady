@@ -201,7 +201,67 @@ export const reviews = {
       createdAt: '2025-07-18T16:30:00.000Z',
       updatedAt: '2025-07-18T16:30:00.000Z',
     },
+    {
+      id: 2201,
+      user: {
+        id: 3001,
+        nickname: '유진',
+        profileImageUrl:
+          '@\\domain\\Activity\\components\\detail\\mock\\mock-2.png',
+      },
+      activityId: 4783,
+      content:
+        '친구랑 같이 참여했는데 너무 만족했어요! 내가 좋아하는 라벤더 향으로 비누를 만들 수 있어서 특별했고, 천연 재료라 안심하고 사용할 수 있어요. 선생님도 친절하게 하나하나 설명해주셔서 처음인데도 쉽게 따라 할 수 있었습니다.',
+      rating: 5,
+      createdAt: '2025-07-20T17:15:00.000Z',
+      updatedAt: '2025-07-20T17:15:00.000Z',
+    },
+    {
+      id: 2033,
+      user: {
+        id: 3001,
+        nickname: '유진',
+        profileImageUrl:
+          '@\\domain\\Activity\\components\\detail\\mock\\mock-2.png',
+      },
+      activityId: 4783,
+      content:
+        '친구랑 같이 참여했는데 너무 만족했어요! 내가 좋아하는 라벤더 향으로 비누를 만들 수 있어서 특별했고, 천연 재료라 안심하고 사용할 수 있어요. 선생님도 친절하게 하나하나 설명해주셔서 처음인데도 쉽게 따라 할 수 있었습니다.',
+      rating: 5,
+      createdAt: '2025-07-20T17:15:00.000Z',
+      updatedAt: '2025-07-20T17:15:00.000Z',
+    },
+    {
+      id: 2093,
+      user: {
+        id: 3001,
+        nickname: '유진',
+        profileImageUrl:
+          '@\\domain\\Activity\\components\\detail\\mock\\mock-2.png',
+      },
+      activityId: 4783,
+      content:
+        '친구랑 같이 참여했는데 너무 만족했어요! 내가 좋아하는 라벤더 향으로 비누를 만들 수 있어서 특별했고, 천연 재료라 안심하고 사용할 수 있어요. 선생님도 친절하게 하나하나 설명해주셔서 처음인데도 쉽게 따라 할 수 있었습니다.',
+      rating: 5,
+      createdAt: '2025-07-20T17:15:00.000Z',
+      updatedAt: '2025-07-20T17:15:00.000Z',
+    },
+    {
+      id: 2099,
+      user: {
+        id: 3001,
+        nickname: '유진',
+        profileImageUrl:
+          '@\\domain\\Activity\\components\\detail\\mock\\mock-2.png',
+      },
+      activityId: 4783,
+      content:
+        '친구랑 같이 참여했는데 너무 만족했어요! 내가 좋아하는 라벤더 향으로 비누를 만들 수 있어서 특별했고, 천연 재료라 안심하고 사용할 수 있어요. 선생님도 친절하게 하나하나 설명해주셔서 처음인데도 쉽게 따라 할 수 있었습니다.',
+      rating: 5,
+      createdAt: '2025-07-20T17:15:00.000Z',
+      updatedAt: '2025-07-20T17:15:00.000Z',
+    },
   ],
-  totalCount: 3,
+  totalCount: 7,
   averageRating: 4.0,
 };
