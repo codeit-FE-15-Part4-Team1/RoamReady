@@ -51,7 +51,7 @@ export default function ReservationCalendar() {
     currentDate,
     today,
     days,
-    getReservationForDate, // 함수명 변경 (단수형)
+    getReservationForDate,
     prevMonth,
     nextMonth,
   } = useCalendar(ReservationsData);

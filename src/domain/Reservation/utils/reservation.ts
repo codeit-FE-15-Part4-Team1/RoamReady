@@ -3,11 +3,18 @@ import { Reservation, ReservationStatus } from '../types/reservation';
 // 요일 배열
 export const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
-// 이벤트 우선순위 (중요도 순)
-const PRIORITY_MAP: Record<ReservationStatus, number> = {
-  completed: 0,
-  pending: 1,
-  confirmed: 2,
+// 상태별 우선순위 (표시 순서)
+export const STATUS_PRIORITY: ReservationStatus[] = [
+  'completed',
+  'pending',
+  'confirmed',
+];
+
+// 상태별 한글 라벨
+export const STATUS_LABELS: Record<ReservationStatus, string> = {
+  confirmed: '예약',
+  pending: '승인',
+  completed: '완료',
 };
 
 /**
@@ -26,25 +33,19 @@ export const getColorClassByStatus = (status: ReservationStatus) => {
 };
 
 /**
- * 예약을 우선순위에 따라 정렬합니다
- * @param reservations - 정렬할 예약 배열
- * @returns 우선순위 순으로 정렬된 예약 배열 (완료 > 승인 > 예약)
+ * 예약 데이터에서 표시할 아이템들을 우선순위 순으로 반환
+ * @param reservation - 예약 객체 (null 가능)
+ * @returns 표시할 아이템 배열 (우선순위 순)
  */
-export const sortEventsByPriority = (reservations: Reservation[]) => {
-  return [...reservations].sort((a, b) => {
-    // 각 예약에서 가장 높은 우선순위의 상태를 찾기
-    const getHighestPriority = (reservation: Reservation): number => {
-      const statuses = Object.keys(
-        reservation.reservations,
-      ) as ReservationStatus[];
-      if (statuses.length === 0) return -1;
+export const getDisplayItems = (reservation: Reservation | null) => {
+  if (!reservation) return [];
 
-      return Math.min(...statuses.map((status) => PRIORITY_MAP[status]));
-    };
-
-    const priorityA = getHighestPriority(a);
-    const priorityB = getHighestPriority(b);
-
-    return priorityA - priorityB;
-  });
+  const items = [];
+  for (const status of STATUS_PRIORITY) {
+    const count = reservation.reservations[status];
+    if (count && count > 0) {
+      items.push({ status, count });
+    }
+  }
+  return items;
 };

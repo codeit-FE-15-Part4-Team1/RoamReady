@@ -55,6 +55,11 @@ interface PopoverContentProps extends HTMLAttributes<HTMLDivElement> {
    * @optional
    */
   className?: string;
+  /**
+   * 백드롭 표시 여부
+   * @default false
+   */
+  withBackdrop?: boolean;
 }
 
 /**
@@ -86,6 +91,7 @@ export default function PopoverContent({
   position = 'bottom-center',
   style,
   className,
+  withBackdrop = false,
   ...props
 }: PopoverContentProps) {
   const { isOpen, setIsOpen, triggerRef, popoverId } = usePopover();
@@ -249,26 +255,34 @@ export default function PopoverContent({
 
   // Portal로 body에 직접 렌더링
   const popoverElement = (
-    <div
-      className={cn(
-        'absolute z-50 h-fit max-h-500 w-fit max-w-2xl overflow-y-auto rounded-md border border-gray-200 bg-white p-4 shadow-lg',
-        className,
+    <>
+      {withBackdrop && (
+        <div
+          className='fixed inset-0 z-60'
+          onClick={() => setIsOpen(false)}
+          role='presentation'
+        />
       )}
-      id={`popover-content-${popoverId}`}
-      role='dialog'
-      aria-modal='true'
-      aria-labelledby={triggerRef.current?.id || undefined}
-      //popover 컨텐츠 위치 계산
-      style={{
-        top: pos.y,
-        left: pos.x,
-        transform: transform,
-        ...style,
-      }}
-      {...props}
-    >
-      {children}
-    </div>
+      <div
+        className={cn(
+          'absolute z-90 h-fit max-h-500 w-fit max-w-2xl overflow-y-auto rounded-2xl border border-gray-200 bg-white p-4 shadow-lg',
+          className,
+        )}
+        id={`popover-content-${popoverId}`}
+        role='dialog'
+        aria-modal='true'
+        aria-labelledby={triggerRef.current?.id || undefined}
+        style={{
+          top: pos.y,
+          left: pos.x,
+          transform: transform,
+          ...style,
+        }}
+        {...props}
+      >
+        {children}
+      </div>
+    </>
   );
 
   return typeof document !== 'undefined'
