@@ -14,10 +14,12 @@ export default function ActivityDetailPage() {
       <div className='flex flex-col gap-40'>
         <ActivityImg subImages={activity.subImages} />
         <DescriptionSection description={activity.description} />
-        <section>
+
+        <section className='flex flex-col gap-8 border-b border-gray-100 pb-40'>
           <h2 className='font-size-18 font-bold'>오시는 길</h2>
           <div className='h-450 w-670 rounded-2xl bg-gray-50' />
         </section>
+
         <ReviewSection review={reviews} />
       </div>
 
