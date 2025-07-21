@@ -97,7 +97,7 @@ export default function DropdownRoot({ children }: { children: ReactNode }) {
     <DropdownContext.Provider
       value={{ isOpen, setIsOpen, dropdownRef, setFocusedIndex, focusedIndex }}
     >
-      <div ref={dropdownRef} className='relative inline-block'>
+      <div ref={dropdownRef} className='relative flex items-start'>
         {children}
       </div>
     </DropdownContext.Provider>

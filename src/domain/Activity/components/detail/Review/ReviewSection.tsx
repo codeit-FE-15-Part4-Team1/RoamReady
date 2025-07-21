@@ -1,5 +1,5 @@
 'use client';
-import { Angry,Frown, Meh, Smile, SmilePlus, Star } from 'lucide-react';
+import { Angry, Frown, Meh, Smile, SmilePlus, Star } from 'lucide-react';
 import { useState } from 'react';
 
 import { ReviewList } from '@/domain/Activity/types/detail/types';
@@ -70,7 +70,7 @@ export default function ReviewSection({ review }: { review: ReviewList }) {
           </div>
         </div>
 
-        <div className='mt-20 flex flex-col gap-20'>
+        <div className='mt-20 flex h-fit min-h-600 flex-col gap-20'>
           {currentReviews.map((review) => (
             <ReviewCard key={review.id} {...review} />
           ))}
