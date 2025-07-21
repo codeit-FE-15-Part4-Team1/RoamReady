@@ -3,16 +3,16 @@
 import Image from 'next/image';
 import React from 'react';
 
-type SubImage = {
+interface SubImage {
   id: number;
   imageUrl: string;
-};
+}
 
-type Props = {
+interface ActivityImgProps {
   subImages: SubImage[];
-};
+}
 
-export default function ActivityImg({ subImages }: Props) {
+export default function ActivityImg({ subImages }: ActivityImgProps) {
   if (!subImages || subImages.length === 0) return null;
 
   if (subImages.length === 1) {
