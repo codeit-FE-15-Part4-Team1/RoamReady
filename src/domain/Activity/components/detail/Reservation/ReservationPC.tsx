@@ -1,14 +1,28 @@
 'use client';
 
+import dayjs from 'dayjs';
 import { useState } from 'react';
 
+import { Activity } from '@/domain/Activity/types/detail/types';
 import Button from '@/shared/components/Button';
 
-import Participation from './Participation';
+import { availableSchedule } from '../mock/mock-data';
+import AvailableTimeSection from './AvailableTimeSection';
+import DateSelectSection from './DateSelectSection';
+import ParticipantSelect from './ParticipationSection';
 
-export default function ReservationPC() {
+export default function ReservationPC({ activity }: { activity: Activity }) {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [participantCount, setParticipantCount] = useState(1);
+
+  const reservableDates = availableSchedule.map((item) => item.date);
+
+  const currentDaySchedule = availableSchedule.find(
+    (item) => item.date === dayjs(selectedDate).format('YYYY-MM-DD'),
+  );
+
+  const timeSlots = currentDaySchedule?.times ?? [];
 
   const handleTimeSelect = (time: string) => {
     setSelectedTime(selectedTime === time ? null : time);
@@ -22,7 +36,7 @@ export default function ReservationPC() {
     setParticipantCount((prev) => Math.max(prev - 1, 1)); // 최소 1명
   };
 
-  const totalPrice = participantCount * 1000;
+  const totalPrice = participantCount * activity.price;
 
   return (
     <aside
@@ -33,103 +47,33 @@ export default function ReservationPC() {
         <section aria-labelledby='pricing'>
           <div className='flex items-center gap-8'>
             <h2 id='pricing' className='font-size-24 font-bold'>
-              ₩ 1,000
+              ₩ {activity.price.toLocaleString()}
             </h2>
             <span className='font-size-20 font-medium text-gray-500'>/ 인</span>
           </div>
         </section>
 
-        <section aria-labelledby='date-select' className='flex flex-col gap-8'>
-          <h3 id='date-select' className='font-size-16 font-bold'>
-            날짜
-          </h3>
-          {/* DatePicker 컴포넌트 */}
-          <div className='h-350 w-full bg-gray-50' />
-        </section>
+        <DateSelectSection
+          selectedDate={selectedDate}
+          onDateChange={(date) => {
+            setSelectedDate(date);
+            setSelectedTime(null);
+          }}
+          reservableDates={reservableDates}
+        />
 
-        <section
-          aria-labelledby='participation'
-          className='flex items-center justify-between'
-        >
-          <h3 id='participation' className='font-size-16 font-bold'>
-            참여 인원 수
-          </h3>
-          <Participation
-            count={participantCount}
-            onIncrease={handleIncrease}
-            onDecrease={handleDecrease}
-          />
-        </section>
+        <ParticipantSelect
+          count={participantCount}
+          onIncrease={handleIncrease}
+          onDecrease={handleDecrease}
+        />
 
-        <section
-          aria-labelledby='available-times'
-          className='flex flex-col gap-14'
-        >
-          <h3 id='available-times' className='font-size-16 font-bold'>
-            예약 가능한 시간
-          </h3>
-          {/* 예약 가능 시간 버튼 목록 */}
-          <div className='relative'>
-            <div className='scrollbar-none flex max-h-200 flex-col gap-10 overflow-y-auto'>
-              <Button
-                type='button'
-                variant='outline'
-                selected={selectedTime === '14:00-15:00'}
-                onClick={() => handleTimeSelect('14:00-15:00')}
-                className='font-size-16 min-h-50 w-full border-2 font-medium'
-              >
-                14:00-15:00
-              </Button>
-              <Button
-                type='button'
-                variant='outline'
-                selected={selectedTime === '15:00-16:00'}
-                onClick={() => handleTimeSelect('15:00-16:00')}
-                className='font-size-16 min-h-50 w-full border-2 font-medium'
-              >
-                15:00-16:00
-              </Button>
-              <Button
-                type='button'
-                variant='outline'
-                selected={selectedTime === '14:00-15:00'}
-                onClick={() => handleTimeSelect('14:00-15:00')}
-                className='font-size-16 min-h-50 w-full border-2 font-medium'
-              >
-                14:00-15:00
-              </Button>
-              <Button
-                type='button'
-                variant='outline'
-                selected={selectedTime === '15:00-16:00'}
-                onClick={() => handleTimeSelect('15:00-16:00')}
-                className='font-size-16 min-h-50 w-full border-2 font-medium'
-              >
-                15:00-16:00
-              </Button>
-              <Button
-                type='button'
-                variant='outline'
-                selected={selectedTime === '14:00-15:00'}
-                onClick={() => handleTimeSelect('14:00-15:00')}
-                className='font-size-16 min-h-50 w-full border-2 font-medium'
-              >
-                14:00-15:00
-              </Button>
-              <Button
-                type='button'
-                variant='outline'
-                selected={selectedTime === '15:00-16:00'}
-                onClick={() => handleTimeSelect('15:00-16:00')}
-                className='font-size-16 min-h-50 w-full border-2 font-medium'
-              >
-                15:00-16:00
-              </Button>
-            </div>
-            {/* 흐림 효과 오버레이 */}
-            <div className='pointer-events-none absolute bottom-0 left-0 h-20 w-full bg-gradient-to-t from-white to-transparent' />
-          </div>
-        </section>
+        <AvailableTimeSection
+          selectedDate={selectedDate}
+          timeSlots={timeSlots}
+          selectedTime={selectedTime}
+          onTimeSelect={handleTimeSelect}
+        />
 
         <div className='flex items-center justify-between border-t-1 border-gray-100 pt-24'>
           <section aria-labelledby='total-price'>
@@ -150,6 +94,7 @@ export default function ReservationPC() {
             variant='primary'
             className='font-size-16 h-50 w-135'
             type='submit'
+            disabled={!selectedDate || !selectedTime}
           >
             예약하기
           </Button>

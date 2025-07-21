@@ -6,7 +6,7 @@ interface ParticipationProps {
   onDecrease: () => void;
 }
 
-export default function Participation({
+export default function HeadCount({
   count,
   onIncrease,
   onDecrease,
@@ -19,7 +19,11 @@ export default function Participation({
         onClick={onDecrease}
         className='cursor-pointer'
       >
-        <Minus className='h-20 w-20 hover:text-gray-300' />
+        <Minus
+          className={`h-20 w-20 hover:text-gray-300 ${
+            count === 1 ? 'cursor-not-allowed text-gray-300' : 'text-gray-950'
+          }`}
+        />
       </button>
 
       <span className='font-size-16 font-bold text-gray-950'>{count}</span>
