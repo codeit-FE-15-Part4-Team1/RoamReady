@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 export type ReservationStatus = 'completed' | 'confirmed' | 'pending';
 
 export interface Reservation {
@@ -21,4 +23,12 @@ export interface ReservationItem {
   endTime: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface DayCellProps {
+  day: dayjs.Dayjs;
+  isCurrentMonth: boolean;
+  isToday: boolean;
+  isLastRow: boolean;
+  reservation: Reservation | null;
 }
