@@ -4,7 +4,7 @@ import { Search } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 
-import { useImagePreview } from '@/shared/hooks/useImagePreview';
+import { useImagePreview } from '@/shared/hooks/useImageMultiPreview';
 import { cn } from '@/shared/libs/cn';
 
 import Input from '.';

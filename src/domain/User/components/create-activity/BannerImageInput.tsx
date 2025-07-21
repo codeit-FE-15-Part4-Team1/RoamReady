@@ -4,7 +4,7 @@ import { Plus, X } from 'lucide-react';
 import Image from 'next/image';
 
 import Input from '@/shared/components/ui/input';
-import { useImagePreview } from '@/shared/hooks/useImagePreview';
+import { useImagePreview } from '@/shared/hooks/useImageMultiPreview';
 
 export default function BannerImageInput() {
   const bannerPreview = useImagePreview();
