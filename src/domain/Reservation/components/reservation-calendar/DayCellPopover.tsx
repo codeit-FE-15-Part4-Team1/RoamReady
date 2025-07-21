@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { X } from 'lucide-react';
 import { useMemo } from 'react';
 
@@ -7,7 +6,7 @@ import { usePopover } from '@/shared/components/ui/popover/PopoverContext';
 import Tabs from '@/shared/components/ui/tabs';
 
 import { allReservations } from '../../mock/reservation';
-import type { Reservation } from '../../types/reservation';
+import type { DayCellProps } from '../../types/reservation';
 import {
   getColorClassByStatus,
   getDisplayItems,
@@ -15,15 +14,7 @@ import {
 } from '../../utils/reservation';
 import ReservationDetail from './ReservationDetail';
 
-interface DayCellProps {
-  day: dayjs.Dayjs;
-  isCurrentMonth: boolean;
-  isToday: boolean;
-  isLastRow: boolean;
-  reservation: Reservation | null;
-}
-
-// 팝 오버 닫기 버튼튼
+// 팝 오버 닫기 버튼
 const CloseButton = () => {
   const { setIsOpen } = usePopover();
 
@@ -34,7 +25,7 @@ const CloseButton = () => {
   );
 };
 
-export default function DayCell({
+export default function DayCellPopover({
   day,
   isCurrentMonth,
   isToday,
