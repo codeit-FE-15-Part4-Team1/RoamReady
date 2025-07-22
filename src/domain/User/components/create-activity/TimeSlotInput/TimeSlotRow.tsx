@@ -18,7 +18,6 @@ interface TimeSlotRowProps {
 export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
   // 2. useFormContext를 통해 RHF의 핵심 기능들을 가져옵니다.
   const {
-    register, // 입력 필드를 RHF에 등록하는 함수
     watch, // 특정 필드의 값을 실시간으로 감시하는 함수
     setValue, // 특정 필드의 값을 프로그래매틱하게 변경하는 함수
     formState: { errors }, // 폼 전체의 에러 상태 객체
