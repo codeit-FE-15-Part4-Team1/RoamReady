@@ -1,42 +1,27 @@
 'use client';
 
-import dayjs from 'dayjs';
-import { useState } from 'react';
-
+import { useReservationForm } from '@/domain/Activity/hooks/detail/useReservationForm';
 import { Activity } from '@/domain/Activity/types/detail/types';
 import Button from '@/shared/components/Button';
 
-import { availableSchedule } from '../mock/mock-data';
 import AvailableTimeSection from './AvailableTimeSection';
 import DateSelectSection from './DateSelectSection';
 import ParticipantSelect from './ParticipationSection';
 
 export default function ReservationPC({ activity }: { activity: Activity }) {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  const [participantCount, setParticipantCount] = useState(1);
-
-  const reservableDates = availableSchedule.map((item) => item.date);
-
-  const currentDaySchedule = availableSchedule.find(
-    (item) => item.date === dayjs(selectedDate).format('YYYY-MM-DD'),
-  );
-
-  const timeSlots = currentDaySchedule?.times ?? [];
-
-  const handleTimeSelect = (time: string) => {
-    setSelectedTime(selectedTime === time ? null : time);
-  };
-
-  const handleIncrease = () => {
-    setParticipantCount((prev) => Math.min(prev + 1, 10)); // 최대 10명
-  };
-
-  const handleDecrease = () => {
-    setParticipantCount((prev) => Math.max(prev - 1, 1)); // 최소 1명
-  };
-
-  const totalPrice = participantCount * activity.price;
+  const {
+    selectedDate,
+    selectedTime,
+    participantCount,
+    reservableDates,
+    timeSlots,
+    totalPrice,
+    setSelectedDate,
+    setSelectedTime,
+    handleTimeSelect,
+    handleIncrease,
+    handleDecrease,
+  } = useReservationForm(activity.price);
 
   return (
     <aside
