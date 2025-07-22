@@ -1,4 +1,5 @@
 import Button from '@/shared/components/Button';
+import { cn } from '@/shared/libs/cn';
 
 type TimeSlot = { id: string | number; startTime: string; endTime: string };
 
@@ -7,6 +8,7 @@ interface AvailableTimeSectionProps {
   timeSlots: TimeSlot[];
   selectedTime: string | null;
   onTimeSelect: (time: string) => void;
+  className?: string;
 }
 
 export default function AvailableTimeSection({
@@ -14,6 +16,7 @@ export default function AvailableTimeSection({
   timeSlots,
   selectedTime,
   onTimeSelect,
+  className,
 }: AvailableTimeSectionProps) {
   return (
     <section aria-labelledby='available-times' className='flex flex-col gap-14'>
@@ -21,7 +24,12 @@ export default function AvailableTimeSection({
         예약 가능한 시간
       </h3>
       <div className='relative'>
-        <div className='scrollbar-none flex max-h-200 flex-col gap-10 overflow-y-auto'>
+        <div
+          className={cn(
+            'scrollbar-none flex max-h-200 flex-col gap-10 overflow-y-auto',
+            className,
+          )}
+        >
           {selectedDate ? (
             timeSlots.length > 0 ? (
               timeSlots.map(({ id, startTime, endTime }) => {

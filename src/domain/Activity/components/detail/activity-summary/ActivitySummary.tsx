@@ -12,7 +12,7 @@ export default function ActivitySummary({
   review: ReviewList;
 }) {
   return (
-    <section className='flex flex-col items-start gap-8'>
+    <section className='flex w-full flex-col items-start gap-8'>
       <div className='flex w-full items-start justify-between'>
         <div className='flex flex-col gap-8'>
           <span className='font-size-14 font-medium'>{activity.category}</span>

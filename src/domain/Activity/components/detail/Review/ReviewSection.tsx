@@ -42,8 +42,8 @@ export default function ReviewSection({ review }: { review: ReviewList }) {
   console.log(review.totalCount);
 
   return (
-    <section className='flex flex-col gap-40'>
-      <div>
+    <section className='flex-col-center w-full gap-30'>
+      <div className='flex flex-col gap-15'>
         <div className='flex items-center justify-start gap-5'>
           <h2 className='font-size-18 leading-none font-bold'>체험 후기</h2>
           <span className='font-size-16 text-gray-550 leading-none font-bold'>
@@ -70,7 +70,7 @@ export default function ReviewSection({ review }: { review: ReviewList }) {
           </div>
         </div>
 
-        <div className='mt-20 flex h-fit min-h-600 flex-col gap-20'>
+        <div className='flex h-fit min-h-550 flex-col gap-20'>
           {currentReviews.map((review) => (
             <ReviewCard key={review.id} {...review} />
           ))}

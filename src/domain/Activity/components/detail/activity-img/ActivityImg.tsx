@@ -17,12 +17,12 @@ export default function ActivityImg({ subImages }: ActivityImgProps) {
 
   if (subImages.length === 1) {
     return (
-      <div className='relative h-400 w-660 overflow-hidden rounded-xl'>
+      <div className='relative h-400 w-full overflow-hidden rounded-xl'>
         <Image
           src={subImages[0].imageUrl}
           alt='Activity Image'
           fill
-          className='h-auto w-full rounded-xl object-cover'
+          className='h-auto w-full rounded-xl object-cover transition duration-300 ease-in-out hover:scale-105'
           priority
         />
       </div>
@@ -41,7 +41,7 @@ export default function ActivityImg({ subImages }: ActivityImgProps) {
               src={img.imageUrl}
               alt='Activity Image'
               fill
-              className='rounded-xl object-cover'
+              className='rounded-xl object-cover transition duration-300 ease-in-out hover:scale-105'
             />
           </div>
         ))}
@@ -57,7 +57,7 @@ export default function ActivityImg({ subImages }: ActivityImgProps) {
             src={subImages[0].imageUrl}
             alt='Activity Image'
             fill
-            className='rounded-xl object-cover'
+            className='rounded-xl object-cover transition duration-300 ease-in-out hover:scale-105'
           />
         </div>
         <div className='flex flex-col gap-2'>
@@ -66,7 +66,7 @@ export default function ActivityImg({ subImages }: ActivityImgProps) {
               src={subImages[1].imageUrl}
               alt='Activity Image'
               fill
-              className='rounded-xl object-cover'
+              className='rounded-xl object-cover transition duration-300 ease-in-out hover:scale-105'
             />
           </div>
           <div className='relative h-200 w-330 overflow-hidden rounded-xl'>
@@ -74,7 +74,7 @@ export default function ActivityImg({ subImages }: ActivityImgProps) {
               src={subImages[2].imageUrl}
               alt='Activity Image'
               fill
-              className='rounded-xl object-cover'
+              className='rounded-xl object-cover transition duration-300 ease-in-out hover:scale-105'
             />
           </div>
         </div>
@@ -84,17 +84,17 @@ export default function ActivityImg({ subImages }: ActivityImgProps) {
 
   if (subImages.length === 4) {
     return (
-      <div className='grid h-410 w-670 grid-cols-2 grid-rows-2 gap-4'>
+      <div className='tablet:h-410 grid h-220 w-full grid-cols-2 grid-rows-2 gap-4'>
         {subImages.map((img) => (
           <div
             key={img.id}
-            className='relative h-200 w-330 overflow-hidden rounded-xl'
+            className='relative h-full w-full overflow-hidden rounded-xl'
           >
             <Image
               src={img.imageUrl}
               alt='Activity Image'
               fill
-              className='rounded-xl object-cover'
+              className='rounded-xl object-cover transition duration-300 ease-in-out hover:scale-105'
             />
           </div>
         ))}
@@ -111,7 +111,7 @@ export default function ActivityImg({ subImages }: ActivityImgProps) {
           alt='Activity Image'
           width={800}
           height={300}
-          className='h-auto w-full rounded-xl object-cover'
+          className='h-auto w-full rounded-xl object-cover transition duration-300 ease-in-out hover:scale-105'
         />
       </div>
       <div className='flex flex-col gap-2'>
@@ -121,7 +121,7 @@ export default function ActivityImg({ subImages }: ActivityImgProps) {
             alt='Activity Image'
             width={400}
             height={145}
-            className='h-auto w-full rounded-xl object-cover'
+            className='h-auto w-full rounded-xl object-cover transition duration-300 ease-in-out hover:scale-105'
           />
         </div>
         <div className='overflow-hidden rounded-xl'>
@@ -130,7 +130,7 @@ export default function ActivityImg({ subImages }: ActivityImgProps) {
             alt='Activity Image'
             width={400}
             height={145}
-            className='h-auto w-full rounded-xl object-cover'
+            className='h-auto w-full rounded-xl object-cover transition duration-300 ease-in-out hover:scale-105'
           />
         </div>
       </div>
