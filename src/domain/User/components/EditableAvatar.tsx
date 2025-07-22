@@ -5,6 +5,7 @@ import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { PROFILE_AVATAR_OPTIONS } from '@/shared/components/constants/image';
 import Avatar from '@/shared/components/ui/avatar';
 import { useImageCompression } from '@/shared/hooks/useImageCompression';
+import { cn } from '@/shared/libs/cn';
 
 import { useProfileImageMutation } from '../hooks/useProfileImageMutation';
 import AvatarEditButton from './AvatarEditButton';
@@ -18,6 +19,7 @@ interface EditableAvatarProps {
    * 이미지 업로드 실패 시 이 URL로 복구됩니다.
    */
   initialImageUrl: string;
+  className?: string;
 }
 
 /**
@@ -27,6 +29,7 @@ interface EditableAvatarProps {
  */
 export default function EditableAvatar({
   initialImageUrl,
+  className,
 }: EditableAvatarProps) {
   // 화면에 실제로 보여지는 이미지 URL을 관리하는 상태
   // 낙관적 업데이트를 위해 즉시 미리보기 URL로 변경되었다가, 최종적으로 서버 URL로 교체됩니다.
@@ -94,14 +97,14 @@ export default function EditableAvatar({
   }, [profileImageUrl]);
 
   return (
-    <div className='relative w-fit'>
+    <div className={cn('relative w-fit', className)}>
       {/* 아바타 UI를 표시하는 Presentational 컴포넌트 */}
       <Avatar
         profileImageUrl={profileImageUrl}
         size='lg'
         isLoading={isLoading}
       />
-      <div className='absolute right-0 bottom-0 translate-x-1/4 translate-y-1/4 transform'>
+      <div className='absolute right-0 bottom-[15%]'>
         <AvatarEditButton
           onFileChange={handleImageFileChange}
           isLoading={isLoading}
