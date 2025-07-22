@@ -60,7 +60,7 @@ export default function ReservationDetail({
   }
 
   return (
-    <div className='flex flex-col gap-30 space-y-2 md:grid md:max-h-[40rem] md:grid-cols-2 md:overflow-y-auto lg:flex lg:flex-col'>
+    <div className='tablet:grid tablet:max-h-[40rem] tablet:grid-cols-2 tablet:overflow-y-auto desktop:flex desktop:flex-col flex flex-col gap-30 space-y-2'>
       <div className='flex flex-col gap-12'>
         <h2 className='font-size-18 font-bold'>예약 시간</h2>
         <Select.Root value={selectedTime} onValueChange={setSelectedTime}>
