@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { HTTPError } from 'ky';
 import { useRouter } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -13,23 +14,28 @@ import { signup } from '@/domain/Auth/services';
 import Button from '@/shared/components/Button';
 import Input from '@/shared/components/ui/input';
 import { ROUTES } from '@/shared/constants/routes';
+import { useRoamReadyStore } from '@/shared/store';
 
 /**
  * @component SignUpForm
  * @description
  * 이메일/닉네임/비밀번호를 이용한 회원가입 폼의 UI와 상태 관리, 제출 로직을 담당하는 클라이언트 컴포넌트입니다.
- * `react-hook-form`과 `zod`를 사용하여 유효성 검사를 수행합니다.
+ * 회원가입 성공 시, 자동으로 로그인 상태를 만들고 메인 페이지로 이동시킵니다.
  *
- * ### 주요 기능:
- * - `useForm`을 통한 폼 상태 관리
- * - `zodResolver`를 이용한 실시간 유효성 검사
- * - `handleSubmit`을 통해 폼 데이터를 `signup` 서비스로 전달하여 API 요청
- * - 제출 중 로딩 상태 관리
- * - 성공 시 메인 페이지 이동
- * - 사용자에게 에러 메시지 표시
+ * @see /src/app/api/auth/signup/route.ts - 자동 로그인을 처리하는 API 라우트
+ *
+ * @feature
+ * - **폼 관리**: `react-hook-form(useForm)`으로 폼의 상태를 관리합니다.
+ * - **유효성 검사**: `zodResolver`를 이용해 실시간으로 유효성을 검사합니다.
+ * - **제출 중 로딩 상태 관리**: API 요청 중에는 버튼을 비활성화하고 로딩 상태를 표시합니다.
+ * - **자동 로그인**: 회원가입 성공 시, 즉시 로그인 상태로 전환하며 Zustand 스토어에 사용자 정보를 저장(`setUser`)합니다.
+ * - **사용자 피드백**: `toast` 메시지를 통해 회원가입 성공 또는 실패에 대한 명확한 피드백을 제공합니다.
+ * - **에러 핸들링**: `ky`의 `HTTPError`를 감지하여 네트워크 에러 메시지를 사용자에게 보여줍니다.
+ *
  */
 export default function SignUpForm() {
   const router = useRouter();
+  const setUser = useRoamReadyStore((state) => state.setUser);
 
   const signupDefaultValues: SignupFormValues = {
     email: '',
@@ -50,12 +56,22 @@ export default function SignUpForm() {
 
   const onSubmit = async (data: SignupRequest) => {
     try {
-      const response = await signup(data);
-      console.log('회원가입 성공:', response);
-      router.push(ROUTES.MAIN);
+      const user = await signup(data);
+
+      if (user && user.id) {
+        setUser(user);
+        router.push(ROUTES.MAIN);
+      } else {
+        //! 에러 처리 - 백엔드가 토큰을 주지 않은 경우 (이론상 발생 가능)
+
+        router.push(ROUTES.SIGNIN);
+      }
     } catch (error) {
       console.error('회원가입 실패:', error);
-      // TODO: 오류 처리 (사용자에게 토스트 메시지 표시 등)
+      if (error instanceof HTTPError) {
+        const errorResponse = await error.response.json();
+      } else {
+      }
     }
   };
 
