@@ -5,11 +5,11 @@ import Header from '@/shared/components/layouts/header/Header';
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (
-    <div className='flex min-h-screen flex-col justify-between'>
+    <div className='flex min-h-[100dvh] flex-col'>
       <Header />
-      <div className='tablet:px-32 desktop:px-40 mx-auto max-w-1200 px-24'>
+      <main className='tablet:px-32 desktop:px-40 mx-auto w-full max-w-1200 flex-1 px-24'>
         {children}
-      </div>
+      </main>
       <Footer />
     </div>
   );
