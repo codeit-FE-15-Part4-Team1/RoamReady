@@ -70,6 +70,7 @@ export default function SignUpForm() {
       console.error('회원가입 실패:', error);
       if (error instanceof HTTPError) {
         const errorResponse = await error.response.json();
+        alert(errorResponse.message || '회원가입 중 오류가 발생했습니다.');
       } else {
       }
     }
