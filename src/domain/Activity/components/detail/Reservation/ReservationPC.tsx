@@ -8,7 +8,18 @@ import AvailableTimeSection from './AvailableTimeSection';
 import DateSelectSection from './DateSelectSection';
 import ParticipantSelect from './ParticipationSection';
 
+/**
+ * ReservationPC
+ * 데스크탑 환경에서 체험 예약을 위한 날짜, 시간, 인원 선택 및 총 합계를 표시하는 사이드 예약 폼 컴포넌트
+ *
+ * @param activity - 예약 대상이 되는 체험(Activity)의 정보 객체 (가격, 제목, ID 등 포함)
+ * @returns 날짜, 시간, 인원 수 선택 및 총 합계와 함께 예약하기 버튼을 포함한 예약 UI
+ *
+ * @example
+ * <ReservationPC activity={activityData} />
+ */
 export default function ReservationPC({ activity }: { activity: Activity }) {
+  // 예약 상태 및 관련 핸들러 훅 호출
   const {
     selectedDate,
     selectedTime,
@@ -28,7 +39,9 @@ export default function ReservationPC({ activity }: { activity: Activity }) {
       aria-label='예약 정보'
       className='h-fit max-h-950 w-400 rounded-4xl border-1 border-gray-50 bg-white p-30 shadow-[0_4px_20px_rgba(0,0,0,0.05)]'
     >
+      {/* Todo: form action 연결 */}
       <form className='flex flex-col gap-24'>
+        {/* 가격 정보 */}
         <section aria-labelledby='pricing'>
           <div className='flex items-center gap-8'>
             <h2 id='pricing' className='font-size-24 font-bold'>
@@ -38,6 +51,7 @@ export default function ReservationPC({ activity }: { activity: Activity }) {
           </div>
         </section>
 
+        {/* 날짜 선택 */}
         <DateSelectSection
           selectedDate={selectedDate}
           onDateChange={(date) => {
@@ -47,12 +61,14 @@ export default function ReservationPC({ activity }: { activity: Activity }) {
           reservableDates={reservableDates}
         />
 
+        {/* 참여 인원 수 선택 */}
         <ParticipantSelect
           count={participantCount}
           onIncrease={handleIncrease}
           onDecrease={handleDecrease}
         />
 
+        {/* 예약 가능 시간대 */}
         <AvailableTimeSection
           selectedDate={selectedDate}
           timeSlots={timeSlots}
@@ -60,6 +76,7 @@ export default function ReservationPC({ activity }: { activity: Activity }) {
           onTimeSelect={handleTimeSelect}
         />
 
+        {/* 총 합계 및 예약 버튼 */}
         <div className='flex items-center justify-between border-t-1 border-gray-100 pt-24'>
           <section aria-labelledby='total-price'>
             <div className='flex items-center gap-8'>
