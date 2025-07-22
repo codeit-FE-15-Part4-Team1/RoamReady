@@ -13,7 +13,12 @@ interface TimeSlotHeaderProps {
 export default function TimeSlotHeader({ onAdd }: TimeSlotHeaderProps) {
   return (
     <div className='grid grid-cols-10 gap-10'>
-      <Input.Root id='date-header' type='date' className='disabled col-span-6'>
+      <Input.Root
+        name='date-header'
+        id='date-header'
+        type='date'
+        className='disabled col-span-6'
+      >
         <Input.Label className='font-size-14'>날짜</Input.Label>
         <Input.Field disabled placeholder='날짜를 선택해 주세요' />
       </Input.Root>
