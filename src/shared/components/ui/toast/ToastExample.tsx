@@ -1,5 +1,5 @@
 import Button from '@/shared/components/Button'; // 프로젝트의 Button 컴포넌트 경로
-import useToast from '@/shared/hooks/useToast';
+import { useToast } from '@/shared/hooks/useToast';
 
 /**
  * @description 토스트 UI를 종류별로 테스트하기 위한 예제 컴포넌트입니다.

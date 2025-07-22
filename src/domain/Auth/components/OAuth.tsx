@@ -36,7 +36,7 @@ export default function OAuth({ pageType }: OAuthProps) {
     >
       <div className='relative flex w-full items-center justify-center gap-0.5'>
         <Image
-          src='/images/kakao-btn-sm.svg'
+          src='/icons/kakao-btn-sm.svg'
           alt='Kakao Icon'
           width={24}
           height={24}

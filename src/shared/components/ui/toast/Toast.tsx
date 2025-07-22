@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-import useToast from '@/shared/hooks/useToast';
+import { useToast } from '@/shared/hooks/useToast';
 import { cn } from '@/shared/libs/cn';
 import { ToastState } from '@/shared/slices/toastSlice';
 

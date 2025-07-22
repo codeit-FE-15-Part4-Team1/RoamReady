@@ -26,6 +26,12 @@ const BACKEND_URL = process.env.API_BASE_URL;
  * - 토큰 갱신마저 실패하면 `refreshToken`도 만료된 것입니다.
  * - 이 경우, 원래의 `401` 에러를 클라이언트에 그대로 전달하며, 클라이언트는 로그아웃 처리를 해야 합니다.
  *
+ * ### 토큰 생명주기 (Token Lifecycle):
+ * - **로그인 시**: `api/auth/signin` 또는 `api/auth/signup`을 통해 완전히 새로운 토큰 세트(Access/Refresh)가 발급됩니다.
+ * - **로그인 유지 시**: 이 미들웨어는 현재 세션의 토큰이 유효한 동안에만 `accessToken`의 자동 갱신을 처리합니다.
+ * - **로그아웃 시**: `api/auth/signout`을 통해 쿠키의 모든 토큰이 삭제되며, 현재 세션은 완전히 종료됩니다.
+ * 로그아웃은 이전 세션의 모든 인증 정보를 파기하므로, 재로그인 시에는 과거와 무관한 새로운 세션이 시작됩니다.
+ *
  * @param {NextRequest} request - 들어오는 클라이언트 요청 객체
  * @returns {Promise<NextResponse>} 처리된 응답 객체
  */
