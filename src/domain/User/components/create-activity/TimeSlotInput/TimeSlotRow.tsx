@@ -121,7 +121,7 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
             className='cursor-pointer rounded-full bg-gray-400 p-15 text-white'
             // 부모(TimeSlotInput)로부터 받은 remove(index) 함수를 실행합니다.
             onClick={() => {
-              (console.log(`빼기 버튼 클릭됨, index: ${index}`), onRemove());
+              onRemove();
             }}
           >
             <Minus className='size-20 font-semibold' />
