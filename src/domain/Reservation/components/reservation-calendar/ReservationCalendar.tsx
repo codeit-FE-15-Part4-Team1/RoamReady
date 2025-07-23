@@ -1,53 +1,11 @@
 import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
 
 import { useCalendar } from '../../hooks/useCalendar';
+import { ReservationsData } from '../../mock/reservation';
 import { WEEKDAYS } from '../../utils/reservation';
 import CalendarHeader from './CalendarHeader';
 import DayCellBottomSheet from './DayCellBottomSheet';
 import DayCellPopover from './DayCellPopover';
-
-export const ReservationsData = [
-  {
-    date: '2025-07-14',
-    reservations: {
-      completed: 1,
-      confirmed: 0,
-      pending: 0,
-    },
-  },
-  {
-    date: '2025-07-15',
-    reservations: {
-      completed: 0,
-      confirmed: 2, // 예약 2건 (id 2, 8)
-      pending: 3, // 승인 3건 (id 3, 5)
-    },
-  },
-  {
-    date: '2025-07-16',
-    reservations: {
-      completed: 0,
-      confirmed: 0,
-      pending: 5, // 승인 5건 (id 5)
-    },
-  },
-  {
-    date: '2025-07-17',
-    reservations: {
-      completed: 9, // 완료 9건 (id 9)
-      confirmed: 8, // 예약 8건 (id 8)
-      pending: 0,
-    },
-  },
-  {
-    date: '2025-07-18',
-    reservations: {
-      completed: 0,
-      confirmed: 0,
-      pending: 0,
-    },
-  },
-];
 
 export default function ReservationCalendar() {
   const {
