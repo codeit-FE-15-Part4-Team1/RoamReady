@@ -41,7 +41,7 @@ export default function DayCell({
   // 반응형 스타일 계산 (PC 기준 유지, 모바일만 축소)
   const styles = useMemo(() => {
     const cellClasses = `
-      relative flex w-full min-h-[8rem] tablet:min-h-[12rem] cursor-pointer flex-col items-center py-6 tablet:py-12 text-xs tablet:font-size-14
+      relative flex w-full min-h-[8rem] tablet:min-h-[12rem] cursor-pointer flex-col items-center py-6 tablet:py-12 font-size-14 tablet:font-size-14
       hover:bg-gray-50 
       ${!isLastRow ? 'border-b-[0.05rem] border-gray-100' : ''} 
       ${!isCurrentMonth ? 'bg-gray-200 text-gray-400 opacity-50' : ''} 
@@ -49,12 +49,15 @@ export default function DayCell({
     `;
 
     const dayOfWeek = day.day();
-    const dateClasses = `
-      text-lg tablet:text-xl
-      ${dayOfWeek === 0 ? 'text-red-500' : ''}
-      ${dayOfWeek === 6 ? 'text-blue-500' : ''}
-      ${isCurrentMonth ? 'text-gray-900' : ''}
-    `;
+    const dateClasses = `font-size-16 tablet:font-size-14 ${
+      dayOfWeek === 0
+        ? 'text-red-500'
+        : dayOfWeek === 6
+          ? 'text-blue-500'
+          : isCurrentMonth
+            ? 'text-gray-900'
+            : ''
+    }`;
 
     return { cellClasses, dateClasses };
   }, [day, isCurrentMonth, isToday, isLastRow]);
@@ -96,7 +99,9 @@ export default function DayCell({
             <div className='tablet:size-6 absolute top-[10%] left-[60%] size-4 rounded-full bg-red-500 sm:size-5' />
           )}
 
-          <div className={`${styles.dateClasses} tablet:font-size-16 text-sm`}>
+          <div
+            className={`${styles.dateClasses} tablet:font-size-16 font-size-16`}
+          >
             {day.format('D')}
           </div>
 
@@ -104,16 +109,11 @@ export default function DayCell({
             {displayItems.slice(0, 3).map((item, index) => (
               <div
                 key={`${reservation?.date}-${item.status}-${index}`}
-                className={`tablet:text-md font-size-10 w-[90%] truncate rounded-xl px-1 text-center font-medium ${getColorClassByStatus(item.status)}`}
+                className={`tablet:font-size-14 font-size-10 w-[90%] truncate rounded-xl px-1 text-center font-medium ${getColorClassByStatus(item.status)}`}
               >
                 {STATUS_LABELS[item.status]} {item.count}명
               </div>
             ))}
-            {displayItems.length > 3 && (
-              <div className='text-center text-xs text-gray-500'>
-                +{displayItems.length - 3}개 더
-              </div>
-            )}
           </div>
         </div>
       </BottomSheet.Trigger>
@@ -125,7 +125,7 @@ export default function DayCell({
               <h3 className='font-size-20 font-bold text-gray-900'>
                 {day.format('YY년 M월 D일')}
               </h3>
-              <span className='text-sm text-gray-500'>
+              <span className='font-size-12 text-gray-500'>
                 {totalReservations}개의 예약
               </span>
             </div>
@@ -135,7 +135,7 @@ export default function DayCell({
           </div>
 
           <Tabs.Root defaultValue='신청'>
-            <Tabs.List className='tablet:font-size-14 flex w-full text-sm'>
+            <Tabs.List className='tablet:font-size-14 font-size-12 flex w-full'>
               <Tabs.Trigger value='신청' className='flex-1'>
                 신청 {confirmedCount}
               </Tabs.Trigger>

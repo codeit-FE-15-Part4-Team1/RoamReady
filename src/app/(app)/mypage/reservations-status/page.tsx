@@ -1,13 +1,7 @@
-'use client';
-
-import { useState } from 'react';
-
 import ReservationCalendar from '@/domain/Reservation/components/reservation-calendar/ReservationCalendar';
-import Select from '@/shared/components/ui/select';
+import ReservationSelect from '@/domain/Reservation/components/reservation-calendar/ReservationSelect';
 
 export default function MyReservationStatusPage() {
-  const [selected, setSelected] = useState('');
-
   return (
     <div className='flex w-full flex-col gap-16'>
       <div className='flex-start flex flex-col gap-10'>
@@ -18,22 +12,7 @@ export default function MyReservationStatusPage() {
       </div>
 
       <div className='w-full'>
-        <Select.Root value={selected} onValueChange={setSelected}>
-          <Select.Trigger>
-            <Select.Value placeholder='함께 배우면 즐거운 스트릿 댄스' />
-          </Select.Trigger>
-          <Select.Content>
-            <Select.Item value='여행은 먹으러 다니는 거지 스트릿 푸드'>
-              여행은 먹으러 다니는 거지 스트릿 푸드
-            </Select.Item>
-            <Select.Item value='함께 배우면 즐거운 스트릿 댄스'>
-              함께 배우면 즐거운 스트릿 댄스
-            </Select.Item>
-            <Select.Item value='밤에는 야경이 짱이야'>
-              밤에는 야경이 짱이야
-            </Select.Item>
-          </Select.Content>
-        </Select.Root>
+        <ReservationSelect />
       </div>
 
       <div className='w-full'>

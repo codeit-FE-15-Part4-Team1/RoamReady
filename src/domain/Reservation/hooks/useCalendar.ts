@@ -1,3 +1,4 @@
+'use client';
 import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { useMemo, useState } from 'react';

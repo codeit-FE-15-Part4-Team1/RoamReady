@@ -49,12 +49,15 @@ export default function DayCellPopover({
     `;
 
     const dayOfWeek = day.day();
-    const dateClasses = `
-      text-xl
-      ${dayOfWeek === 0 ? 'text-red-500' : ''}
-      ${dayOfWeek === 6 ? 'text-blue-500' : ''}
-      ${isCurrentMonth ? 'text-gray-900' : ''}
-    `;
+    const dateClasses = `font-size-14 ${
+      dayOfWeek === 0
+        ? 'text-red-500'
+        : dayOfWeek === 6
+          ? 'text-blue-500'
+          : isCurrentMonth
+            ? 'text-gray-900'
+            : ''
+    }`;
 
     return { cellClasses, dateClasses };
   }, [day, isCurrentMonth, isToday, isLastRow]);
@@ -104,7 +107,7 @@ export default function DayCellPopover({
             {displayItems.map((item, index) => (
               <div
                 key={`${reservation?.date}-${item.status}-${index}`}
-                className={`text-md w-[90%] truncate rounded-xl px-1 text-center font-medium ${getColorClassByStatus(item.status)}`}
+                className={`font-size-14 w-[90%] truncate rounded-xl px-1 text-center font-medium ${getColorClassByStatus(item.status)}`}
               >
                 {STATUS_LABELS[item.status]} {item.count}명
               </div>
@@ -120,7 +123,7 @@ export default function DayCellPopover({
               <h3 className='font-size-20 font-bold text-gray-900'>
                 {day.format('YY년 M월 D일')}
               </h3>
-              <span className='text-sm text-gray-500'>
+              <span className='font-size-12 text-gray-500'>
                 {totalReservations}개의 예약
               </span>
             </div>

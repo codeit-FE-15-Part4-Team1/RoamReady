@@ -1,3 +1,4 @@
+'use client';
 import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
 
 import { useCalendar } from '../../hooks/useCalendar';
