@@ -10,7 +10,7 @@ import { signinRequestSchema } from '@/domain/Auth/schemas/request';
 import { signin } from '@/domain/Auth/services';
 import Button from '@/shared/components/Button';
 import Input from '@/shared/components/ui/input';
-import { ROUTES } from '@/shared/constants/route';
+import { ROUTES } from '@/shared/constants/routes';
 
 /**
  * @component SignInForm
@@ -48,7 +48,7 @@ export default function SignInForm() {
     try {
       const response = await signin(data);
       console.log('로그인 성공:', response);
-      router.push(ROUTES.Main);
+      router.push(ROUTES.MAIN);
     } catch (error) {
       console.error('로그인 실패:', error);
       if (error instanceof HTTPError) {

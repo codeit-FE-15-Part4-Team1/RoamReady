@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 
 import LogoSymbol from '@/shared/assets/logos/LogoSymbol';
-import { ROUTES } from '@/shared/constants/route';
+import { ROUTES } from '@/shared/constants/routes';
 
 import Button from '../../Button';
 
@@ -24,7 +24,7 @@ export default function Nothing({ type }: NothingProps) {
   const buttonText = type === 'reservation' ? '둘러보기' : undefined;
 
   const handleClick = () => {
-    router.push(ROUTES.Main);
+    router.push(ROUTES.MAIN);
   };
 
   return (

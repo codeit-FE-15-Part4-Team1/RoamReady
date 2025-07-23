@@ -1,54 +1,51 @@
 import ky from 'ky';
 
+import { BRIDGE_API } from '../constants/bridgeEndpoints';
+
 /**
- * `apiClient`는 ky 라이브러리로 만든 기본 API 클라이언트 인스턴스입니다.
+ * @file apiClient.ts - 인증이 필요한 API 요청을 위한 ky 클라이언트 인스턴스
  *
- * - `prefixUrl`은 환경 변수 `NEXT_PUBLIC_API_BASE_URL`을 기본 API 주소로 사용합니다.
- * - `timeout`은 요청 제한 시간을 10,000ms (10초)로 설정합니다.
- * - 모든 요청에 `'Content-Type': 'application/json'` 헤더를 기본으로 포함합니다.
- * - `beforeError` 훅을 통해 모든 HTTP 오류를 통합 처리합니다.
- * - 필요 시 `credentials` 옵션을 주석 해제하여 쿠키 등 인증 정보를 포함할 수 있습니다.
+ * @description
+ * 인증이 필요한 일반 API 요청을 처리하는 ky 인스턴스입니다.
+ * 모든 요청은 Next.js 미들웨어(`middleware.ts`)를 통과하는 `/api` 접두사를 가집니다.
  *
- * ### 사용 예시
+ * ### 주요 특징:
+ * - **BFF (Backend for Frontend) 패턴**:
+ * 클라이언트는 토큰을 직접 다루지 않습니다. 모든 API 요청은 `/api`로 보내지고,
+ * 미들웨어가 요청을 가로채 HttpOnly 쿠키의 `accessToken`을 `Authorization` 헤더에 담아 실제 백엔드로 전달합니다.
+ * - **자동 토큰 갱신**
+ * `accessToken`이 만료되어 백엔드에서 401 에러를 반환하면, 미들웨어가 `refreshToken`을 사용해 자동으로 토큰을 갱신하고 원래 요청을 재시도합니다.
+ * - **중앙화된 에러 처리**
+ * `beforeError` 훅을 통해 모든 API 요청 실패 시 일관된 에러 처리를 수행합니다. 백엔드가 반환하는 JSON 형태의 에러 메시지를 파싱하여 에러 객체에 담아줍니다.
  *
- * ```ts
- * const users = await apiClient.get('users').json();
- * const data = await apiClient.post('login', { json: { email, password } }).json();
- * ```
+ * @see /src/middleware.ts - 실제 토큰 처리 및 프록시 로직 포함
  */
 export const apiClient = ky.create({
-  prefixUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+  prefixUrl: BRIDGE_API.PREFIX,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
-  // credentials: 'include', // 인증 쿠키 필요 시 활성화
 
   hooks: {
-    /**
-     * HTTP 에러가 발생했을 때 실행되는 훅입니다.
-     * 에러 내용을 통일된 형태로 변환하거나 로깅할 수 있습니다.
-     */
     beforeError: [
       async (error) => {
         const { response } = error;
 
         try {
           const errorBody = await response.clone().json();
-
-          // 에러 응답 내 message 필드가 있으면 메시지 포함시킴
           if (errorBody?.message) {
             error.name = 'APIError';
             error.message = errorBody.message;
           }
-        } catch {
-          // JSON 파싱 실패시 무시 (text 또는 빈 응답일 수 있음)
-        }
-
+        } catch {}
+        //! 에러 처리 추가 예정
         // 예: 토큰 만료 시 강제 로그아웃 처리도 가능
         // if (response.status === 401) {
         //   logoutUser(); // 클라이언트 전용 logout 함수 등 호출
         // }
+
+        // 사용자 경험(UX) 중심: 에러 메시지 가공, 토스트 알림, 최종 인증 실패 시 로그아웃 및 페이지 이동 처리.
 
         return error;
       },
