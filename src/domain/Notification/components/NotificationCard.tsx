@@ -8,6 +8,13 @@ import { usePopover } from '@/shared/components/ui/popover/PopoverContext';
 import { NotificationResponse } from '../types/type';
 import NotificationDelete from './NotificationDelete';
 
+/**
+ * CloseButton 컴포넌트
+ *
+ * 알림 팝오버를 닫는 X 버튼입니다.
+ * 팝오버 컨텍스트에서 `setIsOpen(false)`를 호출해 팝오버를 닫습니다.
+ *
+ */
 const CloseButton = () => {
   const { setIsOpen } = usePopover();
 
@@ -21,6 +28,19 @@ const CloseButton = () => {
     </button>
   );
 };
+
+/**
+ * NotificationCard 컴포넌트
+ *
+ * 알림 데이터를 받아 화면에 리스트 형태로 렌더링하는 UI 컴포넌트입니다.
+ * 알림은 최신순으로 정렬되며, 상태(승인/거절), 제목, 일정, 생성 시각 등을 표시합니다.
+ * 알림 클릭 시 "/mypage/reservations"로 이동합니다.
+ *
+ * @param {NotificationResponse} props.notification - 알림 데이터 (총 개수 및 리스트 포함)
+ *
+ * @example
+ * <NotificationCard notification={notification} />
+ */
 export default function NotificationCard({
   notification,
 }: {
@@ -28,6 +48,9 @@ export default function NotificationCard({
 }) {
   const content = notification.notifications;
 
+  /**
+   * 알림 리스트를 updatedAt 기준 내림차순 정렬
+   */
   const sortedContent = useMemo(
     () =>
       [...content].sort(
@@ -38,6 +61,7 @@ export default function NotificationCard({
 
   return (
     <div className='h-fit w-230 rounded-4xl bg-white'>
+      {/* 상단 고정 헤더 영역 */}
       <div className='sticky top-0 z-10 w-full border-b border-gray-50 bg-white p-10'>
         <div className='flex w-full justify-between'>
           <h1 className='font-size-16 font-bold'>
@@ -47,14 +71,16 @@ export default function NotificationCard({
         </div>
       </div>
 
+      {/* 알림 리스트 */}
       <ul>
         {sortedContent.map((item) => {
           const time = getTimeAgo(item.updatedAt);
 
-          // 상태와 투어 정보 추출
+          // 알림 내용에서 상태(거절/승인) 판별
           const isRejected = item.content.includes('거절');
           const status = isRejected ? '거절' : '승인';
 
+          // 알림 내용에서 체험 제목과 일정 추출
           const titleMatch = item.content.match(
             /(.+)\((\d{4}-\d{2}-\d{2} \d{2}:\d{2}~\d{2}:\d{2})\)/,
           );
@@ -77,14 +103,17 @@ export default function NotificationCard({
                       [{status}] <span className='text-gray-950'>{title}</span>
                     </h2>
 
+                    {/* 알림 삭제 버튼 */}
                     <NotificationDelete />
                   </div>
 
+                  {/* 일정 정보 */}
                   <div className='flex items-center gap-3'>
                     <Calendar className='h-10 w-10 text-gray-950' />
                     <p className='font-size-12 text-gray-950'>{schedule}</p>
                   </div>
 
+                  {/* 생성 시각 */}
                   <div className='flex items-center gap-3'>
                     <Timer className='h-10 w-10 text-gray-400' />
                     <span className='text-size-12 mt-1 block text-gray-400'>
