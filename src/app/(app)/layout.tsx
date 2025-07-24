@@ -3,13 +3,15 @@ import { ReactNode } from 'react';
 import Footer from '@/shared/components/layouts/footer/Footer';
 import Header from '@/shared/components/layouts/header/Header';
 
+import Container from '../_components/Container';
+
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (
-    <div className='flex min-h-screen flex-col justify-between'>
+    <div className='flex min-h-[100dvh] flex-col'>
       <Header />
-      <div className='tablet:px-32 desktop:px-40 desktop:font-size-40 font-size-14 mx-auto max-w-1200 px-24'>
-        {children}
-      </div>
+      <main className='flex-1'>
+        <Container>{children}</Container>
+      </main>
       <Footer />
     </div>
   );
