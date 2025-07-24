@@ -7,7 +7,7 @@ import GuestMenu from './GuestMenu';
 import LogoLink from './LogoLink';
 
 export default function Header() {
-  const [isLogin] = useState(false);
+  const [isLogin] = useState(true);
 
   return (
     <header className='border-b border-gray-50'>

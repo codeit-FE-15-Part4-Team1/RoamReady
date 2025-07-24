@@ -1,4 +1,7 @@
-import Image from 'next/image';
+
+import Notification from '@/domain/Notification/components/Notification';
+
+import Avatar from '../../ui/avatar';
 
 /**
  * AuthMenu 컴포넌트 입니다.
@@ -11,14 +14,14 @@ import Image from 'next/image';
 export default function AuthMenu() {
   return (
     <div className='flex items-center justify-center gap-20'>
-      <Image src='/icons/bell.svg' alt='알림 아이콘' width={24} height={24} />
+      <Notification />
 
       <div className='flex items-center justify-center gap-15'>
         {/* 세로 구분선 */}
         <div className='h-20 w-1 self-center bg-gray-100' />
 
-        {/* 프로필 아바타*/}
-        <div className='h-30 w-30 rounded-full bg-black' />
+        {/* 프로필 아바타 Todo: user 프로필 이미지 연동*/}
+        <Avatar profileImageUrl='' />
 
         {/* 유저 이름 */}
         <span className='font-size-14'>닉네임</span>
