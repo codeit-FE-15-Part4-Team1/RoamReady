@@ -11,11 +11,13 @@ import Input from '@/shared/components/ui/input';
 interface IntroImageInputProps {
   value?: FileList;
   onChange: (files: FileList | null) => void;
+  name: string;
 }
 
 export default function IntroImageInput({
   value: files,
   onChange,
+  name,
 }: IntroImageInputProps) {
   const {
     formState: { errors },
@@ -74,7 +76,7 @@ export default function IntroImageInput({
 
   return (
     <div>
-      <Input.Root name='subImages' id='intro' type='file' className='my-10'>
+      <Input.Root name={name} id='intro' type='file' className='my-10'>
         <Input.Label className='font-size-16 font-bold'>
           소개 이미지 등록
         </Input.Label>
@@ -111,6 +113,7 @@ export default function IntroImageInput({
           accept='image/*'
           onChange={handleFileChange}
           className='hidden'
+          name={name}
         />
       </Input.Root>
       {errorMessage && (

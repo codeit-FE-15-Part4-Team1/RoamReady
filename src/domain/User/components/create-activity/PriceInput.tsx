@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import Input from '@/shared/components/ui/input';
@@ -17,6 +18,13 @@ export default function PriceInput() {
     typeof priceValue === 'string' && priceValue !== ''
       ? Number(priceValue)
       : priceValue;
+
+  // ✨ 2. 클라이언트 마운트 상태를 추적합니다.
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
     <>
@@ -38,7 +46,8 @@ export default function PriceInput() {
       </Input.Root>
 
       {/* 5. 서식이 적용된 금액 표시에 RHF로부터 받아온 값을 사용합니다. */}
-      {typeof priceAsNumber === 'number' && priceAsNumber > 0 && (
+      {/* isMounted가 true일 때만 포맷팅된 금액을 렌더링합니다. */}
+      {isMounted && typeof priceAsNumber === 'number' && priceAsNumber > 0 && (
         <p className='mt-4 text-gray-600'>
           입력된 금액: {priceAsNumber.toLocaleString('ko-KR')}원
         </p>

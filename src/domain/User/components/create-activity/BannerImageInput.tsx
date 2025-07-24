@@ -13,12 +13,14 @@ import Input from '@/shared/components/ui/input';
 interface BannerImageInputProps {
   value?: FileList;
   onChange: (files: FileList | null) => void;
+  name: string;
   // fieldState.error를 전달받기 위한 prop도 추가할 수 있습니다.
 }
 
 export default function BannerImageInput({
   value: files,
   onChange,
+  name,
 }: BannerImageInputProps) {
   const {
     formState: { errors },
@@ -82,7 +84,7 @@ export default function BannerImageInput({
 
   return (
     <div>
-      <Input.Root name='bannerImages' id='banner' type='file' className='my-10'>
+      <Input.Root name={name} id='banner' type='file' className='my-10'>
         <Input.Label className='font-size-16 font-bold'>
           배너 이미지 등록
         </Input.Label>
@@ -119,6 +121,7 @@ export default function BannerImageInput({
           accept='image/*'
           onChange={handleFileChange}
           className='hidden'
+          name={name}
         />
       </Input.Root>
       {errorMessage && (

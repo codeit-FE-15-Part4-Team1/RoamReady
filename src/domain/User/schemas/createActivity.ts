@@ -4,11 +4,11 @@ import z from 'zod';
 import {
   ACCEPTED_IMAGE_TYPES,
   MAX_FILE_SIZE,
-} from '../constants/createAcitvity';
+} from '../constants/createActivity';
 
 export const formSchema = z.object({
   title: z.string().min(1, '제목을 입력해주세요.'),
-  category: z.string({ required_error: '카테고리를 선택해주세요.' }),
+  category: z.string().min(1, '카테고리를 선택해주세요.'),
   description: z.string().min(1, '설명을 입력해주세요.'),
   price: z.coerce.number().min(0, '가격은 0 이상이어야 합니다.'),
   address: z.string().min(1, '주소를 입력해주세요.'),
@@ -48,11 +48,13 @@ export const formSchema = z.object({
       '배너 이미지를 1개 이상 등록해주세요.',
     )
     .refine(
-      (files) => files && files[0].size <= MAX_FILE_SIZE,
+      // ✨ [수정] files[0]이 없을 수도 있으므로 옵셔널 체이닝(?.')을 추가합니다.
+      (files) => files?.[0]?.size <= MAX_FILE_SIZE,
       `이미지 크기는 5MB를 초과할 수 없습니다.`,
     )
     .refine(
-      (files) => files && ACCEPTED_IMAGE_TYPES.includes(files[0].type),
+      // ✨ [수정] 여기도 동일하게 수정합니다.
+      (files) => files?.[0] && ACCEPTED_IMAGE_TYPES.includes(files[0].type),
       '.jpg, .jpeg, .png, .webp 형식의 파일만 허용됩니다.',
     ),
   subImages: z
@@ -60,5 +62,14 @@ export const formSchema = z.object({
     .refine(
       (files) => files?.length >= 1,
       '소개 이미지를 1개 이상 등록해주세요.',
+    )
+    // ✨ [수정] subImages도 동일하게 수정합니다.
+    .refine(
+      (files) => files?.[0]?.size <= MAX_FILE_SIZE,
+      `이미지 크기는 5MB를 초과할 수 없습니다.`,
+    )
+    .refine(
+      (files) => files?.[0] && ACCEPTED_IMAGE_TYPES.includes(files[0].type),
+      '.jpg, .jpeg, .png, .webp 형식의 파일만 허용됩니다.',
     ),
 });
