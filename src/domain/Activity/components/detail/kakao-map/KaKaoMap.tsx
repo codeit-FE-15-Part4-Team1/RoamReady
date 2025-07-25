@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { renderToString } from 'react-dom/server';
 
-import { getLatLngByAddress } from '@/domain/Activity/libs/detail/getLatLngByAdress';
+import { getLatLngByAddress } from '@/domain/Activity/libs/detail/getLatLngByAddress';
 import LogoSymbol from '@/shared/assets/logos/LogoSymbol';
 import { cn } from '@/shared/libs/cn';
 
