@@ -7,6 +7,7 @@ import { getLatLngByAddress } from '@/domain/Activity/libs/detail/getLatLngByAdd
 import LogoSymbol from '@/shared/assets/logos/LogoSymbol';
 import { cn } from '@/shared/libs/cn';
 
+import KaKaoMapSkeleton from '../skeleton/KaKaoMapSkeleton';
 import MapMarker from './MapMarker';
 
 // 전역 객체에 kakao 속성 추가
@@ -166,12 +167,7 @@ export default function KaKaoMap({
 
       {/* 로딩 중일 때 Skeleton UI */}
       {isLoading ? (
-        <div
-          className={cn(
-            'h-300 w-full animate-pulse rounded-3xl border-none bg-gray-100',
-            className,
-          )}
-        />
+        <KaKaoMapSkeleton className={className} />
       ) : error ? (
         // 에러 발생 시 메시지 출력
         <div
