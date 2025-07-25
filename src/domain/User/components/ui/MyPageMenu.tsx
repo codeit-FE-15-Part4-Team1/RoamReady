@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronRight, LogOut } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { motion } from 'motion/react';
 import Link from 'next/link';
 
@@ -92,45 +92,6 @@ export default function MyPageMenu() {
             </li>
           );
         })}
-        {/* 로그아웃 버튼 UI */}
-        <li
-          key={'logout'}
-          ref={(node) => setItemRef('logout', node)} // 각 항목의 DOM 참조 등록
-          className='relative'
-          onMouseEnter={() => setHoveredItem('logout')}
-          onMouseLeave={() => setHoveredItem(null)}
-        >
-          <button
-            type='button'
-            className='relative z-10 block w-full text-left'
-          >
-            <div
-              className={cn(
-                'tablet:px-20 relative flex items-center justify-between rounded-3xl',
-                'tablet:py-14 desktop:py-17.5 py-17.5',
-              )}
-            >
-              <div className='flex items-center gap-8'>
-                <LogOut
-                  className={cn(
-                    'tablet:size-16 desktop:size-18 size-18 flex-shrink-0 text-gray-600',
-                    hoveredItem === 'logout' && 'text-brand-2',
-                  )}
-                />
-                <span
-                  className={cn(
-                    'font-size-16 whitespace-nowrap',
-                    hoveredItem === 'logout'
-                      ? 'font-medium text-gray-900'
-                      : 'text-gray-600',
-                  )}
-                >
-                  로그아웃
-                </span>
-              </div>
-            </div>
-          </button>
-        </li>
       </ul>
     </div>
   );
