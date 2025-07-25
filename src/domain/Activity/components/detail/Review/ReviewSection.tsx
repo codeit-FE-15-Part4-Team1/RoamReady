@@ -3,6 +3,7 @@ import { Angry, Frown, Meh, Smile, SmilePlus, Star } from 'lucide-react';
 import { useState } from 'react';
 
 import { ReviewList } from '@/domain/Activity/types/detail/types';
+import Nothing from '@/shared/components/ui/nothing';
 import Pagination from '@/shared/components/ui/Pagination';
 
 import ReviewCard from './ReviewCard';
@@ -58,6 +59,21 @@ export default function ReviewSection({ review }: { review: ReviewList }) {
     startIndex,
     startIndex + REVIEWS_PER_PAGE,
   );
+
+  // 리뷰가 없는 경우 Nothing 컴포넌트 렌더링
+  if (review.totalCount === 0) {
+    return (
+      <section className='flex-col-center desktop:gap-50 w-full gap-30'>
+        <div className='flex items-center justify-start gap-5'>
+          <h2 className='font-size-18 leading-none font-bold'>체험 후기</h2>
+          <span className='font-size-16 text-gray-550 leading-none font-bold'>
+            0개
+          </span>
+        </div>
+        <Nothing type='review' />
+      </section>
+    );
+  }
 
   return (
     <section className='flex-col-center w-full gap-30'>

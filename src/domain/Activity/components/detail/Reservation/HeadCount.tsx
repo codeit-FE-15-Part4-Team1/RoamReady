@@ -1,4 +1,5 @@
 import { Minus, Plus } from 'lucide-react';
+import { KeyboardEvent } from 'react';
 
 interface ParticipationProps {
   count: number;
@@ -27,8 +28,27 @@ export default function HeadCount({
   onIncrease,
   onDecrease,
 }: ParticipationProps) {
+  // 상하 버튼 클릭시 인원수 증가/감소 핸들러
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'ArrowUp') {
+      e.preventDefault(); // 페이지 스크롤 방지
+      onIncrease();
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault(); // 페이지 스크롤 방지
+      onDecrease();
+    }
+  };
+
   return (
-    <div className='flex h-40 w-140 items-center justify-around rounded-4xl border-1 border-gray-50 bg-white px-12 py-8'>
+    <div
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+      aria-label='인원 수 조절'
+      role='spinbutton'
+      aria-valuenow={count}
+      aria-valuemin={1}
+      className='flex h-40 w-140 items-center justify-around rounded-4xl border-1 border-gray-50 bg-white px-12 py-8'
+    >
       <button
         type='button'
         aria-label='인원 수 감소'
@@ -52,12 +72,7 @@ export default function HeadCount({
         onClick={onIncrease}
         className='cursor-pointer'
       >
-        <Plus
-          className={`h-20 w-20 hover:text-gray-300 ${
-            // 인원 수 10명일 경우 비활성화 처리
-            count === 10 ? 'cursor-not-allowed text-gray-300' : 'text-gray-950'
-          }`}
-        />
+        <Plus className={`h-20 w-20 hover:text-gray-300`} />
       </button>
     </div>
   );

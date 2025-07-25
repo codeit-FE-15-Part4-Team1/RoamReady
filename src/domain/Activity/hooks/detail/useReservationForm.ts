@@ -59,10 +59,10 @@ export const useReservationForm = (initialPrice: number) => {
   };
 
   /**
-   * 인원 수 증가 (최대 10명 제한)
+   * 인원 수 증가 (제한 없음)
    */
   const handleIncrease = () => {
-    setParticipantCount((prev) => Math.min(prev + 1, 10));
+    setParticipantCount((prev) => prev + 1);
   };
 
   /**
