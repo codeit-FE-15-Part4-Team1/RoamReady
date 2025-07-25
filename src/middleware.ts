@@ -41,7 +41,8 @@ export async function middleware(request: NextRequest) {
   }
 
   const path = request.nextUrl.pathname.replace(BRIDGE_API.PREFIX, '');
-  const destinationUrl = new URL(path, BACKEND_URL);
+  const correctedPath = path.startsWith('/') ? path.substring(1) : path;
+  const destinationUrl = new URL(correctedPath, BACKEND_URL);
   destinationUrl.search = request.nextUrl.search;
 
   const headers = new Headers(request.headers);
@@ -74,8 +75,6 @@ export async function middleware(request: NextRequest) {
   });
 
   if (response.status === 401 && refreshToken) {
-    console.log('Access Token 만료, 재발급을 시도합니다.');
-
     const refreshResponse = await fetch(
       `${BACKEND_URL}${API_ENDPOINTS.AUTH.REFRESH_TOKEN}`,
       {
