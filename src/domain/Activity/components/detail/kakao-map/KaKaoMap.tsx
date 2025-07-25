@@ -7,7 +7,7 @@ import { getLatLngByAddress } from '@/domain/Activity/libs/detail/getLatLngByAdd
 import LogoSymbol from '@/shared/assets/logos/LogoSymbol';
 import { cn } from '@/shared/libs/cn';
 
-import CustomOverlay from './CustomOverlay';
+import MapMarker from './MapMarker';
 
 // 전역 객체에 kakao 속성 추가
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -17,6 +17,8 @@ declare global {
   }
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
+
+const KAKAO_MAP_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY}&autoload=false&libraries=services`;
 
 /**
  * KaKaoMap
@@ -59,9 +61,9 @@ export default function KaKaoMap({
      */
     const loadKakaoScript = (): Promise<void> => {
       return new Promise((resolve, reject) => {
-        const scriptId = 'kakao-map-script';
+        const SCRIPT_ID = 'kakao-map-script';
         const existingScript = document.getElementById(
-          scriptId,
+          SCRIPT_ID,
         ) as HTMLScriptElement | null;
 
         // 이미 로드된 경우
@@ -80,8 +82,8 @@ export default function KaKaoMap({
 
         // 처음 로드하는 경우 스크립트 태그 삽입
         const script = document.createElement('script');
-        script.id = scriptId;
-        script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY}&autoload=false&libraries=services`;
+        script.id = SCRIPT_ID;
+        script.src = KAKAO_MAP_SDK_URL;
         script.async = true;
         script.onload = () => resolve();
         script.onerror = () => reject(new Error('카카오 스크립트 로드 실패'));
@@ -122,7 +124,7 @@ export default function KaKaoMap({
           setFinalAddress(targetAddress);
 
           // 지도를 렌더링할 컨테이너 요소 가져오기
-          const container = document.getElementById('map');
+          const container = document.getElementById('kakao-map');
           if (!container) return;
 
           // 지도 생성
@@ -135,7 +137,7 @@ export default function KaKaoMap({
           const overlay = new window.kakao.maps.CustomOverlay({
             position: new window.kakao.maps.LatLng(coords.lat, coords.lng),
             yAnchor: 1,
-            content: renderToString(<CustomOverlay address={targetAddress} />),
+            content: renderToString(<MapMarker address={targetAddress} />),
           });
           overlay.setMap(map);
 
@@ -186,7 +188,10 @@ export default function KaKaoMap({
         </div>
       ) : (
         // 지도 정상 렌더링
-        <div id='map' className={cn('h-300 w-full rounded-3xl', className)} />
+        <div
+          id='kakao-map'
+          className={cn('h-300 w-full rounded-3xl', className)}
+        />
       )}
     </div>
   );

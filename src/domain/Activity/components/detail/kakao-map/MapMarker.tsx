@@ -1,4 +1,4 @@
-interface CustomOverlayProps {
+interface MapMarkerProps {
   address: string;
 }
 
@@ -13,9 +13,9 @@ interface CustomOverlayProps {
  * @example
  * <CustomOverlay address="서울특별시 강남구" />
  *
- * @param {CustomOverlayProps} props - 컴포넌트에 전달되는 props
+ * @param {MapMarkerProps} props - 컴포넌트에 전달되는 props
  */
-export default function CustomOverlay({ address }: CustomOverlayProps) {
+export default function MapMarker({ address }: MapMarkerProps) {
   return (
     <div className='relative'>
       {/* 말풍선 본체 */}
