@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import Logo from '@/shared/assets/logos/Logo';
-import { ROUTES } from '@/shared/constants/route';
+import { ROUTES } from '@/shared/constants/routes';
 import { cn } from '@/shared/libs/cn';
 
 /**
@@ -20,7 +20,7 @@ import { cn } from '@/shared/libs/cn';
  */
 export default function LogoLink({ className }: { className?: string }) {
   return (
-    <Link href={ROUTES.Main}>
+    <Link href={ROUTES.MAIN}>
       <Logo
         className={cn(
           'tablet:w-130 tablet:h-100 relative h-70 w-100 shrink-0',

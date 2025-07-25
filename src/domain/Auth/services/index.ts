@@ -1,8 +1,6 @@
-//! 이 파일은 수정 예정입니다.
+import { BRIDGE_API } from '@/shared/constants/bridgeEndpoints';
 
-import { AUTH_ENDPOINTS, USER_ENDPOINTS } from '@/shared/constants/endpoints';
-import { apiClient } from '@/shared/libs/apiClient';
-
+import { authApiClient } from '../libs/authApiClient';
 import type { SigninRequest, SignupRequest } from '../schemas/request';
 import type { SigninResponse, SignupResponse } from '../schemas/response';
 
@@ -48,8 +46,8 @@ import type { SigninResponse, SignupResponse } from '../schemas/response';
 export const signup = async (
   userData: SignupRequest,
 ): Promise<SignupResponse> => {
-  return apiClient
-    .post(USER_ENDPOINTS.SIGNUP, {
+  return authApiClient
+    .post(BRIDGE_API.AUTH.SIGNUP, {
       json: userData,
     })
     .json<SignupResponse>();
@@ -92,8 +90,8 @@ export const signup = async (
 export const signin = async (
   credentials: SigninRequest,
 ): Promise<SigninResponse> => {
-  return apiClient
-    .post(AUTH_ENDPOINTS.SIGNIN, {
+  return authApiClient
+    .post(BRIDGE_API.AUTH.SIGNIN, {
       json: credentials,
     })
     .json<SigninResponse>();
