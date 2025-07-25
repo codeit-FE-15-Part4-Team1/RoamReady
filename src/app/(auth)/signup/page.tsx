@@ -4,7 +4,7 @@ import OAuth from '@/domain/Auth/components/OAuth';
 import SignUpForm from '@/domain/Auth/components/SignUpForm';
 import LogoSymbol from '@/shared/assets/logos/LogoSymbol';
 import LogoTextOneLine from '@/shared/assets/logos/LogoTextOneline';
-import { AUTH_ROUTES } from '@/shared/constants/routes';
+import { ROUTES } from '@/shared/constants/routes';
 
 /**
  * @component SignUpPage
@@ -33,10 +33,7 @@ export default function SignUpPage() {
 
       <div className='flex justify-center gap-4'>
         <span className='text-gray-400'>이미 회원이신가요?</span>
-        <Link
-          href={AUTH_ROUTES.SIGNIN}
-          className='text-brand-2 hover:underline'
-        >
+        <Link href={ROUTES.SIGNIN} className='text-brand-2 hover:underline'>
           로그인
         </Link>
       </div>

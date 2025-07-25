@@ -1,4 +1,6 @@
-export const AUTH_ROUTES = {
+export const ROUTES = {
   SIGNIN: '/signin',
   SIGNUP: '/signup',
+  MAIN: '/activities',
+  MYPAGE: '/mypage',
 };

@@ -12,7 +12,7 @@ import { signupRequestSchema } from '@/domain/Auth/schemas/request';
 import { signup } from '@/domain/Auth/services';
 import Button from '@/shared/components/Button';
 import Input from '@/shared/components/ui/input';
-import { ROUTES } from '@/shared/constants/route';
+import { ROUTES } from '@/shared/constants/routes';
 
 /**
  * @component SignUpForm
@@ -52,7 +52,7 @@ export default function SignUpForm() {
     try {
       const response = await signup(data);
       console.log('회원가입 성공:', response);
-      router.push(ROUTES.Main);
+      router.push(ROUTES.MAIN);
     } catch (error) {
       console.error('회원가입 실패:', error);
       // TODO: 오류 처리 (사용자에게 토스트 메시지 표시 등)
