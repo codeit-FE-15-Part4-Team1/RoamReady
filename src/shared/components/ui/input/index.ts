@@ -1,15 +1,15 @@
-import Field from './Field';
-import Helper from './Helper';
-import Label from './Label';
-import Root from './Root';
-import Trigger from './Trigger';
+import InputField from './InputField';
+import InputHelper from './InputHelper';
+import InputLabel from './InputLabel';
+import InputRoot from './InputRoot';
+import InputTrigger from './InputTrigger';
 
 const Input = {
-  Root,
-  Field,
-  Label,
-  Helper,
-  Trigger,
+  Root: InputRoot,
+  Field: InputField,
+  Label: InputLabel,
+  Helper: InputHelper,
+  Trigger: InputTrigger,
 };
 
 export default Input;

@@ -6,7 +6,7 @@ import { ReactNode } from 'react';
 
 import { cn } from '@/shared/libs/cn';
 
-import { useInputContext } from './context';
+import { useInputContext } from './InputContext';
 
 interface TriggerProps {
   children?: ReactNode;
@@ -35,7 +35,7 @@ interface TriggerProps {
  *
  * @returns {JSX.Element | null} 조건에 따라 알맞은 트리거 버튼 요소를 렌더링하거나, 유효하지 않은 경우 `null`을 반환합니다.
  */
-export default function Trigger({
+export default function InputTrigger({
   children,
   className,
   triggerType = 'other',
