@@ -1,7 +1,7 @@
 'use client';
 
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { availableSchedule } from '../../components/detail/mock/mock-data';
 
@@ -35,27 +35,48 @@ export const useReservationForm = (initialPrice: number) => {
   // 사용자가 선택한 시간
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
+  // 사용자가 선택한 날짜와 시간을 바탕으로 scheduledId 탐색
+  const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
+    null,
+  );
+
   // 참여 인원 수
   const [participantCount, setParticipantCount] = useState(1);
 
-  // 예약 가능한 날짜 목록 (추후 API 데이터로 변경 필요)
-  const reservableDates = availableSchedule.map((item) => item.date);
+  // 예약 가능한 날짜 목록 추출 (추후 API 데이터 연동 필요)
+  const reservableDates = useMemo(() => {
+    return availableSchedule.map((item) => item.date);
+  }, []);
 
-  // 현재 선택된 날짜에 대한 시간대 정보 추출
-  const currentSchedule = availableSchedule.find(
-    (item) => item.date === dayjs(selectedDate).format('YYYY-MM-DD'),
-  );
-  const timeSlots = currentSchedule?.times ?? [];
+  // 선택된 날짜의 예약 가능한 time slot 배열 (추후 API 데이터 연동 필요)
+  const timeSlots = useMemo(() => {
+    if (!selectedDate) return [];
+    const formattedDate = dayjs(selectedDate).format('YYYY-MM-DD');
+    const matched = availableSchedule.find(
+      (item) => item.date === formattedDate,
+    );
+    return matched?.times ?? [];
+  }, [selectedDate]);
 
   // 총 가격 계산 = 단가 * 인원 수
   const totalPrice = initialPrice * participantCount;
 
   /**
    * 시간 선택 핸들러
-   * 이미 선택된 시간 클릭 시 해제되고, 아니면 새로 설정됨
+   * - 시간 형식: 'HH:mm-HH:mm'
+   * - 시간 선택 시 scheduleId도 함께 저장
    */
-  const handleTimeSelect = (time: string) => {
-    setSelectedTime(selectedTime === time ? null : time);
+  const handleTimeSelect = (timeLabel: string) => {
+    const matchedSlot = timeSlots.find(
+      (slot) => `${slot.startTime}-${slot.endTime}` === timeLabel,
+    );
+    if (matchedSlot) {
+      setSelectedTime(timeLabel);
+      setSelectedScheduleId(matchedSlot.id);
+    } else {
+      setSelectedTime(null);
+      setSelectedScheduleId(null);
+    }
   };
 
   /**
@@ -76,6 +97,7 @@ export const useReservationForm = (initialPrice: number) => {
     // 상태 값 반환
     selectedDate,
     selectedTime,
+    selectedScheduleId,
     participantCount,
     reservableDates,
     timeSlots,
