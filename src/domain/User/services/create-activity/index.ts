@@ -24,6 +24,7 @@ export const uploadActivityImages = async (file: File) => {
     body: formData,
     headers: {
       'Content-Type': undefined,
+      accept: 'application/json',
     },
   });
   return response.json<{ activityImageUrl: string }>();

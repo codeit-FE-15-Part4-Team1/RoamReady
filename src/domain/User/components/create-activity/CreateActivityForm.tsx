@@ -10,7 +10,7 @@ import { formSchema } from '../../schemas/createActivity';
 import {
   createActivity,
   uploadActivityImages,
-} from '../../services/create-activity/createActivity.api';
+} from '../../services/create-activity';
 import BannerImageInput from './BannerImageInput';
 import CategoryInput from './CategoryInput';
 import DescriptionInput from './DescriptionInput';

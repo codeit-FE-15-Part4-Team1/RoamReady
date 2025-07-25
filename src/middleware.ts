@@ -37,7 +37,8 @@ export async function middleware(request: NextRequest) {
   }
 
   const path = request.nextUrl.pathname.replace(BRIDGE_API.PREFIX, '');
-  const destinationUrl = new URL(path, BACKEND_URL);
+  const correctedPath = path.startsWith('/') ? path.substring(1) : path;
+  const destinationUrl = new URL(correctedPath, BACKEND_URL);
   destinationUrl.search = request.nextUrl.search;
 
   const headers = new Headers(request.headers);
@@ -46,16 +47,32 @@ export async function middleware(request: NextRequest) {
   const accessToken = request.cookies.get('accessToken')?.value;
   const refreshToken = request.cookies.get('refreshToken')?.value;
 
-  console.log('액세스 토큰 존재 여부:', !!accessToken);
+  // [디버깅 로그 2] 쿠키에서 토큰을 제대로 읽었는지 확인
+  console.log(`[Middleware Debug 2] Tokens Found in Cookie:`, {
+    accessToken: accessToken
+      ? `Exists (ends with ...${accessToken.slice(-6)})`
+      : 'Not Found',
+    refreshToken: refreshToken
+      ? `Exists (ends with ...${refreshToken.slice(-6)})`
+      : 'Not Found',
+  });
+
+  console.log('액세스 토큰 존재 여부:', accessToken);
 
   if (accessToken) {
     headers.set('Authorization', `Bearer ${accessToken}`);
   }
+  // [디버깅 로그 3] 백엔드로 보내기 직전의 헤더 상태 확인
+  console.log(
+    `[Middleware Debug 3] Forwarding request to backend with Authorization header:`,
+    headers.has('Authorization'),
+  );
 
   const method = request.method;
   const contentType = request.headers.get('content-type') || '';
   const isMultipart = contentType.includes('multipart/form-data');
   const isSafeToClone = !isMultipart && method !== 'GET' && method !== 'HEAD';
+  console.log('isMultipart', isMultipart);
 
   let rawBody: string | null = null;
   if (isSafeToClone && request.body) {
@@ -72,8 +89,16 @@ export async function middleware(request: NextRequest) {
       !['GET', 'HEAD'].includes(method) && { duplex: 'half' }),
     signal: AbortSignal.timeout(30000),
   });
+  // [디버깅 로그 4] 백엔드로부터 받은 첫 번째 응답 상태 확인
+  console.log(
+    `[Middleware Debug 4] Initial response from backend: ${response.status} ${response.statusText}`,
+  );
 
   if (response.status === 401 && refreshToken) {
+    // [디버깅 로그 5] 토큰 재발급 로직 진입 확인
+    console.log(
+      `[Middleware Debug 5] Access Token expired (401). Attempting refresh with refreshToken.`,
+    );
     console.log('Access Token 만료, 재발급을 시도합니다.');
 
     const refreshResponse = await fetch(
@@ -85,10 +110,18 @@ export async function middleware(request: NextRequest) {
       },
     );
 
+    // [디버깅 로그 6] 토큰 재발급 API의 응답 상태 확인
+    console.log(
+      `[Middleware Debug 6] Refresh token response status: ${refreshResponse.status}`,
+    );
+
     if (refreshResponse.ok) {
       const tokens = await refreshResponse.json();
       const newAccessToken = tokens.accessToken;
       console.log('새로운 Access Token 발급 성공');
+      console.log(
+        `[Middleware Debug 7] Token refresh SUCCESSFUL. Retrying original request.`,
+      );
 
       headers.set('Authorization', `Bearer ${newAccessToken}`);
 
@@ -120,8 +153,14 @@ export async function middleware(request: NextRequest) {
       return finalResponse;
     } else {
       console.log('Refresh Token 만료, 로그인이 필요합니다.');
+      console.log(
+        `[Middleware Debug 8] Token refresh FAILED. User must log in again.`,
+      );
     }
   }
+  console.log(
+    `[Middleware Debug 9] Returning final response to client with status: ${response.status}`,
+  );
 
   return response;
 }
