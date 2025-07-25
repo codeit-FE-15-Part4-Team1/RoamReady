@@ -60,10 +60,16 @@ export const useKakaoMap = (address: string): UseKakaoMapResult => {
             const errorHandler = () =>
               reject(new Error('카카오 스크립트 로드 실패'));
 
-            // 아직 완전히 로드되지 않았다면 이벤트 리스너로 기다림
-            existingScript.addEventListener('load', () => resolve());
-            existingScript.addEventListener('error', () =>
-              reject(new Error('카카오 스크립트 로드 실패')),
+            // Kakao Maps가 아직 로드되지 않은 경우, load/error 이벤트 리스너를 등록하여 로딩 상태를 비동기적으로 감지함
+            existingScript.addEventListener('load', loadHandler);
+            existingScript.addEventListener('error', errorHandler);
+            listeners.push(
+              { element: existingScript, event: 'load', handler: loadHandler },
+              {
+                element: existingScript,
+                event: 'error',
+                handler: errorHandler,
+              },
             );
           }
           return;
