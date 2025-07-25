@@ -27,7 +27,7 @@ export default function MyPageMenu() {
   } = useMyPageMenu();
 
   return (
-    <div className='tablet:border-brand-1 tablet:max-w-178 desktop:max-w-290 tablet:border tablet:shadow-lg tablet:px-24 tablet:py-16 rounded-3xl'>
+    <div className='tablet:border-brand-1 tablet:border tablet:shadow-lg tablet:px-24 tablet:py-16 w-full rounded-3xl'>
       {/* 유저 프로필 아바타 (수정 가능) */}
 
       {/* 메뉴 리스트 영역 */}
