@@ -25,13 +25,13 @@ export default function CategoryInput() {
                 <Select.Value placeholder='카테고리를 선택해 주세요.' />
               </Select.Trigger>
               <Select.Content className='font-size-14'>
-                <Select.Item value='1' className='px-20 py-17.5'>
+                <Select.Item value='투어' className='px-20 py-17.5'>
                   카테고리 1
                 </Select.Item>
-                <Select.Item value='2' className='px-20 py-17.5'>
+                <Select.Item value='하세요' className='px-20 py-17.5'>
                   카테고리 2
                 </Select.Item>
-                <Select.Item value='3' className='px-20 py-17.5'>
+                <Select.Item value='제발발' className='px-20 py-17.5'>
                   카테고리 3
                 </Select.Item>
               </Select.Content>

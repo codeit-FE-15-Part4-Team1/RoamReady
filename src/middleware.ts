@@ -41,6 +41,10 @@ export async function middleware(request: NextRequest) {
   const destinationUrl = new URL(correctedPath, BACKEND_URL);
   destinationUrl.search = request.nextUrl.search;
 
+  console.log('path', path);
+  console.log('correctedPath', correctedPath);
+  console.log('destinationUrl', destinationUrl);
+
   const headers = new Headers(request.headers);
   headers.set('Host', destinationUrl.host);
 
@@ -73,6 +77,7 @@ export async function middleware(request: NextRequest) {
   const isMultipart = contentType.includes('multipart/form-data');
   const isSafeToClone = !isMultipart && method !== 'GET' && method !== 'HEAD';
   console.log('isMultipart', isMultipart);
+  console.log('correctedPath', correctedPath);
 
   let rawBody: string | null = null;
   if (isSafeToClone && request.body) {
@@ -90,6 +95,7 @@ export async function middleware(request: NextRequest) {
     signal: AbortSignal.timeout(30000),
   });
   // [디버깅 로그 4] 백엔드로부터 받은 첫 번째 응답 상태 확인
+  console.log('Destination URL:', destinationUrl.href);
   console.log(
     `[Middleware Debug 4] Initial response from backend: ${response.status} ${response.statusText}`,
   );

@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
 
     // 3. .env.local에 저장된 실제 백엔드 API 주소를 사용합니다.
-    const backendUrl = `${process.env.API_BASE_URL}/my-activities/image`;
+    const backendUrl = `${process.env.API_BASE_URL}/activities/image`;
 
     // 4. 실제 백엔드로 인증 토큰과 FormData를 담아 요청을 전달(forward)합니다.
     const response = await fetch(backendUrl, {
