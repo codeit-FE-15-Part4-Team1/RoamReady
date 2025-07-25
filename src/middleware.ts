@@ -30,6 +30,8 @@ const BACKEND_URL = process.env.API_BASE_URL;
  * @returns {Promise<NextResponse>} 처리된 응답 객체
  */
 export async function middleware(request: NextRequest) {
+  // 요청이 들어올 때마다 터미널에 로그가 찍힙니다.
+
   if (request.nextUrl.pathname.startsWith(`${BRIDGE_API.AUTH_PREFIX}/`)) {
     return NextResponse.next();
   }
@@ -44,6 +46,8 @@ export async function middleware(request: NextRequest) {
   const accessToken = request.cookies.get('accessToken')?.value;
   const refreshToken = request.cookies.get('refreshToken')?.value;
 
+  console.log('액세스 토큰 존재 여부:', !!accessToken);
+
   if (accessToken) {
     headers.set('Authorization', `Bearer ${accessToken}`);
   }
@@ -56,6 +60,8 @@ export async function middleware(request: NextRequest) {
   let rawBody: string | null = null;
   if (isSafeToClone && request.body) {
     rawBody = await request.text();
+    // 폼 데이터가 있다면 로그를 찍어봅니다.
+    console.log('요청 본문:', rawBody);
   }
 
   let response = await fetch(destinationUrl, {
@@ -94,6 +100,8 @@ export async function middleware(request: NextRequest) {
           !['GET', 'HEAD'].includes(method) && { duplex: 'half' }),
         signal: AbortSignal.timeout(30000),
       });
+      // 백엔드 응답 상태 코드를 확인합니다.
+      console.log('백엔드 응답 상태 코드:', response.status);
 
       const finalResponse = new NextResponse(response.body, {
         status: response.status,

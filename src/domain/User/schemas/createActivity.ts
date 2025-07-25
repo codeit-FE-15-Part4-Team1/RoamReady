@@ -40,36 +40,32 @@ export const formSchema = z.object({
         ),
     )
     .min(1, '예약 가능한 시간대를 최소 1개 이상 추가해주세요.'),
-
+  // ✨ [변경점] 다시 FileList를 검증하도록 되돌립니다.
   bannerImages: z
     .custom<FileList>()
+    .nullable()
+    .refine((files) => files?.length === 1, '배너 이미지는 1개만 등록해주세요.')
     .refine(
-      (files) => files?.length >= 1,
-      '배너 이미지를 1개 이상 등록해주세요.',
-    )
-    .refine(
-      // ✨ [수정] files[0]이 없을 수도 있으므로 옵셔널 체이닝(?.')을 추가합니다.
-      (files) => files?.[0]?.size <= MAX_FILE_SIZE,
+      (files) => files?.[0]?.size && files[0].size <= MAX_FILE_SIZE,
       `이미지 크기는 5MB를 초과할 수 없습니다.`,
     )
     .refine(
-      // ✨ [수정] 여기도 동일하게 수정합니다.
       (files) => files?.[0] && ACCEPTED_IMAGE_TYPES.includes(files[0].type),
       '.jpg, .jpeg, .png, .webp 형식의 파일만 허용됩니다.',
     ),
+
   subImages: z
     .custom<FileList>()
+    .nullable()
     .refine(
-      (files) => files?.length >= 1,
+      (files) => files && files.length >= 1,
       '소개 이미지를 1개 이상 등록해주세요.',
     )
-    // ✨ [수정] subImages도 동일하게 수정합니다.
     .refine(
-      (files) => files?.[0]?.size <= MAX_FILE_SIZE,
+      (files) =>
+        files && Array.from(files).every((file) => file.size <= MAX_FILE_SIZE),
       `이미지 크기는 5MB를 초과할 수 없습니다.`,
-    )
-    .refine(
-      (files) => files?.[0] && ACCEPTED_IMAGE_TYPES.includes(files[0].type),
-      '.jpg, .jpeg, .png, .webp 형식의 파일만 허용됩니다.',
     ),
 });
+
+export type FormValues = z.infer<typeof formSchema>;

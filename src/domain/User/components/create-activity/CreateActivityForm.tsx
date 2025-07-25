@@ -2,15 +2,15 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { useActionState, useEffect } from 'react';
+import { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { z } from 'zod';
 
-import {
-  ActionState,
-  createActivityAction,
-} from '../../actions/create-activity/actions';
+import type { FormValues } from '../../schemas/createActivity';
 import { formSchema } from '../../schemas/createActivity';
+import {
+  createActivity,
+  uploadActivityImages,
+} from '../../services/create-activity/createActivity.api';
 import BannerImageInput from './BannerImageInput';
 import CategoryInput from './CategoryInput';
 import DescriptionInput from './DescriptionInput';
@@ -21,64 +21,73 @@ import SubmitButton from './SubmitButton';
 import TimeSlotInput from './TimeSlotInput/TimeSlotInput';
 import TitleInput from './TitleInput';
 
-const initialFormValues = {
+const initialFormValues: FormValues = {
   category: '',
   title: '',
   description: '',
   price: 0,
   address: '',
   schedules: [{ date: '', startTime: '', endTime: '' }],
-  bannerImages: new DataTransfer().files, // 빈 FileList
-  subImages: new DataTransfer().files, // 빈 FileList
+  bannerImages: null,
+  subImages: null,
 };
 
-export type FormValues = z.infer<typeof formSchema>;
-
-const initialState: ActionState = {
-  message: null,
-  errors: {},
-  success: false,
-  inputValues: initialFormValues,
-};
-
-export default function CreateExperienceForm() {
-  const [state, formAction] = useActionState(
-    createActivityAction,
-    initialState,
-  );
-
-  // ✨ [디버깅 로그 3] 서버로부터 받은 state와 inputValues 확인
-
+export default function CreateActivityForm() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submittingError, setSubmittingError] = useState<string | null>(null);
   const router = useRouter();
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     mode: 'onBlur',
-    defaultValues: state.inputValues,
+    defaultValues: initialFormValues,
   });
 
-  useEffect(() => {
-    // 서버 액션이 성공적으로 완료되었을 때
-    if (state.success) {
-      alert(state.message || '성공적으로 등록되었습니다.'); // 혹은 토스트 메시지
-      // 폼을 완전히 초기 상태로 리셋합니다.
-      methods.reset(initialFormValues);
+  const onSubmit = async (data: FormValues) => {
+    setIsSubmitting(true);
+    setSubmittingError(null);
+
+    try {
+      const bannerImageFile = data.bannerImages?.[0];
+      const bannerImageResponse = await uploadActivityImages(
+        bannerImageFile as File,
+      );
+      const bannerImageUrl = bannerImageResponse.activityImageUrl;
+
+      const subImageFiles = Array.from(data.subImages || []);
+      const subImageUploadPromises = subImageFiles.map((file) =>
+        uploadActivityImages(file),
+      );
+      const subImageResponses = await Promise.all(subImageUploadPromises);
+      const subImageUrls = subImageResponses.map((res) => res.activityImageUrl);
+
+      const finalFormData = {
+        title: data.title,
+        category: data.category,
+        description: data.description,
+        price: data.price,
+        address: data.address,
+        schedules: data.schedules,
+        bannerImageUrl,
+        subImageUrls,
+      };
+
+      await createActivity(finalFormData);
+      methods.reset();
       router.push('/');
+    } catch (error) {
+      setSubmittingError(
+        (error as { message: string }).message || '서버 오류가 발생했습니다.',
+      );
+    } finally {
+      setIsSubmitting(false);
     }
-
-    // 서버 액션이 실패하고, 서버가 이전에 입력한 값을 보내줬을 때
-    if (!state.success && state.inputValues) {
-      // 그 값으로 폼의 상태를 업데이트(복원)합니다.
-      methods.reset(state.inputValues);
-    }
-
-    // state가 바뀔 때마다 이 effect를 실행합니다.
-  }, [state, methods, router]);
+  };
 
   return (
     <FormProvider {...methods}>
       <form
-        action={formAction}
+        onSubmit={methods.handleSubmit(onSubmit)}
         className='flex flex-col gap-[2.4rem]'
         noValidate
       >
@@ -95,7 +104,7 @@ export default function CreateExperienceForm() {
           control={methods.control}
           render={({ field: { onChange, value } }) => (
             <BannerImageInput
-              value={value}
+              value={value || undefined}
               onChange={onChange}
               name='bannerImages'
             />
@@ -108,17 +117,17 @@ export default function CreateExperienceForm() {
           control={methods.control}
           render={({ field: { onChange, value } }) => (
             <IntroImageInput
-              value={value}
+              value={value || undefined}
               onChange={onChange}
               name='subImages'
             />
           )}
         />
 
-        <SubmitButton />
+        <SubmitButton isSubmitting={isSubmitting} />
       </form>
-      {state.message && !state.success && (
-        <p className='font-size-16 text-red font-bold'>{state.message}</p>
+      {submittingError && (
+        <p className='font-size-16 text-red font-bold'>{submittingError}</p>
       )}
     </FormProvider>
   );

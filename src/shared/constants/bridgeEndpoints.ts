@@ -16,8 +16,9 @@
  * - `SIGNIN`: 로그인 경로 (-> /api/auth/signin)
  * - `SIGNOUT`: 로그아웃 경로 (-> /api/auth/signout)
  */
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export const BRIDGE_API = {
-  PREFIX: '/api',
+  PREFIX: `${BASE_URL}/api`,
   AUTH_PREFIX: '/api/auth',
 
   AUTH: {
