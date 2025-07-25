@@ -125,42 +125,4 @@ export default function ActivityImg({ subImages }: ActivityImgProps) {
       </div>
     );
   }
-
-  // 5개 이상: 첫 3개만 보여주는 레이아웃
-  return (
-    <div className='flex gap-2'>
-      {/* 첫 번째 이미지는 왼쪽 큰 이미지 */}
-      <div className='overflow-hidden rounded-xl'>
-        <Image
-          src={subImages[0].imageUrl}
-          alt='Activity Image'
-          width={800}
-          height={300}
-          className='h-auto w-full rounded-xl object-cover transition duration-300 ease-in-out hover:scale-105'
-        />
-      </div>
-
-      {/* 두 번째, 세 번째 이미지는 오른쪽 위아래로 나열 */}
-      <div className='flex flex-col gap-2'>
-        <div className='overflow-hidden rounded-xl'>
-          <Image
-            src={subImages[1].imageUrl}
-            alt='Activity Image'
-            width={400}
-            height={145}
-            className='h-auto w-full rounded-xl object-cover transition duration-300 ease-in-out hover:scale-105'
-          />
-        </div>
-        <div className='overflow-hidden rounded-xl'>
-          <Image
-            src={subImages[2].imageUrl}
-            alt='Activity Image'
-            width={400}
-            height={145}
-            className='h-auto w-full rounded-xl object-cover transition duration-300 ease-in-out hover:scale-105'
-          />
-        </div>
-      </div>
-    </div>
-  );
 }
