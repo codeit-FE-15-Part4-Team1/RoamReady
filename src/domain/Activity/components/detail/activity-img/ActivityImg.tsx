@@ -35,7 +35,7 @@ export default function ActivityImg({ subImages }: ActivityImgProps) {
   // 이미지가 1장일 경우: 전체 너비 이미지 하나만 렌더링
   if (subImages.length === 1) {
     return (
-      <div className='relative h-400 w-full overflow-hidden rounded-xl'>
+      <div className='tablet:h-400 relative h-220 w-full overflow-hidden rounded-xl'>
         <Image
           src={subImages[0].imageUrl}
           alt='Activity Image'
@@ -54,7 +54,7 @@ export default function ActivityImg({ subImages }: ActivityImgProps) {
         {subImages.map((img) => (
           <div
             key={img.id}
-            className='relative h-400 w-full overflow-hidden rounded-xl'
+            className='tablet:h-400 relative h-220 w-full overflow-hidden rounded-xl'
           >
             <Image
               src={img.imageUrl}
@@ -73,7 +73,7 @@ export default function ActivityImg({ subImages }: ActivityImgProps) {
     return (
       <div className='flex gap-4'>
         {/* 첫 번째 이미지는 큰 영역 차지 */}
-        <div className='relative h-400 w-full overflow-hidden rounded-xl'>
+        <div className='tablet:h-400 relative h-220 w-full overflow-hidden rounded-xl'>
           <Image
             src={subImages[0].imageUrl}
             alt='Activity Image'
@@ -84,7 +84,7 @@ export default function ActivityImg({ subImages }: ActivityImgProps) {
 
         {/* 두 번째, 세 번째 이미지는 위아래로 배치 */}
         <div className='flex flex-col gap-2'>
-          <div className='relative h-200 w-full overflow-hidden rounded-xl'>
+          <div className='tablet:w-330 tablet:h-200 relative h-110 w-150 overflow-hidden rounded-xl'>
             <Image
               src={subImages[1].imageUrl}
               alt='Activity Image'
@@ -92,7 +92,7 @@ export default function ActivityImg({ subImages }: ActivityImgProps) {
               className='rounded-xl object-cover transition duration-300 ease-in-out hover:scale-105'
             />
           </div>
-          <div className='relative h-200 w-330 overflow-hidden rounded-xl'>
+          <div className='tablet:w-330 tablet:h-200 relative h-110 w-150 overflow-hidden rounded-xl'>
             <Image
               src={subImages[2].imageUrl}
               alt='Activity Image'
