@@ -1,5 +1,6 @@
 import ActivityImg from '@/domain/Activity/components/detail/activity-img/ActivityImg';
 import DescriptionSection from '@/domain/Activity/components/detail/description/DescriptionSection';
+import KaKaoMap from '@/domain/Activity/components/detail/kakao-map/KaKaoMap';
 import {
   activity,
   reviews,
@@ -19,10 +20,12 @@ export default function ActivityDetailPage() {
           <ActivitySummaryWrapper activity={activity} reviews={reviews} />
           <DescriptionSection description={activity.description} />
 
-          {/* Todo: KaKao지도로 변경 */}
           <section className='flex w-full flex-col gap-8 border-b border-gray-100 pb-40'>
             <h2 className='font-size-18 font-bold'>오시는 길</h2>
-            <div className='h-450 w-full rounded-2xl bg-gray-50' />
+            <KaKaoMap
+              address={activity.address}
+              className='tablet:h-450 h-250'
+            />
           </section>
 
           <ReviewSection review={reviews} />
