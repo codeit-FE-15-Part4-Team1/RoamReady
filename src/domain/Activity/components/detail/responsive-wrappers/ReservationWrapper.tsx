@@ -2,6 +2,7 @@
 
 import { Activity, ReviewList } from '@/domain/Activity/types/detail/types';
 import Footer from '@/shared/components/layouts/footer/Footer';
+import { BREAKPOINTS } from '@/shared/constants/breakpoints';
 import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
 
 import ActivitySummary from '../activity-summary/ActivitySummary';
@@ -30,8 +31,8 @@ export default function ReservationWrapper({
   activity: Activity;
   reviews: ReviewList;
 }) {
-  const isMobile = useMediaQuery('(max-width: 767px)');
-  const isTablet = useMediaQuery('(min-width:768px) and (max-width:1023px)');
+  const isMobile = useMediaQuery(BREAKPOINTS.MOBILE);
+  const isTablet = useMediaQuery(BREAKPOINTS.TABLET);
 
   if (isMobile) {
     return (

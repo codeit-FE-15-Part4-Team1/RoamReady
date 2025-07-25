@@ -1,6 +1,7 @@
 'use client';
 
 import { Activity, ReviewList } from '@/domain/Activity/types/detail/types';
+import { BREAKPOINTS } from '@/shared/constants/breakpoints';
 import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
 
 import ActivitySummary from '../activity-summary/ActivitySummary';
@@ -26,7 +27,7 @@ export default function ActivitySummaryWrapper({
   reviews,
 }: ActivitySummaryWrapperProps) {
   // 현재 뷰포트가 모바일(최대 1023px)인지 여부를 판단
-  const isTabletOrMobile = useMediaQuery('(max-width: 1023px)');
+  const isTabletOrMobile = useMediaQuery(BREAKPOINTS.MOBILE);
 
   // 모바일 or 테블릿이 아닌 경우 컴포넌트를 렌더링하지 않음 (null 반환)
   if (!isTabletOrMobile) return null;
