@@ -20,6 +20,16 @@ export const useKakaoMap = (address: string): UseKakaoMapResult => {
   const [finalAddress, setFinalAddress] = useState(address);
 
   useEffect(() => {
+    // 환경 변수 존재 여부 검사
+    if (!process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY) {
+      console.warn(
+        '[KakaoMap] NEXT_PUBLIC_KAKAO_MAP_APP_KEY가 정의되지 않았습니다. env 파일을 확인해주세요.',
+      );
+      setError('map');
+      setIsLoading(false);
+      return;
+    }
+
     // 언마운트 감지를 위한 플래그 및 이벤트 리스너 추적 배열 추가
     let isCleanedUp = false;
     const listeners: Array<{
