@@ -22,9 +22,20 @@ export default function OAuth({ pageType }: OAuthProps) {
     pageType === 'signin' ? '카카오 로그인' : '카카오 회원가입';
 
   const handleKakaoAuth = () => {
+    // 1. .env 파일에 저장된 환경 변수를 가져옵니다.
+    const KAKAO_CLIENT_ID = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
+    const KAKAO_REDIRECT_URI = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
+
+    // 2. 카카오 인가 코드를 요청할 URL을 만듭니다.
+    //    이 URL은 로그인, 회원가입 모두 동일합니다.
+
+    // ✨ 여기! state 파라미터에 pageType ('signin' 또는 'signup')을 추가합니다.
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&state=${pageType}`;
+
+    // 3. 사용자를 카카오 인증 페이지로 이동시킵니다.
+    window.location.href = kakaoAuthUrl;
     // TODO: pageType에 따라 다른 카카오 인증 URL로 리디렉션하는 로직 구현
     // const KAKAO_AUTH_URL = pageType === 'signin' ? '...' : '...';
-    // router.push(KAKAO_AUTH_URL);
   };
 
   return (
