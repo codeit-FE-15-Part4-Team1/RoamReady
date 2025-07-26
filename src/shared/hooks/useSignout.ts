@@ -22,7 +22,7 @@ import { BRIDGE_API } from '../constants/bridgeEndpoints';
  * @example
  * ```jsx
  * 로그아웃 버튼 컴포넌트에서의 사용 예시
- * import { useSignout } from '@/shared/hooks/useSignout';
+ * import useSignout from '@/shared/hooks/useSignout';
  *
  * function LogoutButton() {
  * const handleSignout = useSignout();
@@ -33,10 +33,10 @@ import { BRIDGE_API } from '../constants/bridgeEndpoints';
  * @see /src/app/api/auth/signout/route.ts - 실제 쿠키를 삭제하는 서버 API 라우트
  * @see /src/domain/Auth/libs/authApiClient.ts - API 요청에 사용되는 클라이언트
  */
-export function useSignout() {
+const useSignout = () => {
   const router = useRouter();
 
-  return async function signout() {
+  return async () => {
     try {
       await authApiClient.post(BRIDGE_API.AUTH.SIGNOUT);
       router.push(ROUTES.SIGNIN);
@@ -44,4 +44,6 @@ export function useSignout() {
       console.error('로그아웃 실패:', error);
     }
   };
-}
+};
+
+export default useSignout;

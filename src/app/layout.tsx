@@ -27,6 +27,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang='ko'>
       <body className={pretendard.className}>
         <ClientProviders>{children}</ClientProviders>
+        <div id='portal-root'></div>
       </body>
     </html>
   );

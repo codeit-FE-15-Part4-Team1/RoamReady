@@ -86,7 +86,11 @@ export default function SignUpForm() {
           <Input.Helper />
         </Input.Root>
 
-        <Input.Root id='passwordConfirm' name='passwordConfirm' type='password'>
+        <Input.Root
+          id='password-confirm'
+          name='passwordConfirm'
+          type='password'
+        >
           <Input.Label>비밀번호 확인</Input.Label>
           <Input.Field
             placeholder='비밀번호를 다시 입력해주세요'

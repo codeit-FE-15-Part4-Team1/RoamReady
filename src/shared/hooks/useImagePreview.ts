@@ -78,7 +78,7 @@ import { Control, FieldValues, Path, useWatch } from 'react-hook-form';
  * }
  * ```
  */
-export const useImagePreview = <
+const useImagePreview = <
   TFieldValues extends FieldValues,
   TName extends Path<TFieldValues>,
 >(
@@ -110,3 +110,5 @@ export const useImagePreview = <
     previewUrl,
   };
 };
+
+export default useImagePreview;

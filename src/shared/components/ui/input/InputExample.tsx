@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Control } from 'react-hook-form';
 
 import Button from '@/shared/components/Button';
-import { useImagePreview } from '@/shared/hooks/useImagePreview';
+import useImagePreview from '@/shared/hooks/useImagePreview';
 import { cn } from '@/shared/libs/cn';
 
 import Input from '.';
