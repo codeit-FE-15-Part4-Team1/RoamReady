@@ -6,7 +6,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { cn } from '@/shared/libs/cn';
 
 /**
- * Pagination 컴포넌트에 전달되는 props 타입 정의
+ * Pagination 컴포넌트에 전달되는 props 타입 정의 .
  *
  * @property currentPage - 현재 페이지 번호
  * @property totalPages - 전체 페이지 수

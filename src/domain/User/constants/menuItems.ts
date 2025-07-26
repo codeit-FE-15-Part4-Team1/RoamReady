@@ -1,4 +1,4 @@
-import { ROUTES } from '@/shared/constants/route';
+import { ROUTES } from '@/shared/constants/routes';
 
 import {
   ExperiencesIcon,
@@ -24,4 +24,4 @@ export const MENU_ITEMS = [
     label: '예약 현황',
     icon: ReservationStatusIcon,
   },
-] as const;
+];

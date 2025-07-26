@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-import LogoSymbol from '@/shared/assets/logos/logo-symbol';
+import LogoSymbol from '@/shared/assets/logos/LogoSymbol';
 import { cn } from '@/shared/libs/cn';
 /**
  * Avatar 컴포넌트의 props
