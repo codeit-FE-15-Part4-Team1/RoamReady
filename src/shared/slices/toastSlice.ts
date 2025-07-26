@@ -63,7 +63,7 @@ export interface ToastSlice {
  * @returns {ToastSlice} Zustand용 ToastSlice 객체.
  *
  */
-const createToastSlice: StateCreator<ToastSlice, [], [], ToastSlice> = (
+export const createToastSlice: StateCreator<ToastSlice, [], [], ToastSlice> = (
   set,
   get,
 ) => ({
@@ -85,5 +85,3 @@ const createToastSlice: StateCreator<ToastSlice, [], [], ToastSlice> = (
     }));
   },
 });
-
-export default createToastSlice;

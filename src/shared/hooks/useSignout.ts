@@ -6,6 +6,7 @@ import { authApiClient } from '@/domain/Auth/libs/authApiClient';
 import { ROUTES } from '@/shared/constants/routes';
 
 import { BRIDGE_API } from '../constants/bridgeEndpoints';
+import { useRoamReadyStore } from '../store';
 
 /**
  * @description
@@ -22,7 +23,7 @@ import { BRIDGE_API } from '../constants/bridgeEndpoints';
  * @example
  * ```jsx
  * 로그아웃 버튼 컴포넌트에서의 사용 예시
- * import useSignout from '@/shared/hooks/useSignout';
+ * import {useSignout} from '@/shared/hooks/useSignout';
  *
  * function LogoutButton() {
  * const handleSignout = useSignout();
@@ -33,17 +34,19 @@ import { BRIDGE_API } from '../constants/bridgeEndpoints';
  * @see /src/app/api/auth/signout/route.ts - 실제 쿠키를 삭제하는 서버 API 라우트
  * @see /src/domain/Auth/libs/authApiClient.ts - API 요청에 사용되는 클라이언트
  */
-const useSignout = () => {
+export const useSignout = () => {
   const router = useRouter();
+  const clearUser = useRoamReadyStore((state) => state.clearUser);
 
   return async () => {
     try {
       await authApiClient.post(BRIDGE_API.AUTH.SIGNOUT);
+      clearUser();
       router.push(ROUTES.SIGNIN);
     } catch (error) {
       console.error('로그아웃 실패:', error);
+      clearUser(); //! 에러가 발생해도 사용자 경험을 위해 user 정보는 클리어하고 로그인 페이지로 보낼 수 있다. 이건 에러 처리할때 다시 확인
+      router.push(ROUTES.SIGNIN);
     }
   };
 };
-
-export default useSignout;
