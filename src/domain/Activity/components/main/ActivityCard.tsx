@@ -19,7 +19,10 @@ export default function ActivityCard({ activity }: ActivityCardProp) {
           className='object-cover'
         />
       </figure>
-      <section className='h-1/4 w-full'>adsfsadf</section>
+      <section className='h-1/4 w-full'>
+        {price}
+        {rating}
+      </section>
     </article>
   );
 }
