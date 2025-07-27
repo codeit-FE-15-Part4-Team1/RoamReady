@@ -45,6 +45,11 @@ export default function OAuth({ pageType }: OAuthProps) {
     const KAKAO_CLIENT_ID = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
     const KAKAO_REDIRECT_URI = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
 
+    if (!KAKAO_CLIENT_ID || !KAKAO_REDIRECT_URI) {
+      console.error('카카오 OAuth 환경 변수가 설정되지 않았습니다.');
+      return;
+    }
+
     const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&state=${pageType}`;
 
     window.location.href = kakaoAuthUrl;

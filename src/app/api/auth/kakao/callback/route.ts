@@ -48,7 +48,11 @@ async function handleOauthSignUp(
   }
 
   const errorData = await signUpRes.json();
-  console.error('Signup API Error:', errorData);
+  console.error('Signup API Error:', {
+    status: signUpRes.status,
+    statusText: signUpRes.statusText,
+    message: errorData?.message || 'Unknown error',
+  });
 
   if (signUpRes.status === 409) {
     return NextResponse.redirect(
@@ -95,7 +99,11 @@ async function handleOauthSignIn(kakaoAuthCode: string, req: NextRequest) {
   }
 
   const errorData = await signInRes.json();
-  console.error('Signin API Error:', errorData);
+  console.error('Signin API Error:', {
+    status: signInRes.status,
+    statusText: signInRes.statusText,
+    message: errorData?.message || 'Unknown error',
+  });
 
   if (signInRes.status === 404) {
     return NextResponse.redirect(
@@ -134,8 +142,13 @@ export async function GET(req: NextRequest) {
     if (intent === 'signup') {
       const arbitraryNickname = `KakaoUser_${Date.now().toString().slice(-6)}`;
       return await handleOauthSignUp(code, arbitraryNickname, req);
-    } else {
+    } else if (intent === 'signin') {
       return await handleOauthSignIn(code, req);
+    } else {
+      console.error('Invalid or missing state parameter:', intent);
+      return NextResponse.redirect(
+        new URL('/signin?error=invalid_state', req.url),
+      );
     }
   } catch (error) {
     console.error('Callback-level error:', error);

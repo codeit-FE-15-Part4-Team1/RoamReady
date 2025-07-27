@@ -5,7 +5,6 @@ import { ReactNode, useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 import { getMe } from '@/domain/Auth/services';
-import { useToast } from '@/shared/hooks/useToast';
 import type { User } from '@/shared/slices/userSlice';
 import { BoundState, useRoamReadyStore } from '@/shared/store';
 
@@ -45,8 +44,6 @@ export default function AuthStatusProvider({
     })),
   );
 
-  const { showError } = useToast();
-
   const {
     data: userProfile,
     isError,
@@ -63,9 +60,6 @@ export default function AuthStatusProvider({
   useEffect(() => {
     if (isError) {
       console.error('사용자 프로필을 가져오는 중 에러 발생:', error);
-      showError(
-        error?.message || '사용자 정보를 불러오는 중 오류가 발생했습니다.',
-      );
     }
 
     if (status === 'success') {
@@ -77,7 +71,7 @@ export default function AuthStatusProvider({
     } else if (status === 'error') {
       clearUser();
     }
-  }, [userProfile, status, isError, error, setUser, clearUser, showError]);
+  }, [userProfile, status, isError, error, setUser, clearUser]);
 
   return <>{children}</>;
 }

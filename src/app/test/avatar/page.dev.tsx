@@ -1,4 +1,4 @@
-import EditableAvatar from '@/domain/User/components/EditableAvatar';
+import EditableAvatar from '@/domain/User/components/ui/EditableAvatar';
 import Avatar from '@/shared/components/ui/avatar';
 
 /**
