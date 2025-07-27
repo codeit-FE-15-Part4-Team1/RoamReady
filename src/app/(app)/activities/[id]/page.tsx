@@ -1,15 +1,21 @@
 import ActivityImg from '@/domain/Activity/components/detail/activity-img/ActivityImg';
 import DescriptionSection from '@/domain/Activity/components/detail/description/DescriptionSection';
 import KaKaoMap from '@/domain/Activity/components/detail/kakao-map/KaKaoMap';
-import {
-  activity,
-  reviews,
-} from '@/domain/Activity/components/detail/mock/mock-data';
 import ActivitySummaryWrapper from '@/domain/Activity/components/detail/responsive-wrappers/ActivitySummaryWrapper';
 import ReservationWrapper from '@/domain/Activity/components/detail/responsive-wrappers/ReservationWrapper';
 import ReviewSection from '@/domain/Activity/components/detail/Review/ReviewSection';
+import { getActivityDetail } from '@/domain/Activity/services/detail/getActivityDetail';
+import { getActivityReviews } from '@/domain/Activity/services/detail/getActivityReiviews';
 
-export default function ActivityDetailPage() {
+export default async function ActivityDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const id = Number(params.id);
+  const activity = await getActivityDetail(id);
+  const reviews = await getActivityReviews(id);
+
   return (
     <>
       {/* PC / Tablet 레이아웃 */}

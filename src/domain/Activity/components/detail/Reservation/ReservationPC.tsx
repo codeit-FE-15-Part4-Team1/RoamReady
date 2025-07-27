@@ -32,7 +32,8 @@ export default function ReservationPC({ activity }: { activity: Activity }) {
     handleTimeSelect,
     handleIncrease,
     handleDecrease,
-  } = useReservationForm(activity.price);
+    onMonthChange,
+  } = useReservationForm(activity.price, activity.id);
 
   return (
     <aside
@@ -59,6 +60,7 @@ export default function ReservationPC({ activity }: { activity: Activity }) {
             setSelectedTime(null);
           }}
           reservableDates={reservableDates}
+          onMonthChange={onMonthChange}
         />
 
         {/* 참여 인원 수 선택 */}
@@ -74,6 +76,7 @@ export default function ReservationPC({ activity }: { activity: Activity }) {
           timeSlots={timeSlots}
           selectedTime={selectedTime}
           onTimeSelect={handleTimeSelect}
+          className='max-h-250'
         />
 
         {/* 총 합계 및 예약 버튼 */}

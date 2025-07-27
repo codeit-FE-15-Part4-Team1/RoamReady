@@ -35,7 +35,8 @@ export default function ReservationMobile({
     handleTimeSelect,
     handleIncrease,
     handleDecrease,
-  } = useReservationForm(activity.price);
+    onMonthChange,
+  } = useReservationForm(activity.price, activity.id);
 
   return (
     //  ✅ TODO: form action 연결
@@ -73,6 +74,7 @@ export default function ReservationMobile({
                     setSelectedTime(null);
                   }}
                   reservableDates={reservableDates}
+                  onMonthChange={onMonthChange}
                 />
 
                 <AvailableTimeSection

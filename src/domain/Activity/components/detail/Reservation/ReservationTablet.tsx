@@ -1,5 +1,6 @@
 'use client';
 
+
 import { useReservationForm } from '@/domain/Activity/hooks/detail/useReservationForm';
 import { Activity } from '@/domain/Activity/types/detail/types';
 import Button from '@/shared/components/Button';
@@ -37,7 +38,8 @@ export default function ReservationTablet({
     handleTimeSelect,
     handleIncrease,
     handleDecrease,
-  } = useReservationForm(activity.price);
+    onMonthChange,
+  } = useReservationForm(activity.price, activity.id);
   return (
     //  ✅ TODO: form action 연결
     <form className='fixed bottom-0 left-0 flex h-150 w-full flex-col justify-between bg-white px-24 py-18'>
@@ -69,6 +71,7 @@ export default function ReservationTablet({
                   setSelectedTime(null);
                 }}
                 reservableDates={reservableDates}
+                onMonthChange={onMonthChange}
               />
 
               <div className='flex h-full w-450 flex-col gap-50 rounded-4xl border border-gray-50 p-20 shadow-[0_4px_20px_rgba(0,0,0,0.05)]'>
