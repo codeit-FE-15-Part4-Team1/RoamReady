@@ -15,6 +15,10 @@ const subImagesFileListSchema = z
   .refine(
     (files) => files && files.length > 0,
     '소개 이미지를 1개 이상 등록해주세요.',
+  )
+  .refine(
+    (files) => files && files.length <= 4,
+    '소개 이미지는 최대 4개까지 등록할 수 있습니다.',
   );
 
 export const formSchema = z.object({
@@ -66,31 +70,68 @@ export const formSchema = z.object({
       { message: '중복된 시간대는 등록할 수 없습니다.' },
     ),
   // ✨ 배너 이미지 최종 스키마
-  bannerImages: z
-    .union([
-      // Case 1: 새로 업로드하는 파일
-      fileListSchema,
-      // Case 2: 수정 시 불러온 기존 이미지 (URL 문자열)
-      z
-        .string()
-        .url('유효하지 않은 URL입니다.')
-        .min(1, '배너 이미지를 등록해주세요.'),
-      // Case 3: 빈 상태 (null 허용)
-      z.null(),
-    ])
-    .optional(),
-
-  // ✨ 소개 이미지 최종 스키마
+  bannerImages: z.union([
+    // Case 1: 새로 업로드하는 파일
+    fileListSchema,
+    // Case 2: 수정 시 불러온 기존 이미지 (URL 문자열)
+    z
+      .string()
+      .url('유효하지 않은 URL입니다.')
+      .min(1, '배너 이미지를 등록해주세요.'), // Case 3: 빈 상태 (null 허용)
+    z.null(),
+  ]),
+  // ✨ 소개 이미지 최종 스키마 - 최대 4개 제한 추가
   subImages: z
     .union([
-      // Case 1: 새로 업로드하는 파일
+      // Case 1: 새로 업로드하는 파일 (최대 4개)
       subImagesFileListSchema,
-      // Case 2: 수정 시 불러온 기존 이미지 (URL 문자열 배열)
-      z.array(z.string().url()).min(1, '소개 이미지를 1개 이상 등록해주세요.'),
+      // Case 2: 수정 시 불러온 기존 이미지 (URL 문자열 배열, 최대 4개)
+      z
+        .array(z.string().url())
+        .min(1, '소개 이미지를 1개 이상 등록해주세요.')
+        .max(4, '소개 이미지는 최대 4개까지만 등록할 수 있습니다.'),
       // Case 3: 빈 상태 (null 허용)
       z.null(),
     ])
+    // 전체적인 검증: 기존 이미지 + 새 파일의 총합이 4개를 넘지 않는지 확인
+    .refine(
+      (value) => {
+        if (value instanceof FileList) {
+          return value.length <= 4;
+        }
+        if (Array.isArray(value)) {
+          return value.length <= 4;
+        }
+        return true;
+      },
+      {
+        message: '소개 이미지는 최대 4개까지만 등록할 수 있습니다.',
+      },
+    )
     .optional(),
 });
+
+// 추가적으로 기존 이미지와 새 파일을 함께 검증하는 커스텀 훅이나 함수가 필요한 경우
+export const validateTotalImageCount = (
+  existingImages: string[],
+  newFiles: FileList | null,
+): { isValid: boolean; message?: string } => {
+  const existingCount = existingImages.length;
+  const newFileCount = newFiles ? newFiles.length : 0;
+  const totalCount = existingCount + newFileCount;
+
+  if (totalCount === 0) {
+    return { isValid: false, message: '소개 이미지를 1개 이상 등록해주세요.' };
+  }
+
+  if (totalCount > 4) {
+    return {
+      isValid: false,
+      message: '소개 이미지는 최대 4개까지만 등록할 수 있습니다.',
+    };
+  }
+
+  return { isValid: true };
+};
 
 export type FormValues = z.infer<typeof formSchema>;

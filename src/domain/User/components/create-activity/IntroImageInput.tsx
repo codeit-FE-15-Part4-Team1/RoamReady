@@ -24,6 +24,8 @@ export default function IntroImageInput({
   const [newFilePreviewUrls, setNewFilePreviewUrls] = useState<string[]>([]);
   const [isMounted, setIsMounted] = useState(false);
 
+  const MAX_IMAGES = 4;
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -65,9 +67,34 @@ export default function IntroImageInput({
     return dataTransfer.files;
   };
 
+  const getCurrentImageCount = () => {
+    const existingCount = existingImageUrls.length;
+    const newFileCount = value instanceof FileList ? value.length : 0;
+    return existingCount + newFileCount;
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const addedFiles = Array.from(e.target.files);
+
+    // 현재 이미지 개수 확인
+    const currentCount = getCurrentImageCount();
+    const availableSlots = MAX_IMAGES - currentCount;
+
+    if (availableSlots <= 0) {
+      alert(`최대 ${MAX_IMAGES}개까지만 등록할 수 있습니다.`);
+      e.target.value = ''; // input 초기화
+      return;
+    }
+
+    // 추가하려는 파일이 남은 슬롯보다 많으면 제한
+    const filesToAdd = addedFiles.slice(0, availableSlots);
+
+    if (addedFiles.length > availableSlots) {
+      alert(
+        `최대 ${MAX_IMAGES}개까지만 등록할 수 있습니다. ${filesToAdd.length}개만 추가됩니다.`,
+      );
+    }
 
     // 현재 value가 FileList인 경우 기존 파일과 합침
     if (value instanceof FileList) {
@@ -90,17 +117,20 @@ export default function IntroImageInput({
   // 🚨 수정된 부분: 기존 이미지는 항상 표시하고, 새 파일도 함께 표시
   const displayExistingImages = existingImageUrls;
   const displayNewFileImages = newFilePreviewUrls;
+  const currentImageCount = getCurrentImageCount();
+  const canAddMore = currentImageCount < MAX_IMAGES;
 
   return (
     <div>
       <Input.Root name={name} id={name} type='file'>
-        <Input.Label>소개 이미지 등록 (1개 이상)</Input.Label>
+        <Input.Label className='font-bold'>소개 이미지 등록</Input.Label>
         <div className='flex flex-wrap items-center gap-20'>
           <label
             htmlFor={name}
-            className='flex h-[112px] w-[112px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300'
+            className='flex h-[112px] w-[112px] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300'
           >
-            <Plus className='size-50' />
+            {canAddMore && <Plus className='size-50' />}
+            {currentImageCount} / {MAX_IMAGES}
           </label>
 
           {/* 기존 이미지 표시 - 항상 표시 */}
@@ -135,7 +165,7 @@ export default function IntroImageInput({
                   onClick={() => handleRemoveNewFile(index)}
                   className='absolute -top-10 -right-10 z-10 rounded-full bg-black p-2 shadow-md'
                 >
-                  <X className='size-16 text-white' />
+                  <X className='size-16 cursor-pointer text-white' />
                 </button>
                 <Image
                   src={url}

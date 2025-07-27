@@ -71,7 +71,7 @@ export default function BannerImageInput({
 
   return (
     <Input.Root name={name} id={name} type='file'>
-      <Input.Label>배너 이미지 등록 (1개)</Input.Label>
+      <Input.Label className='font-bold'>배너 이미지 등록</Input.Label>
       <div className='flex flex-wrap items-center gap-20'>
         {!previewUrl && (
           <label className='flex h-[112px] w-[112px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300'>
@@ -94,7 +94,7 @@ export default function BannerImageInput({
               onClick={handleRemoveImage}
               className='absolute -top-10 -right-10 z-10 rounded-full bg-black p-2 shadow-md'
             >
-              <X className='size-16 text-white' />
+              <X className='size-16 cursor-pointer text-white' />
             </button>
             <Image
               src={previewUrl}

@@ -30,7 +30,7 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
   const endTimeErrorMessage = scheduleErrors?.endTime?.message;
 
   return (
-    <div className='relative border-b border-gray-100 py-10'>
+    <div className='relative py-10'>
       <div className='grid grid-cols-10 gap-10'>
         <div className='col-span-6'>
           <Input.Root
@@ -62,7 +62,7 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
             >
               <Select.Value />
             </Select.Trigger>
-            <Select.Content className='font-size-14'>
+            <Select.Content className='font-size-14 scrollbar-none'>
               {timeOptions.map((time) => (
                 <Select.Item key={time} value={time} className='px-20 py-17.5'>
                   {time}
@@ -96,7 +96,7 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
             >
               <Select.Value />
             </Select.Trigger>
-            <Select.Content className='font-size-14'>
+            <Select.Content className='font-size-14 scrollbar-none'>
               {endTimeOptions.map((time) => (
                 <Select.Item key={time} value={time} className='px-20 py-17.5'>
                   {time}
