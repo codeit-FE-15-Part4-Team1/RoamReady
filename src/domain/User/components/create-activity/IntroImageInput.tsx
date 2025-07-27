@@ -29,12 +29,6 @@ export default function IntroImageInput({
   }, []);
 
   useEffect(() => {
-    console.log('🔥 IntroImageInput useEffect - value:', value);
-    console.log(
-      '🔥 IntroImageInput useEffect - existingImageUrls:',
-      existingImageUrls,
-    );
-
     if (value instanceof FileList && value.length > 0) {
       // 새로운 파일이 들어온 경우 (FileList)
       const objectUrls = Array.from(value).map((file) =>
@@ -54,12 +48,7 @@ export default function IntroImageInput({
   }, [value]);
 
   // existingImageUrls 변경 감지
-  useEffect(() => {
-    console.log(
-      '🔥 IntroImageInput existingImageUrls 변경됨:',
-      existingImageUrls,
-    );
-  }, [existingImageUrls]);
+  useEffect(() => {}, [existingImageUrls]);
 
   const createNewFileList = (
     currentFiles: FileList | undefined | null,
@@ -79,7 +68,6 @@ export default function IntroImageInput({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const addedFiles = Array.from(e.target.files);
-    console.log('🔥 새 파일 추가:', addedFiles.length, '개');
 
     // 현재 value가 FileList인 경우 기존 파일과 합침
     if (value instanceof FileList) {
@@ -93,7 +81,6 @@ export default function IntroImageInput({
   };
 
   const handleRemoveNewFile = (indexToRemove: number) => {
-    console.log('🔥 새 파일 삭제:', indexToRemove);
     if (value instanceof FileList) {
       const updatedFileList = createNewFileList(value, [], indexToRemove);
       onChange(updatedFileList.length > 0 ? updatedFileList : null);
@@ -103,10 +90,6 @@ export default function IntroImageInput({
   // 🚨 수정된 부분: 기존 이미지는 항상 표시하고, 새 파일도 함께 표시
   const displayExistingImages = existingImageUrls;
   const displayNewFileImages = newFilePreviewUrls;
-
-  console.log('🔥 렌더링 상태:');
-  console.log('  - displayExistingImages:', displayExistingImages);
-  console.log('  - displayNewFileImages:', displayNewFileImages);
 
   return (
     <div>

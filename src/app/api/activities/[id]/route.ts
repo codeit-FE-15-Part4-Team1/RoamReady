@@ -4,13 +4,6 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } },
 ) {
-  console.log('🔥 PATCH 라우트 호출됨!');
-  console.log('🔥 Activity ID:', params.id);
-  console.log('🔥 Request URL:', request.url);
-  console.log(
-    '🔥 Request headers:',
-    Object.fromEntries(request.headers.entries()),
-  );
   try {
     // 1. URL에서 활동 ID를 가져옵니다.
     const activityId = params.id;
