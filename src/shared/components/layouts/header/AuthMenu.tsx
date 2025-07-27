@@ -1,6 +1,6 @@
-import Image from 'next/image';
-
+import Notification from '@/domain/Notification/components/Notification';
 import type { User } from '@/shared/slices/userSlice';
+
 
 interface AuthMenuProps {
   user: User;
@@ -18,7 +18,7 @@ export default function AuthMenu({ user }: AuthMenuProps) {
   // const signout = useSignout();  이렇게 가져올 수 있어요.
   return (
     <div className='flex items-center justify-center gap-20'>
-      <Image src='/icons/bell.svg' alt='알림 아이콘' width={24} height={24} />
+      <Notification />
 
       <div className='flex items-center justify-center gap-15'>
         {/* 세로 구분선 */}
