@@ -19,7 +19,7 @@ const CloseButton = () => {
   const { onOpenChange } = useBottomSheet();
 
   return (
-    <button onClick={() => onOpenChange(false)}>
+    <button type='button' onClick={() => onOpenChange(false)}>
       <X className='size-15 cursor-pointer font-bold' />
     </button>
   );

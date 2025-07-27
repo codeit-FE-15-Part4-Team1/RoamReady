@@ -19,7 +19,7 @@ const CloseButton = () => {
   const { setIsOpen } = usePopover();
 
   return (
-    <button onClick={() => setIsOpen(false)}>
+    <button type='button' onClick={() => setIsOpen(false)}>
       <X className='size-15 cursor-pointer font-bold' />
     </button>
   );
@@ -116,7 +116,11 @@ export default function DayCellPopover({
         </div>
       </Popover.Trigger>
 
-      <Popover.Content position='right-center' withBackdrop>
+      <Popover.Content
+        position='right-center'
+        withBackdrop
+        className='min-h-[40rem]'
+      >
         <div className='min-w-[40rem] space-y-3 p-10'>
           <div className='flex items-center justify-between'>
             <div className='flex items-end gap-5'>
@@ -132,9 +136,15 @@ export default function DayCellPopover({
 
           <Tabs.Root defaultValue='신청'>
             <Tabs.List className='font-size-14 flex'>
-              <Tabs.Trigger value='신청'>신청 {confirmedCount}</Tabs.Trigger>
-              <Tabs.Trigger value='승인'>승인 {pendingCount}</Tabs.Trigger>
-              <Tabs.Trigger value='거절'>거절 {completedCount}</Tabs.Trigger>
+              <Tabs.Trigger className='cursor-pointer' value='신청'>
+                신청 {confirmedCount}
+              </Tabs.Trigger>
+              <Tabs.Trigger className='cursor-pointer' value='승인'>
+                승인 {pendingCount}
+              </Tabs.Trigger>
+              <Tabs.Trigger className='cursor-pointer' value='거절'>
+                거절 {completedCount}
+              </Tabs.Trigger>
             </Tabs.List>
 
             <Tabs.Content value='신청'>

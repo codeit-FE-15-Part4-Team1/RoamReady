@@ -4,8 +4,6 @@ import { useState } from 'react';
 import Button from '@/shared/components/Button';
 import Select from '@/shared/components/ui/select';
 
-import { TIME_SLOTS } from '../../constants';
-
 interface ReservationDetailProps {
   reservations: ReservationItem[];
   emptyMessage: string;
@@ -56,11 +54,15 @@ export default function ReservationDetail({
     : reservations;
 
   if (reservations.length === 0) {
-    return <p className='py-4 text-center text-gray-500'>{emptyMessage}</p>;
+    return (
+      <p className='flex h-full flex-col items-center justify-center py-4 text-center text-gray-500'>
+        {emptyMessage}
+      </p>
+    );
   }
 
   return (
-    <div className='tablet:grid tablet:max-h-[40rem] tablet:grid-cols-2 tablet:overflow-y-auto desktop:flex desktop:flex-col flex flex-col gap-30 space-y-2'>
+    <div className='tablet:grid tablet:max-h-[40rem] tablet:grid-cols-2 tablet:overflow-y-auto desktop:flex desktop:flex-col scrollbar-none flex flex-col gap-30 space-y-2'>
       <div className='flex flex-col gap-12'>
         <h2 className='font-size-18 font-bold'>예약 시간</h2>
         <Select.Root value={selectedTime} onValueChange={setSelectedTime}>
@@ -71,17 +73,11 @@ export default function ReservationDetail({
             {/* 전체 보기 옵션 추가 */}
             <Select.Item value=''>전체 보기</Select.Item>
 
-            {availableTimeSlots.length > 0
-              ? availableTimeSlots.map((timeSlot) => (
-                  <Select.Item key={timeSlot} value={timeSlot}>
-                    {timeSlot}
-                  </Select.Item>
-                ))
-              : TIME_SLOTS.map((timeSlot) => (
-                  <Select.Item key={timeSlot} value={timeSlot}>
-                    {timeSlot}
-                  </Select.Item>
-                ))}
+            {availableTimeSlots.map((timeSlot) => (
+              <Select.Item key={timeSlot} value={timeSlot}>
+                {timeSlot}
+              </Select.Item>
+            ))}
           </Select.Content>
         </Select.Root>
       </div>
@@ -105,6 +101,7 @@ export default function ReservationDetail({
                 </div>
                 {showApprovalButton && (
                   <Button
+                    type='button'
                     variant='outline'
                     className='font-size-14 font-semibold text-gray-500'
                     onClick={() => onApprove?.(reservation.id)}
@@ -124,6 +121,7 @@ export default function ReservationDetail({
                 </div>
                 {showRejectButton && (
                   <Button
+                    type='button'
                     variant='ghost'
                     className='font-size-14 border-none font-semibold text-gray-500'
                     onClick={() => onReject?.(reservation.id)}

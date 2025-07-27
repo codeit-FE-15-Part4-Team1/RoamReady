@@ -265,7 +265,7 @@ export default function PopoverContent({
       )}
       <div
         className={cn(
-          'absolute z-90 h-fit max-h-500 w-fit max-w-2xl overflow-y-auto rounded-2xl border border-gray-200 bg-white p-4 shadow-lg',
+          'scrollbar-none absolute z-90 h-fit max-h-500 w-fit max-w-2xl overflow-y-auto rounded-2xl border border-gray-200 bg-white p-4 shadow-lg',
           className,
         )}
         id={`popover-content-${popoverId}`}
