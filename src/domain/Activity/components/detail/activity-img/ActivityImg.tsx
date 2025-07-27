@@ -16,6 +16,9 @@ interface ActivityImgProps {
   subImages: SubImage[];
 }
 
+const COMMON_IMAGE_CLASS =
+  'rounded-xl object-cover cursor-pointer transition duration-300 ease-in-out hover:scale-105';
+
 export default function ActivityImg({
   bannerImage,
   subImages,
@@ -38,7 +41,7 @@ export default function ActivityImg({
           src={subImages[0].imageUrl}
           alt='Activity Image'
           fill
-          className='h-auto w-full rounded-xl object-cover transition duration-300 ease-in-out hover:scale-105'
+          className={COMMON_IMAGE_CLASS}
           priority
           onClick={() => handleClick(1)}
         />
@@ -68,7 +71,7 @@ export default function ActivityImg({
                 src={src}
                 alt='Activity Image'
                 fill
-                className='rounded-xl object-cover transition duration-300 ease-in-out hover:scale-105'
+                className={COMMON_IMAGE_CLASS}
               />
             </div>
           ))}
@@ -94,7 +97,7 @@ export default function ActivityImg({
             src={bannerImage}
             alt='Activity Image'
             fill
-            className='rounded-xl object-cover transition duration-300 ease-in-out hover:scale-105'
+            className={COMMON_IMAGE_CLASS}
           />
         </div>
 
@@ -109,7 +112,7 @@ export default function ActivityImg({
                 src={img.imageUrl}
                 alt='Activity Image'
                 fill
-                className='rounded-xl object-cover transition duration-300 ease-in-out hover:scale-105'
+                className={COMMON_IMAGE_CLASS}
               />
             </div>
           ))}
@@ -140,7 +143,7 @@ export default function ActivityImg({
                 src={src}
                 alt='Activity Image'
                 fill
-                className='rounded-xl object-cover transition duration-300 ease-in-out hover:scale-105'
+                className={COMMON_IMAGE_CLASS}
               />
               {index === 3 && subImages.length > 3 && (
                 <div className='flex'>
