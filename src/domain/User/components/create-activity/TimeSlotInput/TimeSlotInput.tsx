@@ -39,6 +39,7 @@ export default function TimeSlotInput() {
           index={index}
           // 7. remove 함수는 특정 인덱스의 필드를 RHF 상태에서 제거합니다.
           onRemove={() => remove(index)}
+          scheduleId={Number(field.id)} // 기존 스케줄의 경우 서버에서 받은 ID
         />
       ))}
     </div>

@@ -10,6 +10,7 @@ import { getEndTimeOptions, timeOptions } from '../../../utils/create-activity';
 
 interface TimeSlotRowProps {
   index: number;
+  scheduleId?: number; // 기존 스케쥴의 ID (있으면 기존, 없으면 새 항목)
   onRemove: () => void;
 }
 
@@ -31,7 +32,6 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
   return (
     <div className='relative border-b border-gray-100 py-10'>
       <div className='grid grid-cols-10 gap-10'>
-        {/* 날짜 입력: name이 점(.) 표기법으로 올바르게 설정되어 있습니다. */}
         <div className='col-span-6'>
           <Input.Root
             name={`schedules.${index}.date`}
@@ -44,7 +44,6 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
         </div>
 
         <div className='col-span-3 flex items-center justify-between gap-10'>
-          {/* 시작 시간 Select */}
           <Select.Root
             value={startTime}
             onValueChange={(value) => {
@@ -72,7 +71,6 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
             </Select.Content>
           </Select.Root>
 
-          {/* ✨ [핵심 수정 1] name을 점(.) 표기법으로 통일합니다. */}
           <input
             type='hidden'
             name={`schedules.${index}.startTime`}
@@ -83,7 +81,6 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
             <Minus />
           </div>
 
-          {/* 종료 시간 Select */}
           <Select.Root
             value={endTime}
             onValueChange={(value) => {
@@ -108,23 +105,33 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
             </Select.Content>
           </Select.Root>
 
-          {/* ✨ [핵심 수정 2] name을 점(.) 표기법으로 통일합니다. */}
           <input
             type='hidden'
             name={`schedules.${index}.endTime`}
             value={endTime || ''}
           />
+
+          {/* ✨ 기존 스케줄의 ID를 hidden input으로 저장
+          {scheduleId && (
+            <input
+              type='hidden'
+              name={`schedules.${index}.id`}
+              value={scheduleId}
+            />
+          )} */}
         </div>
 
-        {/* 삭제 버튼 */}
         <div className='col-span-1 flex items-center justify-center'>
-          <button type='button' className='...' onClick={onRemove}>
+          <button
+            type='button'
+            className='cursor-pointer rounded-full bg-gray-500 p-15 text-white'
+            onClick={onRemove}
+          >
             <Minus className='size-20 font-semibold' />
           </button>
         </div>
       </div>
 
-      {/* 에러 메시지 */}
       {endTimeErrorMessage && (
         <div className='mt-4 grid grid-cols-10 gap-10'>
           <p className='font-size-12 col-span-4 col-start-7 text-red-500'>
@@ -132,8 +139,6 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
           </p>
         </div>
       )}
-
-      {/* ✨ [핵심 수정 3] 불필요하고 형식이 틀렸던 date의 숨겨진 input을 제거합니다. */}
     </div>
   );
 }

@@ -1,10 +1,21 @@
 import dayjs from 'dayjs';
 import z from 'zod';
 
-import {
-  ACCEPTED_IMAGE_TYPES,
-  MAX_FILE_SIZE,
-} from '../constants/createActivity';
+// 새로운 파일(FileList)에 대한 유효성 검사 규칙
+const fileListSchema = z
+  .custom<FileList>()
+  .refine(
+    (files) => files && files.length > 0,
+    '파일을 1개 이상 등록해주세요.',
+  );
+
+// 소개 이미지용 파일(FileList) 유효성 검사 규칙
+const subImagesFileListSchema = z
+  .custom<FileList>()
+  .refine(
+    (files) => files && files.length > 0,
+    '소개 이미지를 1개 이상 등록해주세요.',
+  );
 
 export const formSchema = z.object({
   title: z.string().min(1, '제목을 입력해주세요.'),
@@ -39,33 +50,47 @@ export const formSchema = z.object({
           },
         ),
     )
-    .min(1, '예약 가능한 시간대를 최소 1개 이상 추가해주세요.'),
-  // ✨ [변경점] 다시 FileList를 검증하도록 되돌립니다.
+    .min(1, '예약 가능한 시간대를 최소 1개 이상 추가해주세요.')
+    .refine(
+      (schedules) => {
+        const seen = new Set<string>();
+        for (const schedule of schedules) {
+          const uniqueKey = `${schedule.date}-${schedule.startTime}-${schedule.endTime}`;
+          if (seen.has(uniqueKey)) {
+            return false;
+          }
+          seen.add(uniqueKey);
+        }
+        return true;
+      },
+      { message: '중복된 시간대는 등록할 수 없습니다.' },
+    ),
+  // ✨ 배너 이미지 최종 스키마
   bannerImages: z
-    .custom<FileList>()
-    .nullable()
-    .refine((files) => files?.length === 1, '배너 이미지는 1개만 등록해주세요.')
-    .refine(
-      (files) => files?.[0]?.size && files[0].size <= MAX_FILE_SIZE,
-      `이미지 크기는 5MB를 초과할 수 없습니다.`,
-    )
-    .refine(
-      (files) => files?.[0] && ACCEPTED_IMAGE_TYPES.includes(files[0].type),
-      '.jpg, .jpeg, .png, .webp 형식의 파일만 허용됩니다.',
-    ),
+    .union([
+      // Case 1: 새로 업로드하는 파일
+      fileListSchema,
+      // Case 2: 수정 시 불러온 기존 이미지 (URL 문자열)
+      z
+        .string()
+        .url('유효하지 않은 URL입니다.')
+        .min(1, '배너 이미지를 등록해주세요.'),
+      // Case 3: 빈 상태 (null 허용)
+      z.null(),
+    ])
+    .optional(),
 
+  // ✨ 소개 이미지 최종 스키마
   subImages: z
-    .custom<FileList>()
-    .nullable()
-    .refine(
-      (files) => files && files.length >= 1,
-      '소개 이미지를 1개 이상 등록해주세요.',
-    )
-    .refine(
-      (files) =>
-        files && Array.from(files).every((file) => file.size <= MAX_FILE_SIZE),
-      `이미지 크기는 5MB를 초과할 수 없습니다.`,
-    ),
+    .union([
+      // Case 1: 새로 업로드하는 파일
+      subImagesFileListSchema,
+      // Case 2: 수정 시 불러온 기존 이미지 (URL 문자열 배열)
+      z.array(z.string().url()).min(1, '소개 이미지를 1개 이상 등록해주세요.'),
+      // Case 3: 빈 상태 (null 허용)
+      z.null(),
+    ])
+    .optional(),
 });
 
 export type FormValues = z.infer<typeof formSchema>;

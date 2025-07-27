@@ -1,19 +1,46 @@
 'use client';
 
+import { useDaumPostcodePopup } from 'react-daum-postcode';
+import { useFormContext } from 'react-hook-form';
+
+import Button from '@/shared/components/Button';
 import Input from '@/shared/components/ui/input';
 
 // Zod 스키마에 정의된 필드 이름과 일치시킵니다.
 const FIELD_NAME = 'address';
 
 export default function LocationInput() {
-  return (
-    // 1. 'name' prop을 추가하여 RHF의 'address' 필드와 연결합니다.
-    <Input.Root id={FIELD_NAME} name={FIELD_NAME} type='text' className='my-10'>
-      <Input.Label className='font-size-16 font-bold'>주소</Input.Label>
-      <Input.Field placeholder='주소를 입력해 주세요' />
+  const { setValue } = useFormContext();
+  const openPostcodePopup = useDaumPostcodePopup();
 
-      {/* 2. 에러 메시지를 자동으로 표시하기 위해 Input.Helper를 추가합니다. */}
-      <Input.Helper />
-    </Input.Root>
+  const handleOpenPostcode = () => {
+    openPostcodePopup({
+      onComplete: (data) => {
+        setValue(FIELD_NAME, data.address, {
+          shouldValidate: true,
+          shouldDirty: true,
+        });
+      },
+    });
+  };
+
+  return (
+    <div>
+      <Input.Root
+        id={FIELD_NAME}
+        name={FIELD_NAME}
+        type='text'
+        className='my-10'
+      >
+        <Input.Label className='font-size-16 font-bold'>주소</Input.Label>
+        <Button onClick={handleOpenPostcode} variant='outline'>
+          주소 검색
+        </Button>
+        <Input.Field placeholder='주소 검색 버튼을 눌러주세요.' readOnly />
+
+        {/* 2. 에러 메시지를 자동으로 표시하기 위해 Input.Helper를 추가합니다. */}
+        <Input.Helper />
+      </Input.Root>
+    </div>
   );
 }

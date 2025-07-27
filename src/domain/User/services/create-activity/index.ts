@@ -13,7 +13,27 @@ export interface ActivityPayload {
     endTime: string;
   }[];
   bannerImageUrl: string;
-  subImageUrls: string[];
+  subImages: {
+    id: number;
+    imageUrl: string;
+  }[];
+}
+
+export interface UpdateActivityRequest {
+  title: string;
+  category: string;
+  description: string;
+  price: number;
+  address: string;
+  bannerImageUrl: string;
+  subImageIdsToRemove: number[];
+  subImageUrlsToAdd: string[];
+  scheduleIdsToRemove: number[];
+  schedulesToAdd: {
+    date: string;
+    startTime: string;
+    endTime: string;
+  }[];
 }
 
 export const uploadActivityImages = async (file: File) => {
@@ -37,8 +57,38 @@ export const createActivity = async (data: ActivityPayload) => {
   return response.json();
 };
 
-export const getMyActivity = async () => {
-  const response = await apiClient.get(API_ENDPOINTS.ACTIVITIES.BASE);
-  console.log('getMyActivity', response);
-  return response;
+export const getActivity = async (
+  activityId: number,
+): Promise<ActivityPayload> => {
+  const response = await apiClient.get(
+    API_ENDPOINTS.ACTIVITIES.DETAIL(activityId),
+  );
+  return response.json();
+};
+
+export const updateActivity = async (
+  activityId: number,
+  data: UpdateActivityRequest,
+) => {
+  console.log('🔥 updateActivity 서비스 호출');
+  console.log('🔥 activityId:', activityId);
+  console.log('🔥 data:', data);
+  console.log(
+    '🔥 요청 URL:',
+    `${API_ENDPOINTS.MY_ACTIVITIES.ACTIVITY_DETAIL(activityId)}`,
+  );
+
+  try {
+    const response = await apiClient.patch(
+      `${API_ENDPOINTS.MY_ACTIVITIES.ACTIVITY_DETAIL(activityId)}`,
+      { json: data },
+    );
+    console.log('🔥 PATCH 응답 성공');
+    const result = await response.json();
+    console.log('🔥 응답 데이터:', result);
+    return result;
+  } catch (error) {
+    console.error('🔥 updateActivity 에러:', error);
+    throw error;
+  }
 };
