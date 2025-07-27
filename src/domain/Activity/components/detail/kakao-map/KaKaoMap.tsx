@@ -1,6 +1,5 @@
 'use client';
 
-
 import { useKakaoMap } from '@/domain/Activity/hooks/detail/useKakaoMap';
 import LogoSymbol from '@/shared/assets/logos/LogoSymbol';
 import { cn } from '@/shared/libs/cn';
