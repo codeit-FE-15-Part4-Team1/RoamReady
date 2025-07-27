@@ -1,7 +1,13 @@
+import dayjs from 'dayjs';
+import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
+
+import { reserveAction } from '@/domain/Activity/actions/detail/reserve';
 import { useReservationForm } from '@/domain/Activity/hooks/detail/useReservationForm';
 import { Activity } from '@/domain/Activity/types/detail/types';
 import Button from '@/shared/components/Button';
 import { BottomSheet } from '@/shared/components/ui/bottom-sheet';
+import { useToast } from '@/shared/hooks/useToast';
 
 import AvailableTimeSection from './AvailableTimeSection';
 import DateSelectSection from './DateSelectSection';
@@ -23,6 +29,10 @@ export default function ReservationMobile({
 }: {
   activity: Activity;
 }) {
+  const router = useRouter();
+
+  const { showSuccess, showError } = useToast();
+
   // 예약 상태 및 관련 핸들러 훅 호출
   const {
     selectedDate,
@@ -30,6 +40,7 @@ export default function ReservationMobile({
     participantCount,
     reservableDates,
     timeSlots,
+    selectedScheduleId,
     setSelectedDate,
     setSelectedTime,
     handleTimeSelect,
@@ -38,9 +49,40 @@ export default function ReservationMobile({
     onMonthChange,
   } = useReservationForm(activity.price, activity.id);
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!selectedDate || !selectedTime) return;
+
+    try {
+      await reserveAction(activity.id, selectedScheduleId, participantCount);
+      showSuccess('예약이 완료되었습니다!');
+      router.refresh();
+    } catch (err) {
+      showError(
+        err instanceof Error
+          ? err.message
+          : '예약 처리 중 오류가 발생했습니다.',
+      );
+    }
+  };
+
+  // 날짜, 시간 선택 후 해당 시간이 보이도록 선택 하지 않은 경우 날자 선택하기
+  const selectedDateTimeText = useMemo(() => {
+    if (!selectedDate || !selectedTime) return '날짜 선택하기';
+
+    const [start, end] = selectedTime.split('-');
+    const formattedDate = dayjs(selectedDate).format('YYYY/MM/DD');
+
+    return `${formattedDate} ${start} ~ ${end}`;
+  }, [selectedDate, selectedTime]);
+
   return (
     //  ✅ TODO: form action 연결
-    <form className='fixed bottom-0 left-0 z-30 flex h-200 w-full flex-col justify-center gap-10 bg-white px-24 py-18'>
+    <form
+      onSubmit={handleSubmit}
+      className='fixed bottom-0 left-0 z-30 flex h-200 w-full flex-col justify-center gap-10 bg-white px-24 py-18'
+    >
       {/* 가격 및 날짜 선택 버튼 영역 */}
       <div className='mx-auto flex w-full max-w-1200 items-center justify-between'>
         {/* 가격 및 인원 수 표시 */}
@@ -54,9 +96,9 @@ export default function ReservationMobile({
           <BottomSheet.Trigger>
             <button
               type='button'
-              className='font-size-14 text-blue-500 underline'
+              className='font-size-14 cursor-pointer text-blue-500 underline'
             >
-              날짜 선택
+              {selectedDateTimeText}
             </button>
           </BottomSheet.Trigger>
 
