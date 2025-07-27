@@ -3,6 +3,7 @@
 import { PencilLine } from 'lucide-react';
 import { ChangeEvent } from 'react';
 
+import { LoadingSpinner } from '@/shared/components/ui/loading-spinner';
 import { cn } from '@/shared/libs/cn';
 
 /**
@@ -34,24 +35,22 @@ export default function AvatarEditButton({
   onFileChange,
   isLoading,
 }: AvatarEditButtonProps) {
-  // --- 렌더링 ---
-
   return (
     // 접근성을 위해 input과 연결된 label 요소를 사용합니다.
     // 클릭 가능한 전체 영역을 제공합니다.
     <label
       className={cn(
-        'flex-center size-30 cursor-pointer rounded-full bg-gray-300 text-white shadow-md transition-colors',
+        'flex-center tablet:size-24 desktop:size-30 size-30 cursor-pointer rounded-full bg-gray-300 text-white shadow-md transition-colors',
         // 로딩 중일 때는 비활성화된 스타일을, 아닐 때는 호버 효과를 적용합니다.
         isLoading ? 'cursor-not-allowed bg-gray-300' : 'hover:bg-gray-500',
       )}
     >
       {isLoading ? (
         // 로딩스피너 UI
-        <div className='border-t-brand-2 border-r-brand-2 size-16 animate-spin rounded-full border-2 border-white/50' />
+        <LoadingSpinner />
       ) : (
         // 기본 상태일 때 표시되는 연필 아이콘
-        <PencilLine className='size-16 text-white' />
+        <PencilLine className='tablet:size-14 desktop:size-16 size-16 text-white' />
       )}
 
       {/* 실제 파일 입력을 담당하지만, UI상으로는 보이지 않는 input 요소입니다. */}
