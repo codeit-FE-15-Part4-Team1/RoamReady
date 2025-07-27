@@ -17,6 +17,8 @@ interface DatePickerRootProps {
    */
   onDateClick?: (date: Date) => void;
 
+  onMonthChange?: (year: string, month: string) => void;
+
   /**
    * DatePicker 전체 크기 설정 ('s' | 'l'), 기본값은 'l'
    */
@@ -49,6 +51,7 @@ interface DatePickerRootProps {
 export default function DatePickerRoot({
   selectedDate,
   onDateClick,
+  onMonthChange,
   size = 'l',
   wrapperClassName,
   children,
@@ -66,6 +69,15 @@ export default function DatePickerRoot({
       setCurrentMonth(dayjs(selectedDate));
     }
   }, [selectedDate]);
+
+  // month가 바뀔 때마다 외부 콜백 실행
+  useEffect(() => {
+    if (onMonthChange) {
+      const year = currentMonth.format('YYYY');
+      const month = currentMonth.format('MM');
+      onMonthChange(year, month);
+    }
+  }, [currentMonth, onMonthChange]);
 
   return (
     <DatePickerContext.Provider
