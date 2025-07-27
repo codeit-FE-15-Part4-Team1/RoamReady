@@ -35,10 +35,11 @@ export const activitySchema = z.object({
 
 export type Activity = z.infer<typeof activitySchema>;
 
-export const getActivitiesResponseSchema = z.object({
-  cursorId: z.number(),
+export const getActivitiesResponseOffsetSchema = z.object({
   totalCount: z.number(),
   activities: z.array(activitySchema),
 });
 
-export type GetActivitiesResponse = z.infer<typeof getActivitiesResponseSchema>;
+export type GetActivitiesOffsetResponse = z.infer<
+  typeof getActivitiesResponseOffsetSchema
+>;
