@@ -12,7 +12,6 @@ import LogoLink from './LogoLink';
 export default function Header() {
   const userFromStore = useRoamReadyStore((state) => state.user);
   const [user, setUser] = useState<User | null>(null);
-  // const [isLogin] = useState(false);  이건 이제 안써도 될거 같은데 혹시 필요하면 얘기하세요. 필요하다면 zustand store에 별도로 isLogin 상태 추가해드릴게요.
 
   useEffect(() => {
     setUser(userFromStore);
