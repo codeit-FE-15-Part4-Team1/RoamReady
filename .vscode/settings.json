@@ -1,16 +1,14 @@
 {
-  "eslint.useFlatConfig": true,
-  "eslint.options": {
-    "overrideConfigFile": "../eslint.config.mjs"
-  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
+  "eslint.useFlatConfig": true,
+
   "editor.rulers": [80],
   "prettier.printWidth": 80,
-  "prettier.configPath": "../prettier.config.mjs",
+
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -26,6 +24,7 @@
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "cSpell.words": [
     "cn",
