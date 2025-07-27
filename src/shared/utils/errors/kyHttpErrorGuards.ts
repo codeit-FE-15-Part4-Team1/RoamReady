@@ -8,7 +8,7 @@
  *
  * @property {Response} response - HTTP 요청에 대한 응답 객체입니다.
  */
-interface KyHTTPError extends Error {
+export interface KyHTTPError extends Error {
   response: Response;
 }
 
