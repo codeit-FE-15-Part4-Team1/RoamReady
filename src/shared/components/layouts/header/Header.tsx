@@ -20,7 +20,7 @@ export default function Header() {
   }, [userFromStore]);
 
   return (
-    <header className='border-b border-gray-50'>
+    <header className='sticky top-0 z-40 border-b border-gray-50 bg-white/90 backdrop-blur-xs'>
       <Container>
         <div className='flex items-center justify-between'>
           <LogoLink />

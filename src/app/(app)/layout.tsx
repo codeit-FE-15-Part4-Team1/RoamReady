@@ -9,7 +9,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   return (
     <div className='flex min-h-[100dvh] flex-col'>
       <Header />
-      <main className='flex-1'>
+      <main className='flex-1 py-20'>
         <Container>{children}</Container>
       </main>
       <Footer />
