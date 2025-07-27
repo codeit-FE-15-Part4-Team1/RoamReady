@@ -7,6 +7,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { getMe } from '@/domain/Auth/services';
 import type { User } from '@/shared/slices/userSlice';
 import { BoundState, useRoamReadyStore } from '@/shared/store';
+import { isKyHTTPError } from '@/shared/utils/errors/kyHttpErrorGuards';
 
 /**
  * @component AuthStatusProvider
@@ -58,8 +59,27 @@ export default function AuthStatusProvider({
   });
 
   useEffect(() => {
-    if (isError) {
-      console.error('사용자 프로필을 가져오는 중 에러 발생:', error);
+    if (isError && error) {
+      if (isKyHTTPError(error)) {
+        const isUnauthorized = error.response.status === 401;
+
+        if (isUnauthorized) {
+          console.log(
+            '사용자 정보 요청 실패: 로그인되지 않았거나 인증 세션이 만료됨 (401 Unauthorized)',
+          );
+        } else {
+          console.error(
+            '사용자 정보를 가져오는 중 예상치 못한 HTTP 에러 발생:',
+            error.response.status,
+            error,
+          );
+        }
+      } else {
+        console.error(
+          '사용자 정보를 가져오는 중 알 수 없는 유형의 에러 발생:',
+          error,
+        );
+      }
     }
 
     if (status === 'success') {
