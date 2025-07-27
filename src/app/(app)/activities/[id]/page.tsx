@@ -22,7 +22,10 @@ export default async function ActivityDetailPage({
       <div className='desktop:pt-60 desktop:pb-180 tablet:pb-80 desktop:flex-row flex w-full flex-col gap-30 pt-30 pb-60 max-[767px]:pb-[180px]'>
         {/* 왼쪽 메인 콘텐츠 영역 */}
         <div className='flex w-full flex-col gap-40'>
-          <ActivityImg subImages={activity.subImages} />
+          <ActivityImg
+            bannerImage={activity.bannerImageUrl}
+            subImages={activity.subImages}
+          />
           <ActivitySummaryWrapper activity={activity} reviews={reviews} />
           <DescriptionSection description={activity.description} />
 
