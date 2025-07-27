@@ -1,7 +1,11 @@
 import ReservationCalendar from '@/domain/Reservation/components/reservation-calendar/ReservationCalendar';
 import ReservationSelect from '@/domain/Reservation/components/reservation-calendar/ReservationSelect';
+import { getMyReservation } from '@/domain/Reservation/services/reservation-calendar';
 
-export default function MyReservationStatusPage() {
+export default async function MyReservationStatusPage() {
+  const reservations = await getMyReservation();
+  console.log(reservations);
+
   return (
     <div className='flex w-full flex-col gap-16'>
       <div className='flex-start flex flex-col gap-10'>
