@@ -1,7 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-
 import { reserveAction } from '@/domain/Activity/actions/detail/reserve';
 import { useReservationForm } from '@/domain/Activity/hooks/detail/useReservationForm';
 import { Activity } from '@/domain/Activity/types/detail/types';
@@ -23,8 +21,6 @@ import ParticipantSelect from './ParticipationSection';
  * <ReservationPC activity={activityData} />
  */
 export default function ReservationPC({ activity }: { activity: Activity }) {
-  const router = useRouter();
-
   const { showError, showSuccess } = useToast();
 
   // 예약 상태 및 관련 핸들러 훅 호출
