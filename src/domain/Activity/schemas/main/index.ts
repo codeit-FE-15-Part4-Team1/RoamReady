@@ -8,7 +8,7 @@ export const getActivitiesRequestQuerySchema = z.object({
     .optional(),
   keyword: z.string().optional(),
   sort: z
-    .enum(['most_reviewd', 'price_asc', 'price_desc', 'latest'])
+    .enum(['most_reviewed', 'price_asc', 'price_desc', 'latest'])
     .optional(),
   page: z.number().default(1),
   size: z.number().default(20),

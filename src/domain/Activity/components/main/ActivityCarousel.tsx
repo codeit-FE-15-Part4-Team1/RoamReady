@@ -120,7 +120,7 @@ export default function ActivityCarousel({
       >
         {activities.slice(0, 10).map((activity) => (
           <div
-            key={`${activity.title}-${String(activity.createdAt)}`}
+            key={`${activity.id}`}
             className={cn(
               'shrink-0 snap-start',
               'w-[calc(100%/2.1)] md:w-[calc(100%/3.3)] lg:w-[calc(100%/4.3)] xl:w-[calc(100%/5.3)]',
