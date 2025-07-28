@@ -24,6 +24,12 @@ export default function NotificationDelete({ id }: { id: number }) {
     e.preventDefault();
     e.stopPropagation();
     deleteNotification(id);
+
+    // localStorage에서 제거
+    const storedRaw = localStorage.getItem('readNotifications');
+    const stored = storedRaw ? JSON.parse(storedRaw) : [];
+    const updated = stored.filter((storedId: number) => storedId !== id);
+    localStorage.setItem('readNotifications', JSON.stringify(updated));
   };
 
   return (
