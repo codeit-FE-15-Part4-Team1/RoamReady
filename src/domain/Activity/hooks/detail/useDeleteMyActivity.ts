@@ -30,7 +30,7 @@ export const useDeleteMyActivity = () => {
     },
 
     // 삭제 실패 시 상태 코드에 따른 에러 메시지 처리
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: async (error: any) => {
       const status = error?.status ?? error?.response?.status;
 
