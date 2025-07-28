@@ -19,10 +19,8 @@ const MOCK_ACTIVITIES: Activity[] = Array.from({ length: 60 }).map((_, i) => ({
 
 export default function ActivityPage() {
   return (
-    <div>
-      {/* 캐러셀 */}
+    <div className='space-y-40'>
       <ActivityCarousel activities={MOCK_ACTIVITIES} />
-      {/* 카드 섹션 */}
       <ActivitySection activities={MOCK_ACTIVITIES} />
     </div>
   );

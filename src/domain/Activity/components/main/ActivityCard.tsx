@@ -57,13 +57,15 @@ export default function ActivityCard({
       </figure>
 
       <section className='w-auto p-8 text-gray-900'>
-        <div className='font-size-14 truncate font-semibold'>{title}</div>
-        <div className='font-size-12 flex items-center text-gray-800'>
+        <div className='font-size-14 line-clamp-1 truncate font-semibold'>
+          {title}
+        </div>
+        <div className='font-size-12 flex items-center truncate text-gray-800'>
           <span className='font-semibold'>
             ₩ {price.toLocaleString()}
             /인 ㆍ
           </span>
-          <span className=''>
+          <span className='truncate'>
             <span className='text-yellow-500'>★</span> {rating.toFixed(1)}{' '}
             <span className='text-gray-400'>({reviewCount})</span>
           </span>
