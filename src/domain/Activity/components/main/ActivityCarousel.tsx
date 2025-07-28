@@ -85,7 +85,7 @@ export default function ActivityCarousel({
             type='button'
             onClick={() => handleScroll('left')}
             disabled={!canScrollLeft}
-            className='flex-center size-24 cursor-pointer rounded-full border border-gray-100 bg-gray-100 ring-gray-100 hover:ring-2 disabled:cursor-not-allowed disabled:bg-transparent'
+            className='flex-center size-24 cursor-pointer rounded-full border border-gray-100 bg-gray-100 ring-gray-100 hover:ring-2 disabled:cursor-not-allowed disabled:bg-transparent disabled:ring-0'
           >
             <ChevronLeft
               className={cn(
@@ -99,7 +99,7 @@ export default function ActivityCarousel({
             onClick={() => handleScroll('right')}
             disabled={!canScrollRight}
             className={cn(
-              'flex-center size-24 cursor-pointer rounded-full border border-gray-100 bg-gray-100 ring-gray-100 hover:ring-2 disabled:cursor-not-allowed disabled:bg-transparent',
+              'flex-center size-24 cursor-pointer rounded-full border border-gray-100 bg-gray-100 ring-gray-100 hover:ring-2 disabled:cursor-not-allowed disabled:bg-transparent disabled:ring-0',
             )}
           >
             <ChevronRight
