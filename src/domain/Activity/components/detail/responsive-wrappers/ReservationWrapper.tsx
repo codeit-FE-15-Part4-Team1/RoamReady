@@ -59,7 +59,7 @@ export default function ReservationWrapper({
 
     // 일반 사용자 (PC, 로그인, 소유자 아님) → 예약 폼 노출
     return (
-      <div className='sticky top-40 flex flex-col gap-38'>
+      <div className='sticky top-150 flex flex-col gap-38'>
         <div className='w-400'>
           <ActivitySummary activity={activity} review={reviews} />
         </div>
