@@ -1,6 +1,6 @@
 // 필요한 React 훅과 Next.js 훅 import
 import { usePathname } from 'next/navigation';
-import { useCallback,useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { MENU_ITEMS } from '../constants/menuItems';
 

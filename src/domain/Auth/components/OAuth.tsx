@@ -4,6 +4,11 @@ import Image from 'next/image';
 
 import Button from '@/shared/components/Button';
 
+/**
+ * @property {'signin' | 'signup'} pageType - 현재 페이지의 종류를 나타냅니다.
+ * 'signin'은 로그인 페이지를, 'signup'은 회원가입 페이지를 의미하며,
+ * 이에 따라 OAuth 버튼의 텍스트 및 관련 로직이 변경됩니다.
+ */
 interface OAuthProps {
   pageType: 'signin' | 'signup';
 }
@@ -12,19 +17,42 @@ interface OAuthProps {
  * @component OAuth
  * @description
  * 소셜 로그인(OAuth) 버튼 UI와 관련 로직을 담당하는 재사용 가능한 클라이언트 컴포넌트입니다.
- * `pageType` prop에 따라 '로그인' 또는 '회원가입'으로 텍스트가 변경됩니다.
+ * 이 컴포넌트는 `pageType` prop에 따라 버튼의 텍스트가 '카카오 로그인' 또는 '카카오 회원가입'으로 변경되며, 카카오 OAuth 인증 흐름을 시작합니다.
  *
- * @param {OAuthProps} props - 컴포넌트 props
- * @param {'signin' | 'signup'} props.pageType - 현재 페이지의 종류
+ * @param {object} props - 컴포넌트의 props입니다.
+ * @param {'signin' | 'signup'} props.pageType - 현재 페이지의 종류를 나타냅니다.
+ * - `'signin'`은 로그인 페이지를, `'signup'`은 회원가입 페이지를 의미합니다.
+ * - 이 값은 카카오 인증 URL의 `state` 파라미터로 전달되어, 인증 완료 후 리디렉션될 때 어떤 종류의 인증 요청이었는지(로그인 또는 회원가입) 식별하는 데 사용됩니다.
+ *
+ * @example
+ * 로그인 페이지에서 사용 시:
+ * <OAuth pageType="signin" />
+ *
+ * 회원가입 페이지에서 사용 시:
+ * <OAuth pageType="signup" />
+ *
+ * @function handleKakaoAuth
+ * 카카오 인증 프로세스를 시작하는 내부 핸들러 함수입니다.
+ * 1. `.env` 파일에 저장된 `NEXT_PUBLIC_KAKAO_REST_API_KEY`와 `NEXT_PUBLIC_KAKAO_REDIRECT_URI` 환경 변수를 가져옵니다.
+ * 2. 카카오 인가 코드를 요청할 URL을 동적으로 생성합니다. 이 URL은 로그인과 회원가입 모두 동일한 구조를 가집니다.
+ * 3. 생성된 URL로 사용자를 리디렉션하여 카카오 인증 페이지로 이동시킵니다.
  */
 export default function OAuth({ pageType }: OAuthProps) {
   const buttonText =
     pageType === 'signin' ? '카카오 로그인' : '카카오 회원가입';
 
   const handleKakaoAuth = () => {
-    // TODO: pageType에 따라 다른 카카오 인증 URL로 리디렉션하는 로직 구현
-    // const KAKAO_AUTH_URL = pageType === 'signin' ? '...' : '...';
-    // router.push(KAKAO_AUTH_URL);
+    const KAKAO_CLIENT_ID = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
+    const KAKAO_REDIRECT_URI = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
+
+    if (!KAKAO_CLIENT_ID || !KAKAO_REDIRECT_URI) {
+      console.error('카카오 OAuth 환경 변수가 설정되지 않았습니다.');
+      return;
+    }
+
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&state=${pageType}`;
+
+    window.location.href = kakaoAuthUrl;
   };
 
   return (
