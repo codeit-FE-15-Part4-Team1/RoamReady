@@ -41,7 +41,8 @@ export async function middleware(request: NextRequest) {
   }
 
   const path = request.nextUrl.pathname.replace(BRIDGE_API.PREFIX, '');
-  const destinationUrl = new URL(path, BACKEND_URL);
+  const correctedPath = path.startsWith('/') ? path.substring(1) : path;
+  const destinationUrl = new URL(correctedPath, BACKEND_URL);
   destinationUrl.search = request.nextUrl.search;
 
   const headers = new Headers(request.headers);
