@@ -3,15 +3,10 @@ import { NextResponse } from 'next/server';
 
 import { API_ENDPOINTS } from '@/shared/constants/endpoints';
 
-export async function GET() {
-  return NextResponse.json({ message: 'API 라우트 작동 확인' });
-}
-
 export async function DELETE(
   _request: NextRequest,
   { params }: { params: { activityId: string } },
 ) {
-  console.log('✅ PARAMS:', params);
   const { activityId } = params;
 
   try {
