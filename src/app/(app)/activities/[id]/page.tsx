@@ -21,6 +21,7 @@ export default async function ActivityDetailPage({
 
   const [activityResult, reviewsResult] = await Promise.allSettled([
     getActivityDetail(Number(id)),
+    // 리뷰 1페이지만 사전 패칭하여 초기 렌더 성능 향상 및 React Query 초기 캐시로 활용
     getActivityReviews(Number(id), 1, 3),
   ]);
 
@@ -72,7 +73,10 @@ export default async function ActivityDetailPage({
             />
           </section>
 
-          <ReviewSection activityId={Number(id)} review={initialReviews} />
+          <ReviewSection
+            activityId={Number(id)}
+            initialReviews={initialReviews}
+          />
         </div>
 
         {/* 오른쪽 예약 사이드 영역 (PC/태블릿에서만 노출) */}

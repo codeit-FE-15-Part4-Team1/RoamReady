@@ -35,18 +35,21 @@ const REVIEWS_PER_PAGE = 3; // 페이지당 리뷰 개수
  * ReviewSection
  * 체험 후기 섹션을 구성하며, 평균 평점에 따른 이모지/색상 표시, 리뷰 리스트, 페이지네이션을 포함한 컴포넌트
  *
- * @param review - 전체 후기 리스트와 평균 평점, 총 후기 개수를 포함한 객체
+ * @param activityId - 체험 ID
+ * @param initialReviews - 서버에서 사전 패칭된 1페이지 리뷰 데이터 (SSR/ISR 시 초기 렌더 최적화 목적)
  * @returns 평균 평점에 따른 시각적 표현, 개별 리뷰 카드 리스트, 페이지네이션 UI가 포함된 section 요소
  *
- * @example
- * <ReviewSection review={reviewData} />
+ * @remarks
+ * - `initialReviews`는 React Query의 `initialData`로 전달되어 1페이지 데이터에 대해서만 초기 캐시를 설정합니다.
+ * - 이후 페이지 전환 시(page > 1)에는 클라이언트에서 비동기적으로 새 리뷰 데이터를 요청합니다.
+ * - 리뷰 등록 후에는 `invalidateQueries(['activity-reviews', activityId, 1])`로 1페이지를 수동 무효화하여 최신 데이터로 갱신해야 합니다.
  */
 export default function ReviewSection({
   activityId,
-  review,
+  initialReviews,
 }: {
   activityId: number;
-  review: ReviewList;
+  initialReviews: ReviewList;
 }) {
   const [page, setPage] = useState(1);
 
@@ -54,9 +57,10 @@ export default function ReviewSection({
     activityId,
     page,
     REVIEWS_PER_PAGE,
-    review,
+    initialReviews,
   );
 
+  // 로딩 중 또는 데이터 없으면 로딩 UI 표시
   if (isLoading || !data) {
     return <div>로딩 중...</div>;
   }

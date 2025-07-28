@@ -46,9 +46,16 @@ export const getActivityDetail = async (activityId: number) => {
 };
 
 /**
- * 체험 리뷰 데이터 조회 API (ISR tag: 'activity-review')
- * @param activityId - 체험 ID
- * @returns 리뷰 목록
+ * 체험 리뷰 목록을 조회하는 API
+ *
+ * @param {number} activityId - 조회할 체험 ID
+ * @param {number} [page=1] - 조회할 페이지 번호 (기본값: 1)
+ * @param {number} [size=3] - 페이지당 리뷰 개수 (기본값: 3)
+ * @returns {Promise<ReviewList>} 리뷰 목록을 담은 Promise 객체
+ *
+ * @remarks
+ * - React Query ISR tag: `'activity-review'`
+ * - 페이징 처리된 리뷰 데이터를 반환합니다.
  */
 export const getActivityReviews = async (
   activityId: number,
