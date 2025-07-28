@@ -2,9 +2,7 @@
 import Image from 'next/image';
 
 import { useInfiniteNotifications } from '@/domain/Notification/hooks/useInfiniteNotifications';
-import type {
-  Notification,
-} from '@/domain/Notification/types/type';
+import type { Notification } from '@/domain/Notification/types/type';
 import Popover from '@/shared/components/ui/popover';
 import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
 
@@ -25,14 +23,8 @@ import NotificationCard from './NotificationCard';
 export default function Notification() {
   const isMobile = useMediaQuery('(max-width: 768px)');
 
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-    isError,
-  } = useInfiniteNotifications();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteNotifications();
 
   return (
     <Popover.Root>
