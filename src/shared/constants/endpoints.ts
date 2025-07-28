@@ -56,6 +56,8 @@ export const API_ENDPOINTS = {
     RESERVATION_DETAIL: (activityId: number) =>
       `my-activities/${activityId}/reservations`,
     ACTIVITY_DETAIL: (activityId: number) => `my-activities/${activityId}`,
+    RESERVATION: (activityId: number, reservationId: number) =>
+      `my-activities/${activityId}/reservations/${reservationId}`,
   },
 
   MY_NOTIFICATIONS: {

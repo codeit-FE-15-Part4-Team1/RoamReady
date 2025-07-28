@@ -1,13 +1,11 @@
 'use client';
+import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import ReservationCalendar from '@/domain/Reservation/components/reservation-calendar/ReservationCalendar';
 import ReservationSelect from '@/domain/Reservation/components/reservation-calendar/ReservationSelect';
-import {
-  getReservationDashboard,
-  type MonthlyReservation,
-} from '@/domain/Reservation/services/reservation-calendar';
+import { getReservationDashboard } from '@/domain/Reservation/services/reservation-calendar';
 
 import type { Activity } from '../../types/reservation';
 
@@ -21,30 +19,30 @@ export default function ReservationDashboard({
   );
   const [currentDate, setCurrentDate] = useState(dayjs());
 
-  // API 호출 결과 저장용 상태
-  const [monthlyReservations, setMonthlyReservations] = useState<
-    MonthlyReservation[]
-  >([]);
-
-  // 월별 예약 현황만 전역 상태로 관리리
-  useEffect(() => {
-    if (!selectedActivityId) return;
-
-    const fetchMonthlyData = async () => {
+  // useQuery로 데이터 관리
+  const {
+    data: monthlyReservations,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: [
+      'reservationDashboard',
+      selectedActivityId,
+      currentDate.year(),
+      currentDate.month(),
+    ],
+    queryFn: () => {
       const year = currentDate.year();
-      const month = currentDate.format('MM'); // 또는 padStart 방식
+      const month = currentDate.format('MM');
 
-      // getReservationDashboard는 scheduleId, status가 아닌 year, month를 받습니다.
-      const data = await getReservationDashboard(
-        selectedActivityId.toString(),
+      return getReservationDashboard(
+        selectedActivityId!.toString(),
         year.toString(),
         month,
       );
-      setMonthlyReservations(data || []);
-    };
-
-    fetchMonthlyData();
-  }, [selectedActivityId, currentDate]); // 체험 ID나 현재 날짜(월)가 바뀌면 재호출
+    },
+    enabled: !!selectedActivityId,
+  });
 
   const handleSelectActivity = (id: number) => {
     setSelectedActivityId(id);
@@ -53,6 +51,9 @@ export default function ReservationDashboard({
   const handleMonthChange = (newDate: dayjs.Dayjs) => {
     setCurrentDate(newDate);
   };
+
+  if (isLoading) return <div>캘린더를 불러오는 중입니다..</div>;
+  if (isError) return <div> 오류가 발생했습니다.</div>;
 
   return (
     <>
@@ -65,9 +66,8 @@ export default function ReservationDashboard({
       </div>
       <div className='w-full'>
         <ReservationCalendar
-          key={selectedActivityId}
           currentDate={currentDate}
-          monthlyReservations={monthlyReservations}
+          monthlyReservations={monthlyReservations || []}
           selectedActivityId={selectedActivityId ?? 0}
           onMonthChange={handleMonthChange}
         />

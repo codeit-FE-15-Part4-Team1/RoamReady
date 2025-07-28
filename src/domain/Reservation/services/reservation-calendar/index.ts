@@ -105,3 +105,29 @@ export const getReservationsBySchedule = async (
     return null;
   }
 };
+
+export const updateReservationStatus = async ({
+  activityId,
+  reservationId,
+  status,
+}: {
+  activityId: number;
+  reservationId: number;
+  status: 'pending' | 'confirmed' | 'declined';
+}) => {
+  try {
+    const response = await apiClient
+      .patch(
+        API_ENDPOINTS.MY_ACTIVITIES.RESERVATION(activityId, reservationId),
+        {
+          json: { status },
+        },
+      )
+      .json<ReservationItem[]>();
+
+    return response;
+  } catch (error) {
+    console.error('예약 상태 업데이트 실패:', error);
+    return null;
+  }
+};

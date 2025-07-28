@@ -6,42 +6,22 @@ import { API_ENDPOINTS } from './shared/constants/endpoints';
 
 const BACKEND_URL = process.env.API_BASE_URL;
 
-/**
- * @file middleware.ts - API 요청 프록시 및 인증 토큰 관리 미들웨어
- * @description
- * 이 미들웨어는 클라이언트의 API 요청을 가로채 백엔드 서버로 안전하게 전달하는 BFF(Backend for Frontend) 역할을 합니다.
- * HttpOnly 쿠키에 저장된 인증 토큰을 관리하여 클라이언트 측의 부담을 줄이고 보안을 강화합니다.
- *
- * ### 인증 흐름:
- * 1.  **요청 가로채기**: `/api/`로 시작하지만 `/api/auth/`가 아닌 모든 요청을 가로챕니다.
- * 2.  **토큰 추출 및 헤더 추가**: 브라우저가 보낸 HttpOnly 쿠키에서 `accessToken`을 추출하여 `Authorization` 헤더에 담아 실제 백엔드 API 서버로 요청을 보냅니다.
- * 3.  **성공적인 응답**: 백엔드 응답이 성공적이면 그대로 클라이언트에 전달합니다.
- * 4.  **Access Token 만료 처리 (401 에러)**:
- * - 백엔드에서 `401 Unauthorized` 에러를 받으면 `accessToken`이 만료된 것으로 간주합니다.
- * - 쿠키에 있는 `refreshToken`을 사용하여 백엔드의 토큰 갱신 엔드포인트(`/auth/token`)로 새로운 `accessToken`을 요청합니다.
- * 5.  **토큰 갱신 성공**:
- * - 새로운 `accessToken`을 받으면, 이를 새로운 HttpOnly 쿠키로 설정하여 클라이언트 응답에 포함시킵니다.
- * - 원래 실패했던 API 요청을 새로운 토큰으로 재시도하고, 그 결과를 클라이언트에 최종적으로 반환합니다.
- * 6.  **Refresh Token 만료 (갱신 실패)**:
- * - 토큰 갱신마저 실패하면 `refreshToken`도 만료된 것입니다.
- * - 이 경우, 원래의 `401` 에러를 클라이언트에 그대로 전달하며, 클라이언트는 로그아웃 처리를 해야 합니다.
- *
- * ### 토큰 생명주기 (Token Lifecycle):
- * - **로그인 시**: `api/auth/signin` 또는 `api/auth/signup`을 통해 완전히 새로운 토큰 세트(Access/Refresh)가 발급됩니다.
- * - **로그인 유지 시**: 이 미들웨어는 현재 세션의 토큰이 유효한 동안에만 `accessToken`의 자동 갱신을 처리합니다.
- * - **로그아웃 시**: `api/auth/signout`을 통해 쿠키의 모든 토큰이 삭제되며, 현재 세션은 완전히 종료됩니다.
- * 로그아웃은 이전 세션의 모든 인증 정보를 파기하므로, 재로그인 시에는 과거와 무관한 새로운 세션이 시작됩니다.
- *
- * @param {NextRequest} request - 들어오는 클라이언트 요청 객체
- * @returns {Promise<NextResponse>} 처리된 응답 객체
- */
 export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  console.log('🌐 [middleware] Incoming Request:', {
+    method: request.method,
+    pathname,
+    fullUrl: request.nextUrl.href,
+  });
+
   // AUTH 경로는 미들웨어를 통과
-  if (request.nextUrl.pathname.startsWith(`${BRIDGE_API.AUTH_PREFIX}/`)) {
+  if (pathname.startsWith(`${BRIDGE_API.AUTH_PREFIX}/`)) {
+    console.log('🔓 [middleware] Auth path bypassed:', pathname);
     return NextResponse.next();
   }
 
-  const path = request.nextUrl.pathname.replace(BRIDGE_API.PREFIX, '');
+  const path = pathname.replace(BRIDGE_API.PREFIX, '');
   const correctedPath = path.startsWith('/') ? path.substring(1) : path;
   const destinationUrl = new URL(correctedPath, BACKEND_URL);
   destinationUrl.search = request.nextUrl.search;
@@ -54,6 +34,9 @@ export async function middleware(request: NextRequest) {
 
   if (accessToken) {
     headers.set('Authorization', `Bearer ${accessToken}`);
+    console.log('🪪 [middleware] Access token found');
+  } else {
+    console.warn('⚠️ [middleware] Access token missing');
   }
 
   const method = request.method;
@@ -64,7 +47,13 @@ export async function middleware(request: NextRequest) {
   let rawBody: string | null = null;
   if (isSafeToClone && request.body) {
     rawBody = await request.text();
+    console.log('📦 [middleware] Request body captured');
   }
+
+  console.log(
+    '➡️ [middleware] Proxying request to:',
+    destinationUrl.toString(),
+  );
 
   let response = await fetch(destinationUrl, {
     method,
@@ -75,7 +64,11 @@ export async function middleware(request: NextRequest) {
     signal: AbortSignal.timeout(30000),
   });
 
+  console.log('📥 [middleware] Initial response status:', response.status);
+
   if (response.status === 401 && refreshToken) {
+    console.warn('🔁 [middleware] Access token expired, attempting refresh...');
+
     const refreshResponse = await fetch(
       `${BACKEND_URL}${API_ENDPOINTS.AUTH.REFRESH_TOKEN}`,
       {
@@ -88,6 +81,10 @@ export async function middleware(request: NextRequest) {
     if (refreshResponse.ok) {
       const tokens = await refreshResponse.json();
       const newAccessToken = tokens.accessToken;
+
+      console.log(
+        '✅ [middleware] Token refreshed. Retrying original request.',
+      );
 
       headers.set('Authorization', `Bearer ${newAccessToken}`);
 
@@ -116,6 +113,7 @@ export async function middleware(request: NextRequest) {
 
       return finalResponse;
     } else {
+      console.error('❌ [middleware] Token refresh failed');
     }
   }
 
