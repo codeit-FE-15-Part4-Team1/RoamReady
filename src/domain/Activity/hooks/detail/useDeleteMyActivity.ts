@@ -29,7 +29,7 @@ export const useDeleteMyActivity = () => {
         case 404:
           showError('존재하지 않는 체험입니다.');
           break;
-        case 409:
+        case 400:
           showWarning('신청 예약이 있는 체험은 삭제할 수 없습니다.');
           break;
         default:
