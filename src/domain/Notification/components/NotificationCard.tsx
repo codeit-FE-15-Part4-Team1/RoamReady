@@ -144,7 +144,7 @@ export default function NotificationCard({
                     </h2>
 
                     {/* 알림 삭제 버튼 */}
-                    <NotificationDelete />
+                    <NotificationDelete id={item.id} />
                   </div>
 
                   {/* 일정 정보 */}

@@ -1,4 +1,8 @@
+'use client';
 import { X } from 'lucide-react';
+import { MouseEvent } from 'react';
+
+import { useDeleteNotification } from '@/domain/Notification/hooks/useDeleteNotification';
 
 /**
  * NotificationDelete 컴포넌트
@@ -12,15 +16,20 @@ import { X } from 'lucide-react';
  * @example
  * <NotificationDelete />
  */
-export default function NotificationDelete() {
+export default function NotificationDelete({ id }: { id: number }) {
+  const { mutate: deleteNotification } = useDeleteNotification();
+
+  const handleDelete = async (e: MouseEvent<HTMLButtonElement>) => {
+    console.log('삭제 버튼 클릭');
+    e.preventDefault();
+    e.stopPropagation();
+    deleteNotification(id);
+  };
+
   return (
     <button
       type='button'
-      onClick={(e) => {
-        e.preventDefault(); // 기본 동작 방지
-        e.stopPropagation(); // 이벤트 버블링 방지
-        alert('알림 삭제');
-      }}
+      onClick={handleDelete}
       className='h-20 w-20 cursor-pointer text-gray-950'
     >
       <X className='h-13 w-13' />
