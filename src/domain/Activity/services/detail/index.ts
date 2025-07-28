@@ -4,6 +4,7 @@ import { apiClient } from '@/shared/libs/apiClient';
 import type {
   AvailableScheduleParams,
   ReservableDate,
+  ReviewList,
 } from '../../types/detail/types';
 
 /**
@@ -52,15 +53,12 @@ export const getActivityDetail = async (activityId: number) => {
  * @param {number} [size=3] - 페이지당 리뷰 개수 (기본값: 3)
  * @returns {Promise<ReviewList>} 리뷰 목록을 담은 Promise 객체
  *
- * @remarks
- * - React Query ISR tag: `'activity-review'`
- * - 페이징 처리된 리뷰 데이터를 반환합니다.
  */
 export const getActivityReviews = async (
   activityId: number,
   page = 1,
   size = 3,
-) => {
+): Promise<ReviewList> => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}activities/${activityId}/reviews?page=${page}&size=${size}`,
   );
