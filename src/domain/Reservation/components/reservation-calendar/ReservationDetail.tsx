@@ -114,7 +114,7 @@ export default function ReservationDetail({
   }
 
   return (
-    <div className='tablet:grid tablet:max-h-full tablet:grid-cols-2 tablet:overflow-y-auto desktop:flex desktop:flex-col scrollbar-none flex h-full flex-col gap-30 space-y-2'>
+    <div className='tablet:grid tablet:min-h-[20rem] tablet:max-h-full tablet:grid-cols-2 tablet:overflow-y-auto desktop:flex desktop:flex-col scrollbar-none flex h-full flex-col gap-30 space-y-2'>
       <div className='flex flex-col gap-12'>
         <h2 className='font-size-18 font-bold'>예약 시간</h2>
         <Select.Root

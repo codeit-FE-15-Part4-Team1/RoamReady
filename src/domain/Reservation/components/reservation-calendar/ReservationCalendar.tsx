@@ -7,8 +7,7 @@ import { useCalendar } from '../../hooks/useCalendar';
 import type { MonthlyReservation } from '../../services/reservation-calendar';
 import { WEEKDAYS } from '../../utils/reservation';
 import CalendarHeader from './CalendarHeader';
-import DayCellBottomSheet from './DayCellBottomSheet';
-import DayCellPopover from './DayCellPopover';
+import DayCell from './DayCell'; // 통합된 컴포넌트 import
 
 interface ReservationCalendarProps {
   currentDate: dayjs.Dayjs;
@@ -24,9 +23,10 @@ export default function ReservationCalendar({
   onMonthChange,
 }: ReservationCalendarProps) {
   const isDesktop = useMediaQuery('(min-width: 1024px)');
-  const DayCellComponent = isDesktop ? DayCellPopover : DayCellBottomSheet;
 
-  // useCalendar 훅을 props의 currentDate를 사용하도록 수정
+  // 🔥 미디어쿼리 결과에 따라 displayMode 결정
+  const displayMode = isDesktop ? 'popover' : 'bottomsheet';
+
   const { today, days, getReservationForDate, prevMonth, nextMonth } =
     useCalendar(monthlyReservations, currentDate, onMonthChange);
 
@@ -55,7 +55,7 @@ export default function ReservationCalendar({
 
       <div className='grid auto-rows-fr grid-cols-7' role='grid'>
         {days.map((day, index) => (
-          <DayCellComponent
+          <DayCell
             key={day.format('YYYY-MM-DD')}
             day={day}
             isCurrentMonth={day.isSame(currentDate, 'month')}
@@ -63,6 +63,7 @@ export default function ReservationCalendar({
             isLastRow={index >= days.length - 7}
             reservation={getReservationForDate(day)}
             selectedActivityId={selectedActivityId}
+            displayMode={displayMode} // 🔥 displayMode prop 추가
           />
         ))}
       </div>
