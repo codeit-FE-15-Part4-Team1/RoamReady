@@ -1,29 +1,20 @@
 'use client';
 
+import Link from 'next/link';
+
+import MyReservation from '@/domain/Activity/components/detail/responsive-wrappers/MyReservation';
 import { Activity, ReviewList } from '@/domain/Activity/types/detail/types';
+import Button from '@/shared/components/Button';
 import Footer from '@/shared/components/layouts/footer/Footer';
 import { BREAKPOINTS } from '@/shared/constants/breakpoints';
 import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
+import { useRoamReadyStore } from '@/shared/store';
 
 import ActivitySummary from '../activity-summary/ActivitySummary';
 import ReservationMobile from '../Reservation/ReservationMobile';
 import ReservationPC from '../Reservation/ReservationPC';
 import ReservationTablet from '../Reservation/ReservationTablet';
 
-/**
- * ReservationWrapper
- * 디바이스 화면 크기에 따라 알맞은 예약 컴포넌트(모바일, 태블릿, PC)를 조건부로 렌더링하는 래퍼 컴포넌트
- * - 모바일: ReservationMobile + Footer
- * - 태블릿: ReservationTablet + Footer (약간의 여백 포함)
- * - PC: ActivitySummary + ReservationPC (좌측 고정 영역)
- *
- * @param activity - 예약 대상 체험의 정보 객체 (제목, 가격, 카테고리 등 포함)
- * @param reviews - 체험에 대한 리뷰 정보 객체 (평균 평점, 리뷰 수 등 포함)
- * @returns 모바일은 ReservationMobile + Footer, 태블릿은 ReservationTablet + Footer, PC는 ActivitySummary + ReservationPC를 반환
- *
- * @example
- * <ReservationWrapper activity={activityData} reviews={reviewData} />
- */
 export default function ReservationWrapper({
   activity,
   reviews,
@@ -34,31 +25,51 @@ export default function ReservationWrapper({
   const isMobile = useMediaQuery(BREAKPOINTS.MOBILE);
   const isTablet = useMediaQuery(BREAKPOINTS.TABLET);
 
-  if (isMobile) {
-    return (
-      <>
-        <ReservationMobile activity={activity} />
+  const user = useRoamReadyStore((state) => state.user);
+  const isOwner = user?.id === activity.userId;
 
-        <Footer />
-      </>
-    );
-  }
-
-  if (isTablet) {
+  // PC
+  if (!isMobile && !isTablet) {
     return (
-      <>
-        <ReservationTablet activity={activity} />
-        <div className='pt-100'>
-          <Footer />
+      <div className='sticky top-40 flex flex-col gap-38'>
+        <div className='w-400'>
+          <ActivitySummary activity={activity} review={reviews} />
         </div>
-      </>
+        {isOwner && <MyReservation />}
+        {!isOwner && <ReservationPC activity={activity} />}
+      </div>
     );
   }
 
+  // 모바일/태블릿
+  // 모바일/태블릿
   return (
-    <div className='sticky top-40 flex flex-col gap-38'>
-      <ActivitySummary activity={activity} review={reviews} />
-      <ReservationPC activity={activity} />
-    </div>
+    <>
+      {isOwner ? (
+        <>
+          <div className='flex-center pt-50'>
+            <Button
+              className='hover:bg-brand-2 font-size-12 h-40 w-160 border-gray-50 hover:text-white'
+              asChild
+            >
+              <Link href='/mypage/reservations-status'>
+                내 체험 예약 현황 보러가기
+              </Link>
+            </Button>
+          </div>
+        </>
+      ) : (
+        <>
+          {isMobile ? (
+            <ReservationMobile activity={activity} />
+          ) : (
+            <ReservationTablet activity={activity} />
+          )}
+          <div className={isTablet ? 'pt-100' : ''}>
+            <Footer />
+          </div>
+        </>
+      )}
+    </>
   );
 }

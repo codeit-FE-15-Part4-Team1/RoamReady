@@ -52,7 +52,8 @@ export default function ReservationPC({ activity }: { activity: Activity }) {
     try {
       await reserveAction(activity.id, selectedScheduleId, participantCount);
       showSuccess('예약이 완료되었습니다!');
-      router.refresh();
+      setSelectedDate(null);
+      setSelectedTime(null);
     } catch (err) {
       showError(
         err instanceof Error
