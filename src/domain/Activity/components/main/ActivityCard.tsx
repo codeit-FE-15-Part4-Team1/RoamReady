@@ -30,11 +30,11 @@ export default function ActivityCard({
   return (
     <article
       className={cn(
-        'flex w-full max-w-350 transform flex-col rounded-4xl bg-white p-4 shadow-lg transition-transform duration-300 hover:-translate-y-2',
+        'flex w-full max-w-350 transform flex-col rounded-3xl bg-white p-6 shadow-lg transition-transform duration-300 hover:-translate-y-2',
         className,
       )}
     >
-      <figure className='relative aspect-square overflow-hidden rounded-4xl'>
+      <figure className='relative aspect-[5/6] overflow-hidden rounded-3xl'>
         <Image
           src={bannerImageUrl}
           alt={`${title} 액티비티 이미지`}
@@ -43,7 +43,7 @@ export default function ActivityCard({
         />
 
         <div className='absolute inset-0 flex items-start justify-between p-12'>
-          <span className='font-size-14 rounded-3xl bg-gray-800/50 px-8 py-2 font-semibold text-white shadow-lg backdrop-blur-xs select-none'>
+          <span className='font-size-14 rounded-3xl bg-gray-800/40 px-8 py-2 font-semibold text-white backdrop-blur-xs select-none'>
             {category}
           </span>
           <div className='flex-center size-25 active:scale-90'>
