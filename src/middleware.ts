@@ -32,6 +32,13 @@ const BACKEND_URL = process.env.API_BASE_URL;
  * - **로그아웃 시**: `api/auth/signout`을 통해 쿠키의 모든 토큰이 삭제되며, 현재 세션은 완전히 종료됩니다.
  * 로그아웃은 이전 세션의 모든 인증 정보를 파기하므로, 재로그인 시에는 과거와 무관한 새로운 세션이 시작됩니다.
  *
+ * ### 에러 처리 흐름:
+ * - 이 미들웨어는 모든 에러를 기본적으로 '통과'시키지만, **오직 `401 Unauthorized` 에러에 대해서만 특별한 조치(토큰 재발급)**를 시도합니다.
+ * - `401` 이외의 모든 백엔드 에러(4xx, 5xx)는 클라이언트의 `apiClient`로 그대로 전달되어 최종적으로 처리됩니다.
+ * - `try...catch` 블록은 백엔드 서버 다운, 네트워크 문제 등 `fetch` 호출 자체가 실패하는 **네트워크 레벨의 에러**를 처리합니다.
+ * 이 경우, 클라이언트에게 `502 Bad Gateway` 상태 코드와 함께 일관된 JSON 에러를 반환합니다.
+ *
+ *
  * @param {NextRequest} request - 들어오는 클라이언트 요청 객체
  * @returns {Promise<NextResponse>} 처리된 응답 객체
  */
@@ -65,62 +72,74 @@ export async function middleware(request: NextRequest) {
     rawBody = await request.text();
   }
 
-  let response = await fetch(destinationUrl, {
-    method,
-    headers,
-    body: isSafeToClone ? rawBody : request.body,
-    ...(request.body &&
-      !['GET', 'HEAD'].includes(method) && { duplex: 'half' }),
-    signal: AbortSignal.timeout(30000),
-  });
+  try {
+    let response = await fetch(destinationUrl, {
+      method,
+      headers,
+      body: isSafeToClone ? rawBody : request.body,
+      ...(request.body &&
+        !['GET', 'HEAD'].includes(method) && { duplex: 'half' }),
+      signal: AbortSignal.timeout(30000),
+    });
 
-  if (response.status === 401 && refreshToken) {
-    const refreshResponse = await fetch(
-      `${BACKEND_URL}${API_ENDPOINTS.AUTH.REFRESH_TOKEN}`,
+    if (response.status === 401 && refreshToken) {
+      const refreshResponse = await fetch(
+        `${BACKEND_URL}${API_ENDPOINTS.AUTH.REFRESH_TOKEN}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ refreshToken }),
+        },
+      );
+
+      if (refreshResponse.ok) {
+        const tokens = await refreshResponse.json();
+        const newAccessToken = tokens.accessToken;
+        console.log('새로운 Access Token 발급 성공');
+
+        headers.set('Authorization', `Bearer ${newAccessToken}`);
+
+        response = await fetch(destinationUrl, {
+          method,
+          headers,
+          body: isSafeToClone ? rawBody : request.body,
+          ...(request.body &&
+            !['GET', 'HEAD'].includes(method) && { duplex: 'half' }),
+          signal: AbortSignal.timeout(30000),
+        });
+
+        const finalResponse = new NextResponse(response.body, {
+          status: response.status,
+          statusText: response.statusText,
+          headers: response.headers,
+        });
+
+        finalResponse.cookies.set('accessToken', newAccessToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          path: '/',
+          maxAge: 60 * 60,
+          sameSite: 'lax',
+        });
+
+        return finalResponse;
+      } else {
+        console.log('Refresh Token 만료, 로그인이 필요합니다.');
+      }
+    }
+
+    return response;
+  } catch (error) {
+    console.error('[Middleware] Fetch Error:', error);
+
+    return new NextResponse(
+      JSON.stringify({ message: '백엔드 서버와 통신할 수 없습니다.' }),
       {
-        method: 'POST',
+        status: 502,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refreshToken }),
       },
     );
-
-    if (refreshResponse.ok) {
-      const tokens = await refreshResponse.json();
-      const newAccessToken = tokens.accessToken;
-      console.log('새로운 Access Token 발급 성공');
-
-      headers.set('Authorization', `Bearer ${newAccessToken}`);
-
-      response = await fetch(destinationUrl, {
-        method,
-        headers,
-        body: isSafeToClone ? rawBody : request.body,
-        ...(request.body &&
-          !['GET', 'HEAD'].includes(method) && { duplex: 'half' }),
-        signal: AbortSignal.timeout(30000),
-      });
-
-      const finalResponse = new NextResponse(response.body, {
-        status: response.status,
-        statusText: response.statusText,
-        headers: response.headers,
-      });
-
-      finalResponse.cookies.set('accessToken', newAccessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        path: '/',
-        maxAge: 60 * 60,
-        sameSite: 'lax',
-      });
-
-      return finalResponse;
-    } else {
-      console.log('Refresh Token 만료, 로그인이 필요합니다.');
-    }
   }
-
-  return response;
 }
 
 export const config = {
