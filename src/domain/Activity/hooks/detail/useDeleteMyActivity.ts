@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { deleteMyActivity } from '@/domain/Activity/services/detail/deleteMyActivity';
+import { deleteMyActivity } from '@/domain/Activity/services/detail';
 import { useToast } from '@/shared/hooks/useToast';
 
 /**

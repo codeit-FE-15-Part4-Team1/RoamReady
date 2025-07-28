@@ -1,20 +1,45 @@
+import { notFound } from 'next/navigation';
+
 import ActivityImg from '@/domain/Activity/components/detail/activity-img/ActivityImg';
 import DescriptionSection from '@/domain/Activity/components/detail/description/DescriptionSection';
 import KaKaoMap from '@/domain/Activity/components/detail/kakao-map/KaKaoMap';
 import ActivitySummaryWrapper from '@/domain/Activity/components/detail/responsive-wrappers/ActivitySummaryWrapper';
 import ReservationWrapper from '@/domain/Activity/components/detail/responsive-wrappers/ReservationWrapper';
 import ReviewSection from '@/domain/Activity/components/detail/Review/ReviewSection';
-import { getActivityDetail } from '@/domain/Activity/services/detail/getActivityDetail';
-import { getActivityReviews } from '@/domain/Activity/services/detail/getActivityReiviews';
+import {
+  getActivityDetail,
+  getActivityReviews,
+} from '@/domain/Activity/services/detail';
 
 export default async function ActivityDetailPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const id = Number(params.id);
-  const activity = await getActivityDetail(id);
-  const reviews = await getActivityReviews(id);
+  const { id } = await params;
+
+  const [activityResult, reviewsResult] = await Promise.allSettled([
+    getActivityDetail(Number(id)),
+    getActivityReviews(Number(id)),
+  ]);
+
+  if (activityResult.status !== 'fulfilled') {
+    const error = activityResult.reason;
+    // 404 에러면 notFound() 호출해서 404 페이지 띄우기
+    if (error?.status === 404) {
+      notFound();
+    }
+    console.error('활동 상세 정보를 불러오는 데 실패했습니다:', error);
+    throw new Error('활동 정보를 불러오지 못했습니다.');
+  }
+
+  if (reviewsResult.status !== 'fulfilled') {
+    console.warn('리뷰 정보를 불러오는 데 실패했습니다:', reviewsResult.reason);
+  }
+
+  const activity = activityResult.value;
+  const reviews =
+    reviewsResult.status === 'fulfilled' ? reviewsResult.value : [];
 
   return (
     <>

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getAvailableSchedule } from '../../services/detail/getAvailableSchedule';
+import { getAvailableSchedule } from '@/domain/Activity/services/detail';
+
 import {
   AvailableScheduleParams,
   ReservableDate,
