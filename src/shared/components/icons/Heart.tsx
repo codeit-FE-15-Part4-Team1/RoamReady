@@ -13,8 +13,8 @@ export const Heart: React.FC<HeartIconProps> = ({
   ...props
 }) => {
   const baseClass = cn(
-    'size-14 stroke-white',
-    filled ? 'fill-rose-600' : 'fill-gray-900/50',
+    'size-14 stroke-white/80 ',
+    filled ? 'fill-rose-600 ' : 'fill-gray-800/20 ',
     className,
   );
 
