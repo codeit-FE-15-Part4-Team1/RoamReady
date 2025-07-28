@@ -15,11 +15,17 @@ export const getActivities = async (
     ...params,
   };
 
-  const data = await activityClient
-    .get('activities', {
-      searchParams,
-    })
-    .json();
+  console.log('🔍 [getActivities] 호출 with params:', searchParams);
+
+  const response = await activityClient.get('activities', {
+    searchParams,
+  });
+
+  console.log('✅ [getActivities] 응답 수신됨:', response);
+
+  const data = await response.json();
+
+  console.log('📦 [getActivities] JSON 파싱됨:', data);
 
   const parsed = getActivitiesResponseOffsetSchema.safeParse(data);
 

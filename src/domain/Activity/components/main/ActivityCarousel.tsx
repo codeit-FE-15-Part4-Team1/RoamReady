@@ -73,7 +73,7 @@ export default function ActivityCarousel({
   return (
     <article>
       <section className='mb-5 flex items-center justify-between'>
-        <h2 className='font-size-18 desktop:font-size-20 font-bold text-gray-900'>
+        <h2 className='font-size-24 desktop:font-size-26 mb-10 font-bold text-gray-900'>
           🔥 인기 체험
         </h2>
         <div className='flex gap-4'>

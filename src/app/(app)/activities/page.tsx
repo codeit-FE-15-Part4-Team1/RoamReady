@@ -7,9 +7,7 @@ import {
 import ActivityCarousel from '@/domain/Activity/components/main/ActivityCarousel';
 import ActivitySection from '@/domain/Activity/components/main/ActivitySection';
 import { activitiesKeys } from '@/domain/Activity/libs/main/queryKeys';
-import {
-  GetActivitiesOffsetResponse,
-} from '@/domain/Activity/schemas/main';
+import { GetActivitiesOffsetResponse } from '@/domain/Activity/schemas/main';
 import { getActivities } from '@/domain/Activity/services/main/getActivities';
 
 interface ActivityPageProps {
@@ -53,7 +51,7 @@ export default async function ActivityPage({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className='space-y-40'>
+      <div className='space-y-60'>
         <ActivityCarousel
           activities={carouselData?.activities?.slice(0, 10) ?? []}
         />
