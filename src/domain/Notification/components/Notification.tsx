@@ -1,11 +1,9 @@
 'use client';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
 
-import { getNotifications } from '@/domain/Notification/services/getNotification';
+import { useInfiniteNotifications } from '@/domain/Notification/hooks/useInfiniteNotifications';
 import type {
   Notification,
-  NotificationResponse,
 } from '@/domain/Notification/types/type';
 import Popover from '@/shared/components/ui/popover';
 import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
@@ -26,23 +24,15 @@ import NotificationCard from './NotificationCard';
  */
 export default function Notification() {
   const isMobile = useMediaQuery('(max-width: 768px)');
-  const [notificationData, setNotificationData] =
-    useState<NotificationResponse>({
-      totalCount: 0,
-      notifications: [],
-      cursorId: null,
-    });
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const data = await getNotifications();
-        setNotificationData(data);
-      } catch (error) {
-        console.error('알림 불러오기 실패:', error);
-      }
-    })();
-  }, []);
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+  } = useInfiniteNotifications();
 
   return (
     <Popover.Root>
@@ -53,7 +43,12 @@ export default function Notification() {
         position={isMobile ? 'bottom-center' : 'bottom-end'}
         className='scrollbar-none max-h-320 rounded-3xl border-none p-0 shadow-[0_4px_20px_rgba(0,0,0,0.1)]'
       >
-        <NotificationCard notification={notificationData} />
+        <NotificationCard
+          fetchNextPage={fetchNextPage}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          notification={data}
+        />
       </Popover.Content>
     </Popover.Root>
   );

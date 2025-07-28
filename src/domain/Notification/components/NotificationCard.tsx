@@ -1,8 +1,12 @@
+'use client';
+
+import { InfiniteData } from '@tanstack/react-query';
 import { Calendar, Timer, X } from 'lucide-react';
 import Link from 'next/link';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { getTimeAgo } from '@/domain/Activity/utils/getTimeAgo';
+import NotificationSkeleton from '@/domain/Notification/components/NotificationSkeleton';
 import { usePopover } from '@/shared/components/ui/popover/PopoverContext';
 
 import type { NotificationResponse } from '../types/type';
@@ -29,6 +33,13 @@ const CloseButton = () => {
   );
 };
 
+interface NotificationCardProps {
+  notification?: InfiniteData<NotificationResponse>;
+  fetchNextPage: () => void;
+  hasNextPage?: boolean;
+  isFetchingNextPage: boolean;
+}
+
 /**
  * NotificationCard 컴포넌트
  *
@@ -43,14 +54,24 @@ const CloseButton = () => {
  */
 export default function NotificationCard({
   notification,
-}: {
-  notification: NotificationResponse;
-}) {
-  const content = notification.notifications;
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
+}: NotificationCardProps) {
+  const observerRef = useRef<HTMLDivElement | null>(null);
 
-  /**
-   * 알림 리스트를 updatedAt 기준 내림차순 정렬
-   */
+  const content = useMemo(() => {
+    const all = notification?.pages.flatMap((page) => page.notifications) ?? [];
+    const seen = new Set<number>();
+    return all.filter((item) => {
+      if (seen.has(item.id)) return false;
+      seen.add(item.id);
+      return true;
+    });
+  }, [notification]);
+
+  const totalCount = notification?.pages[0]?.totalCount ?? 0;
+
   const sortedContent = useMemo(
     () =>
       [...content].sort(
@@ -59,20 +80,39 @@ export default function NotificationCard({
     [content],
   );
 
+  useEffect(() => {
+    const target = observerRef.current;
+    if (!target || !hasNextPage || isFetchingNextPage) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 1.0 },
+    );
+
+    observer.observe(target);
+
+    return () => {
+      observer.unobserve(target);
+      observer.disconnect();
+    };
+  }, [hasNextPage, isFetchingNextPage]);
+
   return (
     <div className='h-fit w-230 rounded-4xl bg-white'>
       {/* 상단 고정 헤더 영역 */}
       <div className='sticky top-0 z-10 w-full border-b border-gray-50 bg-white p-10'>
         <div className='flex w-full justify-between'>
-          <h1 className='font-size-16 font-bold'>
-            알림 {notification.totalCount}개
-          </h1>
+          <h1 className='font-size-16 font-bold'>알림 {totalCount}개</h1>
           <CloseButton />
         </div>
       </div>
 
       {/* 알림 리스트 */}
-      <ul>
+      <ul className='scrollbar-none max-h-260 overflow-y-auto'>
         {sortedContent.map((item) => {
           const time = getTimeAgo(item.updatedAt);
 
@@ -125,6 +165,18 @@ export default function NotificationCard({
             </li>
           );
         })}
+
+        {/* 무한스크롤 트리거용 sentinel */}
+        {hasNextPage && (
+          <li>
+            <div ref={observerRef} className='h-10' />
+          </li>
+        )}
+
+        {/* 로딩 표시 */}
+        {isFetchingNextPage && <NotificationSkeleton />}
+
+        {!hasNextPage && null}
       </ul>
     </div>
   );
