@@ -10,12 +10,23 @@ import { deleteNotification } from '@/domain/Notification/services';
 import { NotificationResponse } from '@/domain/Notification/types/type';
 import { useToast } from '@/shared/hooks/useToast';
 
+/**
+ * 알림을 삭제 커스텀 훅
+ *
+ * - 성공 시: 알림 목록 캐시에서 해당 알림을 제거하고 성공 메시지를 표시함
+ * - 실패 시: 상태 코드에 따라 적절한 에러 메시지를 표시함
+ *
+ * @returns {UseMutationResult<void, Error & { status?: number }, number>} 삭제 뮤테이션 훅
+ */
 export const useDeleteNotification = () => {
   const { showSuccess, showError } = useToast();
   const queryClient = useQueryClient();
 
   return useMutation({
+    // 실제 삭제 API 호출
     mutationFn: (id: number) => deleteNotification(id),
+
+    // 캐시된 알림 목록에서 해당 ID의 알림을 제거
     onSuccess: (_, id) => {
       showSuccess('알림이 삭제되었습니다.');
 
@@ -37,10 +48,13 @@ export const useDeleteNotification = () => {
         },
       );
     },
+
+    // 실패 시 실행되는 콜백
     onError: async (error: Error & { status?: number }) => {
       const status = error.status;
       console.log(status);
 
+      // 상태 코드에 따라 다른 메시지 표시
       switch (status) {
         case 401:
           showError('로그인이 필요합니다.');
