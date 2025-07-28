@@ -1,12 +1,18 @@
+import dayjs from 'dayjs';
 import { X } from 'lucide-react';
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { BottomSheet } from '@/shared/components/ui/bottom-sheet';
 import { useBottomSheet } from '@/shared/components/ui/bottom-sheet/BottomSheetContext';
 import Tabs from '@/shared/components/ui/tabs';
 
-import { allReservations } from '../../mock/reservation';
-import type { DayCellProps } from '../../types/reservation';
+import {
+  getReservationsBySchedule,
+  getSchedulesByDate,
+  type MonthlyReservation,
+  type ScheduleItem,
+} from '../../services/reservation-calendar';
+import type { ReservationItem } from '../../types/reservation';
 import {
   getColorClassByStatus,
   getDisplayItems,
@@ -14,7 +20,15 @@ import {
 } from '../../utils/reservation';
 import ReservationDetail from './ReservationDetail';
 
-// 팝 오버 닫기 버튼튼
+interface DayCellProps {
+  day: dayjs.Dayjs;
+  isCurrentMonth: boolean;
+  isToday: boolean;
+  isLastRow: boolean;
+  reservation: MonthlyReservation | null;
+  selectedActivityId: number | null;
+}
+
 const CloseButton = () => {
   const { onOpenChange } = useBottomSheet();
 
@@ -25,20 +39,35 @@ const CloseButton = () => {
   );
 };
 
-export default function DayCell({
+export default function DayCellBottomSheet({
   day,
   isCurrentMonth,
   isToday,
   isLastRow,
   reservation,
+  selectedActivityId,
 }: DayCellProps) {
-  // 표시할 예약 상태들을 우선순위별로 처리
+  const [schedules, setSchedules] = useState<ScheduleItem[]>([]);
+  const [reservationsByStatus, setReservationsByStatus] = useState<{
+    pending: ReservationItem[];
+    confirmed: ReservationItem[];
+    declined: ReservationItem[];
+  }>({
+    pending: [],
+    confirmed: [],
+    declined: [],
+  });
+
+  const [activeTab, setActiveTab] = useState<
+    'pending' | 'confirmed' | 'declined'
+  >('pending');
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+
   const displayItems = useMemo(
     () => getDisplayItems(reservation),
     [reservation],
   );
 
-  // 반응형 스타일 계산 (PC 기준 유지, 모바일만 축소)
   const styles = useMemo(() => {
     const cellClasses = `
       relative flex w-full min-h-[8rem] tablet:min-h-[12rem] cursor-pointer flex-col items-center py-6 tablet:py-12 font-size-14 tablet:font-size-14
@@ -64,33 +93,90 @@ export default function DayCell({
 
   const hasReservations = displayItems.length > 0;
 
-  // 현재 날짜에 해당하는 예약만 필터링
-  const currentDayString = day.format('YYYY-MM-DD');
-  const currentDayReservations = allReservations.filter(
-    (r) => r.date === currentDayString,
+  const reservationCounts = useMemo(() => {
+    if (!reservation?.reservations) {
+      return { pending: 0, confirmed: 0, declined: 0 };
+    }
+
+    return {
+      pending: reservation.reservations.pending || 0,
+      confirmed: reservation.reservations.confirmed || 0,
+      declined: reservation.reservations.completed || 0,
+    };
+  }, [reservation]);
+
+  const totalReservations =
+    reservationCounts.pending +
+    reservationCounts.confirmed +
+    reservationCounts.declined;
+
+  const handleDateClick = useCallback(async () => {
+    if (!selectedActivityId) return;
+
+    setIsBottomSheetOpen(true);
+    const dateString = day.format('YYYY-MM-DD');
+
+    const scheduleData = await getSchedulesByDate(
+      selectedActivityId,
+      dateString,
+    );
+    setSchedules(scheduleData || []);
+
+    if (scheduleData && scheduleData.length > 0) {
+      const firstScheduleId = scheduleData[0].scheduleId;
+      await loadAllStatuses(firstScheduleId);
+    }
+  }, [day, selectedActivityId]);
+
+  const loadAllStatuses = useCallback(
+    async (scheduleId: number) => {
+      if (!selectedActivityId) return;
+
+      const [pending, confirmed, declined] = await Promise.all([
+        getReservationsBySchedule(selectedActivityId, scheduleId, 'pending'),
+        getReservationsBySchedule(selectedActivityId, scheduleId, 'confirmed'),
+        getReservationsBySchedule(selectedActivityId, scheduleId, 'declined'),
+      ]);
+
+      setReservationsByStatus({
+        pending: pending || [],
+        confirmed: confirmed || [],
+        declined: declined || [],
+      });
+    },
+    [selectedActivityId],
   );
 
-  // 상태별로 예약 데이터 필터링 (현재 날짜 기준)
-  const confirmedReservations = currentDayReservations.filter(
-    (r) => r.status === 'confirmed',
-  );
-  const pendingReservations = currentDayReservations.filter(
-    (r) => r.status === 'pending',
-  );
-  const completedReservations = currentDayReservations.filter(
-    (r) => r.status === 'completed',
+  const handleTabChange = useCallback(
+    async (status: 'pending' | 'confirmed' | 'declined') => {
+      setActiveTab(status);
+    },
+    [],
   );
 
-  // 실제 예약 수 계산
-  const totalReservations = currentDayReservations.length;
-  const confirmedCount = confirmedReservations.length;
-  const pendingCount = pendingReservations.length;
-  const completedCount = completedReservations.length;
+  const handleTimeSlotSelect = useCallback(
+    async (scheduleId: number) => {
+      await loadAllStatuses(scheduleId);
+    },
+    [loadAllStatuses],
+  );
+
+  const handleApprove = useCallback((reservationId: number) => {
+    console.log('승인:', reservationId);
+  }, []);
+
+  const handleReject = useCallback((reservationId: number) => {
+    console.log('거절:', reservationId);
+  }, []);
 
   return (
-    <BottomSheet.Root>
+    <BottomSheet.Root
+      open={isBottomSheetOpen}
+      onOpenChange={setIsBottomSheetOpen}
+    >
       <BottomSheet.Trigger>
         <div
+          onClick={handleDateClick}
           role='gridcell'
           aria-label={`${day.format('M월 D일')}`}
           className={styles.cellClasses}
@@ -134,49 +220,67 @@ export default function DayCell({
             </div>
           </div>
 
-          <Tabs.Root defaultValue='신청'>
-            <Tabs.List className='tablet:font-size-14 font-size-12 flex w-full'>
-              <Tabs.Trigger value='신청' className='flex-1'>
-                신청 {confirmedCount}
+          <Tabs.Root defaultValue={activeTab}>
+            <Tabs.List className='font-size-14 flex'>
+              <Tabs.Trigger
+                className='cursor-pointer'
+                value='pending'
+                onClick={() => handleTabChange('pending')}
+              >
+                신청 {reservationCounts.pending}
               </Tabs.Trigger>
-              <Tabs.Trigger value='승인' className='flex-1'>
-                승인 {pendingCount}
+              <Tabs.Trigger
+                className='cursor-pointer'
+                value='confirmed'
+                onClick={() => handleTabChange('confirmed')}
+              >
+                승인 {reservationCounts.confirmed}
               </Tabs.Trigger>
-              <Tabs.Trigger value='거절' className='flex-1'>
-                거절 {completedCount}
+              <Tabs.Trigger
+                className='cursor-pointer'
+                value='declined'
+                onClick={() => handleTabChange('declined')}
+              >
+                거절 {reservationCounts.declined}
               </Tabs.Trigger>
             </Tabs.List>
 
-            <Tabs.Content value='신청'>
+            <Tabs.Content value='pending'>
               <ReservationDetail
-                reservations={confirmedReservations}
+                schedules={schedules}
+                reservations={reservationsByStatus.pending}
                 emptyMessage='신청된 예약이 없습니다.'
                 showApprovalButton={true}
                 showRejectButton={true}
-                onApprove={() => {}}
-                onReject={() => {}}
+                onApprove={handleApprove}
+                onReject={handleReject}
+                onTimeSlotSelect={handleTimeSlotSelect}
               />
             </Tabs.Content>
 
-            <Tabs.Content value='승인'>
+            <Tabs.Content value='confirmed'>
               <ReservationDetail
-                reservations={pendingReservations}
+                schedules={schedules}
+                reservations={reservationsByStatus.confirmed}
                 emptyMessage='승인된 예약이 없습니다.'
                 showApprovalButton={false}
                 showRejectButton={true}
-                onApprove={() => {}}
-                onReject={() => {}}
+                onApprove={handleApprove}
+                onReject={handleReject}
+                onTimeSlotSelect={handleTimeSlotSelect}
               />
             </Tabs.Content>
 
-            <Tabs.Content value='거절'>
+            <Tabs.Content value='declined'>
               <ReservationDetail
-                reservations={completedReservations}
+                schedules={schedules}
+                reservations={reservationsByStatus.declined}
                 emptyMessage='거절된 예약이 없습니다.'
                 showApprovalButton={false}
                 showRejectButton={false}
-                onApprove={() => {}}
-                onReject={() => {}}
+                onApprove={handleApprove}
+                onReject={handleReject}
+                onTimeSlotSelect={handleTimeSlotSelect}
               />
             </Tabs.Content>
           </Tabs.Root>

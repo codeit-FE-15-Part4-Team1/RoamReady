@@ -49,10 +49,12 @@ export const API_ENDPOINTS = {
 
   MY_ACTIVITIES: {
     BASE: 'my-activities',
-    DASHBOARD: 'my-activities/reservations/dashboard',
-    SCHEDULE: 'my-activities/reservations/schedule',
-    RESERVATION_DETAIL: (activityId: number, reservationId: number) =>
-      `my-activities/${activityId}/reservations/${reservationId}`,
+    DASHBOARD: (activityId: string, year: string, month: string) =>
+      `my-activities/${activityId}/reservation-dashboard?year=${year}&month=${month}`,
+    SCHEDULE: (activityId: number) =>
+      `my-activities/${activityId}/reserved-schedule`,
+    RESERVATION_DETAIL: (activityId: number) =>
+      `my-activities/${activityId}/reservations`,
     ACTIVITY_DETAIL: (activityId: number) => `my-activities/${activityId}`,
   },
 

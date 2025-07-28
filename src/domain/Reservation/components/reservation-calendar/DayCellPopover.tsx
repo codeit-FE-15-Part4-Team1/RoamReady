@@ -1,12 +1,16 @@
+import dayjs from 'dayjs';
 import { X } from 'lucide-react';
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
+import {
+  getReservationsBySchedule,
+  getSchedulesByDate,
+} from '@/domain/Reservation/services/reservation-calendar';
 import Popover from '@/shared/components/ui/popover';
 import { usePopover } from '@/shared/components/ui/popover/PopoverContext';
 import Tabs from '@/shared/components/ui/tabs';
 
-import { allReservations } from '../../mock/reservation';
-import type { DayCellProps } from '../../types/reservation';
+import type { Reservation, ReservationItem } from '../../types/reservation';
 import {
   getColorClassByStatus,
   getDisplayItems,
@@ -14,10 +18,28 @@ import {
 } from '../../utils/reservation';
 import ReservationDetail from './ReservationDetail';
 
-// 팝 오버 닫기 버튼
+interface DayCellProps {
+  day: dayjs.Dayjs;
+  isCurrentMonth: boolean;
+  isToday: boolean;
+  isLastRow: boolean;
+  reservation: Reservation | null;
+  selectedActivityId: number | null;
+}
+
+export interface ScheduleItem {
+  scheduleId: number;
+  startTime: string;
+  endTime: string;
+  count: {
+    pending: number;
+    confirmed: number;
+    declined: number;
+  };
+}
+
 const CloseButton = () => {
   const { setIsOpen } = usePopover();
-
   return (
     <button type='button' onClick={() => setIsOpen(false)}>
       <X className='size-15 cursor-pointer font-bold' />
@@ -31,14 +53,28 @@ export default function DayCellPopover({
   isToday,
   isLastRow,
   reservation,
+  selectedActivityId,
 }: DayCellProps) {
-  // 표시할 예약 상태들을 우선순위별로 처리
+  const [schedules, setSchedules] = useState<ScheduleItem[]>([]);
+  const [reservationsByStatus, setReservationsByStatus] = useState<{
+    pending: ReservationItem[];
+    confirmed: ReservationItem[];
+    declined: ReservationItem[];
+  }>({
+    pending: [],
+    confirmed: [],
+    declined: [],
+  });
+
+  const [activeTab, setActiveTab] = useState<
+    'pending' | 'confirmed' | 'declined'
+  >('pending');
+
   const displayItems = useMemo(
     () => getDisplayItems(reservation),
     [reservation],
   );
 
-  // 스타일 계산
   const styles = useMemo(() => {
     const cellClasses = `
       relative flex min-w-[9rem] min-h-[12rem] cursor-pointer flex-col items-center py-12 cursor-pointer font-size-14
@@ -62,30 +98,80 @@ export default function DayCellPopover({
     return { cellClasses, dateClasses };
   }, [day, isCurrentMonth, isToday, isLastRow]);
 
-  const hasReservations = displayItems.length > 0;
+  const reservationCounts = useMemo(() => {
+    if (!reservation?.reservations) {
+      return { pending: 0, confirmed: 0, declined: 0 };
+    }
+    return {
+      pending: reservation.reservations.pending || 0,
+      confirmed: reservation.reservations.confirmed || 0,
+      declined: reservation.reservations.declined || 0,
+    };
+  }, [reservation]);
 
-  // **핵심 수정: 현재 날짜에 해당하는 예약만 필터링**
-  const currentDayString = day.format('YYYY-MM-DD');
-  const currentDayReservations = allReservations.filter(
-    (r) => r.date === currentDayString,
+  const totalReservations =
+    reservationCounts.pending +
+    reservationCounts.confirmed +
+    reservationCounts.declined;
+
+  const handleDateClick = useCallback(async () => {
+    if (!selectedActivityId) return;
+
+    const dateString = day.format('YYYY-MM-DD');
+    const scheduleData = await getSchedulesByDate(
+      selectedActivityId,
+      dateString,
+    );
+    setSchedules(scheduleData || []);
+
+    if (scheduleData && scheduleData.length > 0) {
+      const firstScheduleId = scheduleData[0].scheduleId;
+      await loadAllStatuses(firstScheduleId);
+    }
+  }, [day, selectedActivityId]);
+
+  const loadAllStatuses = useCallback(
+    async (scheduleId: number) => {
+      if (!selectedActivityId) return;
+
+      const [pending, confirmed, declined] = await Promise.all([
+        getReservationsBySchedule(selectedActivityId, scheduleId, 'pending'),
+        getReservationsBySchedule(selectedActivityId, scheduleId, 'confirmed'),
+        getReservationsBySchedule(selectedActivityId, scheduleId, 'declined'),
+      ]);
+
+      setReservationsByStatus({
+        pending: pending || [],
+        confirmed: confirmed || [],
+        declined: declined || [],
+      });
+    },
+    [selectedActivityId],
   );
 
-  // 상태별로 예약 데이터 필터링 (현재 날짜 기준)
-  const confirmedReservations = currentDayReservations.filter(
-    (r) => r.status === 'confirmed',
-  );
-  const pendingReservations = currentDayReservations.filter(
-    (r) => r.status === 'pending',
-  );
-  const completedReservations = currentDayReservations.filter(
-    (r) => r.status === 'completed',
+  const handleTabChange = useCallback(
+    (status: 'pending' | 'confirmed' | 'declined') => {
+      setActiveTab(status);
+    },
+    [],
   );
 
-  // 실제 예약 수 계산
-  const totalReservations = currentDayReservations.length;
-  const confirmedCount = confirmedReservations.length;
-  const pendingCount = pendingReservations.length;
-  const completedCount = completedReservations.length;
+  const handleTimeSlotSelect = useCallback(
+    async (scheduleId: number) => {
+      await loadAllStatuses(scheduleId);
+    },
+    [loadAllStatuses],
+  );
+
+  const handleApprove = useCallback((reservationId: number) => {
+    console.log('승인:', reservationId);
+    // 승인 후 데이터 리패치 로직 추가 필요
+  }, []);
+
+  const handleReject = useCallback((reservationId: number) => {
+    console.log('거절:', reservationId);
+    // 거절 후 데이터 리패치 로직 추가 필요
+  }, []);
 
   return (
     <Popover.Root>
@@ -94,15 +180,14 @@ export default function DayCellPopover({
           role='gridcell'
           aria-label={`${day.format('M월 D일')}`}
           className={styles.cellClasses}
+          onClick={handleDateClick}
         >
-          {hasReservations && (
+          {displayItems.length > 0 && (
             <div className='absolute top-[10%] left-[60%] size-6 rounded-full bg-red-500' />
           )}
-
           <div className={`${styles.dateClasses} font-size-16`}>
             {day.format('D')}
           </div>
-
           <div className='mt-1 flex w-full flex-col items-center space-y-1'>
             {displayItems.map((item, index) => (
               <div
@@ -117,7 +202,7 @@ export default function DayCellPopover({
       </Popover.Trigger>
 
       <Popover.Content
-        position='right-center'
+        position='left-center'
         withBackdrop
         className='min-h-[40rem]'
       >
@@ -134,49 +219,64 @@ export default function DayCellPopover({
             <CloseButton />
           </div>
 
-          <Tabs.Root defaultValue='신청'>
+          <Tabs.Root defaultValue={activeTab}>
             <Tabs.List className='font-size-14 flex'>
-              <Tabs.Trigger className='cursor-pointer' value='신청'>
-                신청 {confirmedCount}
+              <Tabs.Trigger
+                value='pending'
+                onClick={() => handleTabChange('pending')}
+              >
+                신청 {reservationCounts.pending}
               </Tabs.Trigger>
-              <Tabs.Trigger className='cursor-pointer' value='승인'>
-                승인 {pendingCount}
+              <Tabs.Trigger
+                value='confirmed'
+                onClick={() => handleTabChange('confirmed')}
+              >
+                승인 {reservationCounts.confirmed}
               </Tabs.Trigger>
-              <Tabs.Trigger className='cursor-pointer' value='거절'>
-                거절 {completedCount}
+              <Tabs.Trigger
+                value='declined'
+                onClick={() => handleTabChange('declined')}
+              >
+                거절 {reservationCounts.declined}
               </Tabs.Trigger>
             </Tabs.List>
 
-            <Tabs.Content value='신청'>
+            <Tabs.Content value='pending'>
               <ReservationDetail
-                reservations={confirmedReservations}
+                schedules={schedules}
+                reservations={reservationsByStatus.pending}
                 emptyMessage='신청된 예약이 없습니다.'
                 showApprovalButton={true}
                 showRejectButton={true}
-                onApprove={() => {}}
-                onReject={() => {}}
+                onApprove={handleApprove}
+                onReject={handleReject}
+                onTimeSlotSelect={handleTimeSlotSelect}
               />
             </Tabs.Content>
 
-            <Tabs.Content value='승인'>
+            <Tabs.Content value='confirmed'>
               <ReservationDetail
-                reservations={pendingReservations}
+                schedules={schedules}
+                reservations={reservationsByStatus.confirmed}
                 emptyMessage='승인된 예약이 없습니다.'
                 showApprovalButton={false}
                 showRejectButton={true}
-                onApprove={() => {}}
-                onReject={() => {}}
+                onApprove={handleApprove}
+                onReject={handleReject}
+                onTimeSlotSelect={handleTimeSlotSelect}
               />
             </Tabs.Content>
 
-            <Tabs.Content value='거절'>
+            <Tabs.Content value='declined'>
               <ReservationDetail
-                reservations={completedReservations}
+                schedules={schedules}
+                reservations={reservationsByStatus.declined}
                 emptyMessage='거절된 예약이 없습니다.'
                 showApprovalButton={false}
                 showRejectButton={false}
-                onApprove={() => {}}
-                onReject={() => {}}
+                onApprove={handleApprove}
+                onReject={handleReject}
+                onTimeSlotSelect={handleTimeSlotSelect}
               />
             </Tabs.Content>
           </Tabs.Root>

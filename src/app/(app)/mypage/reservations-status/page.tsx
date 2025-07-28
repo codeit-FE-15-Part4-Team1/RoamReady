@@ -1,11 +1,8 @@
-import ReservationCalendar from '@/domain/Reservation/components/reservation-calendar/ReservationCalendar';
-import ReservationSelect from '@/domain/Reservation/components/reservation-calendar/ReservationSelect';
-import { getMyReservation } from '@/domain/Reservation/services/reservation-calendar';
+import { getMyActivities } from '@/app/api/my-reservations/api';
+import ReservationDashboard from '@/domain/Reservation/components/reservation-calendar/ReservationDashboard';
 
 export default async function MyReservationStatusPage() {
-  const reservations = await getMyReservation();
-  console.log(reservations);
-
+  const initialActivities = await getMyActivities();
   return (
     <div className='flex w-full flex-col gap-16'>
       <div className='flex-start flex flex-col gap-10'>
@@ -15,13 +12,13 @@ export default async function MyReservationStatusPage() {
         </span>
       </div>
 
-      <div className='w-full'>
-        <ReservationSelect />
-      </div>
-
-      <div className='w-full'>
-        <ReservationCalendar />
-      </div>
+      {/* 가져온 초기 데이터를 클라이언트 컴포넌트에 props로 전달합니다. */}
+      {/* initialActivities가 null일 경우를 대비해 에러 메시지나 빈 상태를 보여주는 것이 좋습니다. */}
+      {initialActivities ? (
+        <ReservationDashboard initialActivities={initialActivities} />
+      ) : (
+        <div>체험 목록을 불러오는 데 실패했습니다.</div>
+      )}
     </div>
   );
 }

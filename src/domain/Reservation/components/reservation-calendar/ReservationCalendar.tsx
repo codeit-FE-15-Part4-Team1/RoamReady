@@ -1,26 +1,34 @@
 'use client';
+import dayjs from 'dayjs';
+
 import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
 
 import { useCalendar } from '../../hooks/useCalendar';
-import { ReservationsData } from '../../mock/reservation';
+import type { MonthlyReservation } from '../../services/reservation-calendar';
 import { WEEKDAYS } from '../../utils/reservation';
 import CalendarHeader from './CalendarHeader';
 import DayCellBottomSheet from './DayCellBottomSheet';
 import DayCellPopover from './DayCellPopover';
 
-export default function ReservationCalendar() {
-  const {
-    currentDate,
-    today,
-    days,
-    getReservationForDate,
-    prevMonth,
-    nextMonth,
-  } = useCalendar(ReservationsData);
+interface ReservationCalendarProps {
+  currentDate: dayjs.Dayjs;
+  monthlyReservations: MonthlyReservation[];
+  selectedActivityId: number;
+  onMonthChange: (newDate: dayjs.Dayjs) => void;
+}
 
+export default function ReservationCalendar({
+  currentDate,
+  monthlyReservations,
+  selectedActivityId,
+  onMonthChange,
+}: ReservationCalendarProps) {
   const isDesktop = useMediaQuery('(min-width: 1024px)');
-
   const DayCellComponent = isDesktop ? DayCellPopover : DayCellBottomSheet;
+
+  // useCalendar 훅을 props의 currentDate를 사용하도록 수정
+  const { today, days, getReservationForDate, prevMonth, nextMonth } =
+    useCalendar(monthlyReservations, currentDate, onMonthChange);
 
   return (
     <div
@@ -53,7 +61,8 @@ export default function ReservationCalendar() {
             isCurrentMonth={day.isSame(currentDate, 'month')}
             isToday={day.isSame(today, 'day')}
             isLastRow={index >= days.length - 7}
-            reservation={getReservationForDate(day)} // 배열이 아닌 단일 객체 반환
+            reservation={getReservationForDate(day)}
+            selectedActivityId={selectedActivityId}
           />
         ))}
       </div>

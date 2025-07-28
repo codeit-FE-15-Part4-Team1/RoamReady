@@ -11,6 +11,8 @@ export const dynamic = 'force-dynamic';
 
 // GET 요청을 처리하는 함수
 export const GET = async () => {
+  console.log('✅ /api/my-reservations GET 핸들러에 도달했습니다!');
+
   // 서버 컴포넌트나 라우트 핸들러에서 쿠키를 가져옵니다.
   const cookieStore = await cookies();
   const accessToken = cookieStore.get('accessToken')?.value;

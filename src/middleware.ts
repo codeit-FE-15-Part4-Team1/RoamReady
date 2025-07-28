@@ -36,12 +36,14 @@ const BACKEND_URL = process.env.API_BASE_URL;
  * @returns {Promise<NextResponse>} 처리된 응답 객체
  */
 export async function middleware(request: NextRequest) {
+  // AUTH 경로는 미들웨어를 통과
   if (request.nextUrl.pathname.startsWith(`${BRIDGE_API.AUTH_PREFIX}/`)) {
     return NextResponse.next();
   }
 
   const path = request.nextUrl.pathname.replace(BRIDGE_API.PREFIX, '');
-  const destinationUrl = new URL(path, BACKEND_URL);
+  const correctedPath = path.startsWith('/') ? path.substring(1) : path;
+  const destinationUrl = new URL(correctedPath, BACKEND_URL);
   destinationUrl.search = request.nextUrl.search;
 
   const headers = new Headers(request.headers);
@@ -74,8 +76,6 @@ export async function middleware(request: NextRequest) {
   });
 
   if (response.status === 401 && refreshToken) {
-    console.log('Access Token 만료, 재발급을 시도합니다.');
-
     const refreshResponse = await fetch(
       `${BACKEND_URL}${API_ENDPOINTS.AUTH.REFRESH_TOKEN}`,
       {
@@ -88,7 +88,6 @@ export async function middleware(request: NextRequest) {
     if (refreshResponse.ok) {
       const tokens = await refreshResponse.json();
       const newAccessToken = tokens.accessToken;
-      console.log('새로운 Access Token 발급 성공');
 
       headers.set('Authorization', `Bearer ${newAccessToken}`);
 
@@ -117,7 +116,6 @@ export async function middleware(request: NextRequest) {
 
       return finalResponse;
     } else {
-      console.log('Refresh Token 만료, 로그인이 필요합니다.');
     }
   }
 

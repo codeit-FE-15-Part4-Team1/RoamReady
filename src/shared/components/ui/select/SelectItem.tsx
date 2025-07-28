@@ -54,10 +54,10 @@ export default function SelectItem({
   // 포커스 상태에 따라 실제 DOM 포커스 설정
   useEffect(() => {
     if (isFocused && itemRef.current) {
-      itemRef.current.focus();
+      // ScrollIntoView 방지: focus 시 preventScroll 추가
+      itemRef.current.focus({ preventScroll: true });
     }
   }, [isFocused]);
-
   const handleClick = () => {
     if (disabled) return;
     onValueChange?.(value);
