@@ -26,8 +26,10 @@ import ParticipantSelect from './ParticipationSection';
  */
 export default function ReservationMobile({
   activity,
+  reservation,
 }: {
   activity: Activity;
+  reservation: ReturnType<typeof useReservationForm>;
 }) {
   const router = useRouter();
 
@@ -47,7 +49,7 @@ export default function ReservationMobile({
     handleIncrease,
     handleDecrease,
     onMonthChange,
-  } = useReservationForm(activity.price, activity.id);
+  } = reservation;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -78,7 +80,6 @@ export default function ReservationMobile({
   }, [selectedDate, selectedTime]);
 
   return (
-    //  ✅ TODO: form action 연결
     <form
       onSubmit={handleSubmit}
       className='fixed bottom-0 left-0 z-30 flex h-200 w-full flex-col justify-center gap-10 bg-white px-24 py-18'

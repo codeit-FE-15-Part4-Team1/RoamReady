@@ -20,7 +20,13 @@ import ParticipantSelect from './ParticipationSection';
  * @example
  * <ReservationPC activity={activityData} />
  */
-export default function ReservationPC({ activity }: { activity: Activity }) {
+export default function ReservationPC({
+  activity,
+  reservation,
+}: {
+  activity: Activity;
+  reservation: ReturnType<typeof useReservationForm>;
+}) {
   const { showError, showSuccess } = useToast();
 
   // 예약 상태 및 관련 핸들러 훅 호출
@@ -38,7 +44,7 @@ export default function ReservationPC({ activity }: { activity: Activity }) {
     handleIncrease,
     handleDecrease,
     onMonthChange,
-  } = useReservationForm(activity.price, activity.id);
+  } = reservation;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

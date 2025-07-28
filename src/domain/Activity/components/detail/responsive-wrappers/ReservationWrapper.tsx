@@ -3,6 +3,7 @@
 import Link from 'next/link';
 
 import MyReservation from '@/domain/Activity/components/detail/responsive-wrappers/MyReservation';
+import { useReservationForm } from '@/domain/Activity/hooks/detail/useReservationForm';
 import { Activity, ReviewList } from '@/domain/Activity/types/detail/types';
 import Button from '@/shared/components/Button';
 import Footer from '@/shared/components/layouts/footer/Footer';
@@ -28,6 +29,8 @@ export default function ReservationWrapper({
   const user = useRoamReadyStore((state) => state.user);
   const isOwner = user?.id === activity.userId;
 
+  const reservation = useReservationForm(activity.price, activity.id);
+
   // PC
   if (!isMobile && !isTablet) {
     return (
@@ -36,12 +39,13 @@ export default function ReservationWrapper({
           <ActivitySummary activity={activity} review={reviews} />
         </div>
         {isOwner && <MyReservation />}
-        {!isOwner && <ReservationPC activity={activity} />}
+        {!isOwner && (
+          <ReservationPC activity={activity} reservation={reservation} />
+        )}
       </div>
     );
   }
 
-  // 모바일/태블릿
   // 모바일/태블릿
   return (
     <>
@@ -61,9 +65,9 @@ export default function ReservationWrapper({
       ) : (
         <>
           {isMobile ? (
-            <ReservationMobile activity={activity} />
+            <ReservationMobile activity={activity} reservation={reservation} />
           ) : (
-            <ReservationTablet activity={activity} />
+            <ReservationTablet activity={activity} reservation={reservation} />
           )}
           <div className={isTablet ? 'pt-100' : ''}>
             <Footer />

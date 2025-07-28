@@ -28,8 +28,10 @@ import ParticipantSelect from './ParticipationSection';
  */
 export default function ReservationTablet({
   activity,
+  reservation,
 }: {
   activity: Activity;
+  reservation: ReturnType<typeof useReservationForm>;
 }) {
   const router = useRouter();
 
@@ -49,7 +51,7 @@ export default function ReservationTablet({
     handleIncrease,
     handleDecrease,
     onMonthChange,
-  } = useReservationForm(activity.price, activity.id);
+  } = reservation;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
