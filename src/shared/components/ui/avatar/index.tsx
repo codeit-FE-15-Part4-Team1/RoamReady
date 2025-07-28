@@ -34,8 +34,8 @@ const avatarSizeStyles = {
     sizes: '30px',
   },
   lg: {
-    className: 'size-70 desktop:size-120',
-    sizes: '(min-width: 1024px) 120px, 70px',
+    className: 'size-120 tablet:size-70 desktop:size-120',
+    sizes: '(min-width: 1024px) 120px, (min-width: 768px) 70px, 120px',
   },
 };
 
