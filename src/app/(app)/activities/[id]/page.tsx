@@ -10,6 +10,7 @@ import {
   getActivityDetail,
   getActivityReviews,
 } from '@/domain/Activity/services/detail';
+import { ReviewList } from '@/domain/Activity/types/detail/types';
 
 export default async function ActivityDetailPage({
   params,
@@ -20,7 +21,7 @@ export default async function ActivityDetailPage({
 
   const [activityResult, reviewsResult] = await Promise.allSettled([
     getActivityDetail(Number(id)),
-    getActivityReviews(Number(id)),
+    getActivityReviews(Number(id), 1, 3),
   ]);
 
   if (activityResult.status !== 'fulfilled') {
@@ -38,8 +39,14 @@ export default async function ActivityDetailPage({
   }
 
   const activity = activityResult.value;
-  const reviews =
-    reviewsResult.status === 'fulfilled' ? reviewsResult.value : [];
+  const initialReviews: ReviewList =
+    reviewsResult.status === 'fulfilled'
+      ? (reviewsResult.value as ReviewList)
+      : {
+          totalCount: 0,
+          averageRating: 0,
+          reviews: [],
+        };
 
   return (
     <>
@@ -51,7 +58,10 @@ export default async function ActivityDetailPage({
             bannerImage={activity.bannerImageUrl}
             subImages={activity.subImages}
           />
-          <ActivitySummaryWrapper activity={activity} reviews={reviews} />
+          <ActivitySummaryWrapper
+            activity={activity}
+            reviews={initialReviews}
+          />
           <DescriptionSection description={activity.description} />
 
           <section className='flex w-full flex-col gap-8 border-b border-gray-100 pb-40'>
@@ -62,18 +72,18 @@ export default async function ActivityDetailPage({
             />
           </section>
 
-          <ReviewSection review={reviews} />
+          <ReviewSection activityId={Number(id)} review={initialReviews} />
         </div>
 
         {/* 오른쪽 예약 사이드 영역 (PC/태블릿에서만 노출) */}
         <div className='desktop:block tablet:block hidden'>
-          <ReservationWrapper activity={activity} reviews={reviews} />
+          <ReservationWrapper activity={activity} reviews={initialReviews} />
         </div>
       </div>
 
       {/*  모바일 예약 영역 (하단 고정) */}
       <div className='desktop:hidden tablet:hidden'>
-        <ReservationWrapper activity={activity} reviews={reviews} />
+        <ReservationWrapper activity={activity} reviews={initialReviews} />
       </div>
     </>
   );

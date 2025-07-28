@@ -4,6 +4,7 @@ import { apiClient } from '@/shared/libs/apiClient';
 import type {
   AvailableScheduleParams,
   ReservableDate,
+  ReviewList,
 } from '../../types/detail/types';
 
 /**
@@ -48,21 +49,15 @@ export const getActivityDetail = async (activityId: number) => {
  * @param activityId - 체험 ID
  * @returns 리뷰 목록
  */
-export const getActivityReviews = async (activityId: number) => {
-  const res = await fetch(
-    `${process.env.API_BASE_URL}/activities/${activityId}/reviews`,
-    {
-      next: { tags: ['activity-review'] },
-    },
-  );
-
-  if (!res.ok) {
-    throw new Error(
-      `체험 리뷰 데이터를 불러오는데 실패했습니다: ${res.statusText}`,
-    );
-  }
-
-  return res.json();
+export const getActivityReviews = async (
+  activityId: number,
+  page = 1,
+  size = 3,
+): Promise<ReviewList> => {
+  const res = await apiClient.get(`activities/${activityId}/reviews`, {
+    searchParams: { page, size },
+  });
+  return res.json<ReviewList>();
 };
 
 /**
