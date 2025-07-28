@@ -1,6 +1,6 @@
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
+import Notification from '@/domain/Notification/components/Notification';
 import Avatar from '@/shared/components/ui/avatar';
 import Dropdown from '@/shared/components/ui/dropdown';
 import { ROUTES } from '@/shared/constants/routes';
@@ -25,8 +25,7 @@ export default function AuthMenu({ user }: AuthMenuProps) {
 
   return (
     <div className='flex items-center justify-center gap-20'>
-      <Image src='/icons/bell.svg' alt='알림 아이콘' width={24} height={24} />
-
+      <Notification />
       <div className='flex items-center justify-center gap-15'>
         {/* 세로 구분선 */}
         <div className='h-20 w-1 self-center bg-gray-100' />

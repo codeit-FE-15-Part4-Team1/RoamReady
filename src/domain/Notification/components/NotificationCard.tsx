@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { getTimeAgo } from '@/domain/Activity/utils/getTimeAgo';
 import { usePopover } from '@/shared/components/ui/popover/PopoverContext';
 
-import { NotificationResponse } from '../types/type';
+import type { NotificationResponse } from '../types/type';
 import NotificationDelete from './NotificationDelete';
 
 /**
