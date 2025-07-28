@@ -78,7 +78,7 @@ export default function ReservationWrapper({
   // 체험 작성자 본인은 예약 폼 대신 '내 체험 예약 현황' 버튼만 노출
   if (isOwner) {
     return (
-      <div className='flex-center pt-50'>
+      <div className='flex-center tablet:pt-50 tablet:pb-0 pt-20 pb-50'>
         <Button
           className='hover:bg-brand-2 font-size-12 h-40 w-160 border-gray-50 hover:text-white'
           asChild

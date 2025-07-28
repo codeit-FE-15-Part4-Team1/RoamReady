@@ -108,7 +108,7 @@ export default function ReviewSection({ review }: { review: ReviewList }) {
         </div>
 
         {/* 현재 페이지의 리뷰 카드 목록 */}
-        <div className='flex h-fit min-h-550 flex-col gap-20'>
+        <div className='flex h-fit min-h-400 flex-col gap-20'>
           {currentReviews.map((review) => (
             <ReviewCard key={review.id} {...review} />
           ))}

@@ -44,7 +44,7 @@ export default async function ActivityDetailPage({
   return (
     <>
       {/* PC / Tablet 레이아웃 */}
-      <div className='desktop:pt-60 desktop:pb-180 tablet:pb-80 desktop:flex-row flex w-full flex-col gap-30 pt-30 pb-60 max-[767px]:pb-[180px]'>
+      <div className='desktop:pt-60 desktop:pb-180 tablet:pb-80 desktop:flex-row flex w-full flex-col gap-30 pt-30 pb-20'>
         {/* 왼쪽 메인 콘텐츠 영역 */}
         <div className='flex w-full flex-col gap-40'>
           <ActivityImg
