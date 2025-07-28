@@ -4,7 +4,6 @@ import { apiClient } from '@/shared/libs/apiClient';
 import type {
   AvailableScheduleParams,
   ReservableDate,
-  ReviewList,
 } from '../../types/detail/types';
 
 /**
@@ -61,11 +60,12 @@ export const getActivityReviews = async (
   activityId: number,
   page = 1,
   size = 3,
-): Promise<ReviewList> => {
-  const res = await apiClient.get(`activities/${activityId}/reviews`, {
-    searchParams: { page, size },
-  });
-  return res.json<ReviewList>();
+) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}activities/${activityId}/reviews?page=${page}&size=${size}`,
+  );
+  if (!res.ok) throw new Error('리뷰 불러오기 실패');
+  return res.json();
 };
 
 /**
