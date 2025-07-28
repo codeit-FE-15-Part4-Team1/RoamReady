@@ -1,9 +1,11 @@
 'use client';
 
 import Image from 'next/image';
-import { MouseEvent, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Heart } from '@/shared/components/icons/Heart';
+import CategoryBadge from '@/domain/Activity/components/main/CategoryBadge';
+import LikeButton from '@/domain/Activity/components/main/LikeButton';
+import LogoSymbol from '@/shared/assets/logos/LogoSymbol';
 import { cn } from '@/shared/libs/cn';
 
 import { Activity } from '../../schemas/main';
@@ -17,15 +19,15 @@ export default function ActivityCard({
   activity,
   className,
 }: ActivityCardProp) {
-  const { bannerImageUrl, title, price, rating, category, reviewCount } =
-    activity;
-  const [filled, setFilled] = useState<boolean | undefined>(false);
+  const { bannerImageUrl, title, price, rating, reviewCount } = activity;
 
-  const handleHeartClick = (e: MouseEvent<SVGElement>) => {
-    setFilled((prev) => !prev);
-    e.preventDefault();
-    e.stopPropagation();
-  };
+  const [hasImageError, setHasImageError] = useState<boolean | undefined>(
+    false,
+  );
+
+  useEffect(() => {
+    setHasImageError(false);
+  }, [bannerImageUrl]);
 
   return (
     <article
@@ -35,24 +37,24 @@ export default function ActivityCard({
       )}
     >
       <figure className='relative aspect-[5/6] overflow-hidden rounded-3xl'>
-        <Image
-          src={bannerImageUrl}
-          alt={`${title} 액티비티 이미지`}
-          fill
-          className='object-cover'
-        />
+        {hasImageError ? (
+          <div className='bg-brand-1 flex-center absolute inset-0'>
+            <LogoSymbol className='text-brand-2 w-[40%]' />
+          </div>
+        ) : (
+          <Image
+            src={bannerImageUrl}
+            alt={`${title} 액티비티 이미지`}
+            fill
+            className='object-cover'
+            onError={() => setHasImageError(true)}
+            sizes='(max-width: 768px) 50dvw, (max-width: 1024px) 25dvw, 20dvw'
+          />
+        )}
 
         <div className='absolute inset-0 flex items-start justify-between p-12'>
-          <span className='font-size-14 rounded-3xl bg-gray-800/40 px-8 py-2 font-semibold text-white backdrop-blur-xs select-none'>
-            {category}
-          </span>
-          <div className='flex-center size-25 active:scale-90'>
-            <Heart
-              className='size-23 cursor-pointer'
-              filled={filled}
-              onClick={handleHeartClick}
-            />
-          </div>
+          <CategoryBadge activity={activity} />
+          <LikeButton activity={activity} />
         </div>
       </figure>
 
