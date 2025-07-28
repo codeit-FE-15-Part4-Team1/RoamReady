@@ -38,8 +38,8 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(data);
-  } catch (error) {
-    console.error('알림 리스트 조회 중 에러:', error);
+  } catch (err) {
+    console.error('알림 리스트 조회 중 에러:', err);
     return NextResponse.json(
       { message: '서버 내부 오류가 발생했습니다.' },
       { status: 500 },

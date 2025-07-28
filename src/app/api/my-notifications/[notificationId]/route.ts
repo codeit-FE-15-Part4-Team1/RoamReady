@@ -33,6 +33,7 @@ export async function DELETE(
 
     return NextResponse.json({ message: '알림이 삭제되었습니다.' });
   } catch (err) {
+    console.error('알림 삭제 중 에러:', err);
     return NextResponse.json({ message: '서버 오류' }, { status: 500 });
   }
 }
