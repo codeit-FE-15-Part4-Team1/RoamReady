@@ -37,6 +37,7 @@ export const getActivityDetail = async (activityId: number) => {
     const error = new Error(
       `체험 상세 데이터를 불러오는데 실패했습니다: ${res.statusText}`,
     );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (error as any).status = res.status;
     throw error;
   }
