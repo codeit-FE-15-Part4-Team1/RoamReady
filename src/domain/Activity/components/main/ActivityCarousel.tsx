@@ -38,12 +38,7 @@ export default function ActivityCarousel({
       const container = scrollRef.current;
       if (!container) return;
 
-      const card = container.querySelector('div > article') as HTMLElement;
-      if (!card) return;
-
-      const cardWidth = card.offsetWidth * 2;
-      const gap = 10; // Tailwind gap-10 = 2.5rem = 40px
-      const scrollAmount = cardWidth + gap;
+      const scrollAmount = container.clientWidth;
 
       container.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
@@ -51,6 +46,7 @@ export default function ActivityCarousel({
       });
 
       isScrollingRef.current = true;
+      if (debounceRef.current) clearTimeout(debounceRef.current);
       debounceRef.current = setTimeout(() => {
         isScrollingRef.current = false;
         updateScrollState(); // 업데이트
