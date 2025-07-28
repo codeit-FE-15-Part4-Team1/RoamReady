@@ -1,8 +1,12 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-import { API_ENDPOINTS } from '@/shared/constants/endpoints';
-
+/**
+ * DELETE /api/my-activities/[activityId]
+ *
+ * 클라이언트로부터 전달된 activityId를 이용해 체험을 삭제하는 API 라우트입니다.
+ * 내부적으로 BFF를 통해 백엔드 API로 DELETE 요청을 보냅니다.
+ */
 export async function DELETE(
   _request: NextRequest,
   { params }: { params: { activityId: string } },
@@ -10,6 +14,7 @@ export async function DELETE(
   const { activityId } = params;
 
   try {
+    // 백엔드 체험 삭제 API 호출
     const apiResponse = await fetch(
       `${process.env.API_BASE_URL}my-activities/${activityId}`,
       {
@@ -20,10 +25,7 @@ export async function DELETE(
       },
     );
 
-    console.log(
-      `${process.env.API_BASE_URL}${API_ENDPOINTS.MY_ACTIVITIES.ACTIVITY_DETAIL(Number(activityId))}`,
-    );
-
+    // 삭제 실패한 경우: 에러 메시지를 파싱하여 프론트에 전달
     if (!apiResponse.ok) {
       let message = '삭제 요청에 실패했습니다.';
       try {
@@ -36,11 +38,11 @@ export async function DELETE(
         console.error('JSON 파싱 실패:', jsonErr);
       }
 
-      // ✅ 실패 응답을 클라이언트에 전달해야 함
+      // 실패 응답 반환 (예: 404, 403 등 백엔드 응답 상태 그대로 유지)
       return NextResponse.json({ message }, { status: apiResponse.status });
     }
 
-    // ✅ 정상적인 삭제인 경우에만 204 반환
+    // 성공적으로 삭제된 경우: 204 No Content 반환
     return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error('체험 삭제 API 라우트 처리 중 에러 발생:', error);

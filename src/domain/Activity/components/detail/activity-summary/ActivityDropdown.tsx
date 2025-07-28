@@ -32,10 +32,13 @@ export default function ActivityDropdown({
 }: ActivityDropdownProps) {
   const router = useRouter();
 
+  // 전역 상태에서 현재 로그인한 사용자 정보 가져오기
   const user = useRoamReadyStore((state) => state.user);
 
+  // 삭제 확인 모달 열림 상태 관리
   const [isOpen, setIsOpen] = useState(false);
 
+  // 삭제 요청 API 훅
   const deleteActivity = useDeleteMyActivity();
 
   // 로그인하지 않았거나, 작성자가 아닌 경우 드롭다운 미표시
@@ -46,6 +49,7 @@ export default function ActivityDropdown({
     router.push(`/mypage/experiences/edit/${id}`);
   };
 
+  // '삭제하기' 클릭 시 삭제 API 호출 후 성공하면 체험 목록 페이지로 이동
   const handleDelete = async () => {
     try {
       await deleteActivity(id);
@@ -57,6 +61,7 @@ export default function ActivityDropdown({
 
   return (
     <>
+      {/* 드롭다운 메뉴 트리거 및 메뉴 */}
       <Dropdown.Root>
         <Dropdown.Trigger>
           <EllipsisVertical size={20} />
@@ -64,12 +69,13 @@ export default function ActivityDropdown({
         <Dropdown.Menu menuClassName='top-30'>
           <Dropdown.Item onClick={handleEdit}>수정하기</Dropdown.Item>
 
-          {/* Todo: 삭제하기 클릭시 삭제 모달 렌더링 및 삭제 API 연동 */}
           <Dropdown.Item onClick={() => setIsOpen(true)}>
             삭제하기
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown.Root>
+
+      {/* 삭제 확인 모달 */}
       {isOpen && (
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
           <Dialog.Content variant='cancel'>

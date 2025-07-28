@@ -7,6 +7,23 @@ import {
   ReservableDate,
 } from '../../types/detail/types';
 
+/**
+ * 예약 가능 일정 조회를 위한 React Query 훅
+ *
+ * @param {AvailableScheduleParams} params - 조회에 필요한 파라미터 객체
+ * @param {number} params.activityId - 조회할 체험(액티비티) ID
+ * @param {number} params.year - 조회 연도 (YYYY 형식)
+ * @param {number} params.month - 조회 월 (1~12)
+ *
+ * @returns {UseQueryResult<ReservableDate[], unknown>} 예약 가능한 날짜 배열을 반환하는 쿼리 결과 객체
+ *
+ * @example
+ * const { data, isLoading, error } = useAvailableSchedule({
+ *   activityId: 123,
+ *   year: 2025,
+ *   month: 7,
+ * });
+ */
 export const useAvailableSchedule = ({
   activityId,
   year,
