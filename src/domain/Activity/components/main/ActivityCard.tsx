@@ -30,7 +30,7 @@ export default function ActivityCard({
   return (
     <article
       className={cn(
-        'flex w-full max-w-350 transform flex-col rounded-3xl bg-white p-6 shadow-lg transition-transform duration-300 hover:-translate-y-2',
+        'flex w-full max-w-330 transform flex-col rounded-3xl bg-white p-6 shadow-lg transition-transform duration-300 hover:-translate-y-2',
         className,
       )}
     >

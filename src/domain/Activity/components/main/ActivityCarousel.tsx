@@ -122,7 +122,7 @@ export default function ActivityCarousel({
           <div
             key={`${activity.title}-${String(activity.createdAt)}`}
             className={cn(
-              'shrink-0 snap-start px-4',
+              'shrink-0 snap-start',
               'w-[calc(100%/2.1)] md:w-[calc(100%/3.3)] lg:w-[calc(100%/4.3)] xl:w-[calc(100%/5.3)]',
             )}
           >
