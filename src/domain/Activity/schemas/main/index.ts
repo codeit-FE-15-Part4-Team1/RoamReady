@@ -29,8 +29,8 @@ export const activitySchema = z.object({
   bannerImageUrl: z.string(),
   rating: z.number(),
   reviewCount: z.number(),
-  createdAt: z.coerce.date(), // 문자열을 Date 객체로 파싱
-  updatedAt: z.coerce.date(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
 });
 
 export type Activity = z.infer<typeof activitySchema>;
