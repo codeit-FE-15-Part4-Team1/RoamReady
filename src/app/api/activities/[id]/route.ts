@@ -2,11 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  context: { params: { id: string } },
 ) {
+  const { params } = context;
+  const { id } = params;
   try {
     // 1. URL에서 활동 ID를 가져옵니다.
-    const activityId = params.id;
+    const activityId = id;
 
     // 2. 미들웨어가 추가한 인증 토큰을 요청 헤더에서 가져옵니다.
     const authToken = request.headers.get('Authorization');
