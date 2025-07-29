@@ -12,12 +12,12 @@ import {
 } from '@/domain/Activity/services/detail';
 import { ReviewList } from '@/domain/Activity/types/detail/types';
 
-export default async function ActivityDetailPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const { id } = params;
+interface PageParams {
+  params: Promise<{ id: string }>;
+}
+
+export default async function ActivityDetailPage({ params }: PageParams) {
+  const { id } = await params;
 
   const [activityResult, reviewsResult] = await Promise.allSettled([
     getActivityDetail(Number(id)),
