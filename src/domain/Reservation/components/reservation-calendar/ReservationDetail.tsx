@@ -82,7 +82,7 @@ export default function ReservationDetail({
 
   const filteredReservations = useMemo(() => {
     if (!selectedScheduleId) {
-      return []; // 선택 안 하면 빈 배열 반환
+      return null; // 선택 안 하면 빈 배열 반환
     }
     return reservations.filter(
       (res) => res.scheduleId.toString() === selectedScheduleId,
@@ -109,6 +109,22 @@ export default function ReservationDetail({
     return (
       <p className='flex h-full flex-col items-center justify-center py-4 text-center text-gray-500'>
         {emptyMessage}
+      </p>
+    );
+  }
+
+  if (filteredReservations === null) {
+    return (
+      <p className='flex h-full flex-col items-center justify-center py-4 text-center text-gray-500'>
+        예약 시간을 선택해주세요
+      </p>
+    );
+  }
+
+  if (filteredReservations.length === 0) {
+    return (
+      <p className='flex h-full flex-col items-center justify-center py-4 text-center text-gray-500'>
+        선택한 시간대에 예약이 없습니다
       </p>
     );
   }
@@ -140,7 +156,7 @@ export default function ReservationDetail({
       <div className='flex flex-col gap-12'>
         <h2 className='font-size-18 font-bold'>예약 내역</h2>
         <div className='space-y-4'>
-          {filteredReservations.map((reservation) => (
+          {filteredReservations?.map((reservation) => (
             <div
               key={reservation.id}
               className='flex flex-col gap-8 rounded-3xl border border-gray-100 p-20 py-17.5'

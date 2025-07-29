@@ -19,7 +19,7 @@ export const STATUS_LABELS: Record<ReservationStatus, string> = {
 
 /**
  * 예약 상태에 따른 Tailwind CSS 클래스를 반환합니다
- * @param status - 예약 상태 ('completed' | 'confirmed' | 'pending')
+ * @param status - 예약 상태 ('declined' | 'confirmed' | 'pending')
  * @returns Tailwind CSS 클래스 문자열
  */
 export const getColorClassByStatus = (status: ReservationStatus) => {

@@ -5,14 +5,10 @@ import { API_ENDPOINTS } from '@/shared/constants/endpoints';
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { activityId: string; reservationId: string } },
+  context: { params: Promise<{ activityId: string; reservationId: string }> },
 ) {
-  const activityId = params.activityId;
-  const reservationId = params.reservationId;
+  const { activityId, reservationId } = await context.params;
   const { status } = await request.json();
-
-  // 여기서 실제 상태 업데이트 로직 처리
-  console.log('Updating reservation', params, status);
 
   if (!activityId || !reservationId) {
     return NextResponse.json({ error: '필수 파라미터 누락' }, { status: 400 });
@@ -21,13 +17,14 @@ export async function PATCH(
   try {
     const response = await fetch(
       `${process.env.API_BASE_URL}${API_ENDPOINTS.MY_ACTIVITIES.RESERVATION(
-        Number(activityId),
-        Number(reservationId),
+        parseInt(activityId, 10),
+        parseInt(reservationId, 10),
       )}`,
       {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: request.headers.get('Authorization') || '',
         },
         body: JSON.stringify({ status }),
       },
