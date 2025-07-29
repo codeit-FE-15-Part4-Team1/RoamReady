@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
 
 import ActivityCard from '@/domain/Activity/components/main/ActivityCard';
-import ActivityCardSkeleton from '@/domain/Activity/components/main/ActivityCardSkeleton';
+import ActivityCardSkeleton from '@/domain/Activity/components/main/ActivityCard/ActivityCardSkeleton';
 import ActivityFilter from '@/domain/Activity/components/main/ActivityFilter';
 import { GetActivitiesRequestQuery } from '@/domain/Activity/schemas/main';
 import { getActivities } from '@/domain/Activity/services/main/getActivities';

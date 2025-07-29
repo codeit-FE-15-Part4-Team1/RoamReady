@@ -4,9 +4,9 @@ import {
   QueryClient,
 } from '@tanstack/react-query';
 
-import ActivityCarousel from '@/domain/Activity/components/main/ActivityCarousel';
-import ActivitySearchBar from '@/domain/Activity/components/main/ActivitySearchBar';
-import ActivitySection from '@/domain/Activity/components/main/ActivitySection';
+import ActivitySearchBar from '@/domain/Activity/components/main/ActivitySearch/ActivitySearchBar';
+import ActivityCarousel from '@/domain/Activity/components/main/ActivitySection/ActivityCarousel';
+import ActivitySection from '@/domain/Activity/components/main/ActivitySection/ActivitySection';
 import { activitiesKeys } from '@/domain/Activity/libs/main/queryKeys';
 import { GetActivitiesOffsetResponse } from '@/domain/Activity/schemas/main';
 import { getActivities } from '@/domain/Activity/services/main/getActivities';

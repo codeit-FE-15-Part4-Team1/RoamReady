@@ -4,12 +4,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-import CategoryBadge from '@/domain/Activity/components/main/CategoryBadge';
-import LikeButton from '@/domain/Activity/components/main/LikeButton';
+import CategoryBadge from '@/domain/Activity/components/main/ActivityCard/CategoryBadge';
+import LikeButton from '@/domain/Activity/components/main/ActivityCard/LikeButton';
+import { Activity } from '@/domain/Activity/schemas/main';
 import LogoSymbol from '@/shared/assets/logos/LogoSymbol';
 import { cn } from '@/shared/libs/cn';
-
-import { Activity } from '../../schemas/main';
 
 interface ActivityCardProp {
   activity: Activity;

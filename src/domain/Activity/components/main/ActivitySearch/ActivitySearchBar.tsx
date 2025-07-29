@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import ActivitySearchBarForm from '@/domain/Activity/components/main/ActivitySearchForm';
+import ActivitySearchBarForm from '@/domain/Activity/components/main/ActivityFilter/ActivitySearchForm';
 import {
   ActivitySearchFormValues,
   activitySearchSchema,
