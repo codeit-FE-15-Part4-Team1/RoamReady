@@ -17,7 +17,7 @@ export default async function ActivityDetailPage({
 }: {
   params: { id: string };
 }) {
-  const { id } = await params;
+  const { id } = params;
 
   const [activityResult, reviewsResult] = await Promise.allSettled([
     getActivityDetail(Number(id)),
