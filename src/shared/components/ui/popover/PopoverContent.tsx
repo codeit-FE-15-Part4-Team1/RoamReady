@@ -5,6 +5,7 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useRef,
   useState,
 } from 'react';
 import { createPortal } from 'react-dom';
@@ -89,6 +90,7 @@ export default function PopoverContent({
   ...props
 }: PopoverContentProps) {
   const { isOpen, setIsOpen, triggerRef, popoverId } = usePopover();
+  const contentRef = useRef<HTMLDivElement>(null); // PopoverContent 자신을 위한 ref
   const [pos, setPos] = useState({
     x: 0,
     y: 0,
@@ -229,27 +231,46 @@ export default function PopoverContent({
     };
   }, [isOpen, calculatePosition, mounted]);
 
-  // ESC 키로 닫기 기능
+  // [추가된 기능] 외부 클릭 및 ESC 키로 닫기 기능 통합
   useEffect(() => {
-    if (!mounted) return;
+    if (!isOpen || !mounted) return;
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+    const handleInteractionOutside = (e: MouseEvent | KeyboardEvent) => {
+      // ESC 키 처리
+      if (e instanceof KeyboardEvent && e.key === 'Escape') {
+        e.preventDefault();
+        setIsOpen(false);
+        return;
+      }
+
+      // 마우스 클릭 처리
+      if (e instanceof MouseEvent) {
+        // PopoverContent 내부나 Trigger를 클릭한 경우는 무시
+        if (
+          contentRef.current?.contains(e.target as Node) ||
+          triggerRef.current?.contains(e.target as Node)
+        ) {
+          return;
+        }
         setIsOpen(false);
       }
     };
 
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-      return () => document.removeEventListener('keydown', handleKeyDown);
-    }
-  }, [isOpen, setIsOpen, mounted]);
+    document.addEventListener('mousedown', handleInteractionOutside);
+    document.addEventListener('keydown', handleInteractionOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleInteractionOutside);
+      document.removeEventListener('keydown', handleInteractionOutside);
+    };
+  }, [isOpen, mounted, setIsOpen, triggerRef]);
 
   if (!isOpen || !mounted) return null;
 
   // Portal로 body에 직접 렌더링
   const popoverElement = (
     <div
+      ref={contentRef}
       className={cn(
         'absolute z-50 h-fit max-h-100 w-fit max-w-2xl overflow-y-auto rounded-md border border-gray-200 bg-white p-4 shadow-lg',
         className,
