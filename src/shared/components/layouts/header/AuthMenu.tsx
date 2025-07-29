@@ -1,5 +1,11 @@
 import Image from 'next/image';
 
+import type { User } from '@/shared/slices/userSlice';
+
+interface AuthMenuProps {
+  user: User;
+}
+
 /**
  * AuthMenu 컴포넌트 입니다.
  *
@@ -8,7 +14,8 @@ import Image from 'next/image';
  * (현재는 더미 데이터로 구성되어 있으며, 추후 유저 정보를 props로 받을 수 있도록 확장할 예정입니다.)
  *
  */
-export default function AuthMenu() {
+export default function AuthMenu({ user }: AuthMenuProps) {
+  // const signout = useSignout();  이렇게 가져올 수 있어요.
   return (
     <div className='flex items-center justify-center gap-20'>
       <Image src='/icons/bell.svg' alt='알림 아이콘' width={24} height={24} />
@@ -19,6 +26,8 @@ export default function AuthMenu() {
 
         {/* 프로필 아바타*/}
         <div className='h-30 w-30 rounded-full bg-black' />
+        {/* user를 사용해야 PR 프리뷰가 생성되서 우선 아래코드 추가했습니다.  */}
+        {user.profileImageUrl}
 
         {/* 유저 이름 */}
         <span className='font-size-14'>닉네임</span>
