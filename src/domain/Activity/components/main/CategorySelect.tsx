@@ -45,7 +45,7 @@ export default function CategorySelect({
   onValueChange,
 }: CategorySelectProps) {
   return (
-    <div className='flex gap-8 py-12'>
+    <div className='flex shrink-0 gap-8 py-12'>
       <CategoryButton
         label='전체'
         isSelected={value === undefined}

@@ -14,10 +14,6 @@ export const getActivitiesRequestQuerySchema = z.object({
   size: z.number().default(20),
 });
 
-export type GetActivitiesRequestQuery = z.infer<
-  typeof getActivitiesRequestQuerySchema
->;
-
 export const activitySchema = z.object({
   id: z.number(),
   userId: z.number(),
@@ -33,21 +29,25 @@ export const activitySchema = z.object({
   updatedAt: z.string(),
 });
 
-export type Activity = z.infer<typeof activitySchema>;
-
 export const getActivitiesResponseOffsetSchema = z.object({
   totalCount: z.number(),
   activities: z.array(activitySchema),
 });
 
-export type GetActivitiesOffsetResponse = z.infer<
-  typeof getActivitiesResponseOffsetSchema
->;
-
 export const activitySearchSchema = z.object({
   title: z.string().optional(),
   location: z.string().optional(),
-  data: z.date().optional(),
+  date: z.date().optional(),
 });
+
+export type GetActivitiesRequestQuery = z.infer<
+  typeof getActivitiesRequestQuerySchema
+>;
+
+export type Activity = z.infer<typeof activitySchema>;
+
+export type GetActivitiesOffsetResponse = z.infer<
+  typeof getActivitiesResponseOffsetSchema
+>;
 
 export type ActivitySearchFormValues = z.infer<typeof activitySearchSchema>;

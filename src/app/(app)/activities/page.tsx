@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-query';
 
 import ActivityCarousel from '@/domain/Activity/components/main/ActivityCarousel';
-import AirbnbSearch from '@/domain/Activity/components/main/ActivitySearchHelper';
+import ActivitySearchBar from '@/domain/Activity/components/main/ActivitySearchBar';
 import ActivitySection from '@/domain/Activity/components/main/ActivitySection';
 import { activitiesKeys } from '@/domain/Activity/libs/main/queryKeys';
 import { GetActivitiesOffsetResponse } from '@/domain/Activity/schemas/main';
@@ -53,7 +53,9 @@ export default async function ActivityPage({
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <div className='space-y-60'>
-        <AirbnbSearch />
+        <div className='flex-center'>
+          <ActivitySearchBar />
+        </div>
         <ActivityCarousel
           activities={carouselData?.activities?.slice(0, 10) ?? []}
         />
