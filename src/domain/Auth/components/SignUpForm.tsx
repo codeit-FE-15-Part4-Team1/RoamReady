@@ -1,20 +1,20 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { HTTPError } from 'ky';
-import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
+import { useSignupMutation } from '@/domain/Auth/hooks/useSignupMutation';
 import type {
   SignupFormValues,
   SignupRequest,
 } from '@/domain/Auth/schemas/request';
 import { signupRequestSchema } from '@/domain/Auth/schemas/request';
-import { signup } from '@/domain/Auth/services';
 import Button from '@/shared/components/Button';
 import Input from '@/shared/components/ui/input';
-import { ROUTES } from '@/shared/constants/routes';
-import { useRoamReadyStore } from '@/shared/store';
+import { OAUTH_ERROR_MESSAGES } from '@/shared/constants/routes';
+import { useToast } from '@/shared/hooks/useToast';
 
 /**
  * @component SignUpForm
@@ -25,17 +25,16 @@ import { useRoamReadyStore } from '@/shared/store';
  * @see /src/app/api/auth/signup/route.ts - 자동 로그인을 처리하는 API 라우트
  *
  * @feature
- * - **폼 관리**: `react-hook-form(useForm)`으로 폼의 상태를 관리합니다.
- * - **유효성 검사**: `zodResolver`를 이용해 실시간으로 유효성을 검사합니다.
- * - **제출 중 로딩 상태 관리**: API 요청 중에는 버튼을 비활성화하고 로딩 상태를 표시합니다.
- * - **자동 로그인**: 회원가입 성공 시, 즉시 로그인 상태로 전환하며 Zustand 스토어에 사용자 정보를 저장(`setUser`)합니다.
- * - **사용자 피드백**: `toast` 메시지를 통해 회원가입 성공 또는 실패에 대한 명확한 피드백을 제공합니다.
- * - **에러 핸들링**: `ky`의 `HTTPError`를 감지하여 네트워크 에러 메시지를 사용자에게 보여줍니다.
- *
+ * - **폼 관리**: `react-hook-form`의 `useForm`을 사용하여 폼의 상태를 관리합니다.
+ * - **유효성 검사**: `zodResolver`를 이용해 클라이언트 측 유효성 검사를 실시간으로 수행하며, 서버 응답 에러(예: 이메일 중복)를 `react-hook-form`의 `setError`를 통해 특정 필드에 직접 표시합니다.
+ * - **제출 중 로딩 상태 관리**: `isSubmitting` 및 `isPending` 상태를 활용하여 API 요청 중에는 버튼을 비활성화하고 로딩 상태를 표시합니다.
+ * - **자동 로그인**: 회원가입 성공 시, 즉시 로그인 상태로 전환하며 전역 Zustand 스토어에 사용자 정보를 저장하고 관련 캐시를 무효화합니다.
+ * - **사용자 피드백**: `useToast` 훅을 통해 회원가입 성공 또는 실패에 대한 명확한 피드백(토스트 메시지)을 제공합니다. OAuth 관련 에러는 URL 쿼리 파라미터를 통해 받아 처리합니다.
+ * - **에러 핸들링**: `useSignupMutation` 훅 내부에서 `ky`의 `HTTPError`를 감지하여 네트워크 에러 메시지 및 서버 응답 에러를 사용자에게 보여줍니다.
  */
 export default function SignUpForm() {
-  const router = useRouter();
-  const setUser = useRoamReadyStore((state) => state.setUser);
+  const { showError } = useToast();
+  const searchParams = useSearchParams();
 
   const signupDefaultValues: SignupFormValues = {
     email: '',
@@ -43,6 +42,16 @@ export default function SignUpForm() {
     password: '',
     passwordConfirm: '',
   };
+
+  useEffect(() => {
+    const errorCode = searchParams.get('error');
+    if (errorCode) {
+      const message = OAUTH_ERROR_MESSAGES[errorCode];
+      if (message) {
+        showError(message);
+      }
+    }
+  }, [searchParams, showError]);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupRequestSchema),
@@ -54,26 +63,10 @@ export default function SignUpForm() {
     formState: { isSubmitting },
   } = form;
 
-  const onSubmit = async (data: SignupRequest) => {
-    try {
-      const user = await signup(data);
+  const { mutate } = useSignupMutation(form);
 
-      if (user && user.id) {
-        setUser(user);
-        router.push(ROUTES.MAIN);
-      } else {
-        //! 에러 처리 - 백엔드가 토큰을 주지 않은 경우 (이론상 발생 가능)
-
-        router.push(ROUTES.SIGNIN);
-      }
-    } catch (error) {
-      console.error('회원가입 실패:', error);
-      if (error instanceof HTTPError) {
-        const errorResponse = await error.response.json();
-        alert(errorResponse.message || '회원가입 중 오류가 발생했습니다.');
-      } else {
-      }
-    }
+  const onSubmit = (data: SignupRequest) => {
+    mutate(data);
   };
 
   return (
