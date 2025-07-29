@@ -15,6 +15,18 @@ export async function DELETE(
   const { activityId } = await params;
 
   try {
+    // 인증 토큰 확인
+    const authToken = _request.headers.get('Authorization');
+    if (!authToken) {
+      return NextResponse.json(
+        {
+          message:
+            '로그인이 필요한 요청입니다. 요청에 Authorization 헤더가 누락되었습니다.',
+        },
+        { status: 401 },
+      );
+    }
+
     // 백엔드 체험 삭제 API 호출
     const apiResponse = await fetch(
       `${process.env.API_BASE_URL}my-activities/${activityId}`,
@@ -22,6 +34,7 @@ export async function DELETE(
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: authToken,
         },
       },
     );
