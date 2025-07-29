@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function PATCH(
   request: NextRequest,
-  context: { params: { id: string } },
+  context: { params: Promise<{ id: string }> },
 ) {
   const { params } = context;
-  const { id } = params;
+  const { id } = await params;
   try {
     // 1. URL에서 활동 ID를 가져옵니다.
     const activityId = id;
