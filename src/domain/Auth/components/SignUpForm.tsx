@@ -63,7 +63,7 @@ export default function SignUpForm() {
     formState: { isSubmitting },
   } = form;
 
-  const { mutate } = useSignupMutation(form);
+  const { mutate, isPending } = useSignupMutation(form);
 
   const onSubmit = (data: SignupRequest) => {
     mutate(data);
@@ -114,10 +114,12 @@ export default function SignUpForm() {
           variant='primary'
           size='large'
           className='mt-10 w-full py-17.5'
-          loading={isSubmitting}
-          disabled={isSubmitting}
+          loading={isSubmitting || isPending}
+          disabled={isSubmitting || isPending}
         >
-          회원가입
+          <span>
+            {isSubmitting || isPending ? '회원가입 중...' : '회원가입'}
+          </span>
         </Button>
       </form>
     </FormProvider>
