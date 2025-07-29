@@ -30,9 +30,9 @@ export default function FallbackUI({ isOwner, isLogin }: FallbackUIProps) {
 
   // 설명 텍스트 결정
   const description = !isLogin
-    ? '예약을 위해 로그인이 필요해요.\n로그인 후 이용해주세요.'
+    ? '예약을 위해 로그인이 필요합니다.\n로그인 후 이용해주세요.'
     : isOwner
-      ? '이 체험은 회원님이 직접 등록한 체험입니다.\n본인의 체험은 예약할 수 없어요.'
+      ? '이 체험은 회원님이 직접 등록한 체험입니다.\n본인의 체험은 예약할 수 없습니다.'
       : '';
 
   // 버튼 경로 및 텍스트 조건부
