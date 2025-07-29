@@ -42,6 +42,7 @@ interface ErrorPageProps {
  *
  */
 export default function GlobalError({ error, reset }: ErrorPageProps) {
+  //! sentry 로깅
   useEffect(() => {
     console.error('[Global Error] 예상치 못한 클라이언트 에러 발생:', error);
   }, [error]);

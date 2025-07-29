@@ -37,3 +37,5 @@ export const handleErrorByStatus = (error: HTTPError): void => {
       break;
   }
 };
+
+//! 토스트는 UI로직인데 여기있는게 이상함. 외부에서 처리하는게 좋음. formatErrorResponseHooks.ts이랑 같이 정리 필요.

@@ -56,6 +56,7 @@ export const useSignupMutation = (
           data,
         );
         router.push(ROUTES.SIGNIN);
+        return;
       }
 
       setUser(data);
@@ -69,8 +70,10 @@ export const useSignupMutation = (
         if (error.response.status === 409) {
           console.log('이미 가입된 이메일입니다.');
           form.setError('email', { message: error.message });
-          return;
+        } else {
+          showError(error.message);
         }
+        return;
       }
 
       console.error('회원가입 실패:', error);

@@ -135,10 +135,15 @@ export async function GET(request: NextRequest) {
       refreshToken: responseData.refreshToken,
     });
     return response;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[Kakao Callback Error]', error);
 
-    switch (error.status) {
+    const errorStatus =
+      error instanceof Error && 'status' in error
+        ? (error as Error & { status: number }).status
+        : undefined;
+
+    switch (errorStatus) {
       case 409:
         return NextResponse.redirect(
           new URL(
@@ -163,3 +168,6 @@ export async function GET(request: NextRequest) {
     }
   }
 }
+
+//! 카카오 문서의 에러 코드와 일치하는지 확인
+// 카카오 OAuth 문서: https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#response-error-code

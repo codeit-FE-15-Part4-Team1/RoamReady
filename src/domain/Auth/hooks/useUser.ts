@@ -42,7 +42,7 @@ export const useUser = () => {
   return useQuery({
     queryKey: ['user', 'me'],
     queryFn: getMe,
-    staleTime: 1000 * 60 * 5,
+    // staleTime: 1000 * 60 * 5, //! 왜 5분인지 설명못하면 빼는게 좋다.
     retry: 1,
   });
 };

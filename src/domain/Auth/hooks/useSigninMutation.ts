@@ -46,14 +46,15 @@ export const useSigninMutation = () => {
     },
 
     onError: (error: Error) => {
-      if (error instanceof HTTPError) {
-        if (error.response.status === 400 || error.response.status === 401) {
-          showError(`로그인 실패: ${error.message}`);
-          return;
-        }
+      if (
+        error instanceof HTTPError &&
+        (error.response.status === 400 || error.response.status === 401)
+      ) {
+        showError(`로그인 실패: ${error.message}`);
+      } else {
+        console.error('로그인 실패:', error);
+        showError(error.message);
       }
-      console.error('로그인 실패:', error);
-      showError(error.message);
     },
   });
 };
