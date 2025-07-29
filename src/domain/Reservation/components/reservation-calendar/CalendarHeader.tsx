@@ -1,3 +1,4 @@
+import TriangleArrow from '@/shared/assets/icons/TriangleArrow';
 import dayjs from 'dayjs';
 
 interface CalendarHeaderProps {
@@ -19,7 +20,7 @@ export default function CalendarHeader({
         className='cursor-pointer rounded p-2'
         aria-label='이전 달로 이동'
       >
-        &lt;
+        <TriangleArrow direction='left' />
       </button>
       <span id='calendar-header' aria-live='polite'>
         {currentDate.format('YYYY년 MM월')}
@@ -30,7 +31,7 @@ export default function CalendarHeader({
         className='cursor-pointer rounded p-2'
         aria-label='다음 달로 이동'
       >
-        &gt;
+        <TriangleArrow direction='right' />
       </button>
     </div>
   );

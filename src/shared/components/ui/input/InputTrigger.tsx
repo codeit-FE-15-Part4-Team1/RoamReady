@@ -76,7 +76,7 @@ export default function InputTrigger({
 
   if (triggerType === 'file-upload' && contextType === 'file') {
     const handleClick = () => {
-      if (disabled) return;
+      if (disabled || !id) return;
       const fileInput = document.getElementById(id) as HTMLInputElement | null;
       if (fileInput) {
         fileInput.click();
