@@ -54,7 +54,7 @@ export default function SignInForm() {
       const response = await signin(data);
       console.log('로그인 성공:', response);
       setUser(response.user);
-      router.push(ROUTES.MAIN);
+      router.push(ROUTES.ACTIVITIES.ROOT);
     } catch (error) {
       console.error('로그인 실패:', error);
       if (error instanceof HTTPError) {

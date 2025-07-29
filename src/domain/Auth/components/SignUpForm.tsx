@@ -60,7 +60,7 @@ export default function SignUpForm() {
 
       if (user && user.id) {
         setUser(user);
-        router.push(ROUTES.MAIN);
+        router.push(ROUTES.ACTIVITIES.ROOT);
       } else {
         //! 에러 처리 - 백엔드가 토큰을 주지 않은 경우 (이론상 발생 가능)
 

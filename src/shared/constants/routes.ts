@@ -1,7 +1,10 @@
 export const ROUTES = {
   SIGNIN: '/signin',
   SIGNUP: '/signup',
-  MAIN: '/activities',
+  ACTIVITIES: {
+    ROOT: '/activities',
+    DETAIL: (id: number) => `/activities/${id}`,
+  },
   MYPAGE: {
     ROOT: '/mypage',
     EXPERIENCES: '/mypage/experiences',
