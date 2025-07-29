@@ -13,11 +13,12 @@ import { NextResponse } from 'next/server';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { activityId: string } },
+  context: { params: { activityId: string } },
 ) {
   const { searchParams } = new URL(request.url);
   const year = searchParams.get('year');
   const month = searchParams.get('month');
+  const { params } = context;
   const { activityId } = params;
 
   // year 또는 month 누락 시 400 Bad Request 응답
