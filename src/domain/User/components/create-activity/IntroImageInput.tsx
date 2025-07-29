@@ -31,7 +31,14 @@ export default function IntroImageInput({
   }, []);
 
   useEffect(() => {
-    if (value instanceof FileList && value.length > 0) {
+    // 브라우저 환경에서만 FileList 체크
+    if (!isMounted) return;
+
+    if (
+      typeof window !== 'undefined' &&
+      value instanceof FileList &&
+      value.length > 0
+    ) {
       // 새로운 파일이 들어온 경우 (FileList)
       const objectUrls = Array.from(value).map((file) =>
         URL.createObjectURL(file),
@@ -47,7 +54,7 @@ export default function IntroImageInput({
       // FileList가 없으면 미리보기 URL 초기화
       setNewFilePreviewUrls([]);
     }
-  }, [value]);
+  }, [value, isMounted]);
 
   // existingImageUrls 변경 감지
   useEffect(() => {}, [existingImageUrls]);
@@ -57,6 +64,9 @@ export default function IntroImageInput({
     filesToAdd: File[],
     indexToRemove?: number,
   ) => {
+    // 브라우저 환경에서만 DataTransfer 사용
+    if (typeof window === 'undefined') return null;
+
     const dataTransfer = new DataTransfer();
     let existing = currentFiles ? Array.from(currentFiles) : [];
     if (indexToRemove !== undefined) {
@@ -69,7 +79,11 @@ export default function IntroImageInput({
 
   const getCurrentImageCount = () => {
     const existingCount = existingImageUrls.length;
-    const newFileCount = value instanceof FileList ? value.length : 0;
+    // 브라우저 환경에서만 FileList 체크
+    const newFileCount =
+      typeof window !== 'undefined' && value instanceof FileList
+        ? value.length
+        : 0;
     return existingCount + newFileCount;
   };
 
@@ -97,20 +111,26 @@ export default function IntroImageInput({
     }
 
     // 현재 value가 FileList인 경우 기존 파일과 합침
-    if (value instanceof FileList) {
+    if (typeof window !== 'undefined' && value instanceof FileList) {
       const updatedFileList = createNewFileList(value, addedFiles);
-      onChange(updatedFileList.length > 0 ? updatedFileList : null);
+      onChange(
+        updatedFileList && updatedFileList.length > 0 ? updatedFileList : null,
+      );
     } else {
       // 새로운 파일만 추가
       const updatedFileList = createNewFileList(null, addedFiles);
-      onChange(updatedFileList.length > 0 ? updatedFileList : null);
+      onChange(
+        updatedFileList && updatedFileList.length > 0 ? updatedFileList : null,
+      );
     }
   };
 
   const handleRemoveNewFile = (indexToRemove: number) => {
-    if (value instanceof FileList) {
+    if (typeof window !== 'undefined' && value instanceof FileList) {
       const updatedFileList = createNewFileList(value, [], indexToRemove);
-      onChange(updatedFileList.length > 0 ? updatedFileList : null);
+      onChange(
+        updatedFileList && updatedFileList.length > 0 ? updatedFileList : null,
+      );
     }
   };
 
@@ -187,6 +207,7 @@ export default function IntroImageInput({
         onChange={handleFileChange}
         accept='image/*'
         multiple
+        disabled={!canAddMore}
       />
     </div>
   );

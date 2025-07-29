@@ -58,13 +58,13 @@ export const useActivityForm = () => {
       subImageUrls: [],
     },
   );
-  // ✨ 삭제할 이미지 ID들을 추적하는 상태 추가
+  // 삭제할 이미지 ID들을 추적하는 상태 추가
   const [removedSubImageIds, setRemovedSubImageIds] = useState<number[]>([]);
-  // ✨ 기존 이미지 URL과 ID의 매핑을 저장
+  // 기존 이미지 URL과 ID의 매핑을 저장
   const [subImageUrlToIdMap, setSubImageUrlToIdMap] = useState<
     Record<string, number>
   >({});
-  // ✨ 스케줄 관련 추적 상태 추가
+  // 스케줄 관련 추적 상태 추가
   const [originalSchedules, setOriginalSchedules] = useState<Schedule[]>([]);
 
   const router = useRouter();
@@ -86,14 +86,14 @@ export const useActivityForm = () => {
             (imageObj: SubImage) => imageObj.imageUrl,
           );
 
-          // ✨ URL과 ID 매핑 저장
+          // URL과 ID 매핑 저장
           const urlToIdMap: Record<string, number> = {};
           (data.subImages || []).forEach((imageObj: SubImage) => {
             urlToIdMap[imageObj.imageUrl] = imageObj.id;
           });
           setSubImageUrlToIdMap(urlToIdMap);
 
-          // ✨ 원본 스케줄 데이터 저장 (ID 포함)
+          // 원본 스케줄 데이터 저장 (ID 포함)
           setOriginalSchedules(data.schedules || []);
 
           methods.reset({
@@ -138,10 +138,8 @@ export const useActivityForm = () => {
     methods.setValue('bannerImages', null);
   };
 
-  // ✨ 수정된 이미지 삭제 핸들러 - ID 추적 추가
+  // 수정된 이미지 삭제 핸들러 - ID 추적 추가
   const handleRemoveSubImage = (urlToRemove: string) => {
-    console.log('🔥 기존 이미지 삭제:', urlToRemove);
-
     // 삭제할 이미지의 ID를 찾아서 추가
     const imageId = subImageUrlToIdMap[urlToRemove];
     if (imageId && !removedSubImageIds.includes(imageId)) {
@@ -167,7 +165,6 @@ export const useActivityForm = () => {
   };
 
   const onSubmit = async (data: FormValues) => {
-    console.log('3️⃣ 폼 제출 최종 데이터:', data);
     setIsSubmitting(true);
     setSubmittingError(null);
 
@@ -194,11 +191,6 @@ export const useActivityForm = () => {
       let subImageUrlsToAdd: string[] = [];
 
       if (data.subImages instanceof FileList && data.subImages.length > 0) {
-        console.log(
-          '🔥 새 소개 이미지 업로드 중:',
-          data.subImages.length,
-          '개',
-        );
         const uploadPromises = Array.from(data.subImages).map((file) =>
           uploadActivityImages(file),
         );
@@ -211,10 +203,6 @@ export const useActivityForm = () => {
           subImageUrls = [...subImageUrls, ...newSubImageUrls];
         }
       }
-
-      console.log('🔥 최종 소개 이미지 URLs:', subImageUrls);
-      console.log('🔥 삭제할 이미지 IDs:', removedSubImageIds);
-      console.log('🔥 추가할 이미지 URLs:', subImageUrlsToAdd);
 
       if (isEdit) {
         // ✨ 수정 모드: 스케줄 변경사항 분석
@@ -233,7 +221,7 @@ export const useActivityForm = () => {
           (id: number) => !currentScheduleIds.includes(id),
         );
 
-        // ✨ 수정 모드: PATCH 요청에 맞는 데이터 구조
+        // 수정 모드: PATCH 요청에 맞는 데이터 구조
         const finalFormData = {
           title: data.title,
           category: data.category,
@@ -247,11 +235,7 @@ export const useActivityForm = () => {
           schedulesToAdd,
         };
 
-        console.log('🔥 최종 제출 데이터 (수정):', finalFormData);
-        console.log('🔥 삭제할 스케줄 IDs:', scheduleIdsToRemove);
-        console.log('🔥 추가할 스케줄들:', schedulesToAdd);
-        const result = await updateActivity(id, finalFormData);
-        console.log('🔥 updateActivity 결과:', result);
+        await updateActivity(id, finalFormData);
       } else {
         // 등록 모드: POST 요청에 맞는 데이터 구조
         const finalFormData = {
@@ -268,7 +252,6 @@ export const useActivityForm = () => {
           })),
         };
 
-        console.log('🔥 최종 제출 데이터 (등록):', finalFormData);
         await createActivity(finalFormData);
       }
 

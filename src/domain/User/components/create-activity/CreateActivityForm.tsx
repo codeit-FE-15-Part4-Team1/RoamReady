@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { Controller, FormProvider } from 'react-hook-form';
 
 import { useActivityForm } from '@/domain/User/hooks/create-activity/useActivityForm';
@@ -14,7 +15,11 @@ import SubmitButton from './SubmitButton';
 import TimeSlotInput from './TimeSlotInput/TimeSlotInput';
 import TitleInput from './TitleInput';
 
-export default function CreateActivityForm() {
+export default function CreateActivityForm({
+  onDirtyChange,
+}: {
+  onDirtyChange: (isDirty: boolean) => void;
+}) {
   const {
     methods,
     isEdit,
@@ -26,6 +31,14 @@ export default function CreateActivityForm() {
     onSubmit,
     handleRemoveBannerImage,
   } = useActivityForm();
+
+  const { isDirty } = methods.formState;
+
+  useEffect(() => {
+    if (onDirtyChange) {
+      onDirtyChange(isDirty);
+    }
+  }, [isDirty, onDirtyChange]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -65,16 +78,6 @@ export default function CreateActivityForm() {
           name='subImages'
           control={methods.control}
           render={({ field: { onChange, value } }) => {
-            console.log(
-              '➡️ IntroImageInput으로 전달되는 기존 이미지 URL:',
-              existingImageUrls.subImageUrls,
-            );
-            console.log('IntroImageInput value', value);
-            console.log(
-              'IntroImageInput existingImageUrls',
-              existingImageUrls.subImageUrls,
-            );
-
             return (
               <IntroImageInput
                 value={value}
