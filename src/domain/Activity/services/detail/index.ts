@@ -21,7 +21,7 @@ export const deleteMyActivity = async (activityId: number) => {
 };
 
 /**
- * 체험 상세 데이터 조회 API (ISR tag: 'activity-detail')
+ * 체험 상세 데이터 조회 API (ISR tag: 'activity-detail-{activityId}')
  * @param activityId - 체험 ID
  * @returns 체험 상세 데이터
  */
@@ -29,7 +29,7 @@ export const getActivityDetail = async (activityId: number) => {
   const res = await fetch(
     `${process.env.API_BASE_URL}/activities/${activityId}`,
     {
-      next: { tags: ['activity-detail'] },
+      next: { tags: [`activity-detail-${activityId}`] },
     },
   );
 

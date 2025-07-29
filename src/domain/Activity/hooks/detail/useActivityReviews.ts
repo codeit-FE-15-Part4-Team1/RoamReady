@@ -15,7 +15,7 @@ import type { ReviewList } from '@/domain/Activity/types/detail/types';
  *
  * @remarks
  * - ISR 방식: 리뷰 데이터는 주기적으로 갱신되지 않고, 리뷰 등록 등의 이벤트 이후 수동 무효화로 갱신됨.
- * - `staleTime`은 3분이며, 3분 이내 재요청 시 캐시된 데이터가 사용됩니다.
+ * - `staleTime`은 30분이며, 30분 이내 재요청 시 캐시된 데이터가 사용됩니다.
  * - `initialData`는 첫 페이지(`page === 1`)에만 적용되어 SSG/ISR 시 초기 렌더 성능을 높입니다.
  * - 이후 리뷰 등록 시, `queryClient.invalidateQueries(['activity-reviews', activityId, 1])`를 통해 **1페이지 데이터만 수동 무효화**하여 갱신합니다.
  */
@@ -30,7 +30,7 @@ export const useActivityReviews = (
     queryFn: () => getActivityReviews(activityId, page, size),
     initialData: page === 1 ? initialData : undefined,
     placeholderData: (previousData) => previousData,
-    staleTime: 1000 * 60 * 5, // 5분
+    staleTime: 1000 * 60 * 30, // 30분
     enabled: !!activityId,
   });
 };
