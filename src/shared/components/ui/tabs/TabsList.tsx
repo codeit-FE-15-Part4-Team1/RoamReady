@@ -1,3 +1,4 @@
+'use client';
 import { KeyboardEvent, ReactNode, useRef } from 'react';
 
 import { cn } from '@/shared/libs/cn';
@@ -107,7 +108,7 @@ export default function TabsList({ children, className }: TabsListProps) {
     <div
       ref={listRef}
       role='tablist'
-      className={cn(className)}
+      className={cn(className, 'border-b border-gray-200')}
       onKeyDown={handleKeyDown}
     >
       {children}

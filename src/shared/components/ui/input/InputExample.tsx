@@ -2,13 +2,14 @@
 
 import { Search } from 'lucide-react';
 import Image from 'next/image';
-import { Control } from 'react-hook-form';
+import { Control, FieldError, UseFormRegisterReturn } from 'react-hook-form';
 
 import Button from '@/shared/components/Button';
 import { useImagePreview } from '@/shared/hooks/useImagePreview';
 import { cn } from '@/shared/libs/cn';
 
 import Input from '.';
+import { InputContext } from './InputContext';
 
 interface FormValues {
   textExample: string;
@@ -112,18 +113,56 @@ export default function InputExample({
       </div>
 
       {/* 에러 상태의 텍스트 입력 예시 */}
+      {/*
+       *❗주의: 이 InputContext.Provider 사용 방식은 실제 프로덕션 코드에서는 사용하지 않습니다.
+       *
+       * 이 코드는 react-hook-form의 상태 없이 Input 컴포넌트의 "에러 상태 UI"를 시각적으로 미리보기 위해 작성된 테스트/데모용 코드입니다.
+       * 실제로는 useForm + FormProvider + Input.Root 구조를 사용해야 정상 동작합니다.
+       *
+       * @example
+       * ✅ 실사용: <FormProvider><Input.Root name="email">...</Input.Root></FormProvider>
+       * ❌ 여기처럼: <InputContext.Provider value={...}>는 테스트에서만 사용
+       */}
       <div className='flex flex-col gap-3'>
         <h2 className='font-size-15 font-semibold'>Text Input with Error</h2>
-        <Input.Root
-          id='error-example'
-          name='email'
-          type='text'
-          className={group}
+
+        <InputContext.Provider
+          value={{
+            id: 'input-error-preview',
+            name: 'previewError',
+            type: 'text',
+            isError: true, // 에러 상태 강제 주입
+            errors: {
+              previewError: {
+                message: '이메일 형식이 올바르지 않습니다.',
+                type: 'manual',
+              } satisfies FieldError,
+            },
+            register: {
+              name: 'previewError',
+              onBlur: () => {},
+              onChange: () => {},
+              ref: () => {},
+            } as unknown as UseFormRegisterReturn,
+            required: false,
+            disabled: false,
+            fileName: undefined,
+            maxLength: undefined,
+            currentLength: 0,
+            fallbackMessage: '',
+            isPasswordVisible: false,
+            togglePasswordVisibility: () => {},
+          }}
         >
-          <Input.Label>Email</Input.Label>
-          <Input.Field placeholder='Email을 입력하세요' />
-          <Input.Helper />
-        </Input.Root>
+          <div
+            role='group'
+            className='flex flex-col gap-10 rounded-lg border border-gray-300 px-20 py-15'
+          >
+            <Input.Label>Email</Input.Label>
+            <Input.Field placeholder='Email을 입력하세요' />
+            <Input.Helper />
+          </div>
+        </InputContext.Provider>
       </div>
 
       {/* Textarea 예시 */}
