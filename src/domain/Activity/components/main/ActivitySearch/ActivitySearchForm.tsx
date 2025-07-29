@@ -2,8 +2,8 @@
 
 import { Controller, useFormContext } from 'react-hook-form';
 
-import ActivitySearchField from '@/domain/Activity/components/main/ActivityFilter/ActivitySearchField';
 import ActivitySearchButton from '@/domain/Activity/components/main/ActivitySearch/ActivitySearchButton';
+import ActivitySearchField from '@/domain/Activity/components/main/ActivitySearch/ActivitySearchField';
 import { ActivitySearchFormValues } from '@/domain/Activity/schemas/main';
 import { DatePicker } from '@/shared/components/ui/date-picker';
 import { formatDate } from '@/shared/utils/formatDate';
