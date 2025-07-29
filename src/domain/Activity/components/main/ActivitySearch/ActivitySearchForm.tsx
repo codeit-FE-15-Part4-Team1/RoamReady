@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback,useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import ActivitySearchButton from '@/domain/Activity/components/main/ActivitySearch/ActivitySearchButton';

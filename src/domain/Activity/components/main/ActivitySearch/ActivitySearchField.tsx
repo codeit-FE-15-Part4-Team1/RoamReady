@@ -37,7 +37,7 @@ export default function ActivitySearchField({
       </Popover.Trigger>
       <Popover.Content
         position={popoverPosition}
-        className='mt-10 max-h-none w-fit rounded-4xl border-none p-24'
+        className='flex-center max-h-none w-fit min-w-400 rounded-4xl border-none p-30'
       >
         {children}
       </Popover.Content>

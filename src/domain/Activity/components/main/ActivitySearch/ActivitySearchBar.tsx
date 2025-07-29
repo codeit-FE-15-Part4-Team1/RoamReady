@@ -38,7 +38,7 @@ export default function ActivitySearchBar() {
 
     // 3. 쿼리 스트링 생성
     const queryString = params.toString();
-    const url = `/activities/result?${queryString}`;
+    const url = `/activities/search?${queryString}`;
 
     // 4. 새 탭에서 URL 열기
     window.open(url, '_blank');

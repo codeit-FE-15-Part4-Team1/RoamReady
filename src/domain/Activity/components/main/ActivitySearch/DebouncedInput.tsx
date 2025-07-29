@@ -50,7 +50,7 @@ export default function DebouncedInput({
       {...field} // name, ref 등을 자동으로 연결
       type='text'
       placeholder={placeholder}
-      className='w-full rounded-lg border border-neutral-300 p-3 text-base'
+      className='font-size-14 w-full rounded-2xl border border-neutral-300 p-12 text-base'
       autoFocus
       value={inputValue} // 화면에 보여주는 값은 로컬 상태
       onChange={(e) => setInputValue(e.target.value)} // 입력 시 로컬 상태만 변경
