@@ -14,7 +14,6 @@ interface TabsTriggerProps {
   children: ReactNode;
   /** 추가 CSS 클래스명 */
   className?: string;
-  onClick?: () => void;
 }
 
 /**
@@ -49,7 +48,6 @@ export default function TabsTrigger({
   value,
   children,
   className,
-  onClick,
 }: TabsTriggerProps) {
   const { value: selectedValue, onValueChange } = useTabs();
   const isSelected = selectedValue === value;
