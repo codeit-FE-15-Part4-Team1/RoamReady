@@ -1,6 +1,6 @@
 import { cn } from '@/shared/libs/cn';
 
-import TriangleArrow from '../../icons/TriangleArrow';
+import TriangleArrow from '../../../assets/icons/TriangleArrow';
 import { useDatePickerContext } from './DatePickerContext';
 
 /**

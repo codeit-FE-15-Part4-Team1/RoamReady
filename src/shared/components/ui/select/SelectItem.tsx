@@ -105,6 +105,7 @@ export default function SelectItem({
 
   return (
     <button
+      type='button'
       ref={itemRef}
       role='option'
       aria-selected={isSelected}
