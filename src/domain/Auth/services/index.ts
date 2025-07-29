@@ -8,7 +8,6 @@ import type { SigninRequest, SignupRequest } from '../schemas/request';
 import type { SigninResponse, SignupResponse } from '../schemas/response';
 
 /**
- * ! 업데이트
  * @function signup
  * @description 회원가입 API 함수입니다.
  * 서버에 이메일, 닉네임, 비밀번호를 전송하여 계정을 생성하며, 성공 시 생성된 사용자 정보를 반환합니다.
