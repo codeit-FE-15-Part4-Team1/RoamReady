@@ -8,6 +8,9 @@ interface ActivitySearchFieldProps {
   placeholder: string;
   popoverPosition: 'bottom-start' | 'bottom-center' | 'bottom-end';
   children: ReactNode;
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
+  onClick: () => void;
 }
 
 export default function ActivitySearchField({
@@ -16,11 +19,15 @@ export default function ActivitySearchField({
   placeholder,
   popoverPosition,
   children,
+  isOpen,
+  onOpenChange,
+  onClick,
 }: ActivitySearchFieldProps) {
   return (
-    <Popover.Root>
+    <Popover.Root isOpen={isOpen} onOpenChange={onOpenChange}>
       <Popover.Trigger
         type='button'
+        onClick={onClick}
         className='h-full flex-1 cursor-pointer truncate rounded-full px-24 py-8 text-left transition hover:bg-neutral-200'
       >
         <p className='font-size-16 font-semibold text-neutral-800'>{label}</p>

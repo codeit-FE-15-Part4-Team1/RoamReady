@@ -1,9 +1,11 @@
 'use client';
 
-import { Controller, useFormContext } from 'react-hook-form';
+import { useCallback,useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import ActivitySearchButton from '@/domain/Activity/components/main/ActivitySearch/ActivitySearchButton';
 import ActivitySearchField from '@/domain/Activity/components/main/ActivitySearch/ActivitySearchField';
+import DebouncedInput from '@/domain/Activity/components/main/ActivitySearch/DebouncedInput';
 import { ActivitySearchFormValues } from '@/domain/Activity/schemas/main';
 import { DatePicker } from '@/shared/components/ui/date-picker';
 import { formatDate } from '@/shared/utils/formatDate';
@@ -12,15 +14,22 @@ interface ActivitySearchFormProps {
   onSubmit: (data: ActivitySearchFormValues) => void;
 }
 
+type ActiveField = 'title' | 'date' | 'location';
+
 export default function ActivitySearchForm({
   onSubmit,
 }: ActivitySearchFormProps) {
-  const { control, watch, setValue, handleSubmit } = useFormContext();
+  const { watch, setValue, handleSubmit } = useFormContext();
+  const [activeField, setActiveField] = useState<ActiveField | null>(null);
 
-  const title = watch('title');
   const date = watch('date');
-  const location = watch('location');
   const displayDateValue = date ? formatDate(date) : undefined;
+
+  const goToNextField = useCallback((currentField: ActiveField) => {
+    if (currentField === 'title') setActiveField('date');
+    else if (currentField === 'date') setActiveField('location');
+    else setActiveField(null);
+  }, []);
 
   return (
     <form
@@ -30,21 +39,18 @@ export default function ActivitySearchForm({
       {/* Title 필드 */}
       <ActivitySearchField
         label='액티비티'
-        displayValue={title}
+        displayValue={watch('title')}
         placeholder='액티비티 검색'
         popoverPosition='bottom-start'
+        isOpen={activeField === 'title'}
+        onOpenChange={(open) => setActiveField(open ? 'title' : null)}
+        onClick={() => setActiveField('title')}
       >
-        <Controller
+        {/* 복잡한 Controller 대신 DebouncedInput 컴포넌트 사용 */}
+        <DebouncedInput
           name='title'
-          control={control}
-          render={({ field }) => (
-            <input
-              {...field}
-              type='text'
-              placeholder='액티비티 제목 검색'
-              className='w-full rounded-lg border border-neutral-300 p-3 text-base'
-            />
-          )}
+          placeholder='액티비티 제목 검색'
+          onConfirm={() => goToNextField('title')}
         />
       </ActivitySearchField>
 
@@ -54,12 +60,16 @@ export default function ActivitySearchForm({
         displayValue={displayDateValue}
         placeholder='날짜 선택'
         popoverPosition='bottom-center'
+        isOpen={activeField === 'date'}
+        onOpenChange={(open) => setActiveField(open ? 'date' : null)}
+        onClick={() => setActiveField('date')}
       >
         <DatePicker.Root
           selectedDate={date}
-          onDateClick={(selectedDate) =>
-            setValue('date', selectedDate, { shouldValidate: true })
-          }
+          onDateClick={(selectedDate) => {
+            setValue('date', selectedDate, { shouldValidate: true });
+            goToNextField('date');
+          }}
         >
           <DatePicker.Month />
           <DatePicker.Week />
@@ -70,21 +80,18 @@ export default function ActivitySearchForm({
       {/* Location 필드 */}
       <ActivitySearchField
         label='위치'
-        displayValue={location}
+        displayValue={watch('location')}
         placeholder='지역 검색'
         popoverPosition='bottom-end'
+        isOpen={activeField === 'location'}
+        onOpenChange={(open) => setActiveField(open ? 'location' : null)}
+        onClick={() => setActiveField('location')}
       >
-        <Controller
+        {/* 여기도 마찬가지로 DebouncedInput 재사용 */}
+        <DebouncedInput
           name='location'
-          control={control}
-          render={({ field }) => (
-            <input
-              {...field}
-              type='text'
-              placeholder='지역, 주소 검색'
-              className='w-full rounded-lg border border-neutral-300 p-3 text-base'
-            />
-          )}
+          placeholder='지역, 주소 검색'
+          onConfirm={() => goToNextField('location')}
         />
       </ActivitySearchField>
 
