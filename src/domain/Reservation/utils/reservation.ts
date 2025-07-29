@@ -1,42 +1,51 @@
-import { Event } from '../types/event';
+import { Reservation, ReservationStatus } from '../types/reservation';
 
 // 요일 배열
 export const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
-// 이벤트 우선순위 (중요도 순)
-export const PRIORITY_MAP = {
-  완료: 0,
-  승인: 1,
-  예약: 2,
-  거절: 3,
-  취소: 4,
+// 상태별 우선순위 (표시 순서)
+export const STATUS_PRIORITY: ReservationStatus[] = [
+  'completed',
+  'pending',
+  'confirmed',
+];
+
+// 상태별 한글 라벨
+export const STATUS_LABELS: Record<ReservationStatus, string> = {
+  confirmed: '예약',
+  pending: '승인',
+  completed: '완료',
 };
 
 /**
- * 이벤트 색상에 따른 Tailwind CSS 클래스를 반환합니다
- * @param color - 이벤트 색상 ('red' | 'blue' | 'orange' | 'green' | 'purple')
+ * 예약 상태에 따른 Tailwind CSS 클래스를 반환합니다
+ * @param status - 예약 상태 ('completed' | 'confirmed' | 'pending')
  * @returns Tailwind CSS 클래스 문자열
  */
-export const getColorClass = (color: string) => {
-  const colorMap = {
-    red: 'bg-red-200 text-red-400',
-    blue: 'bg-blue-200 text-blue-400',
-    orange: 'bg-orange-200 text-orange-400',
-    green: 'bg-green-200 text-green-400',
-    purple: 'bg-purple-200 text-purple-400',
+export const getColorClassByStatus = (status: ReservationStatus) => {
+  const statusColorMap: Record<ReservationStatus, string> = {
+    completed: 'bg-green-200 text-green-600', // 완료
+    confirmed: 'bg-purple-200 text-purple-600', // 예약
+    pending: 'bg-blue-200 text-blue-600', // 승인
   };
-  return colorMap[color as keyof typeof colorMap] || 'bg-gray-500';
+
+  return statusColorMap[status] || 'bg-gray-200 text-gray-600';
 };
 
 /**
- * 이벤트를 우선순위에 따라 정렬합니다
- * @param events - 정렬할 이벤트 배열
- * @returns 우선순위 순으로 정렬된 이벤트 배열 (완료 > 승인 > 예약 > 거절 > 취소)
+ * 예약 데이터에서 표시할 아이템들을 우선순위 순으로 반환
+ * @param reservation - 예약 객체 (null 가능)
+ * @returns 표시할 아이템 배열 (우선순위 순)
  */
-export const sortEventsByPriority = (events: Event[]) => {
-  return [...events].sort((a, b) => {
-    const priorityA = PRIORITY_MAP[a.title as keyof typeof PRIORITY_MAP] ?? 999;
-    const priorityB = PRIORITY_MAP[b.title as keyof typeof PRIORITY_MAP] ?? 999;
-    return priorityA - priorityB;
-  });
+export const getDisplayItems = (reservation: Reservation | null) => {
+  if (!reservation) return [];
+
+  const items = [];
+  for (const status of STATUS_PRIORITY) {
+    const count = reservation.reservations[status];
+    if (count && count > 0) {
+      items.push({ status, count });
+    }
+  }
+  return items;
 };
