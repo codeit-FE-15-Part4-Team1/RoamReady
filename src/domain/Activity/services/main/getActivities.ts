@@ -3,7 +3,7 @@ import {
   GetActivitiesOffsetResponse,
   GetActivitiesRequestQuery,
   getActivitiesResponseOffsetSchema,
-} from '@/domain/Activity/schemas/main/activity';
+} from '@/domain/Activity/schemas/main';
 
 export const getActivities = async (
   params?: Partial<GetActivitiesRequestQuery>,

@@ -7,7 +7,7 @@ import { useCallback } from 'react';
 import ActivityCard from '@/domain/Activity/components/main/ActivityCard';
 import ActivityCardSkeleton from '@/domain/Activity/components/main/ActivityCardSkeleton';
 import ActivityFilter from '@/domain/Activity/components/main/ActivityFilter';
-import { GetActivitiesRequestQuery } from '@/domain/Activity/schemas/main/activity';
+import { GetActivitiesRequestQuery } from '@/domain/Activity/schemas/main';
 import { getActivities } from '@/domain/Activity/services/main/getActivities';
 import Pagination from '@/shared/components/ui/Pagination';
 

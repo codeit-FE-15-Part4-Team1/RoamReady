@@ -8,7 +8,7 @@ import ActivityCarousel from '@/domain/Activity/components/main/ActivityCarousel
 import AirbnbSearch from '@/domain/Activity/components/main/ActivitySearchHelper';
 import ActivitySection from '@/domain/Activity/components/main/ActivitySection';
 import { activitiesKeys } from '@/domain/Activity/libs/main/queryKeys';
-import { GetActivitiesOffsetResponse } from '@/domain/Activity/schemas/main/activity';
+import { GetActivitiesOffsetResponse } from '@/domain/Activity/schemas/main';
 import { getActivities } from '@/domain/Activity/services/main/getActivities';
 
 interface ActivityPageProps {

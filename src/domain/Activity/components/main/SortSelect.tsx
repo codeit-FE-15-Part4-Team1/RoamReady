@@ -1,6 +1,6 @@
 'use client';
 
-import { GetActivitiesRequestQuery } from '@/domain/Activity/schemas/main/activity';
+import { GetActivitiesRequestQuery } from '@/domain/Activity/schemas/main';
 import Select from '@/shared/components/ui/select';
 
 type sortOption = NonNullable<GetActivitiesRequestQuery['sort']>;

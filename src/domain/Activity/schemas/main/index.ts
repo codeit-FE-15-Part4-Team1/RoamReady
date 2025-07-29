@@ -43,3 +43,11 @@ export const getActivitiesResponseOffsetSchema = z.object({
 export type GetActivitiesOffsetResponse = z.infer<
   typeof getActivitiesResponseOffsetSchema
 >;
+
+export const activitySearchSchema = z.object({
+  title: z.string().optional(),
+  location: z.string().optional(),
+  data: z.date().optional(),
+});
+
+export type ActivitySearchFormValues = z.infer<typeof activitySearchSchema>;

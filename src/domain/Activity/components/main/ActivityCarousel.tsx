@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import ActivityCard from '@/domain/Activity/components/main/ActivityCard';
-import { Activity } from '@/domain/Activity/schemas/main/activity';
+import { Activity } from '@/domain/Activity/schemas/main';
 import { cn } from '@/shared/libs/cn';
 
 interface ActivityCarouselProps {

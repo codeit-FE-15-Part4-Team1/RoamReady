@@ -1,7 +1,7 @@
 import { SortOption } from '@/domain/Activity/components/main/ActivitySection';
 import CategorySelect from '@/domain/Activity/components/main/CategorySelect';
 import SortSelect from '@/domain/Activity/components/main/SortSelect';
-import { GetActivitiesRequestQuery } from '@/domain/Activity/schemas/main/activity';
+import { GetActivitiesRequestQuery } from '@/domain/Activity/schemas/main';
 
 interface ActivityFilterProps {
   category: GetActivitiesRequestQuery['category'];
