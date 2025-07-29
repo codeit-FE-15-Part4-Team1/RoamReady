@@ -7,10 +7,10 @@ import { NextResponse } from 'next/server';
  */
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: { notificationId: string } },
+  context: { params: Promise<{ notificationId: string }> },
 ) {
-  console.log('route 진입');
-  const { notificationId } = params;
+  const { params } = context;
+  const { notificationId } = await params;
 
   try {
     const res = await fetch(
