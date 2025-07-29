@@ -1,4 +1,4 @@
-import ReviewCard from '@/domain/Activity/components/detail/ReviewCard';
+import ReviewCard from '@/domain/Activity/components/detail/Review/ReviewCard';
 import { Review } from '@/domain/Activity/types/detail/types';
 
 export default function ReviewCardTestPage() {
