@@ -1,8 +1,8 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { useSigninMutation } from '@/domain/Auth/hooks/useSigninMutation';
@@ -30,9 +30,11 @@ import { useToast } from '@/shared/hooks/useToast';
  * - **에러 핸들링**: `useSigninMutation` 훅 내부에서 `ky`의 `HTTPError`를 감지하여 네트워크 에러 메시지 및 서버 응답 에러를 사용자에게 보여줍니다.
  */
 export default function SignInForm() {
+  const router = useRouter();
   const { showError } = useToast();
   const { mutate, isPending } = useSigninMutation();
   const searchParams = useSearchParams();
+  const isUrlErrorHandled = useRef(false);
 
   const signinDefaultValues: SigninRequest = {
     email: '',
@@ -40,14 +42,19 @@ export default function SignInForm() {
   };
 
   useEffect(() => {
+    if (isUrlErrorHandled.current) return;
+
     const errorCode = searchParams.get('error');
-    if (errorCode) {
-      const message = OAUTH_ERROR_MESSAGES[errorCode];
-      if (message) {
-        showError(message);
-      }
-    }
-  }, [searchParams, showError]);
+    if (!errorCode) return;
+
+    const message = OAUTH_ERROR_MESSAGES[errorCode];
+    showError(message);
+    isUrlErrorHandled.current = true;
+
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.delete('error');
+    router.replace(`?${newSearchParams.toString()}`);
+  }, [searchParams, showError, router]);
 
   const form = useForm<SigninRequest>({
     resolver: zodResolver(signinRequestSchema),

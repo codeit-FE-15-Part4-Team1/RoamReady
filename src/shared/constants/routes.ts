@@ -45,4 +45,6 @@ export const OAUTH_ERROR_MESSAGES: Record<string, string> = {
     '가입되지 않은 계정입니다. 회원가입을 진행해주세요.',
   [ERROR_CODES.OAUTH_KAKAO_FAILED]:
     '카카오 인증에 실패했습니다. 잠시 후 다시 시도해주세요.',
+  [ERROR_CODES.SESSION_EXPIRED]:
+    '로그인 세션이 만료되었습니다. 다시 로그인해주세요.',
 };

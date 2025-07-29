@@ -81,7 +81,7 @@ export default function SegmentError({ error, reset }: ErrorPageProps) {
           콘텐츠 다시 불러오기
         </Button>
         <Button
-          onClick={() => (window.location.href = '/')}
+          onClick={() => window.location.reload()}
           variant='primary'
           className='bg-gray-500 px-16 py-13'
         >
