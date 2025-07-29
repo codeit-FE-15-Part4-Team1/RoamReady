@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-import TriangleArrow from '@/shared/components/icons/TriangleArrow';
+import TriangleArrow from '@/shared/assets/icons/TriangleArrow';
 
 interface CalendarHeaderProps {
   currentDate: dayjs.Dayjs;
