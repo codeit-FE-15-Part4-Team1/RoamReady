@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { usePathname,useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import ActivitySearchBarForm from '@/domain/Activity/components/main/ActivitySearch/ActivitySearchForm';
@@ -36,10 +36,10 @@ export default function ActivitySearchBar() {
       params.append('location', data.location);
     }
     const queryString = params.toString();
-    const url = `/activities/search?${queryString}`;
+    const url = `/search?${queryString}`;
 
     // 현재 페이지가 /activities/search인 경우 현재 페이지에서 파라미터만 업데이트
-    if (pathname === '/activities/search') {
+    if (pathname === '/search') {
       router.push(url, { scroll: false });
     } else {
       // 다른 페이지에서는 새 창으로 열기
