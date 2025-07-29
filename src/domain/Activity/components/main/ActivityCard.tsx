@@ -9,7 +9,7 @@ import LikeButton from '@/domain/Activity/components/main/LikeButton';
 import LogoSymbol from '@/shared/assets/logos/LogoSymbol';
 import { cn } from '@/shared/libs/cn';
 
-import { Activity } from '../../schemas/main';
+import { Activity } from '../../schemas/main/activity';
 
 interface ActivityCardProp {
   activity: Activity;

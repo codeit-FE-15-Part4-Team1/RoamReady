@@ -1,4 +1,4 @@
-import { Activity } from '@/domain/Activity/schemas/main';
+import { Activity } from '@/domain/Activity/schemas/main/activity';
 
 interface CategoryBadgeProps {
   activity: Activity;

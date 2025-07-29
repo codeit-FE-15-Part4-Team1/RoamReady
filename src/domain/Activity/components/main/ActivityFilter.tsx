@@ -1,7 +1,7 @@
 import { SortOption } from '@/domain/Activity/components/main/ActivitySection';
 import CategorySelect from '@/domain/Activity/components/main/CategorySelect';
 import SortSelect from '@/domain/Activity/components/main/SortSelect';
-import { GetActivitiesRequestQuery } from '@/domain/Activity/schemas/main';
+import { GetActivitiesRequestQuery } from '@/domain/Activity/schemas/main/activity';
 
 interface ActivityFilterProps {
   category: GetActivitiesRequestQuery['category'];
@@ -16,9 +16,6 @@ export default function ActivityFilter({
   onCategoryChange,
   onSortChange,
 }: ActivityFilterProps) {
-  console.log(category);
-  console.log(sort);
-
   return (
     <section className='flex items-center justify-between py-8 pb-12'>
       <CategorySelect value={category} onValueChange={onCategoryChange} />

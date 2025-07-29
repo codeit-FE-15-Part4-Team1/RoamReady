@@ -3,7 +3,7 @@ import {
   GetActivitiesOffsetResponse,
   GetActivitiesRequestQuery,
   getActivitiesResponseOffsetSchema,
-} from '@/domain/Activity/schemas/main';
+} from '@/domain/Activity/schemas/main/activity';
 
 export const getActivities = async (
   params?: Partial<GetActivitiesRequestQuery>,
@@ -15,17 +15,11 @@ export const getActivities = async (
     ...params,
   };
 
-  console.log('🔍 [getActivities] 호출 with params:', searchParams);
-
   const response = await activityClient.get('activities', {
     searchParams,
   });
 
-  console.log('✅ [getActivities] 응답 수신됨:', response);
-
   const data = await response.json();
-
-  console.log('📦 [getActivities] JSON 파싱됨:', data);
 
   const parsed = getActivitiesResponseOffsetSchema.safeParse(data);
 

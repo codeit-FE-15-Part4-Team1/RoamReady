@@ -5,9 +5,10 @@ import {
 } from '@tanstack/react-query';
 
 import ActivityCarousel from '@/domain/Activity/components/main/ActivityCarousel';
+import AirbnbSearch from '@/domain/Activity/components/main/ActivitySearchHelper';
 import ActivitySection from '@/domain/Activity/components/main/ActivitySection';
 import { activitiesKeys } from '@/domain/Activity/libs/main/queryKeys';
-import { GetActivitiesOffsetResponse } from '@/domain/Activity/schemas/main';
+import { GetActivitiesOffsetResponse } from '@/domain/Activity/schemas/main/activity';
 import { getActivities } from '@/domain/Activity/services/main/getActivities';
 
 interface ActivityPageProps {
@@ -52,6 +53,7 @@ export default async function ActivityPage({
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <div className='space-y-60'>
+        <AirbnbSearch />
         <ActivityCarousel
           activities={carouselData?.activities?.slice(0, 10) ?? []}
         />

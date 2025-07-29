@@ -3,7 +3,7 @@
 import { MouseEvent, useCallback, useEffect, useState } from 'react';
 
 import { getLikes, setLikes } from '@/domain/Activity/libs/main/likeStorage';
-import { Activity } from '@/domain/Activity/schemas/main';
+import { Activity } from '@/domain/Activity/schemas/main/activity';
 import { Heart } from '@/shared/components/icons/Heart';
 import { useRoamReadyStore } from '@/shared/store';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { GetActivitiesRequestQuery } from '@/domain/Activity/schemas/main';
+import { GetActivitiesRequestQuery } from '@/domain/Activity/schemas/main/activity';
 import { cn } from '@/shared/libs/cn';
 
 const categories: NonNullable<GetActivitiesRequestQuery['category']>[] = [
