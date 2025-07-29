@@ -78,7 +78,7 @@ export default function DatePickerDate({
   return (
     <div
       className={cn(
-        'grid h-fit grid-cols-7 text-center font-medium',
+        'grid h-full grid-cols-7 text-center font-medium',
         sizeClass,
         gridClassName,
       )}

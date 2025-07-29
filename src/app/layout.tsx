@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   },
   description: '여행 준비는 RoamReady에서!',
   keywords: ['여행', '예약', 'RoamReady'],
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 const pretendard = localFont({
