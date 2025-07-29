@@ -12,6 +12,10 @@ if (
 const nextConfig: NextConfig = {
   pageExtensions,
   reactStrictMode: true,
+  // 빌드 시 console.log 제거
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
 };
 
 export default nextConfig;
