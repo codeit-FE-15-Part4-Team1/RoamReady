@@ -1,10 +1,6 @@
 import Image from 'next/image';
 
-import type { User } from '@/shared/slices/userSlice';
-
-interface AuthMenuProps {
-  user: User;
-}
+import { useRoamReadyStore } from '@/shared/store';
 
 /**
  * AuthMenu 컴포넌트 입니다.
@@ -14,8 +10,20 @@ interface AuthMenuProps {
  * (현재는 더미 데이터로 구성되어 있으며, 추후 유저 정보를 props로 받을 수 있도록 확장할 예정입니다.)
  *
  */
-export default function AuthMenu({ user }: AuthMenuProps) {
-  // const signout = useSignout();  이렇게 가져올 수 있어요.
+export default function AuthMenu() {
+  const user = useRoamReadyStore((state) => state.user);
+
+  //새로 만든 useSignoutMutation 훅을 사용합니다.
+  // const { mutate: handleSignout, isPending } = useSignoutMutation();
+
+  // const onSignout = () => {
+  //   if (isPending) return;
+  //   handleSignout();
+  // };
+
+  if (!user) {
+    return null;
+  }
   return (
     <div className='flex items-center justify-center gap-20'>
       <Image src='/icons/bell.svg' alt='알림 아이콘' width={24} height={24} />

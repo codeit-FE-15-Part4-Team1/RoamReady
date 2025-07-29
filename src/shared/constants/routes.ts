@@ -31,6 +31,7 @@ export const ERROR_CODES = {
   OAUTH_KAKAO_FAILED: 'kakao_failed',
   OAUTH_INVALID_CODE: 'invalid_code',
   OAUTH_INVALID_STATE: 'invalid_state',
+  SESSION_EXPIRED: 'session_expired',
 };
 
 /**

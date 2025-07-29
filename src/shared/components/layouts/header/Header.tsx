@@ -20,7 +20,7 @@ export default function Header() {
     <header className='border-b border-gray-50'>
       <div className='tablet:px-32 desktop:px-40 mx-auto flex w-full max-w-1200 items-center justify-between px-24'>
         <LogoLink />
-        <nav>{user ? <AuthMenu user={user} /> : <GuestMenu />}</nav>
+        <nav>{user ? <AuthMenu /> : <GuestMenu />}</nav>
       </div>
     </header>
   );
