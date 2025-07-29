@@ -1,4 +1,4 @@
-import { getMyActivities } from '@/app/api/my-reservations/api';
+import { getMyActivities } from '@/app/api/my-reservations/route';
 import ReservationDashboard from '@/domain/Reservation/components/reservation-calendar/ReservationDashboard';
 
 export default async function MyReservationStatusPage() {
