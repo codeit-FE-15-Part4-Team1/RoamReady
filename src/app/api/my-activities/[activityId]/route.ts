@@ -9,9 +9,10 @@ import { NextResponse } from 'next/server';
  */
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: { activityId: string } },
+  context: { params: Promise<{ activityId: string }> },
 ) {
-  const { activityId } = params;
+  const { params } = context;
+  const { activityId } = await params;
 
   try {
     // 백엔드 체험 삭제 API 호출
