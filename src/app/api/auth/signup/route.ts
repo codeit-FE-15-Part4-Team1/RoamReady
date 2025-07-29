@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
+import { setAuthCookies } from '@/domain/Auth/utils/setAuthCookies';
 import { API_ENDPOINTS } from '@/shared/constants/endpoints';
 
 /**
@@ -58,26 +59,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const responseWithCookies = NextResponse.json({ user });
+    let responseWithCookies = NextResponse.json({ user });
 
-    responseWithCookies.cookies.set({
-      name: 'accessToken',
-      value: accessToken,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60,
-    });
-
-    responseWithCookies.cookies.set({
-      name: 'refreshToken',
-      value: refreshToken,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7,
+    responseWithCookies = setAuthCookies(responseWithCookies, {
+      accessToken,
+      refreshToken,
     });
 
     return responseWithCookies;

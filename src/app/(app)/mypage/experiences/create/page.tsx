@@ -5,7 +5,7 @@ import CreateActivityForm from '@/domain/User/components/create-activity/CreateA
 
 dayjs.extend(customParseFormat);
 
-export default function EditExperiencePage() {
+export default function CreateExperiencePage() {
   return (
     <div className='mb-[3.4rem] w-[120rem]'>
       <h1 className='font-size-18 py-20 font-bold'>내 체험 등록</h1>

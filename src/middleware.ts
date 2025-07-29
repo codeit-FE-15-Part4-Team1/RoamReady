@@ -75,8 +75,6 @@ export async function middleware(request: NextRequest) {
   });
 
   if (response.status === 401 && refreshToken) {
-    console.log('Access Token 만료, 재발급을 시도합니다.');
-
     const refreshResponse = await fetch(
       `${BACKEND_URL}${API_ENDPOINTS.AUTH.REFRESH_TOKEN}`,
       {
