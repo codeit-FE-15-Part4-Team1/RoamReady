@@ -30,7 +30,7 @@ export const useActivityReviews = (
     queryFn: () => getActivityReviews(activityId, page, size),
     initialData: page === 1 ? initialData : undefined,
     placeholderData: (previousData) => previousData,
-    staleTime: 1000 * 60 * 3, // 3분
+    staleTime: 1000 * 60 * 5, // 5분
     enabled: !!activityId,
   });
 };
