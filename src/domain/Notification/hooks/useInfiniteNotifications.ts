@@ -30,6 +30,8 @@ export const useInfiniteNotifications = () => {
       lastPage.notifications.length > 0 && lastPage.cursorId != null
         ? lastPage.cursorId
         : undefined,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
 
     // 10초 간격으로 데이터를 새로 가져옴
     refetchInterval: 1000 * 10,

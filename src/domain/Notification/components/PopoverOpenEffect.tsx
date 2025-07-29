@@ -22,10 +22,23 @@ export function PopoverOpenEffect({
       const currentIds = data.pages.flatMap((page) =>
         page.notifications.map((n) => n.id),
       );
-      localStorage.setItem('readNotifications', JSON.stringify(currentIds));
-      setHasNewNotification(false);
+
+      try {
+        const storedIds = localStorage.getItem('readNotifications');
+        const existingIds = storedIds ? JSON.parse(storedIds) : [];
+
+        // 새로운 ID가 있는 경우에만 업데이트
+        const hasNewIds = currentIds.some((id) => !existingIds.includes(id));
+        if (hasNewIds) {
+          const mergedIds = [...new Set([...existingIds, ...currentIds])];
+          localStorage.setItem('readNotifications', JSON.stringify(mergedIds));
+          setHasNewNotification(false);
+        }
+      } catch (error) {
+        console.warn('localStorage 업데이트 실패:', error);
+      }
     }
-  }, [isOpen, data]);
+  }, [isOpen, data, setHasNewNotification]);
 
   return null;
 }

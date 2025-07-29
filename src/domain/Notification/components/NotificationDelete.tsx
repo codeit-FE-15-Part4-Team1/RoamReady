@@ -36,6 +36,7 @@ export default function NotificationDelete({ id }: { id: number }) {
     <button
       type='button'
       onClick={handleDelete}
+      aria-label='알림 삭제'
       className='h-20 w-20 cursor-pointer text-gray-950'
     >
       <X className='h-13 w-13' />

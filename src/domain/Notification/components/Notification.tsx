@@ -34,25 +34,38 @@ export default function Notification() {
   // 알림 데이터 처음 받아왔을 때 localStorage에 저장 (최초 1회만)
   useEffect(() => {
     if (!data || hasSavedOnce.current) return;
-
     const allIds = data.pages.flatMap((page) =>
       page.notifications.map((n) => n.id),
     );
-    localStorage.setItem('readNotifications', JSON.stringify(allIds));
-    hasSavedOnce.current = true;
+    try {
+      localStorage.setItem('readNotifications', JSON.stringify(allIds));
+      hasSavedOnce.current = true;
+    } catch (error) {
+      console.warn('localStorage 저장 실패:', error);
+      // localStorage 사용 불가 시에도 기본 동작은 유지
+      hasSavedOnce.current = true;
+    }
   }, [data]);
 
   // polling 될 때마다 localStorage와 비교해서 새로운 알림 여부 체크
   useEffect(() => {
     if (!data) return;
-
     const currentIds = data.pages.flatMap((page) =>
       page.notifications.map((n) => n.id),
     );
+    let storedIds: number[] = [];
+    try {
+      const storedRaw = localStorage.getItem('readNotifications');
+      storedIds = storedRaw ? JSON.parse(storedRaw) : [];
 
-    const storedRaw = localStorage.getItem('readNotifications');
-    const storedIds: number[] = storedRaw ? JSON.parse(storedRaw) : [];
-
+      // 배열이 아닌 경우 빈 배열로 초기화
+      if (!Array.isArray(storedIds)) {
+        storedIds = [];
+      }
+    } catch (error) {
+      console.warn('localStorage 읽기 실패:', error);
+      storedIds = [];
+    }
     const newIds = currentIds.filter((id) => !storedIds.includes(id));
     setHasNewNotification(newIds.length > 0);
   }, [data]);

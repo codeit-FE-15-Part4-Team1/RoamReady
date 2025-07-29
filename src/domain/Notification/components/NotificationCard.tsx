@@ -26,6 +26,7 @@ const CloseButton = () => {
     <button
       className='h-24 w-24'
       type='button'
+      aria-label='알림 팝오버 닫기'
       onClick={() => setIsOpen(false)}
     >
       <X className='h-18 w-18 cursor-pointer' />
@@ -99,7 +100,7 @@ export default function NotificationCard({
       observer.unobserve(target);
       observer.disconnect();
     };
-  }, [hasNextPage, isFetchingNextPage]);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
     <div className='h-fit w-230 rounded-4xl bg-white'>

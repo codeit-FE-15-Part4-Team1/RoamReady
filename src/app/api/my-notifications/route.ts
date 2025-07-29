@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     });
 
     const apiResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}my-notifications/?${query}`,
+      `${process.env.API_BASE_URL}my-notifications/?${query}`,
       {
         method: 'GET',
         headers: {
