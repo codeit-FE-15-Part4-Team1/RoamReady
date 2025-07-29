@@ -35,7 +35,7 @@ export const getActivitiesResponseOffsetSchema = z.object({
 });
 
 export const activitySearchSchema = z.object({
-  title: z.string().optional(),
+  keyword: z.string().optional(),
   location: z.string().optional(),
   date: z.date().optional(),
 });

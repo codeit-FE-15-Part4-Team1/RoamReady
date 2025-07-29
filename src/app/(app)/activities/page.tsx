@@ -17,6 +17,9 @@ interface ActivityPageProps {
   };
 }
 
+// 서버에서 사용할 기본 사이즈 (모바일 기준)
+const DEFAULT_PAGE_SIZE = 8;
+
 export default async function ActivityPage({
   searchParams,
 }: ActivityPageProps) {
@@ -37,11 +40,15 @@ export default async function ActivityPage({
         }),
     }),
 
-    // 페이지네이션 목록 데이터 (현재 페이지)
+    // 페이지네이션 목록 데이터 (현재 페이지) - 기본 사이즈로 prefetch
     queryClient.prefetchQuery({
       queryKey: activitiesKeys.list({ page: currentPage }),
       queryFn: () =>
-        getActivities({ method: 'offset', page: currentPage, size: 10 }),
+        getActivities({
+          method: 'offset',
+          page: currentPage,
+          size: DEFAULT_PAGE_SIZE,
+        }),
     }),
   ]);
 

@@ -13,7 +13,7 @@ const categories: NonNullable<GetActivitiesRequestQuery['category']>[] = [
 ];
 
 interface CategorySelectProps {
-  value?: GetActivitiesRequestQuery['category'];
+  value?: GetActivitiesRequestQuery['category'] | null;
   onValueChange: (
     category: GetActivitiesRequestQuery['category'] | undefined,
   ) => void;
@@ -31,7 +31,7 @@ function CategoryButton({ label, isSelected, onClick }: CategoryButtonProps) {
       type='button'
       onClick={onClick}
       className={cn(
-        'font-size-15 cursor-pointer rounded-full border border-gray-100 bg-white px-12 py-6 text-gray-800 transition duration-100 hover:border-gray-800 active:scale-90',
+        'font-size-15 shrink-0 cursor-pointer rounded-full border border-gray-100 bg-white px-12 py-6 whitespace-nowrap text-gray-800 transition duration-100 hover:border-gray-800 active:scale-90',
         isSelected ? 'ring-2 ring-gray-800' : 'ring-0',
       )}
     >
@@ -45,10 +45,10 @@ export default function CategorySelect({
   onValueChange,
 }: CategorySelectProps) {
   return (
-    <div className='flex shrink-0 gap-8 py-12'>
+    <div className='desktop:px-0 flex min-w-fit gap-8 px-4 py-12'>
       <CategoryButton
         label='전체'
-        isSelected={value === undefined}
+        isSelected={value === undefined || value === null}
         onClick={() => onValueChange(undefined)}
       />
       {categories.map((cat) => (

@@ -6,7 +6,7 @@ export default function ActivityCardSkeleton() {
   return (
     <article
       className={cn(
-        'flex w-full max-w-350 animate-pulse flex-col rounded-3xl bg-white p-6 shadow-lg',
+        'border-brand-1 flex w-full max-w-350 animate-pulse flex-col rounded-3xl border bg-white p-6 shadow-lg',
       )}
     >
       <figure className='relative aspect-[5/6] overflow-hidden rounded-3xl bg-gray-200'>
@@ -15,8 +15,8 @@ export default function ActivityCardSkeleton() {
 
         {/* 카테고리 뱃지와 하트 아이콘 */}
         <div className='absolute inset-0 flex items-start justify-between p-12'>
-          <div className='bg-brand-2/30 size-25 rounded-3xl px-25 backdrop-blur-xs select-none' />
-          <div className='bg-brand-2/30 size-25 rounded-full' />
+          <div className='bg-brand-2/20 size-25 rounded-3xl px-25 backdrop-blur-xs select-none' />
+          <div className='bg-brand-2/20 size-25 rounded-full' />
         </div>
       </figure>
 

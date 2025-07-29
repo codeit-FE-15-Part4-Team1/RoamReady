@@ -33,7 +33,7 @@ export default function ActivityCard({
     <Link href={`/activities/${id}`}>
       <article
         className={cn(
-          'flex w-full max-w-330 transform flex-col rounded-3xl bg-white p-6 shadow-lg transition-transform duration-300 hover:-translate-y-2',
+          'flex w-full max-w-360 transform flex-col rounded-3xl bg-white p-6 shadow-lg transition-transform duration-300 hover:-translate-y-2',
           className,
         )}
       >

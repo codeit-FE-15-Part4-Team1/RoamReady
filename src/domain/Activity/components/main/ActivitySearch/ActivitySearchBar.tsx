@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { usePathname,useRouter } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import ActivitySearchBarForm from '@/domain/Activity/components/main/ActivitySearch/ActivitySearchForm';
@@ -8,40 +9,42 @@ import {
   ActivitySearchFormValues,
   activitySearchSchema,
 } from '@/domain/Activity/schemas/main';
-import { formatDate } from '@/shared/utils/formatDate';
+import { formatDateForAPI } from '@/shared/utils/formatDate';
 
 export default function ActivitySearchBar() {
-  const methods = useForm({
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const methods = useForm<ActivitySearchFormValues>({
     resolver: zodResolver(activitySearchSchema),
     defaultValues: {
-      title: '',
+      keyword: '',
       date: undefined,
       location: '',
     },
   });
 
   const onSubmit = (data: ActivitySearchFormValues) => {
-    // 1. URLSearchParams 객체 생성
     const params = new URLSearchParams();
-
-    // 2. 값이 있는 필드만 파라미터에 추가
-    if (data.title) {
-      params.append('title', data.title);
+    if (data.keyword) {
+      params.append('keyword', data.keyword);
     }
     if (data.date) {
-      // Date 객체를 'YYYY-MM-DD' 형식의 문자열로 변환
-      params.append('date', formatDate(data.date));
+      params.append('date', formatDateForAPI(data.date));
     }
     if (data.location) {
       params.append('location', data.location);
     }
-
-    // 3. 쿼리 스트링 생성
     const queryString = params.toString();
     const url = `/activities/search?${queryString}`;
 
-    // 4. 새 탭에서 URL 열기
-    window.open(url, '_blank');
+    // 현재 페이지가 /activities/search인 경우 현재 페이지에서 파라미터만 업데이트
+    if (pathname === '/activities/search') {
+      router.push(url, { scroll: false });
+    } else {
+      // 다른 페이지에서는 새 창으로 열기
+      window.open(url, '_blank');
+    }
   };
 
   return (

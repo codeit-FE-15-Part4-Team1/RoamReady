@@ -14,19 +14,20 @@ interface ActivitySearchFormProps {
   onSubmit: (data: ActivitySearchFormValues) => void;
 }
 
-type ActiveField = 'title' | 'date' | 'location';
+type ActiveField = 'keyword' | 'date' | 'location';
 
 export default function ActivitySearchForm({
   onSubmit,
 }: ActivitySearchFormProps) {
-  const { watch, setValue, handleSubmit } = useFormContext();
+  const { watch, setValue, handleSubmit } =
+    useFormContext<ActivitySearchFormValues>();
   const [activeField, setActiveField] = useState<ActiveField | null>(null);
 
   const date = watch('date');
   const displayDateValue = date ? formatDate(date) : undefined;
 
   const goToNextField = useCallback((currentField: ActiveField) => {
-    if (currentField === 'title') setActiveField('date');
+    if (currentField === 'keyword') setActiveField('date');
     else if (currentField === 'date') setActiveField('location');
     else setActiveField(null);
   }, []);
@@ -36,21 +37,20 @@ export default function ActivitySearchForm({
       onSubmit={handleSubmit(onSubmit)}
       className='relative flex h-auto w-full max-w-800 items-center rounded-full bg-white shadow-lg ring-1 ring-neutral-200'
     >
-      {/* Title 필드 */}
+      {/* Keyword 필드 */}
       <ActivitySearchField
         label='액티비티'
-        displayValue={watch('title')}
+        displayValue={watch('keyword')}
         placeholder='액티비티 검색'
         popoverPosition='bottom-start'
-        isOpen={activeField === 'title'}
-        onOpenChange={(open) => setActiveField(open ? 'title' : null)}
-        onClick={() => setActiveField('title')}
+        isOpen={activeField === 'keyword'}
+        onOpenChange={(open) => setActiveField(open ? 'keyword' : null)}
+        onClick={() => setActiveField('keyword')}
       >
-        {/* 복잡한 Controller 대신 DebouncedInput 컴포넌트 사용 */}
         <DebouncedInput
-          name='title'
-          placeholder='액티비티 제목 검색'
-          onConfirm={() => goToNextField('title')}
+          name='keyword'
+          placeholder='액티비티 제목, 지역 등 검색'
+          onConfirm={() => goToNextField('keyword')}
         />
       </ActivitySearchField>
 
@@ -87,7 +87,6 @@ export default function ActivitySearchForm({
         onOpenChange={(open) => setActiveField(open ? 'location' : null)}
         onClick={() => setActiveField('location')}
       >
-        {/* 여기도 마찬가지로 DebouncedInput 재사용 */}
         <DebouncedInput
           name='location'
           placeholder='지역, 주소 검색'
