@@ -63,7 +63,7 @@ export default function SelectTrigger({
           placeholder={placeholder}
           disabled={disabled}
           className={cn(
-            'flex-1 bg-transparent text-black outline-none',
+            'w-full bg-transparent text-black outline-none',
             'placeholder:text-gray-400',
           )}
         />
@@ -83,6 +83,7 @@ export default function SelectTrigger({
 
   return (
     <button
+      type='button'
       disabled={disabled}
       role='button'
       aria-expanded={isOpen}
@@ -93,7 +94,10 @@ export default function SelectTrigger({
         disabled && 'cursor-not-allowed opacity-50',
         className,
       )}
-      onClick={() => !disabled && setIsOpen(!isOpen)}
+      onClick={(e) => {
+        e.preventDefault();
+        if (!disabled) setIsOpen(!isOpen);
+      }}
     >
       {children}
       <ChevronDownIcon

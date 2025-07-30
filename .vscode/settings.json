@@ -6,7 +6,6 @@
   },
   "eslint.useFlatConfig": true,
 
-  "editor.rulers": [80],
   "prettier.printWidth": 80,
 
   "[javascript]": {
