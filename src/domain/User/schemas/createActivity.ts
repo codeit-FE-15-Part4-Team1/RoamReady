@@ -1,6 +1,8 @@
 import dayjs from 'dayjs';
 import z from 'zod';
 
+import { timeOptions } from '../utils/create-activity';
+
 // 새로운 파일(FileList)에 대한 유효성 검사 규칙
 const fileListSchema = z
   .custom<FileList>()
@@ -32,8 +34,18 @@ export const formSchema = z.object({
       z
         .object({
           date: z.string().min(1, '날짜를 선택해주세요.'),
-          startTime: z.string().min(1, '시작 시간을 선택해주세요.'),
-          endTime: z.string().min(1, '종료 시간을 선택해주세요.'),
+          startTime: z
+            .string()
+            .min(1, '시작 시간을 선택해주세요.')
+            .refine((time) => timeOptions.includes(time), {
+              message: '유효한 시간을 선택해주세요.',
+            }),
+          endTime: z
+            .string()
+            .min(1, '종료 시간을 선택해주세요.')
+            .refine((time) => timeOptions.includes(time), {
+              message: '유효한 시간을 선택해주세요.',
+            }),
         })
         // [수정] .refine()을 사용하여 객체 수준의 유효성 검사를 추가합니다.
         .refine(

@@ -37,11 +37,7 @@ export default function PriceInput() {
       >
         <Input.Label className='font-size-16 font-bold'>가격</Input.Label>
         {/* 4. 자체 onChange 핸들러를 제거합니다. Input.Field가 자동으로 RHF와 연결됩니다. */}
-        <Input.Field
-          placeholder='체험 금액을 입력해 주세요'
-          step='1000'
-          min='0'
-        />
+        <Input.Field placeholder='체험 금액을 입력해 주세요' min='0' />
         <Input.Helper />
       </Input.Root>
 

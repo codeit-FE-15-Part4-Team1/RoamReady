@@ -8,3 +8,12 @@ export const ACCEPTED_IMAGE_TYPES = [
   'image/png',
   'image/webp',
 ];
+
+export const CATEGORIES = [
+  '문화 예술',
+  '식음료',
+  '스포츠',
+  '투어',
+  '관광',
+  '웰빙',
+];

@@ -30,7 +30,7 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
   const endTimeErrorMessage = scheduleErrors?.endTime?.message;
 
   return (
-    <>
+    <div className='relative py-10'>
       <div className='tablet:grid tablet:grid-cols-10 flex flex-col gap-10'>
         <div className='col-span-6'>
           <Input.Root
@@ -130,6 +130,6 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
           </p>
         </div>
       )}
-    </>
+    </div>
   );
 }
