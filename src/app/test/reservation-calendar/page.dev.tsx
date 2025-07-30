@@ -1,7 +1,5 @@
 'use client';
 
-import ReservationCalendar from '@/domain/Reservation/components/reservation-calendar/ReservationCalendar';
-
 export default function CalendarTestPage() {
   return (
     <div className='min-h-screen bg-gray-50 p-8'>
@@ -21,7 +19,7 @@ export default function CalendarTestPage() {
             📅 기본 캘린더
           </h2>
           <div className='flex justify-center'>
-            <ReservationCalendar />
+            {/* <ReservationCalendar /> */}
           </div>
         </div>
 

@@ -29,7 +29,6 @@ export default function SelectItem({
   const {
     value: selectedValue,
     onValueChange,
-    isOpen,
     setIsOpen,
     disabled,
     focusedIndex,
@@ -54,20 +53,10 @@ export default function SelectItem({
 
   useEffect(() => {
     if (isFocused && itemRef.current) {
+      // ScrollIntoView 방지: focus 시 preventScroll 추가
       itemRef.current.focus({ preventScroll: true });
-      itemRef.current.scrollIntoView({ block: 'nearest' });
     }
   }, [isFocused]);
-
-  // 드롭다운이 열릴 때 선택된 항목 찾아서 스크롤
-  useEffect(() => {
-    if (isOpen && focusedIndex >= 0) {
-      const selected = document.querySelector(
-        '[aria-selected="true"]',
-      ) as HTMLElement;
-      selected?.scrollIntoView({ block: 'nearest' });
-    }
-  }, [isOpen, focusedIndex]);
 
   const handleClick = () => {
     if (disabled) return;
