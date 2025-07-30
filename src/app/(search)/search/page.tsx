@@ -1,6 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
 import DesktopSearchView from '@/domain/Activity/components/search/DesktopSearchView';
 import MobileSearchView from '@/domain/Activity/components/search/MobileSearchView';
@@ -12,9 +13,9 @@ import { GetActivitiesRequestQuery } from '@/domain/Activity/schemas/main';
 export type SortOption = NonNullable<GetActivitiesRequestQuery['sort']>;
 
 /**
- * 활동 검색 페이지
+ * 검색 파라미터를 사용하는 내부 컴포넌트
  */
-export default function ActivitySearchPage() {
+function SearchContent() {
   const breakpoint = useBreakpoint();
   const searchParams = useSearchParams();
 
@@ -63,4 +64,15 @@ export default function ActivitySearchPage() {
   }
 
   return <MobileSearchView {...commonProps} />;
+}
+
+/**
+ * 활동 검색 페이지
+ */
+export default function ActivitySearchPage() {
+  return (
+    <Suspense fallback={<div>로딩 중...</div>}>
+      <SearchContent />
+    </Suspense>
+  );
 }

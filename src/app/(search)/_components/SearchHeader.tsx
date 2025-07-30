@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 
 import CategorySelect from '@/domain/Activity/components/main/ActivityFilter/CategorySelect';
 import SortSelect from '@/domain/Activity/components/main/ActivityFilter/SortSelect';
@@ -17,9 +17,9 @@ import { useRoamReadyStore } from '@/shared/store';
 export type SortOption = NonNullable<GetActivitiesRequestQuery['sort']>;
 
 /**
- * 검색 전용 헤더 컴포넌트
+ * 검색 파라미터를 사용하는 내부 컴포넌트
  */
-export default function SearchHeader() {
+function SearchHeaderContent() {
   const userFromStore = useRoamReadyStore((state) => state.user);
   const [user, setUser] = useState<User | null>(null);
 
@@ -39,11 +39,13 @@ export default function SearchHeader() {
   const handleFilterChange = useCallback(
     (key: 'category' | 'sort', value: string | undefined) => {
       const params = new URLSearchParams(searchParams.toString());
+
       if (value) {
         params.set(key, value);
       } else {
         params.delete(key);
       }
+
       router.push(`${pathname}?${params.toString()}`, { scroll: false });
     },
     [pathname, router, searchParams],
@@ -132,5 +134,16 @@ export default function SearchHeader() {
         </div>
       </div>
     </header>
+  );
+}
+
+/**
+ * 검색 전용 헤더 컴포넌트
+ */
+export default function SearchHeader() {
+  return (
+    <Suspense fallback={<div className='h-140 bg-white' />}>
+      <SearchHeaderContent />
+    </Suspense>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useCallback } from 'react';
+import { Suspense, useCallback } from 'react';
 
 import ActivityCard from '@/domain/Activity/components/main/ActivityCard';
 import ActivityCardSkeleton from '@/domain/Activity/components/main/ActivityCard/ActivityCardSkeleton';
@@ -14,7 +14,7 @@ import Pagination from '@/shared/components/ui/Pagination';
 
 export type SortOption = NonNullable<GetActivitiesRequestQuery['sort']>;
 
-export default function ActivitySection() {
+function ActivitySectionContent() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -28,39 +28,35 @@ export default function ActivitySection() {
 
   const { data, isPending } = useQuery({
     queryKey: ['activities', 'list', currentPage, category, sort, pageSize],
-
-    queryFn: () => {
-      const apiParams: {
-        method: 'offset';
-        page: number;
-        size: number;
-        sort: SortOption;
-        category?: GetActivitiesRequestQuery['category'];
-      } = {
+    queryFn: () =>
+      getActivities({
         method: 'offset',
         page: currentPage,
         size: pageSize,
+        category,
         sort,
-      };
-
-      if (category) {
-        apiParams.category = category;
-      }
-
-      return getActivities(apiParams);
-    },
+      }),
+    refetchOnWindowFocus: false,
   });
+
+  const activities = data?.activities ?? [];
+  const totalCount = data?.totalCount ?? 0;
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   const handleFilterChange = useCallback(
     (key: 'category' | 'sort', value: string | undefined) => {
       const params = new URLSearchParams(searchParams.toString());
+
       if (value) {
         params.set(key, value);
       } else {
         params.delete(key);
       }
-      params.set('page', '1');
-      router.push(`${pathname}?${params.toString()}`, { scroll: false });
+
+      // 필터 변경 시 페이지를 첫 번째로 리셋
+      params.delete('page');
+
+      router.push(`${pathname}?${params.toString()}`);
     },
     [pathname, router, searchParams],
   );
@@ -68,22 +64,16 @@ export default function ActivitySection() {
   const handlePageChange = useCallback(
     (page: number) => {
       const params = new URLSearchParams(searchParams.toString());
-      params.set('page', String(page));
-      router.push(`${pathname}?${params.toString()}`, { scroll: false });
+      params.set('page', page.toString());
+      router.push(`${pathname}?${params.toString()}`);
     },
     [pathname, router, searchParams],
   );
 
-  const activities = data?.activities ?? [];
-  const totalPages = data ? Math.ceil((data?.totalCount ?? 0) / pageSize) : 1;
-
   return (
-    <article>
-      <section className='mb-5'>
-        <h2 className='font-size-24 desktop:font-size-26 mb-10 font-bold text-gray-900'>
-          🕺 모든 체험
-        </h2>
-      </section>
+    <section className='space-y-40'>
+      <h2 className='font-size-36 font-bold text-black'>🏃 모든 체험</h2>
+
       <ActivityFilter
         category={category}
         sort={sort}
@@ -92,22 +82,40 @@ export default function ActivitySection() {
         }
         onSortChange={(newSort) => handleFilterChange('sort', newSort)}
       />
-      <section className='grid grid-cols-2 gap-20 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7'>
-        {isPending
-          ? Array.from({ length: pageSize }).map((_, i) => (
-              <ActivityCardSkeleton key={`skeleton-${i}`} />
-            ))
-          : activities.map((activity) => (
+
+      {isPending ? (
+        <div className='tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4 grid grid-cols-1 gap-24'>
+          {Array.from({ length: pageSize }).map((_, index) => (
+            <ActivityCardSkeleton key={index} />
+          ))}
+        </div>
+      ) : (
+        <>
+          <div className='tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4 grid grid-cols-1 gap-24'>
+            {activities.map((activity) => (
               <ActivityCard key={activity.id} activity={activity} />
             ))}
-      </section>
-      <div className='my-40 mt-60'>
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
-      </div>
-    </article>
+          </div>
+
+          {totalCount > 0 && (
+            <div className='flex justify-center pt-40'>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          )}
+        </>
+      )}
+    </section>
+  );
+}
+
+export default function ActivitySection() {
+  return (
+    <Suspense fallback={<div className='h-400'>로딩 중...</div>}>
+      <ActivitySectionContent />
+    </Suspense>
   );
 }
