@@ -29,7 +29,6 @@ export default function SelectItem({
   const {
     value: selectedValue,
     onValueChange,
-    isOpen,
     setIsOpen,
     disabled,
     focusedIndex,
