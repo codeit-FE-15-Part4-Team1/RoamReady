@@ -29,6 +29,7 @@ export default function SelectItem({
   const {
     value: selectedValue,
     onValueChange,
+    isOpen,
     setIsOpen,
     disabled,
     focusedIndex,
@@ -40,23 +41,33 @@ export default function SelectItem({
   const isSelected = selectedValue === value;
   const itemRef = useRef<HTMLButtonElement>(null);
 
-  // 옵션 목록에 현재 값 등록
+  // 현재 아이템의 인덱스 계산
+  const itemIndex = options.indexOf(value);
+  const isFocused = focusedIndex === itemIndex;
+
+  // 등록 + 포커싱 + 드롭다운 열릴 때 스크롤
   useEffect(() => {
     if (!options.includes(value)) {
       setOptions([...options, value]);
     }
   }, [value, setOptions, options]);
 
-  // 현재 아이템의 인덱스 계산
-  const itemIndex = options.indexOf(value);
-  const isFocused = focusedIndex === itemIndex;
-
-  // 포커스 상태에 따라 실제 DOM 포커스 설정
   useEffect(() => {
     if (isFocused && itemRef.current) {
-      itemRef.current.focus();
+      itemRef.current.focus({ preventScroll: true });
+      itemRef.current.scrollIntoView({ block: 'nearest' });
     }
   }, [isFocused]);
+
+  // 드롭다운이 열릴 때 선택된 항목 찾아서 스크롤
+  useEffect(() => {
+    if (isOpen && focusedIndex >= 0) {
+      const selected = document.querySelector(
+        '[aria-selected="true"]',
+      ) as HTMLElement;
+      selected?.scrollIntoView({ block: 'nearest' });
+    }
+  }, [isOpen, focusedIndex]);
 
   const handleClick = () => {
     if (disabled) return;

@@ -36,6 +36,8 @@ const BACKEND_URL = process.env.API_BASE_URL;
  * @returns {Promise<NextResponse>} 처리된 응답 객체
  */
 export async function middleware(request: NextRequest) {
+  // 요청이 들어올 때마다 터미널에 로그가 찍힙니다.
+
   if (request.nextUrl.pathname.startsWith(`${BRIDGE_API.AUTH_PREFIX}/`)) {
     return NextResponse.next();
   }
@@ -87,7 +89,6 @@ export async function middleware(request: NextRequest) {
     if (refreshResponse.ok) {
       const tokens = await refreshResponse.json();
       const newAccessToken = tokens.accessToken;
-      console.log('새로운 Access Token 발급 성공');
 
       headers.set('Authorization', `Bearer ${newAccessToken}`);
 
@@ -99,7 +100,6 @@ export async function middleware(request: NextRequest) {
           !['GET', 'HEAD'].includes(method) && { duplex: 'half' }),
         signal: AbortSignal.timeout(30000),
       });
-
       const finalResponse = new NextResponse(response.body, {
         status: response.status,
         statusText: response.statusText,
@@ -116,7 +116,6 @@ export async function middleware(request: NextRequest) {
 
       return finalResponse;
     } else {
-      console.log('Refresh Token 만료, 로그인이 필요합니다.');
     }
   }
 
