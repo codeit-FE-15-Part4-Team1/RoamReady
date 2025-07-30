@@ -71,5 +71,6 @@ export const API_ENDPOINTS = {
   USERS: {
     DETAIL: (userId: number) => `users/${userId}`,
     ME: 'users/me',
+    UPLOAD_IMAGE: 'users/me/image',
   },
 };
