@@ -8,15 +8,11 @@ export const getActivitiesRequestQuerySchema = z.object({
     .optional(),
   keyword: z.string().optional(),
   sort: z
-    .enum(['most_reviewd', 'price_asc', 'price_desc', 'latest'])
+    .enum(['most_reviewed', 'price_asc', 'price_desc', 'latest'])
     .optional(),
   page: z.number().default(1),
   size: z.number().default(20),
 });
-
-export type GetActivitiesRequestQuery = z.infer<
-  typeof getActivitiesRequestQuerySchema
->;
 
 export const activitySchema = z.object({
   id: z.number(),
@@ -29,16 +25,29 @@ export const activitySchema = z.object({
   bannerImageUrl: z.string(),
   rating: z.number(),
   reviewCount: z.number(),
-  createdAt: z.coerce.date(), // 문자열을 Date 객체로 파싱
-  updatedAt: z.coerce.date(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
 });
 
-export type Activity = z.infer<typeof activitySchema>;
-
-export const getActivitiesResponseSchema = z.object({
-  cursorId: z.number(),
+export const getActivitiesResponseOffsetSchema = z.object({
   totalCount: z.number(),
   activities: z.array(activitySchema),
 });
 
-export type GetActivitiesResponse = z.infer<typeof getActivitiesResponseSchema>;
+export const activitySearchSchema = z.object({
+  keyword: z.string().optional(),
+  location: z.string().optional(),
+  date: z.date().optional(),
+});
+
+export type GetActivitiesRequestQuery = z.infer<
+  typeof getActivitiesRequestQuerySchema
+>;
+
+export type Activity = z.infer<typeof activitySchema>;
+
+export type GetActivitiesOffsetResponse = z.infer<
+  typeof getActivitiesResponseOffsetSchema
+>;
+
+export type ActivitySearchFormValues = z.infer<typeof activitySearchSchema>;

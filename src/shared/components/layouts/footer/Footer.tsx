@@ -1,5 +1,6 @@
 import Image from 'next/image';
 
+import Container from '@/app/_components/Container';
 import Logo2 from '@/shared/assets/logos/LogoTextTwoline';
 
 /**
@@ -18,38 +19,50 @@ import Logo2 from '@/shared/assets/logos/LogoTextTwoline';
  */
 export default function Footer() {
   return (
-    <footer className='align-center desktop:px-150 tablet:px-50 flex h-auto w-full flex-col justify-center border-t border-gray-50 px-30 py-30'>
-      {/* 푸터 전체 컨테이너: 좌우 영역 분할 */}
-      <div className='flex justify-between'>
-        {/* 좌측 영역: 로고, 브랜드 슬로건, CopyRight sign */}
-        <div className='flex flex-col gap-10'>
-          <Logo2 className='h-70 w-70' />
-          <div className='flex flex-col gap-3'>
-            <span className='text-gray-800'>
-              Start your journey with RoamReady
-            </span>
-            <span className='text-gray-300'>©2025.07</span>
+    <footer className='border-t border-gray-50 py-30'>
+      <Container>
+        {/* 푸터 전체 컨테이너: 좌우 영역 분할 */}
+        <div className='flex justify-between'>
+          {/* 좌측 영역: 로고, 브랜드 슬로건, CopyRight sign */}
+          <div className='font-size-12 flex flex-col gap-20'>
+            <div className='space-y-10'>
+              <Logo2 className='w-70' />
+              <span className='text-gray-800'>
+                Start your Activity with RoamReady
+              </span>
+            </div>
+            <div className='flex flex-col'>
+              <p className='text-gray-300'>
+                © 2025 Codeit, Inc.
+                <br />
+                Designed and developed by Team RoamReady (FE15 Part4 Team1)
+                <br />
+                based on Codeit curriculum.
+              </p>
+            </div>
+          </div>
+
+          {/* 우측 영역: GitHub 링크 및 팀원 정보 */}
+          <div className='font-size-12 flex flex-col items-end gap-10'>
+            <a
+              aria-label='GitHub repository'
+              href='https://github.com/codeit-FE-15-Part4-Team1/RoamReady'
+              rel='noopener noreferrer'
+              target='_blank'
+            >
+              <Image
+                src='/icons/github-logo.svg'
+                alt='GitHub Logo'
+                width={30}
+                height={30}
+              />
+            </a>
+            <div className='flex flex-col items-end text-gray-800'>
+              <p>김서연 | 박재현 | 송시은 | 유용민</p>
+            </div>
           </div>
         </div>
-
-        {/* 우측 영역: GitHub 링크 및 팀원 정보 */}
-        <div className='flex flex-col items-end gap-10'>
-          <a
-            aria-label='GitHub repository'
-            href='https://github.com/codeit-FE-15-Part4-Team1/RoamReady'
-            rel='noopener noreferrer'
-            target='_blank'
-          >
-            <Image
-              src='/icons/github-logo.svg'
-              alt='GitHub Logo'
-              width={30}
-              height={30}
-            />
-          </a>
-          <p>김서연 | 박재현 | 송시은 | 유용민</p>
-        </div>
-      </div>
+      </Container>
     </footer>
   );
 }

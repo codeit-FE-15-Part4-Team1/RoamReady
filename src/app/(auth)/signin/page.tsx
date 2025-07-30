@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Suspense } from 'react';
 
 import OAuth from '@/domain/Auth/components/OAuth';
 import SignInForm from '@/domain/Auth/components/SignInForm';
@@ -11,6 +12,8 @@ import { ROUTES } from '@/shared/constants/routes';
  * @description
  * 로그인 페이지의 전체 레이아웃을 담당하는 서버 컴포넌트입니다.
  * 실제 상호작용 로직은 각각의 클라이언트 컴포넌트(<SignInForm />, <OAuth />)에 위임하여 초기 로딩 성능을 최적화합니다.
+ * `useSearchParams`와 같은 클라이언트 훅을 사용하는 <SignInForm /> 컴포넌트가 서버에서 프리렌더링될 때 발생하는 오류를 방지하기 위해
+ * <Suspense> 바운더리로 래핑합니다.
  */
 export default function SignInPage() {
   return (
@@ -20,7 +23,9 @@ export default function SignInPage() {
         <LogoTextOneLine className='text-brand-2 aspect-[255/31] w-255' />
       </div>
 
-      <SignInForm />
+      <Suspense fallback={<div>스켈레톤UI넣을예정...</div>}>
+        <SignInForm />
+      </Suspense>
 
       <div className='relative flex w-full items-center'>
         <div className='w-full border-t border-gray-100' />

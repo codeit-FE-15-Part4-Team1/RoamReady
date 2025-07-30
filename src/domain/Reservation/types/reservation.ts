@@ -1,6 +1,4 @@
-import dayjs from 'dayjs';
-
-export type ReservationStatus = 'completed' | 'confirmed' | 'pending';
+export type ReservationStatus = 'declined' | 'confirmed' | 'pending';
 
 export interface Reservation {
   date: string;
@@ -25,10 +23,17 @@ export interface ReservationItem {
   updatedAt: string;
 }
 
-export interface DayCellProps {
-  day: dayjs.Dayjs;
-  isCurrentMonth: boolean;
-  isToday: boolean;
-  isLastRow: boolean;
-  reservation: Reservation | null;
+export interface Activity {
+  id: number;
+  userId: number;
+  title: string;
+  description: string;
+  category: string;
+  price: number;
+  address: string;
+  bannerImageUrl: string;
+  rating: number;
+  reviewCount: number;
+  createdAt: string;
+  updatedAt: string;
 }

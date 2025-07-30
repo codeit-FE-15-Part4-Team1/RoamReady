@@ -103,7 +103,7 @@ export default function Pagination({
     }
 
     return pages;
-  }, [currentPage, totalPages, pageRange]);
+  }, [currentPage, totalPages, pageRange, isInvalid]);
 
   // 키보드 방향키 접근성: ← → 키로 페이지 전환
   useEffect(() => {
@@ -131,7 +131,7 @@ export default function Pagination({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentPage, totalPages, onPageChange, pages]);
+  }, [currentPage, totalPages, onPageChange, pages, isInvalid]);
 
   // 페이지 번호별 버튼 요소를 Map에 등록하거나 해제하는 ref 콜백
   const getPageButtonRefCallback =
@@ -194,7 +194,7 @@ export default function Pagination({
               key={page}
               onClick={() => onPageChange(page)}
               className={cn(
-                'flex h-24 w-24 cursor-pointer items-center justify-center text-[15px]',
+                'flex cursor-pointer items-center justify-center text-[15px]',
                 page === currentPage
                   ? 'border-brand-2 border-b-2 font-bold text-gray-950'
                   : 'hover:border-brand-2 text-gray-400 hover:border-b-2 hover:text-gray-950',

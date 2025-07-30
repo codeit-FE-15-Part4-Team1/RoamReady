@@ -29,7 +29,7 @@ export default function TimeSlotInput() {
       <h3 className='font-size-16 mb-[1.8rem] font-bold'>예약 가능한 시간대</h3>
 
       <TimeSlotHeader onAdd={addTimeSlot} />
-      <div className='border-b border-gray-100' />
+      <div className='border-b-2 border-gray-100 py-10' />
 
       {/* 5. RHF의 'fields' 배열을 매핑하여 각 시간대 행을 렌더링합니다. */}
       {fields.map((field, index) => (
@@ -39,6 +39,7 @@ export default function TimeSlotInput() {
           index={index}
           // 7. remove 함수는 특정 인덱스의 필드를 RHF 상태에서 제거합니다.
           onRemove={() => remove(index)}
+          scheduleId={Number(field.id)} // 기존 스케줄의 경우 서버에서 받은 ID
         />
       ))}
     </div>

@@ -1,4 +1,4 @@
-interface ReservableTimeSlot {
+export interface ReservableTimeSlot {
   id: number;
   startTime: string;
   endTime: string;
@@ -52,4 +52,10 @@ export interface Activity {
     startTime: string;
     endTime: string;
   }[];
+}
+
+export interface AvailableScheduleParams {
+  activityId: number;
+  year: string; // YYYY 형식 (예: '2025')
+  month: string; // MM 형식 (예: '08')
 }

@@ -4,6 +4,8 @@ import AuthStatusProvider from '@/app/_components/AuthStatusProvider';
 import Footer from '@/shared/components/layouts/footer/Footer';
 import Header from '@/shared/components/layouts/header/Header';
 
+import Container from '../_components/Container';
+
 /**
  * @component AppLayout
  * @description
@@ -22,8 +24,10 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   return (
     <div className='flex min-h-[100dvh] flex-col'>
       <Header />
-      <main className='tablet:px-32 desktop:px-40 mx-auto w-full max-w-1200 flex-1 px-24'>
-        <AuthStatusProvider>{children}</AuthStatusProvider>
+      <main className='flex-1 py-20'>
+        <Container>
+          <AuthStatusProvider>{children}</AuthStatusProvider>
+        </Container>
       </main>
       <Footer />
     </div>

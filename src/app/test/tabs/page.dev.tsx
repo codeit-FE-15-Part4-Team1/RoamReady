@@ -142,18 +142,28 @@ export default function TabsTestPage() {
               <h3 className='mb-3 font-semibold'>간단한 폼</h3>
               <div className='max-w-sm space-y-3'>
                 <div>
-                  <label className='mb-1 block text-sm font-medium'>이름</label>
+                  <label
+                    htmlFor='name'
+                    className='mb-1 block text-sm font-medium'
+                  >
+                    이름
+                  </label>
                   <input
+                    id='name'
                     type='text'
                     className='w-full rounded border px-3 py-2'
                     placeholder='이름을 입력하세요'
                   />
                 </div>
                 <div>
-                  <label className='mb-1 block text-sm font-medium'>
+                  <label
+                    htmlFor='email'
+                    className='mb-1 block text-sm font-medium'
+                  >
                     이메일
                   </label>
                   <input
+                    id='email'
                     type='email'
                     className='w-full rounded border px-3 py-2'
                     placeholder='이메일을 입력하세요'
