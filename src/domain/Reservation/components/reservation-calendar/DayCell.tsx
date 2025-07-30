@@ -102,6 +102,8 @@ export default function DayCell({
     enabled: !!selectedActivityId,
   });
 
+  console.log('schedules', schedules);
+
   // 스케줄 데이터가 로드되면 첫 번째 스케줄을 선택
   useEffect(() => {
     if (schedules && schedules.length > 0 && !selectedScheduleId) {
