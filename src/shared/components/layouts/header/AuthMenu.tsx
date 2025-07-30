@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 import { useSignoutMutation } from '@/domain/Auth/hooks/useSignoutMutation';
 import Notification from '@/domain/Notification/components/Notification';
