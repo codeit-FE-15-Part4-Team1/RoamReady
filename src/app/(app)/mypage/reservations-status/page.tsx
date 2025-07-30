@@ -1,5 +1,6 @@
 import { getMyActivities } from '@/app/api/my-activities/api';
 import ReservationDashboard from '@/domain/Reservation/components/reservation-calendar/ReservationDashboard';
+import Nothing from '@/shared/components/ui/nothing';
 
 export default async function MyReservationStatusPage() {
   const initialActivities = await getMyActivities();
@@ -17,7 +18,7 @@ export default async function MyReservationStatusPage() {
       {initialActivities ? (
         <ReservationDashboard initialActivities={initialActivities} />
       ) : (
-        <div>체험 목록을 불러오는 데 실패했습니다.</div>
+        <Nothing type='activity' />
       )}
     </div>
   );

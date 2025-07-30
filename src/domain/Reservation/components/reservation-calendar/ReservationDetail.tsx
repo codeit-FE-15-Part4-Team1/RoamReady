@@ -47,8 +47,6 @@ export default function ReservationDetail({
 }: ReservationDetailProps) {
   const [selectedScheduleId, setSelectedScheduleId] = useState<string>('');
 
-  console.log('reservations', reservations);
-
   // 스케줄에서 고유한 시간대 추출
   const availableTimeSlots = useMemo(() => {
     const uniqueSchedules = schedules.reduce(
@@ -77,8 +75,6 @@ export default function ReservationDetail({
 
     return Array.from(uniqueSchedules.values());
   }, [schedules]);
-
-  console.log('availableTimeSlots', availableTimeSlots);
 
   const filteredReservations = useMemo(() => {
     if (!selectedScheduleId) {

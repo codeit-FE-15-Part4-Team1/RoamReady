@@ -10,7 +10,7 @@ import { apiClient } from '@/shared/libs/apiClient';
 export interface MonthlyReservation {
   date: string;
   reservations: {
-    completed: number;
+    declined: number;
     confirmed: number;
     pending: number;
   };
