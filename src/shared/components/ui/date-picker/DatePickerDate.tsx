@@ -78,7 +78,7 @@ export default function DatePickerDate({
   return (
     <div
       className={cn(
-        'grid h-fit grid-cols-7 text-center font-medium',
+        'grid h-full grid-cols-7 text-center font-medium',
         sizeClass,
         gridClassName,
       )}
@@ -102,9 +102,11 @@ export default function DatePickerDate({
 
         // 예약 가능 여부: 지정된 날짜 목록이 있을 경우 Set 기준으로 체크
         const isReservable =
-          (reservableDates?.length ?? 0) > 0
-            ? reservableSet.has(dateStr)
-            : !isPast;
+          reservableDates === undefined
+            ? !isPast
+            : reservableDates.length > 0
+              ? reservableSet.has(dateStr)
+              : false;
 
         // 최종적으로 선택 가능한 날짜인지 판단 (과거/타월 제외)
         const isAllowed = isReservable && isCurrentMonth && !isPast;

@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-import { setAuthCookies } from '@/domain/Auth/utils/authCookies';
+import { setAuthCookies } from '@/domain/Auth/utils/setAuthCookies';
 import { API_ENDPOINTS } from '@/shared/constants/endpoints';
 
 /**

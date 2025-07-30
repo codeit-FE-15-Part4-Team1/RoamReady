@@ -194,7 +194,7 @@ export default function Pagination({
               key={page}
               onClick={() => onPageChange(page)}
               className={cn(
-                'flex h-24 w-24 cursor-pointer items-center justify-center text-[15px]',
+                'flex cursor-pointer items-center justify-center text-[15px]',
                 page === currentPage
                   ? 'border-brand-2 border-b-2 font-bold text-gray-950'
                   : 'hover:border-brand-2 text-gray-400 hover:border-b-2 hover:text-gray-950',

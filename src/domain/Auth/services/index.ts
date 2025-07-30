@@ -1,4 +1,7 @@
 import { BRIDGE_API } from '@/shared/constants/bridgeEndpoints';
+import { API_ENDPOINTS } from '@/shared/constants/endpoints';
+import { apiClient } from '@/shared/libs/apiClient';
+import type { User } from '@/shared/slices/userSlice';
 
 import { authApiClient } from '../libs/authApiClient';
 import type { SigninRequest, SignupRequest } from '../schemas/request';
@@ -95,4 +98,30 @@ export const signin = async (
       json: credentials,
     })
     .json<SigninResponse>();
+};
+
+/**
+ * @function getMe
+ * @description
+ * 현재 로그인된 사용자의 정보를 가져오는 API 함수입니다.
+ * apiClient가 쿠키에 담긴 인증 토큰을 자동으로 헤더에 담아 요청합니다.
+ *
+ * @summary
+ * ### OAuth 로그인 흐름에서 getMe 함수의 역할
+ * 카카오 같은 OAuth 로그인은 중간에 다른 사이트(카카오)에 다녀오는 과정 때문에, 일반 로그인과 달리 서버와 클라이언트의 역할 분담이 필요합니다.
+ * 1. **서버의 역할**:
+ * OAuth 콜백 API는 인증 성공 후, 백엔드로부터 토큰을 받아 브라우저에 **쿠키만 설정**하고 역할이 끝납니다.
+ * 서버는 브라우저의 상태(Zustand 스토어)를 직접 수정할 수 없습니다.
+ * 2. **클라이언트의 역할**:
+ * 사용자가 메인 페이지로 돌아오면, 브라우저에는 쿠키는 있지만 화면에 보여줄 사용자 정보(Zustand 스토어)는 비어있습니다.
+ * 3. **getMe의 등장**:
+ * 바로 이때! RootLayout이나 헤더 같은 최상위 클라이언트 컴포넌트가 이 `getMe` 함수를 호출합니다.
+ * 브라우저는 쿠키를 이용해 백엔드에 "나 지금 누구로 로그인되어 있어?"라고 물어보고, 응답으로 받은 사용자 정보를 비로소 Zustand 스토어에 저장합니다.
+ * 따라서 `getMe` 함수는 서버가 처리한 로그인 결과를 클라이언트가 이어받아, 최종적으로 화면에 로그인 상태를 반영하기 위한 **필수적인 연결고리** 역할을 합니다.
+ *
+ * @returns {Promise<User>} 인증된 사용자 정보를 포함하는 프로미스입니다.
+ * @throws {Error} API 요청 실패 시 (예: 네트워크 오류, 인증되지 않음) 오류를 발생시킬 수 있습니다.
+ */
+export const getMe = async (): Promise<User> => {
+  return apiClient.get(API_ENDPOINTS.USERS.ME).json<User>();
 };

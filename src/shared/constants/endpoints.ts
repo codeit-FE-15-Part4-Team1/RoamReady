@@ -41,6 +41,7 @@ export const API_ENDPOINTS = {
 
   ACTIVITIES: {
     BASE: 'activities',
+    IMAGES: 'activities/image',
     DETAIL: (activityId: number) => `activities/${activityId}`,
     RESERVATIONS: (activityId: number) =>
       `activities/${activityId}/reservations`,

@@ -72,7 +72,7 @@ export default function DropdownMenu({
   return (
     <ul
       className={cn(
-        'absolute z-9999 flex flex-col content-center justify-around rounded-[1.3rem] border border-gray-200 bg-white p-3 shadow-lg',
+        'absolute z-9999 flex flex-col content-center justify-around rounded-[1.3rem] bg-white p-3 shadow-[0_4px_20px_rgba(0,0,0,0.1)]',
         positionClass,
         menuClassName,
       )}
