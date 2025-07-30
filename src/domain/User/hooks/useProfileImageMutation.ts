@@ -1,69 +1,106 @@
 import { useMutation } from '@tanstack/react-query';
 import { Dispatch, SetStateAction } from 'react';
 
+import {
+  uploadProfileImage,
+  UploadProfileImageResponse,
+} from '../services/uploadProfileImage';
+
 interface MutationHookProp {
   setProfileImageUrl: Dispatch<SetStateAction<string>>;
   initialImageUrl: string;
+  onImageChange?: (imageUrl: string) => void;
 }
 
-// 이미지 업로드 mock api 입니다.
-const mockUploadApi = (file: File): Promise<{ profileImageUrl: string }> => {
-  console.log(`[MOCK API] 서버 업로드 시작: ${file.name}`);
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const newImageUrl = URL.createObjectURL(file);
-      console.log(`[MOCK API] 새 이미지 URL 수신: ${newImageUrl}`);
-      resolve({ profileImageUrl: newImageUrl });
-    }, 1500);
-  });
-};
+interface MutationContext {
+  previousImageUrl: string;
+  previewUrl: string;
+}
 
 /**
  * 프로필 이미지 업로드(Mutation)와 낙관적 업데이트 로직을 처리하는 커스텀 훅입니다.
+ *
+ * ### 낙관적 업데이트 플로우:
+ * 1. **즉시 미리보기**: 파일 선택 시 즉시 미리보기 URL로 UI 업데이트
+ * 2. **백그라운드 업로드**: 동시에 서버로 실제 파일 업로드 진행
+ * 3. **성공 시**: 서버 URL로 교체 및 미리보기 URL 메모리 해제
+ * 4. **실패 시**: 이전 이미지로 롤백 및 에러 메시지 표시
+ *
  * @param setProfileImageUrl - 부모 컴포넌트의 이미지 URL 상태를 업데이트하는 함수
  * @param initialImageUrl - 롤백 시 돌아갈 초기 이미지 URL
+ * @param onImageChange - 이미지 변경 시 호출되는 콜백 함수
  * @returns TanStack Query의 `useMutation` 결과 객체 (`mutate` 함수, `isPending` 상태 등)
  */
 export const useProfileImageMutation = ({
   setProfileImageUrl,
   initialImageUrl,
+  onImageChange,
 }: MutationHookProp) => {
-  return useMutation({
-    mutationFn: mockUploadApi,
+  return useMutation<UploadProfileImageResponse, Error, File, MutationContext>({
+    mutationFn: uploadProfileImage,
 
-    // 1. Mutation이 시작되기 직전에 실행됩니다. (낙관적 업데이트의 핵심)
-    onMutate: async (imageFile: File) => {
-      // 롤백을 대비하여 이전 이미지 URL을 저장합니다.
+    // 낙관적 업데이트: 업로드 시작 전 즉시 미리보기 표시
+    onMutate: async (imageFile: File): Promise<MutationContext> => {
+      // 롤백을 위해 이전 이미지 URL 저장
       const previousImageUrl = initialImageUrl;
 
-      // 사용자에게 즉각적인 피드백을 주기 위해 임시 미리보기 URL을 생성합니다.
+      // 즉시 미리보기를 위한 임시 URL 생성
       const previewUrl = URL.createObjectURL(imageFile);
 
-      // setProfileImageUrl 함수를 호출하여 UI를 즉시 업데이트합니다.
+      // UI를 즉시 업데이트하여 사용자에게 반응성 제공
       setProfileImageUrl(previewUrl);
+      onImageChange?.(previewUrl);
 
-      // onError와 onSettled에서 사용할 값들을 context 객체에 담아 반환합니다.
+      // 컨텍스트로 이전 상태와 임시 URL 반환
       return { previousImageUrl, previewUrl };
     },
 
-    // 2. Mutation이 실패했을 때 실행됩니다.
-    onError: (error, _variables, context) => {
-      console.error('이미지 업로드를 실패했습니다. 롤백을 실행합니다.', error);
-      // onMutate에서 저장해 둔 이전 이미지로 UI를 되돌립니다.
-      if (context?.previousImageUrl) {
-        setProfileImageUrl(context.previousImageUrl);
+    // 업로드 성공 시 실행: 실제 서버 URL로 교체
+    onSuccess: (data, _variables, context?: MutationContext) => {
+      // API로부터 받은 실제 이미지 URL로 상태 업데이트
+      setProfileImageUrl(data.profileImageUrl);
+      // 상위 컴포넌트에 최종 이미지 변경을 알림
+      onImageChange?.(data.profileImageUrl);
+
+      // 미리보기 URL 메모리 해제
+      if (context?.previewUrl) {
+        URL.revokeObjectURL(context.previewUrl);
       }
     },
 
-    // 3. Mutation이 성공했을 때 실행됩니다.
-    onSuccess: (data) => {
-      // API로부터 받은 최종 이미지 URL로 UI 상태를 업데이트합니다.
-      setProfileImageUrl(data.profileImageUrl);
+    // 업로드 실패 시 실행: 이전 상태로 롤백
+    onError: (error, _variables, context?: MutationContext) => {
+      console.error('이미지 업로드 실패:', error);
+
+      // 이전 이미지로 롤백
+      if (context?.previousImageUrl) {
+        setProfileImageUrl(context.previousImageUrl);
+        onImageChange?.(context.previousImageUrl);
+      }
+
+      // 미리보기 URL 메모리 해제
+      if (context?.previewUrl) {
+        URL.revokeObjectURL(context.previewUrl);
+      }
+
+      // 더 구체적인 에러 메시지 제공
+      let errorMessage = '이미지 업로드에 실패했습니다.';
+
+      if (error.name === 'TimeoutError') {
+        errorMessage =
+          '이미지 업로드 시간이 초과되었습니다. 파일 크기를 확인해주세요.';
+      } else if (error.message?.includes('404')) {
+        errorMessage = '이미지 업로드 API가 구현되지 않았습니다.';
+      } else if (error.message?.includes('500')) {
+        errorMessage = '서버 내부 오류가 발생했습니다.';
+      }
+
+      alert(errorMessage);
     },
 
-    // 4. Mutation이 성공하든 실패하든, 마지막에 항상 실행됩니다. (주로 뒷정리 로직)
-    onSettled: (_data, _error, _variables, context) => {
-      // onMutate에서 생성했던 임시 미리보기 URL의 메모리를 해제합니다.
+    // 성공/실패와 관계없이 항상 실행: 메모리 정리
+    onSettled: (_data, _error, _variables, context?: MutationContext) => {
+      // 혹시 놓친 미리보기 URL이 있다면 정리
       if (context?.previewUrl) {
         URL.revokeObjectURL(context.previewUrl);
       }

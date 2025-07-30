@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useState } from 'react';
 
 import { PROFILE_AVATAR_OPTIONS } from '@/shared/components/constants/image';
 import Avatar from '@/shared/components/ui/avatar';
@@ -19,16 +19,28 @@ interface EditableAvatarProps {
    * 이미지 업로드 실패 시 이 URL로 복구됩니다.
    */
   initialImageUrl: string;
+  /**
+   * 이미지가 변경될 때 호출되는 콜백 함수.
+   * 상위 컴포넌트에서 이미지 변경을 감지하고 상태를 업데이트하는 데 사용됩니다.
+   */
+  onImageChange?: (imageUrl: string) => void;
   className?: string;
 }
 
 /**
  * 마이페이지에서 사용되는 대형 + 수정 버튼을 포함하는 컴포넌트입니다.
- * 이미지 선택, 이미지 업로드, 이미지 반영 등 비즈니스 로직을 한 번에 포함합니다.
+ * 이미지 선택, 압축, 업로드 등의 비즈니스 로직을 포함하며 낙관적 업데이트를 지원합니다.
+ *
+ * ### 사용자 경험 플로우:
+ * 1. **이미지 선택** → 파일 압축 → **즉시 미리보기 표시**
+ * 2. **백그라운드 업로드** → 성공 시 서버 URL로 교체, 실패 시 롤백
+ *
  * @param initialImageUrl - 초기 아바타 이미지 URL
+ * @param onImageChange - 이미지 변경 시 호출되는 콜백 함수
  */
 export default function EditableAvatar({
   initialImageUrl,
+  onImageChange,
   className,
 }: EditableAvatarProps) {
   // 화면에 실제로 보여지는 이미지 URL을 관리하는 상태
@@ -43,6 +55,7 @@ export default function EditableAvatar({
   const { mutate, isPending: isUploading } = useProfileImageMutation({
     setProfileImageUrl,
     initialImageUrl,
+    onImageChange,
   });
 
   /**
@@ -66,35 +79,18 @@ export default function EditableAvatar({
           PROFILE_AVATAR_OPTIONS,
         );
 
-        // 3. 압축된 파일로 업로드(Mutation) 실행.
-        // useProfileImageMutation 훅의 onMutate가 즉시 실행되어 낙관적 업데이트가 시작됩니다.
+        // 3. 압축된 파일을 즉시 서버에 업로드
         mutate(compressedFile);
       } catch (error) {
         // 압축 과정에서 에러 발생 시 처리
-        console.log(error);
+        console.error('이미지 처리 중 오류가 발생했습니다:', error);
         alert('이미지 처리 중 오류가 발생했습니다.');
       }
     },
-    // 의존성 배열: 이 함수들은 재생성되지 않으므로, handleImageFileChange도 처음 한 번만 생성됩니다.
     [compressImage, mutate],
   );
 
-  /**
-   * 컴포넌트가 unmount되거나 profileImageUrl이 변경될 때,
-   * 이전에 생성된 blob URL의 메모리를 해제하여 누수를 방지합니다.
-   */
-  useEffect(() => {
-    const currentUrl = profileImageUrl;
-
-    // cleanup
-    return () => {
-      // URL이 'blob:'으로 시작하는 임시 URL인 경우에만 메모리 해제 실행
-      if (currentUrl && currentUrl.startsWith('blob:')) {
-        URL.revokeObjectURL(currentUrl);
-        console.log(`메모리 해제: ${currentUrl}`);
-      }
-    };
-  }, [profileImageUrl]);
+  // 메모리 해제는 useProfileImageMutation에서 처리함 (낙관적 업데이트)
 
   return (
     <div className={cn('relative w-fit', className)}>
