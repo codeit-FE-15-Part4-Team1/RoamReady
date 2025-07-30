@@ -1,18 +1,11 @@
-// import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 
-
-import { useRoamReadyStore } from '@/shared/store';
+import { useSignoutMutation } from '@/domain/Auth/hooks/useSignoutMutation';
 import Notification from '@/domain/Notification/components/Notification';
 import Avatar from '@/shared/components/ui/avatar';
 import Dropdown from '@/shared/components/ui/dropdown';
 import { ROUTES } from '@/shared/constants/routes';
-import { useSignout } from '@/shared/hooks/useSignout';
-import type { User } from '@/shared/slices/userSlice';
-
-interface AuthMenuProps {
-  user: User;
-}
-
+import { useRoamReadyStore } from '@/shared/store';
 
 /**
  * AuthMenu 컴포넌트 입니다.
@@ -23,16 +16,16 @@ interface AuthMenuProps {
  *
  */
 
-export default function AuthMenu({ user }: AuthMenuProps) {
+export default function AuthMenu() {
   const user = useRoamReadyStore((state) => state.user);
-  // const router = useRouter();
-  //새로 만든 useSignoutMutation 훅을 사용합니다.
-  // const { mutate: handleSignout, isPending } = useSignoutMutation();
+  const router = useRouter();
+  // 새로 만든 useSignoutMutation 훅을 사용합니다.
+  const { mutate: handleSignout, isPending } = useSignoutMutation();
 
-  // const onSignout = () => {
-  //   if (isPending) return;
-  //   handleSignout();
-  // };
+  const onSignout = () => {
+    if (isPending) return;
+    handleSignout();
+  };
 
   if (!user) {
     return null;
@@ -51,7 +44,7 @@ export default function AuthMenu({ user }: AuthMenuProps) {
             <Avatar profileImageUrl={user.profileImageUrl ?? ''} />
           </Dropdown.Trigger>
           <Dropdown.Menu menuClassName='top-40'>
-            <Dropdown.Item onClick={signout}>로그아웃</Dropdown.Item>
+            <Dropdown.Item onClick={onSignout}>로그아웃</Dropdown.Item>
             <Dropdown.Item onClick={() => router.push(ROUTES.MYPAGE.INFO)}>
               마이페이지
             </Dropdown.Item>

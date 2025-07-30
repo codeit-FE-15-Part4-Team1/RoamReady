@@ -20,7 +20,7 @@ import { cn } from '@/shared/libs/cn';
  */
 export default function LogoLink({ className }: { className?: string }) {
   return (
-    <Link href={ROUTES.MAIN}>
+    <Link href={ROUTES.ACTIVITIES.ROOT}>
       <Logo
         className={cn(
           'tablet:w-130 tablet:h-100 relative h-70 w-100 shrink-0',

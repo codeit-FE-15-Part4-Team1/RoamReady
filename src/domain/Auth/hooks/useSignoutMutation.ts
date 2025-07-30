@@ -17,7 +17,7 @@ import { useRoamReadyStore } from '@/shared/store';
  * - 전역 Zustand 스토어의 `clearUser` 함수를 호출하여 사용자 정보를 제거하고 로그인 상태를 초기화합니다.
  * - `queryClient.removeQueries({ queryKey: ['user', 'me'] })`를 호출하여 'user', 'me' 쿼리 키에 해당하는 캐시 데이터를 완전히 제거합니다. 이는 로그아웃 후 이전 사용자 정보가 캐시에 남아있지 않도록 하여 데이터 일관성을 보장합니다.
  * - `showSuccess` 토스트 메시지('로그아웃되었습니다. 안녕히 가세요!')를 표시하여 사용자에게 로그아웃 성공을 알립니다.
- * - 메인 페이지(`ROUTES.MAIN`)로 리다이렉트하여 로그인되지 않은 상태의 초기 화면으로 이동시킵니다.
+ * - 메인 페이지(`ROUTES.ACTIVITIES.ROOT`)로 리다이렉트하여 로그인되지 않은 상태의 초기 화면으로 이동시킵니다.
  *
  * @property {Function} onError - `mutationFn`이 실패했을 때 실행되는 콜백 함수입니다.
  * - `error` (Error): 발생한 에러 객체입니다. 이 `error.message`는 `formatErrorResponseHooks`에 의해 이미 사용자 친화적인 메시지로 가공되어 있습니다.
@@ -39,7 +39,7 @@ export const useSignoutMutation = () => {
       clearUser();
       queryClient.removeQueries({ queryKey: ['user', 'me'] });
       showSuccess('로그아웃되었습니다. 안녕히 가세요!');
-      router.push(ROUTES.MAIN);
+      router.push(ROUTES.ACTIVITIES.ROOT);
     },
     onError: (error: Error) => {
       console.error('로그아웃 실패:', error);

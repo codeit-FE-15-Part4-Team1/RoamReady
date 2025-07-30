@@ -24,7 +24,7 @@ export default function Nothing({ type }: NothingProps) {
   const buttonText = type === 'reservation' ? '둘러보기' : undefined;
 
   const handleClick = () => {
-    router.push(ROUTES.MAIN);
+    router.push(ROUTES.ACTIVITIES.ROOT);
   };
 
   return (

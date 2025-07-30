@@ -129,7 +129,9 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const response = NextResponse.redirect(new URL(ROUTES.MAIN, request.url));
+    const response = NextResponse.redirect(
+      new URL(ROUTES.ACTIVITIES.ROOT, request.url),
+    );
     setAuthCookies(response, {
       accessToken: responseData.accessToken,
       refreshToken: responseData.refreshToken,

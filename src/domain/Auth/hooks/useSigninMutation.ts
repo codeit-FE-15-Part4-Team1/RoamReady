@@ -19,7 +19,7 @@ import { useRoamReadyStore } from '@/shared/store';
  * - `data` (SigninResponse): 로그인 API 호출의 결과 데이터입니다.
  * - 전역 Zustand 스토어의 `setUser` 함수를 통해 로그인된 사용자 정보(`data.user`)를 업데이트합니다.
  * - `queryClient.invalidateQueries({ queryKey: ['user', 'me'] })`를 호출하여 'user', 'me' 쿼리 키에 해당하는 캐시를 무효화합니다. `queryClient`는 Tanstack Query의 중앙 캐시 관리자이며, `invalidateQueries`는 특정 쿼리 키에 해당하는 캐시 데이터를 '오래된' 상태로 표시하여 다음 번에 해당 데이터를 사용할 때 서버에서 최신 정보를 다시 가져오도록 강제합니다. 이는 로그인 후 사용자 정보가 변경되었을 수 있으므로 최신 정보를 다시 가져오도록 합니다.
- * - `showSuccess` 토스트 메시지('로그인 되었습니다. 환영합니다!')를 표시하고 메인 페이지(`ROUTES.MAIN`)로 리다이렉트합니다.
+ * - `showSuccess` 토스트 메시지('로그인 되었습니다. 환영합니다!')를 표시하고 메인 페이지(`ROUTES.ACTIVITIES.ROOT`)로 리다이렉트합니다.
  *
  * @property {Function} onError - `mutationFn`이 실패했을 때 실행되는 콜백 함수입니다.
  * - `error` (Error): 발생한 에러 객체입니다. 이 `error.message`는 `formatErrorResponseHooks`에 의해 이미 사용자 친화적인 메시지로 가공되어 있습니다.
@@ -42,7 +42,7 @@ export const useSigninMutation = () => {
       setUser(data.user);
       queryClient.invalidateQueries({ queryKey: ['user', 'me'] });
       showSuccess('로그인 되었습니다. 환영합니다!');
-      router.push(ROUTES.MAIN);
+      router.push(ROUTES.ACTIVITIES.ROOT);
     },
 
     onError: (error: Error) => {

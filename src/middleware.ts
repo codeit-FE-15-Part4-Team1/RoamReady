@@ -46,11 +46,9 @@ const BACKEND_URL = process.env.API_BASE_URL;
  * @returns {Promise<NextResponse>} 처리된 응답 객체
  */
 export async function middleware(request: NextRequest) {
-
   if (request.nextUrl.pathname.startsWith('/api/test/')) {
     return NextResponse.next();
   }
-
 
   if (request.nextUrl.pathname.startsWith(`${BRIDGE_API.AUTH_PREFIX}/`)) {
     return NextResponse.next();
@@ -153,62 +151,9 @@ export async function middleware(request: NextRequest) {
         headers: { 'Content-Type': 'application/json' },
       },
     );
-
-
-    if (refreshResponse.ok) {
-      const tokens = await refreshResponse.json();
-      const newAccessToken = tokens.accessToken;
-
-      headers.set('Authorization', `Bearer ${newAccessToken}`);
-
-      response = await fetch(destinationUrl, {
-        method,
-        headers,
-        body: isSafeToClone ? rawBody : request.body,
-        ...(request.body &&
-          !['GET', 'HEAD'].includes(method) && { duplex: 'half' }),
-        signal: AbortSignal.timeout(30000),
-      });
-      const finalResponse = new NextResponse(response.body, {
-        status: response.status,
-        statusText: response.statusText,
-        headers: response.headers,
-      });
-
-      finalResponse.cookies.set('accessToken', newAccessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        path: '/',
-        maxAge: 60 * 60,
-        sameSite: 'lax',
-      });
-
-      return finalResponse;
-    } else {
-        console.log(
-          '[Middleware] Refresh Token 만료 또는 갱신 실패. 로그인 페이지로 리다이렉트합니다.',
-        );
-        const redirectUrl = new URL(ROUTES.SIGNIN, request.url);
-        redirectUrl.searchParams.set('error', ERROR_CODES.SESSION_EXPIRED);
-        return NextResponse.redirect(redirectUrl);
-      }
-    }
-
-    return response;
-  } catch (error) {
-    console.error('[Middleware] Fetch Error:', error);
-
-    return new NextResponse(
-      JSON.stringify({ message: '백엔드 서버와 통신할 수 없습니다.' }),
-      {
-        status: 502,
-        headers: { 'Content-Type': 'application/json' },
-      },
-    );
   }
 }
 
 export const config = {
   matcher: '/api/:path*',
 };
-
