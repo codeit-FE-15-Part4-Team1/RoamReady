@@ -1,4 +1,4 @@
-import './globals.css';
+import './global.css';
 
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   },
   description: '여행 준비는 RoamReady에서!',
   keywords: ['여행', '예약', 'RoamReady'],
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 const pretendard = localFont({
@@ -26,6 +29,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang='ko'>
       <body className={pretendard.className}>
+        <div id='portal-root'></div>
         <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
