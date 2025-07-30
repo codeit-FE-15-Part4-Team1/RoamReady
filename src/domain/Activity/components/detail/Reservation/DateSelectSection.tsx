@@ -4,6 +4,7 @@ interface DateSelectSectionProps {
   selectedDate: Date | null;
   onDateChange: (date: Date) => void;
   reservableDates: string[];
+  onMonthChange?: (year: string, month: string) => void;
 }
 
 /**
@@ -26,6 +27,7 @@ export default function DateSelectSection({
   selectedDate,
   onDateChange,
   reservableDates,
+  onMonthChange,
 }: DateSelectSectionProps) {
   return (
     <section
@@ -39,6 +41,7 @@ export default function DateSelectSection({
       <DatePicker.Root
         selectedDate={selectedDate ?? undefined} // 선택된 날짜가 없으면 undefined 처리
         onDateClick={(date) => onDateChange(date)} // 날짜 선택 시 콜백 실행
+        onMonthChange={onMonthChange}
         size='l'
         wrapperClassName='w-full'
       >

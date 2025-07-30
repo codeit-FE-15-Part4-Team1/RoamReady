@@ -27,10 +27,11 @@ export default function ActivitySummaryWrapper({
   reviews,
 }: ActivitySummaryWrapperProps) {
   // 현재 뷰포트가 모바일(최대 1023px)인지 여부를 판단
-  const isTabletOrMobile = useMediaQuery(BREAKPOINTS.MOBILE);
+  const isMobile = useMediaQuery(BREAKPOINTS.MOBILE);
+  const isTablet = useMediaQuery(BREAKPOINTS.TABLET);
 
   // 모바일 or 테블릿이 아닌 경우 컴포넌트를 렌더링하지 않음 (null 반환)
-  if (!isTabletOrMobile) return null;
+  if (!isMobile && !isTablet) return null;
 
   // 모바일인 경우에만 ActivitySummary 렌더링
   return <ActivitySummary activity={activity} review={reviews} />;

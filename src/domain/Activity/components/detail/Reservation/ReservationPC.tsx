@@ -1,8 +1,10 @@
 'use client';
 
+import { reserveAction } from '@/domain/Activity/actions/detail/reserve';
 import { useReservationForm } from '@/domain/Activity/hooks/detail/useReservationForm';
 import { Activity } from '@/domain/Activity/types/detail/types';
 import Button from '@/shared/components/Button';
+import { useToast } from '@/shared/hooks/useToast';
 
 import AvailableTimeSection from './AvailableTimeSection';
 import DateSelectSection from './DateSelectSection';
@@ -18,7 +20,15 @@ import ParticipantSelect from './ParticipationSection';
  * @example
  * <ReservationPC activity={activityData} />
  */
-export default function ReservationPC({ activity }: { activity: Activity }) {
+export default function ReservationPC({
+  activity,
+  reservation,
+}: {
+  activity: Activity;
+  reservation: ReturnType<typeof useReservationForm>;
+}) {
+  const { showError, showSuccess } = useToast();
+
   // 예약 상태 및 관련 핸들러 훅 호출
   const {
     selectedDate,
@@ -27,12 +37,33 @@ export default function ReservationPC({ activity }: { activity: Activity }) {
     reservableDates,
     timeSlots,
     totalPrice,
+    selectedScheduleId,
     setSelectedDate,
     setSelectedTime,
     handleTimeSelect,
     handleIncrease,
     handleDecrease,
-  } = useReservationForm(activity.price);
+    onMonthChange,
+  } = reservation;
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!selectedDate || !selectedTime) return;
+
+    try {
+      await reserveAction(activity.id, selectedScheduleId, participantCount);
+      showSuccess('예약이 완료되었습니다!');
+      setSelectedDate(null);
+      setSelectedTime(null);
+    } catch (err) {
+      showError(
+        err instanceof Error
+          ? err.message
+          : '예약 처리 중 오류가 발생했습니다.',
+      );
+    }
+  };
 
   return (
     <aside
@@ -40,7 +71,7 @@ export default function ReservationPC({ activity }: { activity: Activity }) {
       className='h-fit max-h-950 w-400 rounded-4xl border-1 border-gray-50 bg-white p-30 shadow-[0_4px_20px_rgba(0,0,0,0.05)]'
     >
       {/* Todo: form action 연결 */}
-      <form className='flex flex-col gap-24'>
+      <form className='flex flex-col gap-24' onSubmit={handleSubmit}>
         {/* 가격 정보 */}
         <section aria-labelledby='pricing'>
           <div className='flex items-center gap-8'>
@@ -59,6 +90,7 @@ export default function ReservationPC({ activity }: { activity: Activity }) {
             setSelectedTime(null);
           }}
           reservableDates={reservableDates}
+          onMonthChange={onMonthChange}
         />
 
         {/* 참여 인원 수 선택 */}
@@ -74,6 +106,7 @@ export default function ReservationPC({ activity }: { activity: Activity }) {
           timeSlots={timeSlots}
           selectedTime={selectedTime}
           onTimeSelect={handleTimeSelect}
+          className='max-h-250'
         />
 
         {/* 총 합계 및 예약 버튼 */}
