@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 
 interface DynamicStickyHeightProps {
   /** 헤더 요소의 ref */
@@ -35,32 +35,27 @@ export function useDynamicStickyHeight({
     heightValue: 'calc(100dvh - 200px)',
   });
 
-  const calculateDimensions = () => {
+  const calculateDimensions = useCallback(() => {
     // 헤더 높이 계산
     let headerHeight = 0;
     if (headerRef?.current) {
-      headerHeight = headerRef.current.getBoundingClientRect().height;
-    } else {
-      // 헤더가 없다면 기본 헤더 높이 추정 (일반적으로 64-80px)
-      const headerElement = document.querySelector('header');
-      headerHeight = headerElement?.getBoundingClientRect().height || 72;
+      headerHeight = headerRef.current.offsetHeight;
     }
 
-    // sticky top 계산: 헤더 높이 + 추가 오프셋
-    const stickyTop = headerHeight + additionalOffset;
-
-    // 사용 가능한 높이 계산: 전체 viewport - 헤더 - 오프셋 - 하단 여백
-    const calculatedHeight = window.innerHeight - stickyTop - bottomMargin;
+    // viewport 높이
+    const viewportHeight = window.innerHeight;
+    const newStickyTop = headerHeight + additionalOffset;
+    const newCalculatedHeight = viewportHeight - newStickyTop - bottomMargin;
 
     setDimensions({
-      stickyTop,
-      calculatedHeight: Math.max(calculatedHeight, 300), // 최소 높이 300px 보장
-      topValue: `${stickyTop}px`,
-      heightValue: `${Math.max(calculatedHeight, 300)}px`,
+      stickyTop: newStickyTop,
+      calculatedHeight: newCalculatedHeight,
+      topValue: `${newStickyTop}px`,
+      heightValue: `${newCalculatedHeight}px`,
     });
-  };
+  }, [headerRef, additionalOffset, bottomMargin]);
 
-  // 초기 계산 및 resize 이벤트 리스너
+  // 초기 계산 및 Resize Observer 설정
   useLayoutEffect(() => {
     calculateDimensions();
 
@@ -70,13 +65,11 @@ export function useDynamicStickyHeight({
 
     window.addEventListener('resize', handleResize);
 
-    // ResizeObserver로 헤더 크기 변화도 감지
-    let resizeObserver: ResizeObserver | null = null;
+    const resizeObserver = new ResizeObserver(() => {
+      calculateDimensions();
+    });
 
     if (headerRef?.current) {
-      resizeObserver = new ResizeObserver(() => {
-        calculateDimensions();
-      });
       resizeObserver.observe(headerRef.current);
     }
 
@@ -84,14 +77,14 @@ export function useDynamicStickyHeight({
       window.removeEventListener('resize', handleResize);
       resizeObserver?.disconnect();
     };
-  }, [headerRef, additionalOffset, bottomMargin]);
+  }, [calculateDimensions, headerRef]);
 
   // 헤더 ref가 변경될 때마다 재계산
   useEffect(() => {
     if (headerRef?.current) {
       calculateDimensions();
     }
-  }, [headerRef?.current]);
+  }, [calculateDimensions, headerRef]);
 
   return dimensions;
 }

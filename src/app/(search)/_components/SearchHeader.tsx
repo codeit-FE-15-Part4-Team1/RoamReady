@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useCallback,useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import CategorySelect from '@/domain/Activity/components/main/ActivityFilter/CategorySelect';
 import SortSelect from '@/domain/Activity/components/main/ActivityFilter/SortSelect';
@@ -46,7 +46,7 @@ export default function SearchHeader() {
       }
       router.push(`${pathname}?${params.toString()}`, { scroll: false });
     },
-    [pathname, router, searchParams.toString()],
+    [pathname, router, searchParams],
   );
 
   return (

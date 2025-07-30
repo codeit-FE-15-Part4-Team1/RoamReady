@@ -26,7 +26,7 @@ export default function ActivitySection() {
   ) as GetActivitiesRequestQuery['category'];
   const sort = (searchParams.get('sort') ?? 'latest') as SortOption;
 
-  const { data, error, isPending } = useQuery({
+  const { data, isPending } = useQuery({
     queryKey: ['activities', 'list', currentPage, category, sort, pageSize],
 
     queryFn: () => {
@@ -62,7 +62,7 @@ export default function ActivitySection() {
       params.set('page', '1');
       router.push(`${pathname}?${params.toString()}`, { scroll: false });
     },
-    [pathname, router, searchParams.toString()],
+    [pathname, router, searchParams],
   );
 
   const handlePageChange = useCallback(
@@ -71,7 +71,7 @@ export default function ActivitySection() {
       params.set('page', String(page));
       router.push(`${pathname}?${params.toString()}`, { scroll: false });
     },
-    [pathname, router, searchParams.toString()],
+    [pathname, router, searchParams],
   );
 
   const activities = data?.activities ?? [];

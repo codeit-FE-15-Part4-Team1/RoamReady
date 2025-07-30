@@ -1,14 +1,25 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef } from 'react';
 
-import { Activity } from '@/domain/Activity/schemas/main';
+import {
+  Activity,
+  GetActivitiesRequestQuery,
+} from '@/domain/Activity/schemas/main';
 import { getActivities } from '@/domain/Activity/services/main/getActivities';
 
 interface UseInfiniteActivitiesParams {
   keyword?: string;
   size: number;
-  category?: string;
-  sort?: string;
+  category?: GetActivitiesRequestQuery['category'];
+  sort?: GetActivitiesRequestQuery['sort'];
+}
+
+interface QueryParams {
+  page: number;
+  size: number;
+  keyword?: string;
+  category?: GetActivitiesRequestQuery['category'];
+  sort?: GetActivitiesRequestQuery['sort'];
 }
 
 /**
@@ -24,7 +35,7 @@ export function useInfiniteActivities({
     useInfiniteQuery({
       queryKey: ['activities-search', { keyword, size, category, sort }],
       queryFn: async ({ pageParam = 1 }) => {
-        const params: Record<string, any> = { page: pageParam, size };
+        const params: QueryParams = { page: pageParam, size };
         if (keyword) params.keyword = keyword;
         if (category) params.category = category;
         if (sort) params.sort = sort;
@@ -58,6 +69,8 @@ export function useInfiniteActivities({
   useEffect(() => {
     if (!hasNextPage || isFetchingNextPage) return;
 
+    const currentLoader = loaderRef.current;
+
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
@@ -67,12 +80,12 @@ export function useInfiniteActivities({
       { threshold: 1 },
     );
 
-    if (loaderRef.current) {
-      observer.observe(loaderRef.current);
+    if (currentLoader) {
+      observer.observe(currentLoader);
     }
 
     return () => {
-      if (loaderRef.current) observer.unobserve(loaderRef.current);
+      if (currentLoader) observer.unobserve(currentLoader);
     };
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
