@@ -14,14 +14,14 @@ import { useRoamReadyStore } from '@/shared/store';
  */
 export default function MyInfoPage() {
   const { user } = useRoamReadyStore();
-  const [profileImageUrl, setProfileImageUrl] = useState<string>(
-    user?.profileImageUrl || '',
+  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(
+    user?.profileImageUrl || null,
   );
 
   // user 상태가 변경될 때 프로필 이미지 URL 동기화
   useEffect(() => {
     if (user) {
-      setProfileImageUrl(user.profileImageUrl || '');
+      setProfileImageUrl(user.profileImageUrl);
     }
   }, [user?.profileImageUrl]);
 
@@ -40,7 +40,7 @@ export default function MyInfoPage() {
         onImageChange={handleImageChange}
         className='tablet:py-16 desktop:py-24 mx-auto py-24'
       />
-      <EditUserInfoForm currentProfileImageUrl={profileImageUrl} />
+      <EditUserInfoForm currentProfileImageUrl={profileImageUrl || ''} />
     </div>
   );
 }

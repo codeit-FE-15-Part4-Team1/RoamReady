@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, useCallback, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 
 import { PROFILE_AVATAR_OPTIONS } from '@/shared/components/constants/image';
 import Avatar from '@/shared/components/ui/avatar';
@@ -47,6 +47,11 @@ export default function EditableAvatar({
   // 낙관적 업데이트를 위해 즉시 미리보기 URL로 변경되었다가, 최종적으로 서버 URL로 교체됩니다.
   const [profileImageUrl, setProfileImageUrl] =
     useState<string>(initialImageUrl);
+
+  // initialImageUrl이 변경될 때 내부 상태를 동기화
+  useEffect(() => {
+    setProfileImageUrl(initialImageUrl);
+  }, [initialImageUrl]);
 
   // 이미지 압축 커스텀 훅
   const { compressImage, isCompressing } = useImageCompression();
