@@ -20,7 +20,7 @@ export default function Header() {
     <header className='sticky top-0 z-20 bg-white/60 backdrop-blur-sm'>
       <div className='tablet:px-32 desktop:px-40 mx-auto flex h-fit w-full max-w-1200 items-center justify-between px-24'>
         <LogoLink />
-        <nav>{user ? <AuthMenu user={user} /> : <GuestMenu />}</nav>
+        <nav>{user ? <AuthMenu /> : <GuestMenu />}</nav>
       </div>
     </header>
   );

@@ -12,6 +12,15 @@
   .flex-col-center {
     @apply flex flex-col items-center justify-center;
   }
+
+  .scrollbar-none {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
 }
 
 @layer base {
@@ -102,15 +111,8 @@
   --font-size-48: 4.8rem;
   --font-size-49: 4.9rem;
   --font-size-50: 5rem;
-}
+  --font-size-100: 10rem;
+  --font-size-150: 15rem;
 
-@layer utilities {
-  .scrollbar-none {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-  }
-
-  .scrollbar-none::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-  }
+  /* Animation */
 }

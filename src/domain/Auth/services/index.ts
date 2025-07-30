@@ -28,31 +28,11 @@ import type { SigninResponse, SignupResponse } from '../schemas/response';
  * @throws {ErrorResponse} ky 내부에서 HTTP 응답이 4xx/5xx일 경우 예외가 발생합니다.
  * - `message`: 오류 메시지 (예: "중복된 이메일입니다.", "이메일 형식으로 작성해주세요.")
  * - `statusCode`: HTTP 상태 코드 (예: 409, 400)
- * @example
- * ```typescript
- * async function handleSignupSubmit() {
- *  try {
- *    const user = await signup({
- *      email: 'newuser@example.com',
- *      nickname: '새로운유저',
- *      password: 'password123',
- *     });
- *      console.log('회원가입 성공:', user);
- *      예: 로그인 페이지로 리다이렉트
- *    } catch (error) {
- *      console.error('회원가입 실패:', error);
- *      예: 사용자에게 오류 메시지 표시
- *  }
- * }
- * ```
+ *
  */
-export const signup = async (
-  userData: SignupRequest,
-): Promise<SignupResponse> => {
+export const signup = (userData: SignupRequest): Promise<SignupResponse> => {
   return authApiClient
-    .post(BRIDGE_API.AUTH.SIGNUP, {
-      json: userData,
-    })
+    .post(BRIDGE_API.AUTH.SIGNUP, { json: userData })
     .json<SignupResponse>();
 };
 
@@ -73,30 +53,11 @@ export const signup = async (
  * @throws {ErrorResponse} ky 내부에서 HTTP 응답이 4xx/5xx일 경우 예외가 발생합니다.
  * - `message`: 오류 메시지 (예: "이메일 또는 비밀번호를 잘못 입력했습니다.")
  * - `statusCode`: HTTP 상태 코드 (예: 401)
- * @example
- * ```typescript
- * async function handleSigninSubmit() {
- *  try {
- *    const response = await signin({
- *      email: 'test@example.com',
- *      password: 'password123',
- *     });
- *     console.log('로그인 성공:', response.user.nickname);
- *      예: 토큰을 로컬 스토리지에 저장하고 메인 페이지로 리다이렉트
- *   } catch (error) {
- *     console.error('로그인 실패:', error);
- *      예: 사용자에게 오류 메시지 표시
- *   }
- * }
- * ```
  */
-export const signin = async (
-  credentials: SigninRequest,
-): Promise<SigninResponse> => {
+
+export const signin = (credentials: SigninRequest): Promise<SigninResponse> => {
   return authApiClient
-    .post(BRIDGE_API.AUTH.SIGNIN, {
-      json: credentials,
-    })
+    .post(BRIDGE_API.AUTH.SIGNIN, { json: credentials })
     .json<SigninResponse>();
 };
 
@@ -122,6 +83,16 @@ export const signin = async (
  * @returns {Promise<User>} 인증된 사용자 정보를 포함하는 프로미스입니다.
  * @throws {Error} API 요청 실패 시 (예: 네트워크 오류, 인증되지 않음) 오류를 발생시킬 수 있습니다.
  */
-export const getMe = async (): Promise<User> => {
+export const getMe = (): Promise<User> => {
   return apiClient.get(API_ENDPOINTS.USERS.ME).json<User>();
+};
+
+/**
+ * @function signout
+ * @description 로그아웃 API를 호출하여 현재 사용자의 세션을 종료합니다. 이 함수는 서버에 로그아웃 요청을 보내고, 성공 시 서버로부터 메시지를 반환받습니다.
+ * @returns {Promise<{ message: string }>} 로그아웃 성공 시 서버에서 반환되는 메시지를 포함하는 프로미스입니다.
+ * @throws {Error} API 요청 실패 시 (예: 네트워크 오류) 오류를 발생시킬 수 있습니다.
+ */
+export const signout = (): Promise<{ message: string }> => {
+  return authApiClient.post(BRIDGE_API.AUTH.SIGNOUT).json();
 };
