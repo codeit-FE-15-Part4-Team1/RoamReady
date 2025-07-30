@@ -30,6 +30,10 @@ export const PopoverContext = createContext<PopoverContextType | null>(null);
 interface PopoverRootProps {
   /** Popover 내부 컴포넌트들 (PopoverTrigger, PopoverContent 등) */
   children: ReactNode;
+  /** Popover의 열림 상태를 외부에서 제어하기 위한 prop */
+  isOpen?: boolean;
+  /** Popover의 열림 상태가 외부에서 변경될 때 호출되는 콜백 함수 */
+  onOpenChange?: (isOpen: boolean) => void;
 }
 
 /**
@@ -52,10 +56,24 @@ interface PopoverRootProps {
  * @param {PopoverRootProps} props - 컴포넌트 props
  * @returns {JSX.Element} Context Provider로 감싸진 children
  */
-export default function PopoverRoot({ children }: PopoverRootProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function PopoverRoot({
+  children,
+  isOpen: controlledIsOpen,
+  onOpenChange,
+}: PopoverRootProps) {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const popoverId = useId();
+
+  const isOpen =
+    controlledIsOpen !== undefined ? controlledIsOpen : internalIsOpen;
+
+  const setIsOpen = (open: boolean) => {
+    onOpenChange?.(open);
+    if (controlledIsOpen === undefined) {
+      setInternalIsOpen(open);
+    }
+  };
 
   return (
     <PopoverContext.Provider

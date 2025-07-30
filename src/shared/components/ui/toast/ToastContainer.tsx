@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { useRoamReadyStore } from '@/shared/store';
@@ -20,15 +19,19 @@ import Toast from './Toast';
 export default function ToastContainer() {
   const toasts = useRoamReadyStore((state) => state.toasts);
 
-  const [mounted, setMounted] = useState(false);
-  const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null);
+  const portalRoot =
+    typeof document !== 'undefined'
+      ? document.getElementById('portal-root')
+      : null;
 
-  useEffect(() => {
-    setMounted(true);
-    setPortalRoot(document.getElementById('portal-root'));
-  }, []);
+  console.log(
+    'ToastContainer rendered. portalRoot:',
+    portalRoot,
+    'toasts.length:',
+    toasts.length,
+  );
 
-  if (!mounted || !portalRoot || !toasts.length) {
+  if (!portalRoot || !toasts.length) {
     return null;
   }
 

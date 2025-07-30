@@ -2,6 +2,7 @@
 
 import { useShallow } from 'zustand/shallow';
 
+import Container from '@/app/_components/Container';
 import type { BoundState } from '@/shared/store';
 import { useRoamReadyStore } from '@/shared/store';
 
@@ -17,11 +18,13 @@ export default function Header() {
   );
 
   return (
-    <header className='sticky top-0 z-20 bg-white/60 backdrop-blur-sm'>
-      <div className='tablet:px-32 desktop:px-40 mx-auto flex h-fit w-full max-w-1200 items-center justify-between px-24'>
-        <LogoLink />
-        <nav>{user ? <AuthMenu user={user} /> : <GuestMenu />}</nav>
-      </div>
+    <header className='sticky top-0 z-40 border-b border-gray-50 bg-white/90 backdrop-blur-xs'>
+      <Container>
+        <div className='flex items-center justify-between'>
+          <LogoLink />
+          <nav>{user ? <AuthMenu /> : <GuestMenu />}</nav>
+        </div>
+      </Container>
     </header>
   );
 }

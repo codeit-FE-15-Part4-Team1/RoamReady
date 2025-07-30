@@ -45,7 +45,7 @@ const avatarSizeStyles = {
  * 이미지 URL 유무에 따라 사용자 지정 이미지 또는 기본 로고를 렌더링하며,
  * 로딩 상태를 시각적으로 표현할 수 있습니다.
  *
- * @param profileImageUrl - 표시할 이미지 URL. Falsy 값일 경우 기본 로고가 표시됩니다.
+ * @param profileImageUrl - 표시할 이미지 URL. 빈 문자열, null, undefined일 경우 기본 로고가 표시됩니다.
  * @param size - 아바타 크기 프리셋 ('sm' 또는 'lg').
  * @param isLoading - 로딩 상태 여부.
  *
@@ -57,8 +57,8 @@ export default function Avatar({
   size = 'sm',
   isLoading = false,
 }: AvatarProps) {
-  // profileImageUrl이 빈 문자열('')이면 기본 이미지를 표시합니다.
-  const isDefaultImage = !profileImageUrl;
+  // profileImageUrl이 빈 문자열(''), null, undefined이면 기본 이미지를 표시합니다.
+  const isDefaultImage = !profileImageUrl || profileImageUrl.trim() === '';
 
   // size prop에 따라 해당되는 스타일 클래스와 sizes 속성을 가져옵니다.
   const { className, sizes } = avatarSizeStyles[size];
