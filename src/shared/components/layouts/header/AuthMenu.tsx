@@ -1,4 +1,4 @@
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 
 
 import { useRoamReadyStore } from '@/shared/store';
@@ -25,7 +25,7 @@ interface AuthMenuProps {
 
 export default function AuthMenu({ user }: AuthMenuProps) {
   const user = useRoamReadyStore((state) => state.user);
-  const router = useRouter();
+  // const router = useRouter();
   //새로 만든 useSignoutMutation 훅을 사용합니다.
   // const { mutate: handleSignout, isPending } = useSignoutMutation();
 
