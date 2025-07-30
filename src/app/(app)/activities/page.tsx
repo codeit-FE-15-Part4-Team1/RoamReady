@@ -12,9 +12,9 @@ import { GetActivitiesOffsetResponse } from '@/domain/Activity/schemas/main';
 import { getActivities } from '@/domain/Activity/services/main/getActivities';
 
 interface ActivityPageProps {
-  searchParams: {
+  searchParams: Promise<{
     [key: string]: string | string[] | undefined;
-  };
+  }>;
 }
 
 // 서버에서 사용할 기본 사이즈 (모바일 기준)
