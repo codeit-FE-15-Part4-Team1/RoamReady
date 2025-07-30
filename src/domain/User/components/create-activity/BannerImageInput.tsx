@@ -73,7 +73,7 @@ export default function BannerImageInput({
     <Input.Root name={name} id={name} type='file'>
       <Input.Label className='font-bold'>배너 이미지 등록</Input.Label>
       <div className='flex flex-wrap items-center gap-20'>
-        {!previewUrl && (
+        {isMounted && (
           <label className='flex h-[112px] w-[112px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300'>
             <Plus className='size-50' />
             <input

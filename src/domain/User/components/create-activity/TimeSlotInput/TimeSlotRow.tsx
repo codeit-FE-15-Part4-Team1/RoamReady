@@ -30,8 +30,8 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
   const endTimeErrorMessage = scheduleErrors?.endTime?.message;
 
   return (
-    <div className='relative py-10'>
-      <div className='grid grid-cols-10 gap-10'>
+    <>
+      <div className='tablet:grid tablet:grid-cols-10 flex flex-col gap-10'>
         <div className='col-span-6'>
           <Input.Root
             name={`schedules.${index}.date`}
@@ -43,7 +43,7 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
           </Input.Root>
         </div>
 
-        <div className='col-span-3 flex items-center justify-between gap-10'>
+        <div className='col-span-4 flex items-center justify-between gap-10'>
           <Select.Root
             value={startTime}
             onValueChange={(value) => {
@@ -57,7 +57,7 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
           >
             <Select.Trigger
               editable
-              className='font-size-14 w-full px-20 py-17.5'
+              className='font-size-14 w-full min-w-[8.9rem] px-20 py-17.5'
               placeholder='00:00'
             >
               <Select.Value />
@@ -91,7 +91,7 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
           >
             <Select.Trigger
               editable
-              className='font-size-14 w-full px-20 py-17.5'
+              className='font-size-14 w-full min-w-[8.9rem] px-20 py-17.5'
               placeholder='00:00'
             >
               <Select.Value />
@@ -111,24 +111,15 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
             value={endTime || ''}
           />
 
-          {/* ✨ 기존 스케줄의 ID를 hidden input으로 저장
-          {scheduleId && (
-            <input
-              type='hidden'
-              name={`schedules.${index}.id`}
-              value={scheduleId}
-            />
-          )} */}
-        </div>
-
-        <div className='col-span-1 flex items-center justify-center'>
-          <button
-            type='button'
-            className='cursor-pointer rounded-full bg-gray-500 p-15 text-white'
-            onClick={onRemove}
-          >
-            <Minus className='size-20 font-semibold' />
-          </button>
+          <div className='flex items-center justify-center'>
+            <button
+              type='button'
+              className='cursor-pointer rounded-full bg-gray-500 p-15 text-white'
+              onClick={onRemove}
+            >
+              <Minus className='size-20 font-semibold' />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -139,6 +130,6 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
           </p>
         </div>
       )}
-    </div>
+    </>
   );
 }
