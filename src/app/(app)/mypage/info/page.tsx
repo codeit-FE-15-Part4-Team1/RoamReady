@@ -36,7 +36,7 @@ export default function MyInfoPage() {
   return (
     <div>
       <h1 className='font-size-18 font-bold text-neutral-900'>내 정보</h1>
-      <p className='text-neutral-900'>
+      <p className='font-size-16 text-neutral-700'>
         이미지와 닉네임, 비밀번호를 수정할 수 있습니다.
       </p>
       <EditableAvatar
