@@ -1,10 +1,11 @@
-import Image from 'next/image';
+import { useRouter } from 'next/router';
 
-import type { User } from '@/shared/slices/userSlice';
-
-interface AuthMenuProps {
-  user: User;
-}
+import { useSignoutMutation } from '@/domain/Auth/hooks/useSignoutMutation';
+import Notification from '@/domain/Notification/components/Notification';
+import Avatar from '@/shared/components/ui/avatar';
+import Dropdown from '@/shared/components/ui/dropdown';
+import { ROUTES } from '@/shared/constants/routes';
+import { useRoamReadyStore } from '@/shared/store';
 
 /**
  * AuthMenu 컴포넌트 입니다.
@@ -14,23 +15,44 @@ interface AuthMenuProps {
  * (현재는 더미 데이터로 구성되어 있으며, 추후 유저 정보를 props로 받을 수 있도록 확장할 예정입니다.)
  *
  */
-export default function AuthMenu({ user }: AuthMenuProps) {
-  // const signout = useSignout();  이렇게 가져올 수 있어요.
+
+export default function AuthMenu() {
+  const user = useRoamReadyStore((state) => state.user);
+  const router = useRouter();
+  // 새로 만든 useSignoutMutation 훅을 사용합니다.
+  const { mutate: handleSignout, isPending } = useSignoutMutation();
+
+  const onSignout = () => {
+    if (isPending) return;
+    handleSignout();
+  };
+
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className='flex items-center justify-center gap-20'>
-      <Image src='/icons/bell.svg' alt='알림 아이콘' width={24} height={24} />
-
+      <Notification />
       <div className='flex items-center justify-center gap-15'>
         {/* 세로 구분선 */}
         <div className='h-20 w-1 self-center bg-gray-100' />
 
         {/* 프로필 아바타*/}
-        <div className='h-30 w-30 rounded-full bg-black' />
-        {/* user를 사용해야 PR 프리뷰가 생성되서 우선 아래코드 추가했습니다.  */}
-        {user.profileImageUrl}
+        <Dropdown.Root>
+          <Dropdown.Trigger>
+            <Avatar profileImageUrl={user.profileImageUrl ?? ''} />
+          </Dropdown.Trigger>
+          <Dropdown.Menu menuClassName='top-40'>
+            <Dropdown.Item onClick={onSignout}>로그아웃</Dropdown.Item>
+            <Dropdown.Item onClick={() => router.push(ROUTES.MYPAGE.INFO)}>
+              마이페이지
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown.Root>
 
         {/* 유저 이름 */}
-        <span className='font-size-14'>닉네임</span>
+        <span className='font-size-14'>{user.nickname}</span>
       </div>
     </div>
   );

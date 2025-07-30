@@ -22,7 +22,7 @@ export default function Header() {
       <Container>
         <div className='flex items-center justify-between'>
           <LogoLink />
-          <nav>{user ? <AuthMenu user={user} /> : <GuestMenu />}</nav>
+          <nav>{user ? <AuthMenu /> : <GuestMenu />}</nav>
         </div>
       </Container>
     </header>

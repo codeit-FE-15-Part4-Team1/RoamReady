@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import Button from '@/shared/components/Button';
 import { cn } from '@/shared/libs/cn';
 
@@ -37,6 +39,19 @@ export default function AvailableTimeSection({
   onTimeSelect,
   className,
 }: AvailableTimeSectionProps) {
+  const now = dayjs();
+
+  // 선택된 날짜가 있을 경우, 현재 시간 기준으로 지난 시간대 제외
+  const filteredSlots =
+    selectedDate !== null
+      ? timeSlots.filter(({ startTime }) => {
+          const fullStart = dayjs(
+            `${dayjs(selectedDate).format('YYYY-MM-DD')}T${startTime}`,
+          );
+          return fullStart.isAfter(now);
+        })
+      : [];
+
   return (
     <section aria-labelledby='available-times' className='flex flex-col gap-14'>
       {/* 제목 영역 */}
@@ -53,15 +68,15 @@ export default function AvailableTimeSection({
           )}
         >
           {selectedDate ? (
-            timeSlots.length > 0 ? (
-              timeSlots.map(({ id, startTime, endTime }) => {
+            filteredSlots.length > 0 ? (
+              filteredSlots.map(({ id, startTime, endTime }) => {
                 const timeLabel = `${startTime}-${endTime}`;
                 return (
                   <Button
                     key={id}
                     type='button'
                     variant='outline'
-                    selected={selectedTime === timeLabel} // 선택 여부 표시
+                    selected={selectedTime === timeLabel}
                     onClick={() => onTimeSelect(timeLabel)}
                     className='font-size-16 min-h-50 w-full border-2 font-medium'
                   >
@@ -70,13 +85,11 @@ export default function AvailableTimeSection({
                 );
               })
             ) : (
-              // 예약 가능한 시간이 없을 경우 안내 메시지
               <span className='font-size-14 text-gray-400'>
                 예약 가능한 시간이 없습니다.
               </span>
             )
           ) : (
-            // 날짜가 선택되지 않은 경우 안내 메시지
             <span className='font-size-14 text-gray-400'>
               날짜를 먼저 선택해주세요.
             </span>
@@ -84,7 +97,7 @@ export default function AvailableTimeSection({
         </div>
 
         {/* 흐림 효과: 타임 슬롯이 많아 스크롤이 필요한 경우 하단 fade 효과 표시 */}
-        {timeSlots.length >= 3 && (
+        {filteredSlots.length >= 3 && (
           <div className='pointer-events-none absolute bottom-0 left-0 h-20 w-full bg-gradient-to-t from-white to-transparent' />
         )}
       </div>

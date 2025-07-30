@@ -3,7 +3,8 @@
 import dayjs from 'dayjs';
 import { useMemo, useState } from 'react';
 
-import { availableSchedule } from '../../components/detail/mock/mock-data';
+import { ReservableTimeSlot } from '../../types/detail/types';
+import { useAvailableSchedule } from './useAvailableSchedule';
 
 /**
  * useReservationForm
@@ -28,7 +29,24 @@ import { availableSchedule } from '../../components/detail/mock/mock-data';
  *   handleDecrease,
  * } = useReservationForm(30000);
  */
-export const useReservationForm = (initialPrice: number) => {
+export const useReservationForm = (
+  initialPrice: number,
+  activityId: number,
+) => {
+  const [yearMonth, setYearMonth] = useState(() => {
+    const now = new Date();
+    return {
+      year: String(now.getFullYear()),
+      month: String(now.getMonth() + 1).padStart(2, '0'),
+    };
+  });
+
+  const { data: rawSchedule = [] } = useAvailableSchedule({
+    activityId: Number(activityId),
+    year: yearMonth.year,
+    month: yearMonth.month,
+  });
+
   // 사용자가 선택한 날짜
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
@@ -45,18 +63,16 @@ export const useReservationForm = (initialPrice: number) => {
 
   // 예약 가능한 날짜 목록 추출 (추후 API 데이터 연동 필요)
   const reservableDates = useMemo(() => {
-    return availableSchedule.map((item) => item.date);
-  }, []);
+    return rawSchedule.map((item) => item.date);
+  }, [rawSchedule]);
 
   // 선택된 날짜의 예약 가능한 time slot 배열 (추후 API 데이터 연동 필요)
-  const timeSlots = useMemo(() => {
+  const timeSlots: ReservableTimeSlot[] = useMemo(() => {
     if (!selectedDate) return [];
     const formattedDate = dayjs(selectedDate).format('YYYY-MM-DD');
-    const matched = availableSchedule.find(
-      (item) => item.date === formattedDate,
-    );
+    const matched = rawSchedule.find((item) => item.date === formattedDate);
     return matched?.times ?? [];
-  }, [selectedDate]);
+  }, [selectedDate, rawSchedule]);
 
   // 총 가격 계산 = 단가 * 인원 수
   const totalPrice = initialPrice * participantCount;
@@ -109,5 +125,11 @@ export const useReservationForm = (initialPrice: number) => {
     handleTimeSelect,
     handleIncrease,
     handleDecrease,
+    onMonthChange: (year: string, month: string) => {
+      setYearMonth((prev) => {
+        if (prev.year === year && prev.month === month) return prev;
+        return { year, month };
+      });
+    },
   };
 };

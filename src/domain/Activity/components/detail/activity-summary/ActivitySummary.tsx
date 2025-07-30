@@ -36,9 +36,8 @@ export default function ActivitySummary({
           <h1 className='font-size-24 font-bold'>{activity.title}</h1>
         </div>
 
-        {/* 체험 드롭다운 메뉴 (예: 수정/삭제) */}
-        {/* Todo: 본인이 등록한 체험인 경우에만 노출되도록 조건부 처리 필요 */}
-        <ActivityDropdown id={activity.id} />
+        {/* 체험 드롭다운 메뉴 (수정/삭제) */}
+        <ActivityDropdown id={activity.id} ownerId={activity.userId} />
       </div>
 
       {/* 평점 영역 */}

@@ -19,6 +19,7 @@ interface SelectProps {
   className?: string;
   /** 전체 SelectBox 비활성화 여부 */
   disabled?: boolean;
+  name?: string;
 }
 
 /**

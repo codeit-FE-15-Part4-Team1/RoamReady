@@ -1,26 +1,34 @@
 'use client';
+import dayjs from 'dayjs';
+
 import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
 
 import { useCalendar } from '../../hooks/useCalendar';
-import { ReservationsData } from '../../mock/reservation';
+import type { MonthlyReservation } from '../../services/reservation-calendar';
 import { WEEKDAYS } from '../../utils/reservation';
 import CalendarHeader from './CalendarHeader';
-import DayCellBottomSheet from './DayCellBottomSheet';
-import DayCellPopover from './DayCellPopover';
+import DayCell from './DayCell'; // 통합된 컴포넌트 import
 
-export default function ReservationCalendar() {
-  const {
-    currentDate,
-    today,
-    days,
-    getReservationForDate,
-    prevMonth,
-    nextMonth,
-  } = useCalendar(ReservationsData);
+interface ReservationCalendarProps {
+  currentDate: dayjs.Dayjs;
+  monthlyReservations: MonthlyReservation[];
+  selectedActivityId: number;
+  onMonthChange: (newDate: dayjs.Dayjs) => void;
+}
 
+export default function ReservationCalendar({
+  currentDate,
+  monthlyReservations,
+  selectedActivityId,
+  onMonthChange,
+}: ReservationCalendarProps) {
   const isDesktop = useMediaQuery('(min-width: 1024px)');
 
-  const DayCellComponent = isDesktop ? DayCellPopover : DayCellBottomSheet;
+  // 🔥 미디어쿼리 결과에 따라 displayMode 결정
+  const displayMode = isDesktop ? 'popover' : 'bottomsheet';
+
+  const { today, days, getReservationForDate, prevMonth, nextMonth } =
+    useCalendar(monthlyReservations, currentDate, onMonthChange);
 
   return (
     <div
@@ -47,13 +55,15 @@ export default function ReservationCalendar() {
 
       <div className='grid auto-rows-fr grid-cols-7' role='grid'>
         {days.map((day, index) => (
-          <DayCellComponent
+          <DayCell
             key={day.format('YYYY-MM-DD')}
             day={day}
             isCurrentMonth={day.isSame(currentDate, 'month')}
             isToday={day.isSame(today, 'day')}
             isLastRow={index >= days.length - 7}
-            reservation={getReservationForDate(day)} // 배열이 아닌 단일 객체 반환
+            reservation={getReservationForDate(day)}
+            selectedActivityId={selectedActivityId}
+            displayMode={displayMode} // 🔥 displayMode prop 추가
           />
         ))}
       </div>
