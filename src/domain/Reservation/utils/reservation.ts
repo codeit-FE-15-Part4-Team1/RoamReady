@@ -5,26 +5,26 @@ export const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 // 상태별 우선순위 (표시 순서)
 export const STATUS_PRIORITY: ReservationStatus[] = [
-  'completed',
   'pending',
   'confirmed',
+  'declined',
 ];
 
 // 상태별 한글 라벨
 export const STATUS_LABELS: Record<ReservationStatus, string> = {
-  confirmed: '예약',
-  pending: '승인',
-  completed: '완료',
+  confirmed: '승인',
+  pending: '신청',
+  declined: '거절',
 };
 
 /**
  * 예약 상태에 따른 Tailwind CSS 클래스를 반환합니다
- * @param status - 예약 상태 ('completed' | 'confirmed' | 'pending')
+ * @param status - 예약 상태 ('declined' | 'confirmed' | 'pending')
  * @returns Tailwind CSS 클래스 문자열
  */
 export const getColorClassByStatus = (status: ReservationStatus) => {
   const statusColorMap: Record<ReservationStatus, string> = {
-    completed: 'bg-green-200 text-green-600', // 완료
+    declined: 'bg-red-200 text-red-600', // 완료
     confirmed: 'bg-purple-200 text-purple-600', // 예약
     pending: 'bg-blue-200 text-blue-600', // 승인
   };

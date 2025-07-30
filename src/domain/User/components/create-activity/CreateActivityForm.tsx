@@ -1,36 +1,48 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { useEffect } from 'react';
+import { Controller, FormProvider } from 'react-hook-form';
 
-import Button from '@/shared/components/Button';
+import { useActivityForm } from '@/domain/User/hooks/create-activity/useActivityForm';
 
-import { formSchema } from '../../schemas/createActivity';
 import BannerImageInput from './BannerImageInput';
 import CategoryInput from './CategoryInput';
 import DescriptionInput from './DescriptionInput';
 import IntroImageInput from './IntroImageInput';
 import LocationInput from './LocationInput';
 import PriceInput from './PriceInput';
+import SubmitButton from './SubmitButton';
 import TimeSlotInput from './TimeSlotInput/TimeSlotInput';
 import TitleInput from './TitleInput';
 
-type FormValues = z.infer<typeof formSchema>;
+export default function CreateActivityForm({
+  onDirtyChange,
+}: {
+  onDirtyChange: (isDirty: boolean) => void;
+}) {
+  const {
+    methods,
+    isEdit,
+    isLoading,
+    isSubmitting,
+    submittingError,
+    existingImageUrls,
+    handleRemoveSubImage,
+    onSubmit,
+    handleRemoveBannerImage,
+  } = useActivityForm();
 
-export default function CreateExperienceForm() {
-  const methods = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    mode: 'onBlur',
-    defaultValues: {
-      schedules: [{ date: '', startTime: '', endTime: '' }],
-    },
-  });
+  const { isDirty } = methods.formState;
 
-  const onSubmit = (data: FormValues) => {
-    // 추후에 서버에 전송하는 로직 추가
-    console.log('Form Submitted Data:', data);
-  };
+  useEffect(() => {
+    if (onDirtyChange) {
+      onDirtyChange(isDirty);
+    }
+  }, [isDirty, onDirtyChange]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <FormProvider {...methods}>
@@ -42,38 +54,47 @@ export default function CreateExperienceForm() {
         <CategoryInput />
         <DescriptionInput />
         <PriceInput />
-        <TimeSlotInput />
         <LocationInput />
+        <TimeSlotInput />
 
-        {/* BannerImageInput을 Controller로 감싸 RHF와 연결합니다. */}
         <Controller
           name='bannerImages'
           control={methods.control}
           render={({ field: { onChange, value } }) => (
-            <BannerImageInput value={value} onChange={onChange} />
+            console.log('BannerImageInput value', value),
+            (
+              <BannerImageInput
+                value={value}
+                onChange={onChange}
+                name='bannerImages'
+                existingImageUrl={existingImageUrls.bannerImageUrl}
+                onRemoveExistingImage={handleRemoveBannerImage}
+              />
+            )
           )}
         />
 
-        {/* IntroImageInput도 Controller로 감싸 RHF와 연결합니다. */}
         <Controller
-          name='subImages' // Zod 스키마에 정의된 이름으로 변경
+          name='subImages'
           control={methods.control}
-          render={({ field: { onChange, value } }) => (
-            <IntroImageInput value={value} onChange={onChange} />
-          )}
+          render={({ field: { onChange, value } }) => {
+            return (
+              <IntroImageInput
+                value={value}
+                onChange={onChange}
+                name='subImages'
+                existingImageUrls={existingImageUrls.subImageUrls}
+                onRemoveExistingImage={handleRemoveSubImage}
+              />
+            );
+          }}
         />
 
-        <div className='flex w-full justify-center'>
-          <Button
-            variant='primary'
-            size='medium'
-            className='h-40'
-            type='submit'
-          >
-            등록하기
-          </Button>
-        </div>
+        <SubmitButton isSubmitting={isSubmitting} isEdit={isEdit} />
       </form>
+      {submittingError && (
+        <p className='font-size-16 text-red font-bold'>{submittingError}</p>
+      )}
     </FormProvider>
   );
 }

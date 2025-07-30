@@ -2,128 +2,110 @@
 
 import { Plus, X } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useEffect, useRef, useState } from 'react';
 
 import Input from '@/shared/components/ui/input';
 
-// 1. Controller로부터 받을 props 타입을 정의합니다.
-//    - value: RHF가 관리하는 현재 파일 목록 (FileList)
-//    - onChange: 파일 목록이 변경될 때 RHF 상태를 업데이트하는 함수
+// ✨ Props 타입을 FileList | string | null로 수정
 interface BannerImageInputProps {
-  value?: FileList;
-  onChange: (files: FileList | null) => void;
-  // fieldState.error를 전달받기 위한 prop도 추가할 수 있습니다.
+  value?: FileList | string | null;
+  onChange: (files: FileList | string | null) => void;
+  name: string;
+  existingImageUrl?: string;
+  onRemoveExistingImage?: () => void;
 }
 
 export default function BannerImageInput({
-  value: files,
+  value,
   onChange,
+  name,
+  existingImageUrl,
+  onRemoveExistingImage = () => {},
 }: BannerImageInputProps) {
-  const {
-    formState: { errors },
-  } = useFormContext();
-  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  // 2. RHF 상태(files)가 변경될 때마다 미리보기 URL을 업데이트합니다.
   useEffect(() => {
-    if (files && files.length > 0) {
-      const objectUrls = Array.from(files).map((file) =>
-        URL.createObjectURL(file),
-      );
-      setPreviewUrls(objectUrls);
+    setIsMounted(true);
+  }, []);
 
-      // 컴포넌트가 언마운트되거나 파일이 변경되면 기존 URL을 해제하여 메모리 누수를 방지합니다.
-      return () => {
-        objectUrls.forEach((url) => URL.revokeObjectURL(url));
-      };
+  useEffect(() => {
+    if (value instanceof FileList && value.length > 0) {
+      // 1. 새로운 파일이 들어온 경우 (FileList)
+      const file = value[0];
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+      return () => URL.revokeObjectURL(url);
+    } else if (typeof value === 'string') {
+      // 2. 기존 이미지 URL이 RHF의 값으로 들어온 경우 (string)
+      setPreviewUrl(value);
+    } else if (existingImageUrl) {
+      // 3. RHF 값은 없지만 표시해야 할 기존 이미지가 있는 경우 (초기 로드)
+      setPreviewUrl(existingImageUrl);
     } else {
-      setPreviewUrls([]);
+      // 4. 모든 값이 없는 경우
+      setPreviewUrl(null);
     }
-  }, [files]);
+  }, [value, existingImageUrl]);
 
-  // 3. DataTransfer 객체를 사용해 FileList를 쉽게 조작하는 헬퍼 함수
-  const createNewFileList = (
-    currentFiles: FileList | undefined,
-    filesToAdd: File[],
-    filesToRemove?: number[],
-  ) => {
-    const dataTransfer = new DataTransfer();
-    const existingFiles = currentFiles ? Array.from(currentFiles) : [];
-
-    // 파일 추가
-    const allFiles = [...existingFiles, ...filesToAdd];
-
-    // 파일 제거
-    const finalFiles = filesToRemove
-      ? allFiles.filter((_, i) => !filesToRemove.includes(i))
-      : allFiles;
-
-    finalFiles.forEach((file) => dataTransfer.items.add(file));
-    return dataTransfer.files;
-  };
-
-  // 4. 파일 선택 시 실행되는 핸들러
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
-    const newFiles = Array.from(e.target.files);
-    const updatedFileList = createNewFileList(files, newFiles);
-    onChange(updatedFileList); // RHF 상태 업데이트
+    const selectedFiles = e.target.files;
+
+    if (selectedFiles && selectedFiles.length > 0) {
+      // React Hook Form이 요구하는 FileList 형식을 그대로 전달
+      onChange(selectedFiles);
+    } else {
+      onChange(null);
+    }
   };
 
-  // 5. 이미지 제거 시 실행되는 핸들러
-  const removeImage = (indexToRemove: number) => {
-    const updatedFileList = createNewFileList(files, [], [indexToRemove]);
-    onChange(updatedFileList.length > 0 ? updatedFileList : null); // RHF 상태 업데이트
+  const handleRemoveImage = () => {
+    // null을 전달하여 RHF의 필드 값을 비움
+    onChange(null);
+    onRemoveExistingImage();
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
   };
-
-  // Zod 스키마에 정의된 에러 메시지를 가져옵니다.
-  const errorMessage = errors.bannerImages?.message;
 
   return (
-    <div>
-      <Input.Root name='bannerImages' id='banner' type='file' className='my-10'>
-        <Input.Label className='font-size-16 font-bold'>
-          배너 이미지 등록
-        </Input.Label>
-        <div className='flex flex-wrap items-center gap-20'>
-          <label
-            htmlFor='banner'
-            className='flex h-[112px] w-[112px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300'
-          >
+    <Input.Root name={name} id={name} type='file'>
+      <Input.Label className='font-bold'>배너 이미지 등록</Input.Label>
+      <div className='flex flex-wrap items-center gap-20'>
+        {isMounted && (
+          <label className='flex h-[112px] w-[112px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300'>
             <Plus className='size-50' />
+            <input
+              ref={inputRef}
+              id={name}
+              name={name}
+              type='file'
+              className='hidden'
+              onChange={handleFileChange}
+              accept='image/*'
+            />
           </label>
-          {previewUrls.map((url, index) => (
-            <div key={url} className='relative h-[112px] w-[112px]'>
-              <button
-                type='button'
-                onClick={() => removeImage(index)}
-                className='absolute -top-10 -right-10 z-10 rounded-full bg-black p-2 shadow-md'
-              >
-                <X className='size-16 text-white' />
-              </button>
-              <Image
-                src={url}
-                alt={`미리보기 ${index + 1}`}
-                fill
-                className='rounded-lg object-cover'
-              />
-            </div>
-          ))}
-        </div>
-        {/* 실제 파일 입력을 담당하는 숨겨진 input. 자체 onChange 핸들러를 사용합니다. */}
-        <input
-          id='banner'
-          type='file'
-          multiple
-          accept='image/*'
-          onChange={handleFileChange}
-          className='hidden'
-        />
-      </Input.Root>
-      {errorMessage && (
-        <p className='font-size-12 mt-4 text-red-500'>{String(errorMessage)}</p>
-      )}
-    </div>
+        )}
+        {isMounted && previewUrl && (
+          <div className='relative h-[112px] w-[112px]'>
+            <button
+              type='button'
+              onClick={handleRemoveImage}
+              className='absolute -top-10 -right-10 z-10 rounded-full bg-black p-2 shadow-md'
+            >
+              <X className='size-16 cursor-pointer text-white' />
+            </button>
+            <Image
+              src={previewUrl}
+              alt='배너 이미지 미리보기'
+              fill
+              className='rounded-lg object-cover'
+            />
+          </div>
+        )}
+      </div>
+      <Input.Helper />
+    </Input.Root>
   );
 }

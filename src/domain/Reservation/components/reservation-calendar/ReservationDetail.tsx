@@ -1,16 +1,20 @@
 'use client';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
+import { ScheduleItem } from '@/domain/Reservation/services/reservation-calendar';
 import Button from '@/shared/components/Button';
 import Select from '@/shared/components/ui/select';
 
 interface ReservationDetailProps {
   reservations: ReservationItem[];
+  schedules: ScheduleItem[];
   emptyMessage: string;
   showApprovalButton?: boolean;
   showRejectButton?: boolean;
-  onApprove: (reservationId: number) => void;
-  onReject: (reservationId: number) => void;
+  onApprove: (reservationId: number, scheduleId: number) => void;
+  onReject: (reservationId: number, scheduleId: number) => void;
+  onTimeSlotSelect?: (scheduleId: number) => Promise<void>;
+  isLoading?: boolean;
 }
 
 interface ReservationItem {
@@ -33,25 +37,69 @@ interface ReservationItem {
 
 export default function ReservationDetail({
   reservations,
+  schedules,
   emptyMessage,
   showApprovalButton,
   showRejectButton,
   onApprove,
   onReject,
+  onTimeSlotSelect,
 }: ReservationDetailProps) {
-  const [selectedTime, setSelectedTime] = useState<string>('');
+  const [selectedScheduleId, setSelectedScheduleId] = useState<string>('');
 
-  // 고유한 시간대 추출 (예약 데이터에서)
-  const availableTimeSlots = [
-    ...new Set(reservations.map((res) => `${res.startTime} - ${res.endTime}`)),
-  ];
+  // 스케줄에서 고유한 시간대 추출
+  const availableTimeSlots = useMemo(() => {
+    const uniqueSchedules = schedules.reduce(
+      (acc, schedule) => {
+        const timeSlotKey = `${schedule.startTime}-${schedule.endTime}`;
+        if (!acc.has(timeSlotKey)) {
+          acc.set(timeSlotKey, {
+            scheduleId: schedule.scheduleId,
+            startTime: schedule.startTime,
+            endTime: schedule.endTime,
+            displayText: `${schedule.startTime} - ${schedule.endTime}`,
+          });
+        }
+        return acc;
+      },
+      new Map<
+        string,
+        {
+          scheduleId: number;
+          startTime: string;
+          endTime: string;
+          displayText: string;
+        }
+      >(),
+    );
 
-  // 선택된 시간대에 맞는 예약 필터링
-  const filteredReservations = selectedTime
-    ? reservations.filter(
-        (res) => `${res.startTime} - ${res.endTime}` === selectedTime,
-      )
-    : reservations;
+    return Array.from(uniqueSchedules.values());
+  }, [schedules]);
+
+  const filteredReservations = useMemo(() => {
+    if (!selectedScheduleId) {
+      return null; // 선택 안 하면 빈 배열 반환
+    }
+    return reservations.filter(
+      (res) => res.scheduleId.toString() === selectedScheduleId,
+    );
+  }, [reservations, selectedScheduleId]);
+
+  // 시간대 선택 핸들러
+  const handleTimeSlotChange = useCallback(
+    async (value: string) => {
+      setSelectedScheduleId(value);
+      if (value && onTimeSlotSelect) {
+        await onTimeSlotSelect(parseInt(value, 10));
+      }
+    },
+    [onTimeSlotSelect],
+  );
+
+  const selectedDisplayText =
+    availableTimeSlots.find(
+      (slot) => slot.scheduleId.toString() === selectedScheduleId,
+    )?.displayText ?? '예약 시간 선택';
 
   if (reservations.length === 0) {
     return (
@@ -61,21 +109,40 @@ export default function ReservationDetail({
     );
   }
 
+  if (filteredReservations === null) {
+    return (
+      <p className='flex h-full flex-col items-center justify-center py-4 text-center text-gray-500'>
+        예약 시간을 선택해주세요
+      </p>
+    );
+  }
+
+  if (filteredReservations.length === 0) {
+    return (
+      <p className='flex h-full flex-col items-center justify-center py-4 text-center text-gray-500'>
+        선택한 시간대에 예약이 없습니다
+      </p>
+    );
+  }
+
   return (
-    <div className='tablet:grid tablet:max-h-[40rem] tablet:grid-cols-2 tablet:overflow-y-auto desktop:flex desktop:flex-col scrollbar-none flex flex-col gap-30 space-y-2'>
+    <div className='tablet:grid tablet:min-h-[20rem] tablet:max-h-full tablet:grid-cols-2 tablet:overflow-y-auto desktop:flex desktop:flex-col scrollbar-none flex h-full flex-col gap-30 space-y-2'>
       <div className='flex flex-col gap-12'>
         <h2 className='font-size-18 font-bold'>예약 시간</h2>
-        <Select.Root value={selectedTime} onValueChange={setSelectedTime}>
+        <Select.Root
+          value={selectedScheduleId}
+          onValueChange={handleTimeSlotChange}
+        >
           <Select.Trigger className='font-size-16 w-full'>
-            <Select.Value placeholder='예약 시간' />
+            <p className='text-black'>{selectedDisplayText}</p>
           </Select.Trigger>
           <Select.Content className='font-size-16'>
-            {/* 전체 보기 옵션 추가 */}
-            <Select.Item value=''>전체 보기</Select.Item>
-
             {availableTimeSlots.map((timeSlot) => (
-              <Select.Item key={timeSlot} value={timeSlot}>
-                {timeSlot}
+              <Select.Item
+                key={timeSlot.scheduleId}
+                value={timeSlot.scheduleId.toString()}
+              >
+                {timeSlot.displayText}
               </Select.Item>
             ))}
           </Select.Content>
@@ -85,7 +152,7 @@ export default function ReservationDetail({
       <div className='flex flex-col gap-12'>
         <h2 className='font-size-18 font-bold'>예약 내역</h2>
         <div className='space-y-4'>
-          {filteredReservations.map((reservation) => (
+          {filteredReservations?.map((reservation) => (
             <div
               key={reservation.id}
               className='flex flex-col gap-8 rounded-3xl border border-gray-100 p-20 py-17.5'
@@ -104,7 +171,9 @@ export default function ReservationDetail({
                     type='button'
                     variant='outline'
                     className='font-size-14 font-semibold text-gray-500'
-                    onClick={() => onApprove?.(reservation.id)}
+                    onClick={() =>
+                      onApprove?.(reservation.id, reservation.scheduleId)
+                    }
                   >
                     승인하기
                   </Button>
@@ -124,7 +193,9 @@ export default function ReservationDetail({
                     type='button'
                     variant='ghost'
                     className='font-size-14 border-none font-semibold text-gray-500'
-                    onClick={() => onReject?.(reservation.id)}
+                    onClick={() =>
+                      onReject?.(reservation.id, reservation.scheduleId)
+                    }
                   >
                     거절하기
                   </Button>
