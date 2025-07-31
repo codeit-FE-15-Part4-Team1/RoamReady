@@ -1,9 +1,5 @@
 import { ReactNode } from 'react';
 
-import AuthStatusProvider from '@/app/_components/AuthStatusProvider';
-import Footer from '@/shared/components/layouts/footer/Footer';
-import Header from '@/shared/components/layouts/header/Header';
-
 /**
  * @component AppLayout
  * @description
@@ -18,14 +14,14 @@ import Header from '@/shared/components/layouts/header/Header';
  *
  * @returns {JSX.Element} 헤더, 콘텐츠 영역(AuthStatusProvider 포함), 푸터로 구성된 React 요소입니다.
  */
-export default function AppLayout({ children }: { children: ReactNode }) {
+export default function ActivityDetailLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
-    <div className='flex min-h-[100dvh] flex-col'>
-      <Header />
-      <main className='tablet:px-32 desktop:px-40 mx-auto w-full max-w-1920 flex-1 px-24 py-20'>
-        <AuthStatusProvider>{children}</AuthStatusProvider>
-      </main>
-      <Footer />
-    </div>
+    <main className='mx-auto w-full max-w-1200 flex-1 px-24 py-20'>
+      {children}
+    </main>
   );
 }
