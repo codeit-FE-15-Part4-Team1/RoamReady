@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import FallbackUI from '@/domain/Activity/components/detail/responsive-wrappers/FallbackUI';
 import { useReservationForm } from '@/domain/Activity/hooks/detail/useReservationForm';
+import { useDynamicStickyHeight } from '@/domain/Activity/hooks/main/useDynamicStickyHeight';
 import { Activity, ReviewList } from '@/domain/Activity/types/detail/types';
 import Button from '@/shared/components/Button';
 import { BREAKPOINTS } from '@/shared/constants/breakpoints';
@@ -28,6 +29,12 @@ export default function ReservationWrapper({
   activity: Activity;
   reviews: ReviewList;
 }) {
+  // 동적 sticky 높이 계산 - 새로운 SearchHeader 높이에 맞춰 offset 조정
+  const { heightValue } = useDynamicStickyHeight({
+    additionalOffset: 70,
+    bottomMargin: 0,
+  });
+
   // 반응형 구분
   const isMobile = useMediaQuery(BREAKPOINTS.MOBILE);
   const isTablet = useMediaQuery(BREAKPOINTS.TABLET);
@@ -45,7 +52,13 @@ export default function ReservationWrapper({
     // 비로그인 상태이거나 체험 작성자 본인일 경우 → 예약 폼 대신 요약 + 안내 UI
     if (!isLogin || isOwner) {
       return (
-        <div className='sticky top-40 flex flex-col gap-38'>
+        <div
+          className='sticky top-30 flex flex-col gap-38'
+          style={{
+            top: 300,
+            height: heightValue,
+          }}
+        >
           <div className='w-400'>
             {/* 체험 요약 정보 + 후기 */}
             <ActivitySummary activity={activity} review={reviews} />
@@ -58,7 +71,13 @@ export default function ReservationWrapper({
 
     // 일반 사용자 (PC, 로그인, 소유자 아님) → 예약 폼 노출
     return (
-      <div className='sticky top-150 flex flex-col gap-38'>
+      <div
+        className='sticky flex flex-col gap-38'
+        style={{
+          top: 120,
+          height: heightValue,
+        }}
+      >
         <div className='w-400'>
           <ActivitySummary activity={activity} review={reviews} />
         </div>
