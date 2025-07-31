@@ -26,15 +26,9 @@ export function useResponsiveSize(): number {
       } else if (window.matchMedia('(min-width: 1024px)').matches) {
         // lg: 5열 * 2줄
         setSize(10);
-      } else if (window.matchMedia('(min-width: 768px)').matches) {
-        // md: 4열 * 2줄
-        setSize(8);
-      } else if (window.matchMedia('(min-width: 640px)').matches) {
-        // sm: 2열 * 2줄
-        setSize(4);
       } else {
-        // mobile: 1열 * 2줄
-        setSize(2);
+        // md 이하: 4열 * 2줄
+        setSize(8);
       }
     }
 

@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useCallback } from 'react';
+import { Suspense, useCallback, useEffect } from 'react';
 
 import ActivityCard from '@/domain/Activity/components/main/ActivityCard';
 import ActivityCardSkeleton from '@/domain/Activity/components/main/ActivityCard/ActivityCardSkeleton';
@@ -20,7 +20,7 @@ function ActivitySectionContent() {
   const searchParams = useSearchParams();
   const pageSize = useResponsiveSize();
 
-  const currentPage = Number(searchParams.get('page') ?? 1);
+  const currentPage = Math.max(1, Number(searchParams.get('page')) || 1);
   const category = searchParams.get('category') as
     | GetActivitiesRequestQuery['category']
     | null;
@@ -42,6 +42,19 @@ function ActivitySectionContent() {
   const activities = data?.activities ?? [];
   const totalCount = data?.totalCount ?? 0;
   const totalPages = Math.ceil(totalCount / pageSize);
+
+  // currentPage가 totalPages를 초과하지 않도록 조정
+  const safeCurrentPage =
+    totalPages > 0 ? Math.min(currentPage, totalPages) : currentPage;
+
+  // currentPage가 totalPages를 초과하는 경우 URL을 자동으로 조정
+  useEffect(() => {
+    if (totalPages > 0 && currentPage > totalPages) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('page', totalPages.toString());
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    }
+  }, [currentPage, totalPages, pathname, router, searchParams]);
 
   const handleFilterChange = useCallback(
     (key: 'category' | 'sort', value: string | undefined) => {
@@ -84,14 +97,14 @@ function ActivitySectionContent() {
       />
 
       {isPending ? (
-        <div className='grid grid-cols-1 gap-24 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7'>
+        <div className='grid grid-cols-2 gap-24 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7'>
           {Array.from({ length: pageSize }).map((_, index) => (
             <ActivityCardSkeleton key={index} />
           ))}
         </div>
       ) : (
         <div className='transition-opacity duration-300 ease-in-out'>
-          <div className='grid grid-cols-1 gap-24 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7'>
+          <div className='grid grid-cols-2 gap-24 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7'>
             {activities.map((activity) => (
               <ActivityCard key={activity.id} activity={activity} />
             ))}
@@ -100,7 +113,7 @@ function ActivitySectionContent() {
           {totalCount > 0 && (
             <div className='flex justify-center pt-40'>
               <Pagination
-                currentPage={currentPage}
+                currentPage={safeCurrentPage}
                 totalPages={totalPages}
                 onPageChange={handlePageChange}
               />
@@ -133,7 +146,7 @@ function ActivitySectionSkeleton() {
       </div>
 
       {/* 그리드 스켈레톤 */}
-      <div className='grid grid-cols-1 gap-24 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7'>
+      <div className='grid grid-cols-2 gap-24 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7'>
         {Array.from({ length: 8 }).map((_, index) => (
           <ActivityCardSkeleton key={index} />
         ))}
