@@ -39,15 +39,17 @@ export default function PriceInput() {
         {/* 4. 자체 onChange 핸들러를 제거합니다. Input.Field가 자동으로 RHF와 연결됩니다. */}
         <Input.Field placeholder='체험 금액을 입력해 주세요' min='0' />
         <Input.Helper />
+        {isMounted &&
+          typeof priceAsNumber === 'number' &&
+          priceAsNumber > 0 && (
+            <p className='font-size-14 text-gray-600'>
+              입력된 금액: {priceAsNumber.toLocaleString('ko-KR')}원
+            </p>
+          )}
       </Input.Root>
 
       {/* 5. 서식이 적용된 금액 표시에 RHF로부터 받아온 값을 사용합니다. */}
       {/* isMounted가 true일 때만 포맷팅된 금액을 렌더링합니다. */}
-      {isMounted && typeof priceAsNumber === 'number' && priceAsNumber > 0 && (
-        <p className='mt-4 text-gray-600'>
-          입력된 금액: {priceAsNumber.toLocaleString('ko-KR')}원
-        </p>
-      )}
     </>
   );
 }

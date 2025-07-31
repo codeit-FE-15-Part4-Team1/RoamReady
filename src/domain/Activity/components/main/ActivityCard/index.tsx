@@ -21,12 +21,12 @@ export default function ActivityCard({
 }: ActivityCardProp) {
   const { id, bannerImageUrl, title, price, rating, reviewCount } = activity;
 
-  const [hasImageError, setHasImageError] = useState<boolean | undefined>(
-    false,
-  );
+  const [hasImageError, setHasImageError] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(true);
 
   useEffect(() => {
     setHasImageError(false);
+    setIsImageLoading(true);
   }, [bannerImageUrl]);
 
   return (
@@ -43,14 +43,26 @@ export default function ActivityCard({
               <LogoSymbol className='text-brand-2 w-[40%]' />
             </div>
           ) : (
-            <Image
-              src={bannerImageUrl}
-              alt={`${title} 액티비티 이미지`}
-              fill
-              className='object-cover'
-              onError={() => setHasImageError(true)}
-              sizes='(max-width: 768px) 50dvw, (max-width: 1024px) 25dvw, 20dvw'
-            />
+            <>
+              {isImageLoading && (
+                <div className='bg-brand-1 absolute inset-0 animate-pulse' />
+              )}
+              <Image
+                src={bannerImageUrl}
+                alt={`${title} 액티비티 이미지`}
+                fill
+                className={cn(
+                  'object-cover transition-opacity duration-300',
+                  isImageLoading ? 'opacity-0' : 'opacity-100',
+                )}
+                onLoad={() => setIsImageLoading(false)}
+                onError={() => {
+                  setHasImageError(true);
+                  setIsImageLoading(false);
+                }}
+                sizes='(max-width: 768px) 50dvw, (max-width: 1024px) 25dvw, 20dvw'
+              />
+            </>
           )}
 
           <div className='absolute inset-0 flex items-start justify-between p-12'>

@@ -1,10 +1,8 @@
 import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
-import z from 'zod';
 
 import { signinRequestSchema } from '@/domain/Auth/schemas/request';
-import { setAuthCookies } from '@/domain/Auth/utils/setAuthCookies';
-import { API_ENDPOINTS } from '@/shared/constants/endpoints';
+import handleSignin from '@/domain/Auth/utils/handleSignin';
+import { handleApiError } from '@/shared/utils/errors/handleApiError';
 
 /**
  * @file /api/auth/signin/route.ts
@@ -46,70 +44,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedBody = signinRequestSchema.parse(body);
 
-    const apiResponse = await fetch(
-      `${process.env.API_BASE_URL}${API_ENDPOINTS.AUTH.SIGNIN}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(validatedBody),
-      },
-    );
+    const signinResponse = await handleSignin(validatedBody);
 
-    const responseBody = await apiResponse.json();
-
-    if (!apiResponse.ok) {
-      throw Object.assign(
-        new Error(responseBody.message || '로그인에 실패했습니다.'),
-        {
-          status: apiResponse.status,
-        },
-      );
-    }
-
-    const { accessToken, refreshToken, user } = responseBody;
-
-    if (!accessToken || !refreshToken) {
-      throw Object.assign(new Error('인증 토큰이 제공되지 않았습니다.'), {
-        status: 400,
-      });
-    }
-
-    let responseWithCookies = NextResponse.json({ user });
-
-    responseWithCookies = setAuthCookies(responseWithCookies, {
-      accessToken,
-      refreshToken,
-    });
-
-    return responseWithCookies;
+    return signinResponse;
   } catch (error) {
-    console.error('[API Signin Error]:', error);
-
-    let errorMessage = '서버 내부 오류가 발생했습니다.';
-    let errorStatus = 500;
-
-    if (error instanceof z.ZodError) {
-      errorMessage =
-        error.errors[0]?.message ||
-        '이메일 또는 비밀번호 형식이 올바르지 않습니다.';
-      errorStatus = 400;
-    } else if (error instanceof Error) {
-      errorMessage = error.message;
-      if (
-        error &&
-        typeof error === 'object' &&
-        'status' in error &&
-        typeof error.status === 'number'
-      ) {
-        errorStatus = error.status;
-      }
-    }
-
-    return NextResponse.json(
-      { message: errorMessage },
-      { status: errorStatus },
-    );
+    return handleApiError(error, 'Signin');
   }
 }
