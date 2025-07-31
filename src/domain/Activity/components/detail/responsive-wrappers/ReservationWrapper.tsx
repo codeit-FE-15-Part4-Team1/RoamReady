@@ -6,7 +6,6 @@ import FallbackUI from '@/domain/Activity/components/detail/responsive-wrappers/
 import { useReservationForm } from '@/domain/Activity/hooks/detail/useReservationForm';
 import { Activity, ReviewList } from '@/domain/Activity/types/detail/types';
 import Button from '@/shared/components/Button';
-import Footer from '@/shared/components/layouts/footer/Footer';
 import { BREAKPOINTS } from '@/shared/constants/breakpoints';
 import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
 import { useRoamReadyStore } from '@/shared/store';
@@ -99,9 +98,6 @@ export default function ReservationWrapper({
       ) : (
         <ReservationTablet activity={activity} reservation={reservation} />
       )}
-      <div className='pt-100'>
-        <Footer />
-      </div>
     </>
   );
 }

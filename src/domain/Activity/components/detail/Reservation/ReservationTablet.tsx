@@ -82,10 +82,9 @@ export default function ReservationTablet({
   }, [selectedDate, selectedTime]);
 
   return (
-    //  ✅ TODO: form action 연결
     <form
       onSubmit={handleSubmit}
-      className='fixed bottom-0 left-0 z-30 flex h-150 w-full flex-col justify-between bg-white px-24 py-18'
+      className='fixed bottom-0 left-0 z-30 flex h-180 w-full flex-col justify-between bg-white px-24 py-18 pt-50'
     >
       {/* 가격 및 날짜 선택 버튼 영역 */}
       <div className='flex items-center justify-between'>
