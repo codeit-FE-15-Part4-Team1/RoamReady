@@ -65,11 +65,11 @@ export default async function ActivityDetailPage({ params }: PageParams) {
           />
           <DescriptionSection description={activity.description} />
 
-          <section className='flex w-full flex-col gap-8 border-b border-gray-100 pb-40'>
+          <section className='flex w-full flex-col justify-center gap-8 border-b border-gray-100 pb-40'>
             <h2 className='font-size-18 font-bold'>오시는 길</h2>
             <KaKaoMap
               address={activity.address}
-              className='tablet:h-450 h-250'
+              className='tablet:h-450 desktop:h-700 h-250'
             />
           </section>
 
