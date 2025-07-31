@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import ActivitySearchBarForm from '@/domain/Activity/components/main/ActivitySearch/ActivitySearchForm';
@@ -13,7 +13,6 @@ import { formatDateForAPI } from '@/shared/utils/formatDate';
 
 export default function ActivitySearchBar() {
   const router = useRouter();
-  const pathname = usePathname();
 
   const methods = useForm<ActivitySearchFormValues>({
     resolver: zodResolver(activitySearchSchema),
