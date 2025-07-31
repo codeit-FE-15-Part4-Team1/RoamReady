@@ -61,7 +61,7 @@ export default function ReviewCard(review: Review) {
           })}
         </div>
       </div>
-      <ExpandableReview text={content} clampLines={5} />
+      <ExpandableReview text={content} />
     </article>
   );
 }
