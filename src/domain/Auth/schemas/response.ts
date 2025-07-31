@@ -56,7 +56,8 @@ export type SignupResponse = z.infer<typeof signupResponseSchema>;
 /**
  * @schema authResponseSchema
  * @description
- * 로그인, OAuth 회원가입/로그인 공통 응답 스키마입니다.
+ * 일반 로그인, 회원가입 후 자동 로그인, OAuth 등 모든 인증 성공 시
+ * BFF 서버가 클라이언트에게 최종적으로 반환하는 공통 응답 스키마입니다.
  * 사용자 정보와 함께 액세스/리프레시 토큰이 포함됩니다.
  */
 export const authResponseSchema = z.object({
@@ -73,15 +74,8 @@ export const authResponseSchema = z.object({
 export type SigninResponse = z.infer<typeof authResponseSchema>;
 
 /**
- * @type OAuthSigninResponse
- * @description OAuth 로그인 응답 타입입니다.
- * @note authResponseSchema를 기반으로 하며, 일반 로그인 및 OAuth 회원가입과 동일한 구조입니다.
+ * @type OAuthResponse
+ * @description OAuth 회원가입, 로그인 응답 타입입니다.
+ * @note authResponseSchema를 기반으로 하며, 일반 로그인과 동일한 구조입니다.
  */
-export type OAuthSigninResponse = z.infer<typeof authResponseSchema>;
-
-/**
- * @type OAuthSignupResponse
- * @description OAuth 회원가입 응답 타입입니다.
- * @note authResponseSchema를 기반으로 하며, 로그인 관련 응답과 동일한 구조입니다.
- */
-export type OAuthSignupResponse = z.infer<typeof authResponseSchema>;
+export type OAuthResponse = z.infer<typeof authResponseSchema>;
