@@ -1,10 +1,10 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import z from 'zod';
 
 import { signinRequestSchema } from '@/domain/Auth/schemas/request';
-import { setAuthCookies } from '@/domain/Auth/utils/setAuthCookies';
-import { API_ENDPOINTS } from '@/shared/constants/endpoints';
+import handleSignin from '@/domain/Auth/utils/handleSignin';
+import setAuthCookies from '@/domain/Auth/utils/setAuthCookies';
+import { handleApiError } from '@/shared/utils/errors/handleApiError';
 
 /**
  * @file /api/auth/signin/route.ts
@@ -41,34 +41,25 @@ import { API_ENDPOINTS } from '@/shared/constants/endpoints';
  * @param {NextRequest} request - 클라이언트의 요청 객체. `email`, `password`를 포함합니다.
  * @returns {Promise<NextResponse>} 처리 결과에 따른 응답 객체.
  */
-export async function POST(request: NextRequest) {
+export default async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const validatedBody = signinRequestSchema.parse(body);
 
-    const apiResponse = await fetch(
-      `${process.env.API_BASE_URL}${API_ENDPOINTS.AUTH.SIGNIN}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(validatedBody),
-      },
-    );
+    const signinResponse = await handleSignin(validatedBody);
 
-    const responseBody = await apiResponse.json();
+    const signinResponseBody = await signinResponse.json();
 
-    if (!apiResponse.ok) {
+    if (!signinResponse.ok) {
       throw Object.assign(
-        new Error(responseBody.message || '로그인에 실패했습니다.'),
+        new Error(signinResponseBody.message || '로그인에 실패했습니다.'),
         {
-          status: apiResponse.status,
+          status: signinResponse.status,
         },
       );
     }
 
-    const { accessToken, refreshToken, user } = responseBody;
+    const { accessToken, refreshToken, user } = signinResponseBody;
 
     if (!accessToken || !refreshToken) {
       throw Object.assign(new Error('인증 토큰이 제공되지 않았습니다.'), {
@@ -85,31 +76,6 @@ export async function POST(request: NextRequest) {
 
     return responseWithCookies;
   } catch (error) {
-    console.error('[API Signin Error]:', error);
-
-    let errorMessage = '서버 내부 오류가 발생했습니다.';
-    let errorStatus = 500;
-
-    if (error instanceof z.ZodError) {
-      errorMessage =
-        error.errors[0]?.message ||
-        '이메일 또는 비밀번호 형식이 올바르지 않습니다.';
-      errorStatus = 400;
-    } else if (error instanceof Error) {
-      errorMessage = error.message;
-      if (
-        error &&
-        typeof error === 'object' &&
-        'status' in error &&
-        typeof error.status === 'number'
-      ) {
-        errorStatus = error.status;
-      }
-    }
-
-    return NextResponse.json(
-      { message: errorMessage },
-      { status: errorStatus },
-    );
+    return handleApiError(error, 'Signin');
   }
 }

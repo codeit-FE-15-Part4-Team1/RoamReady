@@ -5,7 +5,7 @@ import type {
   OAuthSignupResponse,
 } from '@/domain/Auth/schemas/response';
 import { authResponseSchema } from '@/domain/Auth/schemas/response';
-import { setAuthCookies } from '@/domain/Auth/utils/setAuthCookies';
+import setAuthCookies from '@/domain/Auth/utils/setAuthCookies';
 import { API_ENDPOINTS } from '@/shared/constants/endpoints';
 import { ERROR_CODES, ROUTES } from '@/shared/constants/routes';
 
