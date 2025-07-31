@@ -24,13 +24,6 @@ export default function ToastContainer() {
       ? document.getElementById('portal-root')
       : null;
 
-  console.log(
-    'ToastContainer rendered. portalRoot:',
-    portalRoot,
-    'toasts.length:',
-    toasts.length,
-  );
-
   if (!portalRoot || !toasts.length) {
     return null;
   }

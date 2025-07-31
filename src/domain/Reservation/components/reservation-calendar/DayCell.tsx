@@ -12,7 +12,6 @@ import {
 } from '@/domain/Reservation/services/reservation-calendar';
 import { BottomSheet } from '@/shared/components/ui/bottom-sheet';
 import Popover from '@/shared/components/ui/popover';
-import { usePopover } from '@/shared/components/ui/popover/PopoverContext';
 import Tabs from '@/shared/components/ui/tabs';
 
 import type {
@@ -33,22 +32,22 @@ interface DayCellProps {
   displayMode?: 'popover' | 'bottomsheet'; // 🔥 UI 모드 선택
 }
 
-// Popover 닫기 버튼
-const PopoverCloseButton = () => {
-  const { setIsOpen } = usePopover();
-  return (
-    <button type='button' onClick={() => setIsOpen(false)}>
-      <X className='size-15 cursor-pointer font-bold' />
-    </button>
-  );
-};
+// // Popover 닫기 버튼
+// const PopoverCloseButton = () => {
+//   const { setIsOpen } = usePopover();
+//   return (
+//     <button type='button' onClick={() => setIsOpen(false)}>
+//       <X className='size-15 cursor-pointer font-bold' />
+//     </button>
+//   );
+// };
 
-// BottomSheet 닫기 버튼
-const BottomSheetCloseButton = ({ onClose }: { onClose: () => void }) => (
-  <button type='button' onClick={onClose}>
-    <X className='size-15 cursor-pointer font-bold' />
-  </button>
-);
+// // BottomSheet 닫기 버튼
+// const BottomSheetCloseButton = ({ onClose }: { onClose: () => void }) => (
+//   <button type='button' onClick={onClose}>
+//     <X className='size-15 cursor-pointer font-bold' />
+//   </button>
+// );
 
 export default function DayCell({
   day,
@@ -65,7 +64,7 @@ export default function DayCell({
   );
 
   // BottomSheet용 상태
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const [activeTab, setActiveTab] = useState<
     'pending' | 'confirmed' | 'declined'
@@ -76,7 +75,7 @@ export default function DayCell({
       relative flex min-w-[9rem] min-h-[12rem] cursor-pointer flex-col items-center py-12 cursor-pointer font-size-14
       hover:bg-gray-50 
       ${!isLastRow ? 'border-b-[0.05rem] border-gray-100' : ''} 
-      ${!isCurrentMonth ? 'bg-gray-200 text-gray-400 opacity-50' : ''} 
+      ${!isCurrentMonth ? 'bg-neutral-200 text-gray-400 opacity-50' : ''} 
       ${isToday ? 'border-blue-300 bg-blue-100' : ''}
     `;
 
@@ -94,7 +93,7 @@ export default function DayCell({
     return { cellClasses, dateClasses };
   }, [day, isCurrentMonth, isToday, isLastRow]);
 
-  // 🔽 1. 날짜별 스케줄 조회 (useQuery)
+  //  1. 날짜별 스케줄 조회 (useQuery)
   const { data: schedules = [] } = useQuery<ScheduleItem[] | null>({
     queryKey: ['schedules', selectedActivityId, day.format('YYYY-MM-DD')],
     queryFn: () =>
@@ -111,7 +110,7 @@ export default function DayCell({
     }
   }, [schedules, selectedScheduleId]);
 
-  // 🔽 2. 선택된 시간대의 예약 목록 조회 (useQuery)
+  //  2. 선택된 시간대의 예약 목록 조회 (useQuery)
   const {
     data: reservationsByStatus = { pending: [], confirmed: [], declined: [] },
   } = useQuery<{
@@ -151,7 +150,7 @@ export default function DayCell({
     enabled: !!selectedScheduleId,
   });
 
-  // 🔽 3. '하나 승인 후 나머지 거절' 비즈니스 로직을 처리하는 전용 뮤테이션
+  // 3. '하나 승인 후 나머지 거절' 비즈니스 로직을 처리하는 전용 뮤테이션
   const { mutate: approveAndDecline, isPending: isApproving } = useMutation({
     mutationFn: async (variables: {
       reservationId: number;
@@ -182,7 +181,7 @@ export default function DayCell({
     onError: (error) => console.error('예약 승인 처리 중 오류:', error),
   });
 
-  // 🔽 4. '단일 거절' 로직을 처리하는 뮤테이션
+  // 4. '단일 거절' 로직을 처리하는 뮤테이션
   const { mutate: reject, isPending: isRejecting } = useMutation({
     mutationFn: (variables: { reservationId: number }) =>
       updateReservationStatus({
@@ -198,7 +197,7 @@ export default function DayCell({
     onError: (error) => console.error('거절 실패:', error),
   });
 
-  // 🔽 핸들러 함수들
+  // 핸들러 함수들
   const handleApprove = useCallback(
     (reservationId: number, scheduleId: number) => {
       if (isApproving) return;
@@ -222,6 +221,10 @@ export default function DayCell({
     setSelectedScheduleId(scheduleId);
   }, []);
 
+  const handleClose = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+
   const reservationCounts = useMemo(() => {
     const counts = schedules?.reduce(
       (acc, schedule) => {
@@ -231,10 +234,14 @@ export default function DayCell({
         return acc;
       },
       { pending: 0, confirmed: 0, declined: 0 },
-    );
+    ) ?? { pending: 0, confirmed: 0, declined: 0 };
 
-    return counts ?? { pending: 0, confirmed: 0, declined: 0 };
-  }, [schedules]);
+    if (day.isBefore(dayjs(), 'day')) {
+      counts.pending = 0;
+    }
+
+    return counts;
+  }, [schedules, day]);
 
   const displayItems = useMemo(() => {
     const items: { status: ReservationStatus; count: number }[] = [];
@@ -255,12 +262,13 @@ export default function DayCell({
     reservationCounts.confirmed +
     reservationCounts.declined;
 
-  // 🔥 공통 셀 UI
+  // 공통 셀 UI
   const cellContent = (
     <div
       role='gridcell'
       aria-label={`${day.format('M월 D일')}`}
       className={styles.cellClasses}
+      onClick={() => setIsOpen(true)}
     >
       {displayItems.length > 0 && (
         <div className='absolute top-[10%] left-[60%] size-6 rounded-full bg-red-500' />
@@ -281,7 +289,7 @@ export default function DayCell({
     </div>
   );
 
-  // 🔥 공통 콘텐츠 UI
+  // 공통 콘텐츠 UI
   const contentUI = (
     <div className='tablet:min-w-[40rem] h-full space-y-3 p-10'>
       <div className='flex items-center justify-between'>
@@ -293,11 +301,9 @@ export default function DayCell({
             {totalReservations}개의 예약
           </span>
         </div>
-        {displayMode === 'popover' ? (
-          <PopoverCloseButton />
-        ) : (
-          <BottomSheetCloseButton onClose={() => setIsBottomSheetOpen(false)} />
-        )}
+        <button type='button' onClick={handleClose}>
+          <X className='size-15 cursor-pointer font-bold' />
+        </button>
       </div>
 
       <Tabs.Root
@@ -339,7 +345,7 @@ export default function DayCell({
             reservations={reservationsByStatus.confirmed}
             emptyMessage='승인된 예약이 없습니다.'
             showApprovalButton={false}
-            showRejectButton={true}
+            showRejectButton={false}
             onApprove={handleApprove}
             onReject={handleReject}
             onTimeSlotSelect={handleTimeSlotSelect}
@@ -367,10 +373,7 @@ export default function DayCell({
   // 🔥 displayMode에 따라 다른 UI 렌더링
   if (displayMode === 'bottomsheet') {
     return (
-      <BottomSheet.Root
-        open={isBottomSheetOpen}
-        onOpenChange={setIsBottomSheetOpen}
-      >
+      <BottomSheet.Root open={isOpen} onOpenChange={setIsOpen}>
         <BottomSheet.Trigger>{cellContent}</BottomSheet.Trigger>
         <BottomSheet.Content>{contentUI}</BottomSheet.Content>
       </BottomSheet.Root>
@@ -379,7 +382,7 @@ export default function DayCell({
 
   // 기본값: Popover
   return (
-    <Popover.Root>
+    <Popover.Root isOpen={isOpen} onOpenChange={setIsOpen}>
       <Popover.Trigger>{cellContent}</Popover.Trigger>
       <Popover.Content
         position='left-center'

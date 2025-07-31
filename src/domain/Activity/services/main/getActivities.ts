@@ -8,15 +8,21 @@ import {
 export const getActivities = async (
   params?: Partial<GetActivitiesRequestQuery>,
 ) => {
-  const searchParams = {
-    method: 'offset',
+  const defaultParams = {
+    method: 'offset' as const,
     page: 1,
     size: 20,
-    ...params,
   };
 
+  // undefined 값들을 필터링하여 HTTP 요청에 포함되지 않도록 함
+  const filteredParams = Object.fromEntries(
+    Object.entries({ ...defaultParams, ...params }).filter(
+      ([, value]) => value !== undefined && value !== null,
+    ),
+  );
+
   const response = await activityClient.get('activities', {
-    searchParams,
+    searchParams: filteredParams,
   });
 
   const data = await response.json();

@@ -10,7 +10,7 @@ export default function CategoryInput() {
   const { control } = useFormContext();
   return (
     <div>
-      <h3 className='font-size-16 font-bold'>카테고리</h3>
+      <h3 className='font-size-16 mb-10 font-bold'>카테고리</h3>
       <Controller
         control={control}
         name={FIELD_NAME}
@@ -19,13 +19,13 @@ export default function CategoryInput() {
             <Select.Root
               value={field.value}
               onValueChange={field.onChange}
-              className='font-size-14'
+              className='font-size-16'
               name={field.name}
             >
-              <Select.Trigger className='font-size-14 px-20 py-17.5'>
+              <Select.Trigger className='font-size-16 px-20 py-17.5'>
                 <Select.Value placeholder='카테고리를 선택해 주세요.' />
               </Select.Trigger>
-              <Select.Content className='font-size-14 scrollbar-hide'>
+              <Select.Content className='font-size-16 scrollbar-hide'>
                 {CATEGORIES.map((category) => (
                   <Select.Item
                     key={category}
