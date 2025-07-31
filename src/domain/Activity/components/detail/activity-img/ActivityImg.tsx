@@ -171,7 +171,7 @@ export default function ActivityImg({
   if (images.length >= 4) {
     return (
       <div
-        className='tablet:h-410 desktop:h-800 grid h-220 w-full grid-cols-2 grid-rows-2 gap-4'
+        className='tablet:h-410 grid h-220 w-full grid-cols-2 grid-rows-2 gap-4'
         role='list'
         aria-label='이미지 미리보기 목록'
       >

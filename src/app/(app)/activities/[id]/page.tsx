@@ -69,7 +69,7 @@ export default async function ActivityDetailPage({ params }: PageParams) {
             <h2 className='font-size-18 font-bold'>오시는 길</h2>
             <KaKaoMap
               address={activity.address}
-              className='tablet:h-450 desktop:h-600 h-250'
+              className='tablet:h-450 h-250'
             />
           </section>
 
