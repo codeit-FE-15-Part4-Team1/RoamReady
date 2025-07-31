@@ -32,6 +32,19 @@ export default function ActivitySearchForm({
     else setActiveField(null);
   }, []);
 
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent, currentField: ActiveField) => {
+      if (event.key === 'Tab') {
+        event.preventDefault();
+        goToNextField(currentField);
+      } else if (event.key === 'Enter' && currentField === 'location') {
+        event.preventDefault();
+        handleSubmit(onSubmit)();
+      }
+    },
+    [goToNextField, handleSubmit, onSubmit],
+  );
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}

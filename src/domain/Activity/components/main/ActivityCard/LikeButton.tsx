@@ -33,12 +33,6 @@ export default function LikeButton({ activity }: LikeButtonProps) {
       e.preventDefault();
       e.stopPropagation();
 
-      // 5. 로그인 상태가 아니면, 로그인 유도 후 함수를 종료합니다.
-      if (!user) {
-        alert('로그인이 필요한 기능입니다.');
-        return;
-      }
-
       const currentLikes = getLikes();
       const isLiked = currentLikes.includes(activityId);
 
@@ -59,7 +53,7 @@ export default function LikeButton({ activity }: LikeButtonProps) {
     [user, activityId],
   );
 
-  return (
+  return user ? (
     <div className='flex-center size-25 active:scale-90'>
       <Heart
         className='size-23 cursor-pointer'
@@ -67,5 +61,5 @@ export default function LikeButton({ activity }: LikeButtonProps) {
         onClick={handleHeartClick}
       />
     </div>
-  );
+  ) : null;
 }

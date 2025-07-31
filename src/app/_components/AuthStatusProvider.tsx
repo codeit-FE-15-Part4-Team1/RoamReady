@@ -56,9 +56,9 @@ export default function AuthStatusProvider({
     }
   }, [user, isError, isLoading, setUser, clearUser]);
 
-  if (isLoading) {
-    return null;
-  }
-
+  // 로딩 중에도 children을 렌더링하여 서버 스트리밍을 차단하지 않습니다.
+  // 인증 상태 확인은 클라이언트에서 비동기적으로 처리되며,
+  // 그 결과는 useEffect를 통해 Zustand 스토어에 반영됩니다.
+  // UI(예: 헤더)는 Zustand 스토어를 구독하여 자동으로 업데이트됩니다.
   return <>{children}</>;
 }

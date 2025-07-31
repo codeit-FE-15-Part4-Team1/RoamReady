@@ -6,7 +6,7 @@ export default function ActivityCardSkeleton() {
   return (
     <article
       className={cn(
-        'border-brand-1 flex w-full max-w-350 animate-pulse flex-col rounded-3xl border bg-white p-6 shadow-lg',
+        'border-brand-1 flex w-full max-w-360 animate-pulse flex-col rounded-3xl border bg-white p-6 shadow-lg',
       )}
     >
       <figure className='relative aspect-[5/6] overflow-hidden rounded-3xl bg-gray-200'>
