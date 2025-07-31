@@ -16,7 +16,6 @@ import { getMe } from '@/domain/Auth/services';
  *
  * @property {Array<string>} queryKey - Tanstack Query가 이 데이터를 식별하고 캐싱하는 고유한 키 (`['user', 'me']`).
  * @property {Function} queryFn - 실제 데이터를 가져오는 비동기 함수 (`getMe`).
- * @property {number} staleTime - 캐시된 데이터가 '신선한' 상태로 간주되는 시간 (5분, `1000 * 60 * 5`ms). 이 시간 동안은 캐시된 데이터를 즉시 사용합니다.
  * @property {number} retry - 쿼리 실패 시 재시도 횟수 (1회).
  *
  * @example
@@ -42,7 +41,6 @@ export const useUser = () => {
   return useQuery({
     queryKey: ['user', 'me'],
     queryFn: getMe,
-    // staleTime: 1000 * 60 * 5, //! 왜 5분인지 설명못하면 빼는게 좋다.
     retry: 1,
   });
 };

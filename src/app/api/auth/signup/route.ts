@@ -41,7 +41,7 @@ import { handleApiError } from '@/shared/utils/errors/handleApiError';
  * @param {NextRequest} request - 클라이언트의 요청 객체. `email`, `password`, `nickname`을 포함합니다.
  * @returns {Promise<NextResponse>} 처리 결과에 따른 응답 객체.
  */
-export default async function POST(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const validatedBody = signupRequestSchema.parse(body);
