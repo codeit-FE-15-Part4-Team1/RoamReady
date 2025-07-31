@@ -41,7 +41,13 @@ export default function AuthMenu() {
         {/* 프로필 아바타*/}
         <Dropdown.Root>
           <Dropdown.Trigger>
-            <Avatar profileImageUrl={user.profileImageUrl ?? ''} />
+            <div className='flex items-center justify-center gap-15'>
+              <Avatar profileImageUrl={user.profileImageUrl ?? ''} />
+              {/* 유저 이름 */}
+              <span className='tablet:inline font-size-14 hidden'>
+                {user.nickname}
+              </span>
+            </div>
           </Dropdown.Trigger>
           <Dropdown.Menu menuClassName='top-40'>
             <Dropdown.Item onClick={onSignout}>로그아웃</Dropdown.Item>
@@ -50,9 +56,6 @@ export default function AuthMenu() {
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown.Root>
-
-        {/* 유저 이름 */}
-        <span className='font-size-14'>{user.nickname}</span>
       </div>
     </div>
   );
