@@ -32,7 +32,7 @@ export async function reserveAction(
 
   // 예약 API 호출
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/activities/${activityId}/reservations`,
+    `${process.env.API_BASE_URL}/activities/${activityId}/reservations`,
     {
       method: 'POST',
       headers: {
