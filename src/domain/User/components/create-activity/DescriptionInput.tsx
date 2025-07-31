@@ -14,6 +14,7 @@ export default function DescriptionInput() {
       name={FIELD_NAME}
       type='textarea'
       className='my-10'
+      maxLength={1000}
     >
       <Input.Label className='font-size-16 font-bold'>설명</Input.Label>
       <Input.Field placeholder='체험에 대한 설명을 입력해 주세요' rows={10} />

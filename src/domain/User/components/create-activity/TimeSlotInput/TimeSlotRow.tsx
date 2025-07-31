@@ -1,9 +1,13 @@
 'use client';
 
-import { Minus } from 'lucide-react';
+import dayjs from 'dayjs';
+import { Calendar, Minus } from 'lucide-react';
+import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import { DatePicker } from '@/shared/components/ui/date-picker';
 import Input from '@/shared/components/ui/input';
+import Popover from '@/shared/components/ui/popover';
 import Select from '@/shared/components/ui/select';
 
 import { getEndTimeOptions, timeOptions } from '../../../utils/create-activity';
@@ -21,6 +25,9 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
     formState: { errors },
   } = useFormContext();
 
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const selectedDate = watch(`schedules.${index}.date`); // 🆕 추가
   const startTime = watch(`schedules.${index}.startTime`);
   const endTime = watch(`schedules.${index}.endTime`);
   const endTimeOptions = getEndTimeOptions(startTime);
@@ -29,19 +36,61 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
     : undefined;
   const endTimeErrorMessage = scheduleErrors?.endTime?.message;
 
+  const formatDateForInput = (date: Date | null) => {
+    if (!date) return '';
+    return dayjs(date).format('YYYY-MM-DD');
+  };
+
+  const parseDateForInput = (dateString: string): Date | null => {
+    if (!dateString) return null;
+    return dayjs(dateString, 'YYYY-MM-DD').toDate();
+  };
+
+  const handleDateSelect = (date: Date | null) => {
+    const formattedDate = formatDateForInput(date);
+    setValue(`schedules.${index}.date`, formattedDate, {
+      shouldValidate: true,
+    });
+  };
+
   return (
     <div className='relative py-10'>
       <div className='tablet:grid tablet:grid-cols-10 flex flex-col gap-10'>
-        <div className='col-span-6'>
-          <Input.Root
-            name={`schedules.${index}.date`}
-            id={`date-${index}`}
-            type='date'
-            className='col-span-6'
-          >
-            <Input.Field className='w-full' />
-          </Input.Root>
-        </div>
+        <Popover.Root
+          isOpen={showDatePicker}
+          onOpenChange={() => setShowDatePicker(!showDatePicker)}
+        >
+          <div className='relative col-span-6'>
+            <Input.Root
+              name={`schedules.${index}.date`}
+              id={`date-${index}`}
+              type='text'
+              className='col-span-6 gap-0'
+            >
+              <Input.Field className='w-full' readOnly />
+              <Popover.Trigger>
+                <button
+                  type='button'
+                  onClick={() => setShowDatePicker(!showDatePicker)}
+                  className='absolute top-20 right-10 p-1 text-gray-600 hover:text-gray-900'
+                >
+                  <Calendar size={20} />
+                </button>
+              </Popover.Trigger>
+            </Input.Root>
+          </div>
+          <Popover.Content>
+            <DatePicker.Root
+              selectedDate={parseDateForInput(selectedDate) || undefined}
+              onDateClick={handleDateSelect}
+              size='l'
+            >
+              <DatePicker.Month />
+              <DatePicker.Week />
+              <DatePicker.Date />
+            </DatePicker.Root>
+          </Popover.Content>
+        </Popover.Root>
 
         <div className='col-span-4 flex items-center justify-between gap-10'>
           <Select.Root
@@ -57,12 +106,12 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
           >
             <Select.Trigger
               editable
-              className='font-size-14 w-full min-w-[8.9rem] px-20 py-17.5'
+              className='font-size-16 w-full min-w-[8.9rem] px-20 py-17.5'
               placeholder='00:00'
             >
               <Select.Value />
             </Select.Trigger>
-            <Select.Content className='font-size-14 scrollbar-none'>
+            <Select.Content className='font-size-16 scrollbar-none'>
               {timeOptions.map((time) => (
                 <Select.Item key={time} value={time} className='px-20 py-17.5'>
                   {time}

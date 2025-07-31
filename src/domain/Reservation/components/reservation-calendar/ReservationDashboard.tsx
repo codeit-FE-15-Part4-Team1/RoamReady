@@ -52,7 +52,13 @@ export default function ReservationDashboard({
     setCurrentDate(newDate);
   };
 
-  if (isLoading) return <div>캘린더를 불러오는 중입니다..</div>;
+  if (isLoading)
+    return (
+      //너무 짧아서 스켈레톤으로 해야할지 고민중..
+      <div className='flex h-full items-center justify-center'>
+        캘린더를 불러오는 중입니다..
+      </div>
+    );
   if (isError) return <div> 오류가 발생했습니다.</div>;
 
   return (
