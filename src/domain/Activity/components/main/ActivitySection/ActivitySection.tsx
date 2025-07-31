@@ -21,9 +21,9 @@ function ActivitySectionContent() {
   const pageSize = useResponsiveSize();
 
   const currentPage = Number(searchParams.get('page') ?? 1);
-  const category = searchParams.get(
-    'category',
-  ) as GetActivitiesRequestQuery['category'];
+  const category = searchParams.get('category') as
+    | GetActivitiesRequestQuery['category']
+    | null;
   const sort = (searchParams.get('sort') ?? 'latest') as SortOption;
 
   const { data, isPending } = useQuery({
@@ -33,7 +33,7 @@ function ActivitySectionContent() {
         method: 'offset',
         page: currentPage,
         size: pageSize,
-        category,
+        category: category || undefined,
         sort,
       }),
     refetchOnWindowFocus: false,
@@ -56,7 +56,7 @@ function ActivitySectionContent() {
       // 필터 변경 시 페이지를 첫 번째로 리셋
       params.delete('page');
 
-      router.push(`${pathname}?${params.toString()}`);
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
     },
     [pathname, router, searchParams],
   );
@@ -65,7 +65,7 @@ function ActivitySectionContent() {
     (page: number) => {
       const params = new URLSearchParams(searchParams.toString());
       params.set('page', page.toString());
-      router.push(`${pathname}?${params.toString()}`);
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
     },
     [pathname, router, searchParams],
   );
@@ -75,7 +75,7 @@ function ActivitySectionContent() {
       <h2 className='font-size-36 font-bold text-black'>🏃 모든 체험</h2>
 
       <ActivityFilter
-        category={category}
+        category={category || undefined}
         sort={sort}
         onCategoryChange={(newCategory) =>
           handleFilterChange('category', newCategory)
@@ -84,14 +84,14 @@ function ActivitySectionContent() {
       />
 
       {isPending ? (
-        <div className='tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4 grid grid-cols-1 gap-24'>
+        <div className='grid grid-cols-1 gap-24 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7'>
           {Array.from({ length: pageSize }).map((_, index) => (
             <ActivityCardSkeleton key={index} />
           ))}
         </div>
       ) : (
-        <>
-          <div className='tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4 grid grid-cols-1 gap-24'>
+        <div className='transition-opacity duration-300 ease-in-out'>
+          <div className='grid grid-cols-1 gap-24 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7'>
             {activities.map((activity) => (
               <ActivityCard key={activity.id} activity={activity} />
             ))}
@@ -106,15 +106,45 @@ function ActivitySectionContent() {
               />
             </div>
           )}
-        </>
+        </div>
       )}
+    </section>
+  );
+}
+
+function ActivitySectionSkeleton() {
+  return (
+    <section className='space-y-40'>
+      <h2 className='font-size-36 font-bold text-black'>🏃 모든 체험</h2>
+
+      {/* 필터 스켈레톤 */}
+      <div className='py-8 pb-12'>
+        <div className='flex items-center justify-between'>
+          <div className='flex gap-8'>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className='h-36 w-80 animate-pulse rounded-full bg-gray-200'
+              />
+            ))}
+          </div>
+          <div className='h-36 w-120 animate-pulse rounded bg-gray-200' />
+        </div>
+      </div>
+
+      {/* 그리드 스켈레톤 */}
+      <div className='grid grid-cols-1 gap-24 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7'>
+        {Array.from({ length: 8 }).map((_, index) => (
+          <ActivityCardSkeleton key={index} />
+        ))}
+      </div>
     </section>
   );
 }
 
 export default function ActivitySection() {
   return (
-    <Suspense fallback={<div className='h-400'>로딩 중...</div>}>
+    <Suspense fallback={<ActivitySectionSkeleton />}>
       <ActivitySectionContent />
     </Suspense>
   );
