@@ -59,11 +59,12 @@ export default function SignInForm() {
   const form = useForm<SigninRequest>({
     resolver: zodResolver(signinRequestSchema),
     defaultValues: signinDefaultValues,
+    mode: 'onChange',
   });
 
   const {
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isValid },
   } = form;
 
   const onSubmit = (data: SigninRequest) => {
@@ -97,9 +98,9 @@ export default function SignInForm() {
           size='small'
           className='mt-10 w-full py-17.5'
           loading={isSubmitting || isPending}
-          disabled={isSubmitting || isPending}
+          disabled={!isValid}
         >
-          <span>{isSubmitting || isPending ? '로그인 중...' : '로그인'}</span>
+          로그인
         </Button>
       </form>
     </FormProvider>

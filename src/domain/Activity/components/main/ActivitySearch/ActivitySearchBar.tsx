@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import ActivitySearchBarForm from '@/domain/Activity/components/main/ActivitySearch/ActivitySearchForm';
@@ -13,7 +13,6 @@ import { formatDateForAPI } from '@/shared/utils/formatDate';
 
 export default function ActivitySearchBar() {
   const router = useRouter();
-  const pathname = usePathname();
 
   const methods = useForm<ActivitySearchFormValues>({
     resolver: zodResolver(activitySearchSchema),
@@ -38,13 +37,8 @@ export default function ActivitySearchBar() {
     const queryString = params.toString();
     const url = `/search?${queryString}`;
 
-    // 현재 페이지가 /activities/search인 경우 현재 페이지에서 파라미터만 업데이트
-    if (pathname === '/search') {
-      router.push(url, { scroll: false });
-    } else {
-      // 다른 페이지에서는 새 창으로 열기
-      window.open(url, '_blank');
-    }
+    // 검색 페이지로 이동
+    router.push(url);
   };
 
   return (
