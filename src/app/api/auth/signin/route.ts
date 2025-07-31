@@ -1,9 +1,7 @@
 import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
 
 import { signinRequestSchema } from '@/domain/Auth/schemas/request';
 import handleSignin from '@/domain/Auth/utils/handleSignin';
-import setAuthCookies from '@/domain/Auth/utils/setAuthCookies';
 import { handleApiError } from '@/shared/utils/errors/handleApiError';
 
 /**
@@ -48,33 +46,7 @@ export async function POST(request: NextRequest) {
 
     const signinResponse = await handleSignin(validatedBody);
 
-    const signinResponseBody = await signinResponse.json();
-
-    if (!signinResponse.ok) {
-      throw Object.assign(
-        new Error(signinResponseBody.message || '로그인에 실패했습니다.'),
-        {
-          status: signinResponse.status,
-        },
-      );
-    }
-
-    const { accessToken, refreshToken, user } = signinResponseBody;
-
-    if (!accessToken || !refreshToken) {
-      throw Object.assign(new Error('인증 토큰이 제공되지 않았습니다.'), {
-        status: 400,
-      });
-    }
-
-    let responseWithCookies = NextResponse.json({ user });
-
-    responseWithCookies = setAuthCookies(responseWithCookies, {
-      accessToken,
-      refreshToken,
-    });
-
-    return responseWithCookies;
+    return signinResponse;
   } catch (error) {
     return handleApiError(error, 'Signin');
   }
