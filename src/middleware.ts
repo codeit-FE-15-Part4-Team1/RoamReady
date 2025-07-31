@@ -94,8 +94,11 @@ export async function middleware(request: NextRequest) {
         `${BACKEND_URL}${API_ENDPOINTS.AUTH.REFRESH_TOKEN}`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ refreshToken }),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${refreshToken}`,
+          },
+          body: null,
         },
       );
 
