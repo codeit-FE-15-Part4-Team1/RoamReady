@@ -21,10 +21,10 @@ interface Tokens {
  * - `accessToken` (1시간): 탈취 시 피해를 최소화하기 위해 의도적으로 짧게 설정합니다.
  * - `refreshToken` (7일): 사용자의 로그인 세션을 편리하게 유지하기 위해 길게 설정합니다.
  */
-export const setAuthCookies = <T>(
+export default function setAuthCookies<T>(
   response: NextResponse<T>,
   tokens: Tokens,
-): NextResponse<T> => {
+): NextResponse<T> {
   const { accessToken, refreshToken } = tokens;
 
   response.cookies.set({
@@ -48,4 +48,4 @@ export const setAuthCookies = <T>(
   });
 
   return response;
-};
+}
