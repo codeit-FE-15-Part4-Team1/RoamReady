@@ -1,5 +1,7 @@
 import { Star } from 'lucide-react';
 
+import ExpandableReview from '@/domain/Activity/components/detail/Review/ExpandableReview';
+
 import { Review } from '../../../types/detail/types';
 import { getTimeAgo } from '../../../utils/getTimeAgo';
 
@@ -34,7 +36,7 @@ export default function ReviewCard(review: Review) {
   const date = getTimeAgo(updatedAt);
 
   return (
-    <article className='tablet:max-h-300 scrollbar-none flex h-fit max-h-200 flex-col gap-[1.2rem] overflow-auto rounded-4xl bg-white p-20 shadow-[0_4px_20px_rgba(0,0,0,0.05)]'>
+    <article className='flex h-fit flex-col gap-[1.2rem] rounded-4xl bg-white p-20 shadow-[0_4px_20px_rgba(0,0,0,0.05)]'>
       <div className='flex flex-col gap-4'>
         <div className='flex items-center justify-start gap-10'>
           <span className='font-size-16 font-bold text-gray-950'>
@@ -59,9 +61,7 @@ export default function ReviewCard(review: Review) {
           })}
         </div>
       </div>
-      <p className='font-size-16 line-height-1.5 font-medium text-gray-950'>
-        {content}
-      </p>
+      <ExpandableReview text={content} clampLines={5} />
     </article>
   );
 }

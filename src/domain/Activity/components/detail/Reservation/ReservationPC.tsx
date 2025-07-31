@@ -1,5 +1,3 @@
-'use client';
-
 import { reserveAction } from '@/domain/Activity/actions/detail/reserve';
 import { useReservationForm } from '@/domain/Activity/hooks/detail/useReservationForm';
 import { Activity } from '@/domain/Activity/types/detail/types';
@@ -68,7 +66,7 @@ export default function ReservationPC({
   return (
     <aside
       aria-label='예약 정보'
-      className='h-fit max-h-950 w-400 rounded-4xl border-1 border-gray-50 bg-white p-30 shadow-[0_4px_20px_rgba(0,0,0,0.05)]'
+      className='h-fit max-h-950 w-full rounded-4xl border-1 border-gray-50 bg-white p-30 shadow-[0_4px_20px_rgba(0,0,0,0.05)]'
     >
       {/* Todo: form action 연결 */}
       <form className='flex flex-col gap-24' onSubmit={handleSubmit}>

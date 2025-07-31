@@ -2,6 +2,12 @@
 
 import { cookies } from 'next/headers';
 
+class SerializableError extends Error {
+  toJSON() {
+    return { message: this.message };
+  }
+}
+
 /**
  * 체험 예약 요청을 처리하는 서버 액션 함수
  *
@@ -27,7 +33,7 @@ export async function reserveAction(
 
   // 로그인 상태 확인 (토큰 없으면 에러 발생)
   if (!accessToken) {
-    throw new Error('로그인이 필요합니다.');
+    throw new SerializableError('로그인이 필요합니다.');
   }
 
   // 예약 API 호출
@@ -46,6 +52,6 @@ export async function reserveAction(
   // 응답 실패 시 에러 메시지 파싱 후 예외 처리
   if (!res.ok) {
     const errorBody = await res.json().catch(() => null);
-    throw new Error(errorBody?.message || '예약에 실패했습니다.');
+    throw new SerializableError(errorBody?.message || '예약에 실패했습니다.');
   }
 }
