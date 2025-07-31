@@ -2,12 +2,7 @@
 
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter } from 'next/navigation';
-import {
-  useCallback,
-  useEffect,
-  useState,
-  useTransition,
-} from 'react';
+import { useCallback, useEffect, useState, useTransition } from 'react';
 
 import ActivityCard from '@/domain/Activity/components/main/ActivityCard';
 import ActivityCardSkeleton from '@/domain/Activity/components/main/ActivityCard/ActivityCardSkeleton';

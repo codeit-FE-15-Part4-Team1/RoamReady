@@ -114,7 +114,6 @@ export default function InputTrigger({
       </button>
     );
   }
-
   if (triggerType === 'base') {
     return (
       <button

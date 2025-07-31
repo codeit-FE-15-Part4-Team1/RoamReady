@@ -26,7 +26,7 @@ export default function TimeSlotHeader({ onAdd }: TimeSlotHeaderProps) {
         <div className='flex w-full flex-col gap-10'>
           <h4 className='font-size-14'>시작 시간</h4>
           <Select.Root disabled>
-            <Select.Trigger className='font-size-14 px-20 py-17.5'>
+            <Select.Trigger className='font-size-16 px-20 py-17.5'>
               <Select.Value placeholder='0:00' />
             </Select.Trigger>
           </Select.Root>
@@ -37,7 +37,7 @@ export default function TimeSlotHeader({ onAdd }: TimeSlotHeaderProps) {
         <div className='flex w-full flex-col gap-10'>
           <h4 className='font-size-14'>종료 시간</h4>
           <Select.Root disabled>
-            <Select.Trigger className='font-size-14 px-20 py-17.5'>
+            <Select.Trigger className='font-size-16 px-20 py-17.5'>
               <Select.Value placeholder='0:00' />
             </Select.Trigger>
           </Select.Root>

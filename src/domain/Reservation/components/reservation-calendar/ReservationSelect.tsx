@@ -37,13 +37,17 @@ export default function ReservationSelect({
       onValueChange={handleValueChange}
     >
       <Select.Trigger>
-        <Select.Value placeholder='체험을 선택해주세요' />
+        <Select.Value
+          className='font-size-14'
+          placeholder='체험을 선택해주세요'
+        />
       </Select.Trigger>
       <Select.Content>
         {activities.map((activity) => (
           <Select.Item
             key={activity.id}
             value={activity.title}
+            className='font-size-14'
             // 접근성을 위한 추가 속성
             aria-label={`체험 ${activity.title} 선택`}
           >
