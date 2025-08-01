@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
-import { useMemo } from 'react';
 
 import { reserveAction } from '@/domain/Activity/actions/detail/reserve';
 import { useReservationForm } from '@/domain/Activity/hooks/detail/useReservationForm';
@@ -66,16 +65,6 @@ export default function ReservationMobile({
       );
     }
   };
-
-  // 날짜, 시간 선택 후 해당 시간이 보이도록 선택 하지 않은 경우 날자 선택하기
-  const selectedDateTimeText = useMemo(() => {
-    if (!selectedDate || !selectedTime) return '날짜 선택하기';
-
-    const [start, end] = selectedTime.split('-');
-    const formattedDate = dayjs(selectedDate).format('YYYY/MM/DD');
-
-    return `${formattedDate} ${start} ~ ${end}`;
-  }, [selectedDate, selectedTime]);
 
   return (
     <form
