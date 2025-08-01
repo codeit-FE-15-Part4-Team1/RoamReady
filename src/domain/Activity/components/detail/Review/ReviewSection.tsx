@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { useActivityReviews } from '@/domain/Activity/hooks/detail/useActivityReviews';
 import { ReviewList } from '@/domain/Activity/types/detail/types';
+import ComponentErrorBoundary from '@/shared/components/errors/ComponentErrorBoundary';
 import Nothing from '@/shared/components/ui/nothing';
 import Pagination from '@/shared/components/ui/Pagination';
 
@@ -119,7 +120,10 @@ export default function ReviewSection({
         {/* 현재 페이지의 리뷰 카드 목록 */}
         <div className='flex h-fit min-h-400 flex-col gap-20'>
           {reviews.map((review) => (
-            <ReviewCard key={review.id} {...review} />
+            //  <ReviewCard key={review.id} {...review} />
+            <ComponentErrorBoundary key={review.id}>
+              <ReviewCard {...review} />
+            </ComponentErrorBoundary>
           ))}
         </div>
       </div>

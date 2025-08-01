@@ -49,7 +49,7 @@ const ApiErrorToastTest = () => {
 
   const handleJsonParseError = async () => {
     try {
-      await ky.get(`/api/test/non-json-error`).json();
+      await ky.get(`/api/test/error?status=json-parse-error`).json();
     } catch (error) {
       console.error('Captured error in component:', error);
     }
