@@ -37,14 +37,8 @@ export default [
         },
       ],
 
-      // React Hooks 규칙 강화
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
-
-      // 접근성 관련 경고
-      'jsx-a11y/click-events-have-key-events': 'warn',
-      'jsx-a11y/no-static-element-interactions': 'warn',
-      'jsx-a11y/label-has-associated-control': ['warn', { assert: 'either' }],
+      // Next.js에서 이미 제공하는 규칙들은 제거
+      // react-hooks, jsx-a11y 규칙들은 next/core-web-vitals에 포함됨
     },
   },
 

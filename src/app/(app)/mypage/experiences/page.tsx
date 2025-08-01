@@ -1,5 +1,3 @@
-import ExperienceCard from '@/domain/Reservation/components/card';
-
 export default function MyExperiencePage() {
   return (
     <div>
@@ -14,12 +12,9 @@ export default function MyExperiencePage() {
           체험 등록하기
         </button>
       </div>
-
-      <ExperienceCard.Root>
-        <ExperienceCard.Content>
-          <p>test</p>
-        </ExperienceCard.Content>
-      </ExperienceCard.Root>
+      <div className='py-12 text-center text-gray-500'>
+        등록된 체험이 없습니다.
+      </div>
     </div>
   );
 }

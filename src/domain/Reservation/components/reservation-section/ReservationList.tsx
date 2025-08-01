@@ -1,0 +1,56 @@
+import ReservationCard from '@/domain/Reservation/components/reservation-card/ReservationCard';
+import { Reservation } from '@/domain/Reservation/schemas/reservation';
+import { useEffect, useRef } from 'react';
+
+interface ReservationListProps {
+  reservations: Reservation[];
+  hasNextPage?: boolean;
+  isFetchingNextPage?: boolean;
+  onLoadMore?: () => void;
+}
+
+export default function ReservationList({
+  reservations,
+  hasNextPage,
+  isFetchingNextPage,
+  onLoadMore,
+}: ReservationListProps) {
+  const observerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          onLoadMore?.();
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, onLoadMore]);
+
+  return (
+    <div>
+      {reservations.map((reservation) => (
+        <div key={reservation.id} className='mb-16'>
+          <ReservationCard reservation={reservation} />
+        </div>
+      ))}
+      {hasNextPage && (
+        <div
+          ref={observerRef}
+          className='flex h-20 items-center justify-center'
+        >
+          {isFetchingNextPage && (
+            <div className='text-gray-500'>로딩 중...</div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
