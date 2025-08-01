@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 
 import { formSchema, FormValues } from '@/domain/User/schemas/createActivity';
 import {
-  ActivityPayload,
+  ActivityResponse,
   createActivity,
   getActivity,
   updateActivity,
@@ -42,7 +42,7 @@ const initialFormValues: FormValues = {
   address: '',
   schedules: [{ date: '', startTime: '', endTime: '' }],
   bannerImages: null,
-  subImages: null,
+  subImages: [],
 };
 
 export const useActivityForm = () => {
@@ -82,7 +82,7 @@ export const useActivityForm = () => {
       const fetchActivity = async () => {
         setIsLoading(true);
         try {
-          const data: ActivityPayload = await getActivity(id);
+          const data: ActivityResponse = await getActivity(id);
           const subImages = (data.subImages || []).map(
             (imageObj: SubImage) => imageObj.imageUrl,
           );
@@ -183,46 +183,33 @@ export const useActivityForm = () => {
         bannerImageUrl = data.bannerImages;
       }
 
-      if (isEdit && !bannerImageUrl) {
+      // ✅ 변경: 등록 모드에서도 배너 이미지 필수 체크
+      if (!bannerImageUrl) {
         throw new Error('배너 이미지를 등록해주세요.');
       }
 
-      // 소개 이미지 처리
-      let subImageUrls = [...existingImageUrls.subImageUrls];
-      let subImageUrlsToAdd: string[] = [];
-
-      if (data.subImages instanceof FileList && data.subImages.length > 0) {
-        const uploadPromises = Array.from(data.subImages).map((file) =>
-          uploadActivityImages(file),
-        );
-        const responses = await Promise.all(uploadPromises);
-        const newSubImageUrls = responses.map((res) => res.activityImageUrl);
-
-        if (isEdit) {
-          subImageUrlsToAdd = newSubImageUrls;
-        } else {
-          subImageUrls = [...subImageUrls, ...newSubImageUrls];
-        }
-      }
-
+      // ✅ 변경: 수정/등록 모드 완전 분리
       if (isEdit) {
-        // ✨ 수정 모드: 스케줄 변경사항 분석
-        const currentSchedules = data.schedules as Schedule[];
-        const schedulesToAdd = currentSchedules.filter(
-          (schedule: Schedule) => !schedule.id,
-        );
-        const existingScheduleIds = originalSchedules
-          .map((s: Schedule) => s.id)
-          .filter((id): id is number => id !== undefined);
-        const currentScheduleIds = currentSchedules
-          .filter((s: Schedule) => s.id)
-          .map((s: Schedule) => s.id)
-          .filter((id): id is number => id !== undefined);
-        const scheduleIdsToRemove = existingScheduleIds.filter(
-          (id: number) => !currentScheduleIds.includes(id),
-        );
+        // 수정 모드: 기존 이미지 + 새 이미지 추가 처리
+        let subImageUrlsToAdd: string[] = [];
 
-        // 수정 모드: PATCH 요청에 맞는 데이터 구조
+        if (data.subImages instanceof FileList && data.subImages.length > 0) {
+          console.log(
+            '🔍 [수정모드] 새 파일 업로드 중:',
+            data.subImages.length,
+            '개',
+          );
+
+          const uploadPromises = Array.from(data.subImages).map((file) =>
+            uploadActivityImages(file),
+          );
+          const responses = await Promise.all(uploadPromises);
+          subImageUrlsToAdd = responses.map((res) => res.activityImageUrl);
+
+          console.log('✅ [수정모드] 업로드된 이미지 URLs:', subImageUrlsToAdd);
+        }
+
+        // 수정 모드 API 호출
         const finalFormData = {
           title: data.title,
           category: data.category,
@@ -232,13 +219,33 @@ export const useActivityForm = () => {
           bannerImageUrl,
           subImageIdsToRemove: removedSubImageIds,
           subImageUrlsToAdd,
-          scheduleIdsToRemove,
-          schedulesToAdd,
+          scheduleIdsToRemove: getScheduleIdsToRemove(data.schedules),
+          schedulesToAdd: getSchedulesToAdd(data.schedules),
         };
 
+        console.log('📤 [수정모드] 전송 데이터:', finalFormData);
         await updateActivity(id, finalFormData);
       } else {
-        // 등록 모드: POST 요청에 맞는 데이터 구조
+        // 등록 모드: 새 이미지만 처리
+        let finalSubImageUrls: string[] = [];
+
+        if (data.subImages instanceof FileList && data.subImages.length > 0) {
+          console.log(
+            '🔍 [등록모드] 새 파일 업로드 중:',
+            data.subImages.length,
+            '개',
+          );
+
+          const uploadPromises = Array.from(data.subImages).map((file) =>
+            uploadActivityImages(file),
+          );
+          const responses = await Promise.all(uploadPromises);
+          finalSubImageUrls = responses.map((res) => res.activityImageUrl);
+
+          console.log('✅ [등록모드] 업로드된 이미지 URLs:', finalSubImageUrls);
+        }
+
+        // 등록 모드 API 호출
         const finalFormData = {
           title: data.title,
           category: data.category,
@@ -247,23 +254,43 @@ export const useActivityForm = () => {
           address: data.address,
           schedules: data.schedules,
           bannerImageUrl,
-          subImages: subImageUrls.map((url, index) => ({
-            id: index + 1, // 임시 ID 생성
-            imageUrl: url,
-          })),
+          subImageUrls: finalSubImageUrls, // ✅ URL 배열로 전송
         };
+
+        console.log('📤 [등록모드] 전송 데이터:', finalFormData);
+        console.log('🔍 subImageUrls 개수:', finalSubImageUrls.length);
 
         await createActivity(finalFormData);
       }
 
       router.push(ROUTES.ACTIVITIES.ROOT);
     } catch (error) {
+      console.error('❌ 폼 제출 에러:', error);
       const errorMessage =
         error instanceof Error ? error.message : '서버 오류가 발생했습니다.';
       setSubmittingError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // 헬퍼 함수들 (기존 로직을 분리)
+  const getScheduleIdsToRemove = (currentSchedules: Schedule[]) => {
+    const existingScheduleIds = originalSchedules
+      .map((s: Schedule) => s.id)
+      .filter((id): id is number => id !== undefined);
+    const currentScheduleIds = currentSchedules
+      .filter((s: Schedule) => s.id)
+      .map((s: Schedule) => s.id)
+      .filter((id): id is number => id !== undefined);
+
+    return existingScheduleIds.filter(
+      (id: number) => !currentScheduleIds.includes(id),
+    );
+  };
+
+  const getSchedulesToAdd = (currentSchedules: Schedule[]) => {
+    return currentSchedules.filter((schedule: Schedule) => !schedule.id);
   };
 
   return {
