@@ -13,6 +13,7 @@ import {
 import { BottomSheet } from '@/shared/components/ui/bottom-sheet';
 import Popover from '@/shared/components/ui/popover';
 import Tabs from '@/shared/components/ui/tabs';
+import { useToast } from '@/shared/hooks/useToast';
 
 import type {
   Reservation,
@@ -48,6 +49,7 @@ export default function DayCell({
 
   // BottomSheet용 상태
   const [isOpen, setIsOpen] = useState(false);
+  const { showSuccess } = useToast();
 
   const [activeTab, setActiveTab] = useState<
     'pending' | 'confirmed' | 'declined'
@@ -83,8 +85,6 @@ export default function DayCell({
       getSchedulesByDate(selectedActivityId!, day.format('YYYY-MM-DD')),
     enabled: !!selectedActivityId,
   });
-
-  console.log('schedules', schedules);
 
   // 스케줄 데이터가 로드되면 첫 번째 스케줄을 선택
   useEffect(() => {
@@ -188,8 +188,9 @@ export default function DayCell({
         (r) => r.scheduleId === scheduleId && r.id !== reservationId,
       );
       approveAndDecline({ reservationId, scheduleId, reservationsToDecline });
+      showSuccess('승인되었습니다.');
     },
-    [approveAndDecline, isApproving, reservationsByStatus.pending],
+    [approveAndDecline, isApproving, reservationsByStatus.pending, showSuccess],
   );
 
   const handleReject = useCallback(
@@ -200,9 +201,13 @@ export default function DayCell({
     [reject, isRejecting],
   );
 
-  const handleTimeSlotSelect = useCallback(async (scheduleId: number) => {
-    setSelectedScheduleId(scheduleId);
-  }, []);
+  const handleTimeSlotSelect = useCallback(
+    async (scheduleId: number) => {
+      setSelectedScheduleId(scheduleId);
+      showSuccess('거절되었습니다.');
+    },
+    [showSuccess],
+  );
 
   const handleClose = useCallback(() => {
     setIsOpen(false);

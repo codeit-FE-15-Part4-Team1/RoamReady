@@ -14,6 +14,7 @@ import {
   uploadActivityImages,
 } from '@/domain/User/services/create-activity';
 import { ROUTES } from '@/shared/constants/routes';
+import { useToast } from '@/shared/hooks/useToast';
 
 // ✨ 타입 정의 추가
 interface SubImage {
@@ -49,6 +50,8 @@ export const useActivityForm = () => {
   const params = useParams();
   const id = Number(params.id);
   const isEdit = !!id;
+
+  const { showSuccess, showError } = useToast();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(isEdit);
@@ -123,13 +126,14 @@ export const useActivityForm = () => {
               ? error.message
               : '서버 오류가 발생했습니다.';
           setSubmittingError(errorMessage);
+          showError(errorMessage);
         } finally {
           setIsLoading(false);
         }
       };
       fetchActivity();
     }
-  }, [isEdit, id, methods]);
+  }, [isEdit, id, methods, showError]);
 
   const handleRemoveBannerImage = () => {
     setExistingImageUrls((prev) => ({
@@ -183,7 +187,6 @@ export const useActivityForm = () => {
         bannerImageUrl = data.bannerImages;
       }
 
-      // ✅ 변경: 등록 모드에서도 배너 이미지 필수 체크
       if (!bannerImageUrl) {
         throw new Error('배너 이미지를 등록해주세요.');
       }
@@ -194,19 +197,11 @@ export const useActivityForm = () => {
         let subImageUrlsToAdd: string[] = [];
 
         if (data.subImages instanceof FileList && data.subImages.length > 0) {
-          console.log(
-            '🔍 [수정모드] 새 파일 업로드 중:',
-            data.subImages.length,
-            '개',
-          );
-
           const uploadPromises = Array.from(data.subImages).map((file) =>
             uploadActivityImages(file),
           );
           const responses = await Promise.all(uploadPromises);
           subImageUrlsToAdd = responses.map((res) => res.activityImageUrl);
-
-          console.log('✅ [수정모드] 업로드된 이미지 URLs:', subImageUrlsToAdd);
         }
 
         // 수정 모드 API 호출
@@ -223,26 +218,19 @@ export const useActivityForm = () => {
           schedulesToAdd: getSchedulesToAdd(data.schedules),
         };
 
-        console.log('📤 [수정모드] 전송 데이터:', finalFormData);
         await updateActivity(id, finalFormData);
+        router.push(ROUTES.ACTIVITIES.DETAIL(id));
+        showSuccess('체험 수정이 완료되었습니다.');
       } else {
         // 등록 모드: 새 이미지만 처리
         let finalSubImageUrls: string[] = [];
 
         if (data.subImages instanceof FileList && data.subImages.length > 0) {
-          console.log(
-            '🔍 [등록모드] 새 파일 업로드 중:',
-            data.subImages.length,
-            '개',
-          );
-
           const uploadPromises = Array.from(data.subImages).map((file) =>
             uploadActivityImages(file),
           );
           const responses = await Promise.all(uploadPromises);
           finalSubImageUrls = responses.map((res) => res.activityImageUrl);
-
-          console.log('✅ [등록모드] 업로드된 이미지 URLs:', finalSubImageUrls);
         }
 
         // 등록 모드 API 호출
@@ -257,18 +245,16 @@ export const useActivityForm = () => {
           subImageUrls: finalSubImageUrls, // ✅ URL 배열로 전송
         };
 
-        console.log('📤 [등록모드] 전송 데이터:', finalFormData);
-        console.log('🔍 subImageUrls 개수:', finalSubImageUrls.length);
-
         await createActivity(finalFormData);
       }
 
       router.push(ROUTES.ACTIVITIES.ROOT);
+      showSuccess('체험 등록이 완료되었습니다.');
     } catch (error) {
-      console.error('❌ 폼 제출 에러:', error);
       const errorMessage =
         error instanceof Error ? error.message : '서버 오류가 발생했습니다.';
       setSubmittingError(errorMessage);
+      showError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }

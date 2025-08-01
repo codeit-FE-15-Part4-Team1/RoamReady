@@ -73,7 +73,6 @@ export default function ReservationDashboard({
           onMonthChange={handleMonthChange}
         />
       </div>
-      <ReservationSkeleton />
     </>
   );
 }
