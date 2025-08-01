@@ -97,7 +97,7 @@ export default function ReviewSection({
 
         {/* 평균 평점 시각화: 숫자 + 이모지 + 메시지 */}
         <div className='flex flex-col gap-6'>
-          <div className='flex flex-col items-center justify-center'>
+          <div className='flex-col-center'>
             <span className='font-size-32 font-bold'>
               {averageRating.toFixed(1)}
             </span>
@@ -108,7 +108,7 @@ export default function ReviewSection({
           </div>
 
           {/* 별 아이콘과 총 후기 개수 표시 */}
-          <div className='flex items-center justify-center gap-2'>
+          <div className='flex-center gap-2'>
             <Star size={13} className='fill-[#FFCB02] stroke-[#FFCB02]' />
             <span className='font-size-14 text-gray-550 font-medium'>
               {totalCount.toLocaleString()}개 후기

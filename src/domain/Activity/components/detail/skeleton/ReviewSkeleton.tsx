@@ -10,7 +10,7 @@ export default function ReviewSkeleton() {
 
         {/* 평균 평점 시각화: 숫자 + 이모지 + 메시지 */}
         <div className='flex flex-col gap-6'>
-          <div className='flex flex-col items-center justify-center gap-3'>
+          <div className='flex-col-center gap-3'>
             {/* 평균 평점 */}
             <div className='bg-brand-1 h-40 w-60 rounded-xl' />
             <div className='flex items-center gap-3'>
@@ -21,7 +21,7 @@ export default function ReviewSkeleton() {
           </div>
 
           {/* 별 아이콘과 총 후기 개수 표시 */}
-          <div className='flex items-center justify-center gap-2'>
+          <div className='flex-center gap-2'>
             <div className='bg-brand-1 h-15 w-15 rounded-full' />
             <div className='bg-brand-1 h-15 w-50 rounded-xl' />
           </div>

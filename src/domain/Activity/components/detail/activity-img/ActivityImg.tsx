@@ -194,7 +194,7 @@ export default function ActivityImg({
                 <span
                   role='button'
                   aria-label={`추가 이미지 ${subImages.length - 3}장 더 보기`}
-                  className='font-size-24 absolute inset-0 flex items-center justify-center bg-black/50 font-bold text-white hover:bg-black/60'
+                  className='font-size-24 flex-center absolute inset-0 bg-black/50 font-bold text-white hover:bg-black/60'
                 >
                   <Plus className='h-20 w-20' aria-hidden='true' />{' '}
                   {subImages.length - 3}

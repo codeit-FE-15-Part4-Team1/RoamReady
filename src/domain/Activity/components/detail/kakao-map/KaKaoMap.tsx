@@ -87,7 +87,7 @@ export default function KaKaoMap({
             className,
           )}
         >
-          <div className='flex flex-col items-center justify-center gap-20'>
+          <div className='flex-col-center gap-20'>
             <LogoSymbol className='h-130 w-130' />
             {error === 'map' && '지도를 불러오는 중 오류가 발생했습니다.'}
             {error === 'address' && '해당 위치를 찾을 수 없습니다.'}
