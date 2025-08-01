@@ -1,6 +1,8 @@
+// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
 import { FlatCompat } from '@eslint/eslintrc';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
+import storybook from 'eslint-plugin-storybook';
 import unusedImportsPlugin from 'eslint-plugin-unused-imports';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -14,7 +16,7 @@ const compat = new FlatCompat({
 
 export default [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
-
+  // Prettier와 충돌 방지
   {
     plugins: {
       'simple-import-sort': simpleImportSortPlugin,
@@ -47,6 +49,7 @@ export default [
       'jsx-a11y/label-has-associated-control': ['warn', { assert: 'either' }],
     },
   },
-
-  eslintConfigPrettier, // Prettier와 충돌 방지
+  eslintConfigPrettier,
+  ...storybook.configs['flat/recommended'],
+  ...storybook.configs['flat/recommended'],
 ];
