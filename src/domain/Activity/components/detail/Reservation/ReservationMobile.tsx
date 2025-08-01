@@ -53,17 +53,18 @@ export default function ReservationMobile({
   const handleSubmit = async () => {
     if (!selectedDate || !selectedTime) return;
 
-    try {
-      await reserveAction(activity.id, selectedScheduleId, participantCount);
-      showSuccess('예약이 완료되었습니다!');
-      router.refresh();
-    } catch (err) {
-      showError(
-        err instanceof Error
-          ? err.message
-          : '예약 처리 중 오류가 발생했습니다.',
-      );
+    const result = await reserveAction(
+      activity.id,
+      selectedScheduleId,
+      participantCount,
+    );
+
+    if (result.statusCode !== 200) {
+      showError(result.message);
+      return;
     }
+
+    showSuccess(result.message);
   };
 
   return (
