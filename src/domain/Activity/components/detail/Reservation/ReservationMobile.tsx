@@ -51,9 +51,7 @@ export default function ReservationMobile({
     onMonthChange,
   } = reservation;
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     if (!selectedDate || !selectedTime) return;
 
     try {
@@ -84,31 +82,27 @@ export default function ReservationMobile({
       onSubmit={handleSubmit}
       className='fixed bottom-0 left-0 z-30 flex h-200 w-full flex-col justify-center gap-10 bg-white px-24 py-18'
     >
-      {/* 가격 및 날짜 선택 버튼 영역 */}
-      <div className='mx-auto flex w-full max-w-1200 items-center justify-between'>
-        {/* 가격 및 인원 수 표시 */}
+      <div className='flex flex-col gap-10'>
         <p className='font-size-18 font-bold'>
           ₩{activity.price.toLocaleString()}
           <span className='font-size-16 text-gray-550'>{` / ${participantCount}명`}</span>
         </p>
 
-        {/* 날짜 선택 버튼 + BottomSheet */}
         <BottomSheet.Root>
           <BottomSheet.Trigger>
-            <button
+            <Button
               type='button'
-              className='font-size-14 cursor-pointer text-blue-500 underline'
+              variant='primary'
+              className='font-size-16 h-50 w-full'
             >
-              {selectedDateTimeText}
-            </button>
+              예약하기
+            </Button>
           </BottomSheet.Trigger>
 
           <BottomSheet.Content hasMultiStep>
             {/* Step 1: 날짜 및 시간 선택 */}
             <BottomSheet.Step>
               <BottomSheet.Header>날짜 및 시간 선택</BottomSheet.Header>
-
-              {/* 날짜 선택 및 시간 슬롯 UI */}
               <div className='flex h-fit w-full flex-col gap-10 p-20'>
                 <DateSelectSection
                   selectedDate={selectedDate}
@@ -119,7 +113,6 @@ export default function ReservationMobile({
                   reservableDates={reservableDates}
                   onMonthChange={onMonthChange}
                 />
-
                 <AvailableTimeSection
                   selectedDate={selectedDate}
                   timeSlots={timeSlots}
@@ -128,8 +121,6 @@ export default function ReservationMobile({
                   className='max-h-200'
                 />
               </div>
-
-              {/* 다음 버튼 ( 날짜 + 시간 선택 시 활성화) */}
               <BottomSheet.Footer>
                 <Button
                   variant='primary'
@@ -141,7 +132,7 @@ export default function ReservationMobile({
               </BottomSheet.Footer>
             </BottomSheet.Step>
 
-            {/* Step 2: 참여 인원 선택 */}
+            {/* Step 2: 인원 선택 */}
             <BottomSheet.Step>
               <BottomSheet.Header>참여 인원 선택</BottomSheet.Header>
               <div className='h-80 px-20 py-30'>
@@ -151,25 +142,46 @@ export default function ReservationMobile({
                   onDecrease={handleDecrease}
                 />
               </div>
-
               <BottomSheet.Footer>
                 <Button variant='primary' className='font-size-16 h-50 w-full'>
-                  확인
+                  다음
+                </Button>
+              </BottomSheet.Footer>
+            </BottomSheet.Step>
+
+            {/*  Step 3: 예약 확인 */}
+            <BottomSheet.Step>
+              <BottomSheet.Header>예약 확인</BottomSheet.Header>
+              <div className='space-y-10 px-20 py-30'>
+                <p className='font-size-16 text-gray-800'>
+                  일정:{' '}
+                  <strong>
+                    {dayjs(selectedDate).format('YYYY.MM.DD')} / {selectedTime}
+                  </strong>
+                </p>
+                <p className='font-size-16 text-gray-800'>
+                  인원: <strong>{participantCount}명</strong>
+                </p>
+                <hr className='my-10 border-gray-200' />
+                <p className='font-size-18 font-bold'>
+                  총 금액: ₩
+                  {(activity.price * participantCount).toLocaleString()}
+                </p>
+              </div>
+              <BottomSheet.Footer>
+                <Button
+                  variant='primary'
+                  className='font-size-16 h-50 w-full'
+                  disabled={!selectedDate || !selectedTime}
+                  onClick={handleSubmit}
+                >
+                  예약하기
                 </Button>
               </BottomSheet.Footer>
             </BottomSheet.Step>
           </BottomSheet.Content>
         </BottomSheet.Root>
       </div>
-
-      <Button
-        type='submit'
-        variant='primary'
-        className='font-size-16 h-50 w-full'
-        disabled={!selectedDate || !selectedTime} // 날짜와 시간이 모두 선택되어야 활성화
-      >
-        예약하기
-      </Button>
     </form>
   );
 }
