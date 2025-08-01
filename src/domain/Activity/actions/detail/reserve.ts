@@ -1,6 +1,5 @@
 'use server';
 
-import { cookies } from 'next/headers';
 
 class SerializableError extends Error {
   toJSON() {
@@ -28,14 +27,6 @@ export async function reserveAction(
   scheduleId: number | null,
   headCount: number,
 ) {
-  // 요청 쿠키에서 accessToken 가져오기
-  const accessToken = (await cookies()).get('accessToken')?.value;
-
-  // 로그인 상태 확인 (토큰 없으면 에러 발생)
-  if (!accessToken) {
-    throw new SerializableError('로그인이 필요합니다.');
-  }
-
   // 예약 API 호출
   const res = await fetch(
     `${process.env.API_BASE_URL}/activities/${activityId}/reservations`,
@@ -43,7 +34,6 @@ export async function reserveAction(
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({ scheduleId, headCount }),
     },
