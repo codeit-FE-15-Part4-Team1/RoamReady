@@ -197,17 +197,14 @@ export default function DayCell({
     (reservationId: number) => {
       if (isRejecting) return;
       reject({ reservationId });
-    },
-    [reject, isRejecting],
-  );
-
-  const handleTimeSlotSelect = useCallback(
-    async (scheduleId: number) => {
-      setSelectedScheduleId(scheduleId);
       showSuccess('거절되었습니다.');
     },
-    [showSuccess],
+    [reject, isRejecting, showSuccess],
   );
+
+  const handleTimeSlotSelect = useCallback(async (scheduleId: number) => {
+    setSelectedScheduleId(scheduleId);
+  }, []);
 
   const handleClose = useCallback(() => {
     setIsOpen(false);
