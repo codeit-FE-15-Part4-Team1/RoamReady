@@ -15,31 +15,31 @@ export const activitySchema = z.object({
   updatedAt: z.string(),
 });
 
-export const getMyExperienceRequestSchema = z.object({
+export const getMyActivityeRequestSchema = z.object({
   cursorId: z.number().optional(),
   size: z.number().optional(),
 });
 
-export const getMyExperienceResponseSchema = z.object({
-  cursorId: z.number(),
+export const getMyActivityeResponseSchema = z.object({
+  cursorId: z.number().nullable(),
   activities: z.array(activitySchema),
   totalCount: z.number(),
 });
 
-export const deleteMyExperienceRequestSchema = z.object({
-  activityId: z.number(),
+export const deleteMyActivityeRequestSchema = z.object({
+  activityId: z.number().positive(),
 });
 
 // -------------------- 타입 정의 --------------------
 
 export type Activity = z.infer<typeof activitySchema>;
 
-export type GetMyExperienceRequestQuery = z.infer<
-  typeof getMyExperienceRequestSchema
+export type GetMyActivityeRequestQuery = z.infer<
+  typeof getMyActivityeRequestSchema
 >;
-export type GetMyExperienceResponse = z.infer<
-  typeof getMyExperienceResponseSchema
+export type GetMyActivityeResponse = z.infer<
+  typeof getMyActivityeResponseSchema
 >;
-export type DeleteMyExperienceRequestQuery = z.infer<
-  typeof deleteMyExperienceRequestSchema
+export type DeleteMyActivityeRequestQuery = z.infer<
+  typeof deleteMyActivityeRequestSchema
 >;

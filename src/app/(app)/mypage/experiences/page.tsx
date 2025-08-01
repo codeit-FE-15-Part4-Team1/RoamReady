@@ -1,20 +1,26 @@
+import Link from 'next/link';
+
+import MyActivitySection from '@/domain/Reservation/components/my-activity-section/MyActivitySection';
+
 export default function MyExperiencePage() {
   return (
     <div>
-      <div className='mb-6 flex items-center justify-between'>
+      <div className='mb-20 flex items-center justify-between'>
         <div>
-          <h1 className='text-lg font-bold text-gray-900'>내 체험 관리</h1>
-          <p className='text-sm text-gray-600'>
-            게시한 등록하신 수 있는 체험을 관리합니다.
+          <h1 className='font-size-18 font-bold text-neutral-900'>
+            내 체험 관리
+          </h1>
+          <p className='font-size-16 font-medium text-neutral-500'>
+            체험을 등록하거나 수정 및 삭제할 수 있습니다.
           </p>
         </div>
-        <button className='rounded-lg bg-blue-500 px-4 py-2 text-sm text-white'>
-          체험 등록하기
-        </button>
+        <Link href='/mypage/experiences/create'>
+          <button className='bg-brand-2 font-size-16 hover:bg-brand-2/80 cursor-pointer rounded-3xl px-12 py-12 font-semibold text-white'>
+            체험 등록하기
+          </button>
+        </Link>
       </div>
-      <div className='py-12 text-center text-gray-500'>
-        등록된 체험이 없습니다.
-      </div>
+      <MyActivitySection />
     </div>
   );
 }

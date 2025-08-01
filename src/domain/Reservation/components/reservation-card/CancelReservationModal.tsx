@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { deleteMyReservation } from '@/domain/Reservation/services/reservation/deleteMyReservation';
+import { deleteMyReservation } from '@/domain/Reservation/services/reservation';
 import { Dialog } from '@/shared/components/ui/dialog';
 import { useToast } from '@/shared/hooks/useToast';
 import { queryClient } from '@/shared/libs/queryClient';

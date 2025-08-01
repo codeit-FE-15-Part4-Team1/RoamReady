@@ -43,7 +43,7 @@ export const deleteMyReservation = async (reservationId: number) => {
   const validatedReservationId = z.number().positive().parse(reservationId);
 
   return await apiClient
-    .patch(API_ENDPOINTS.MY_RESERVATIONS.BASE + `/${validatedReservationId}`, {
+    .patch(API_ENDPOINTS.MY_RESERVATIONS.DETAIL(validatedReservationId), {
       json: { status: 'canceled' },
     })
     .json<void>();
@@ -58,12 +58,9 @@ export const writeReview = async (
   const validatedReview = createReservationReviewSchema.parse(review);
 
   const response = await apiClient
-    .post(
-      API_ENDPOINTS.MY_RESERVATIONS.BASE + `/${validatedReservationId}/reviews`,
-      {
-        json: validatedReview,
-      },
-    )
+    .post(API_ENDPOINTS.MY_RESERVATIONS.REVIEW(validatedReservationId), {
+      json: validatedReview,
+    })
     .json<CreateReservationReviewResponse>();
 
   // 응답 데이터 검증

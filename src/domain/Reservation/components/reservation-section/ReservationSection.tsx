@@ -7,7 +7,7 @@ import ReservationList from '@/domain/Reservation/components/reservation-section
 import ReservationStatusFilter from '@/domain/Reservation/components/reservation-section/ReservationStatusFilter';
 import ReservationSectionSkeleton from '@/domain/Reservation/components/skeleton/ReservationSectionSkeleton';
 import { ReservationStatus } from '@/domain/Reservation/schemas/reservation';
-import { getMyReservation } from '@/domain/Reservation/services/reservation/getMyReservation';
+import { getMyReservation } from '@/domain/Reservation/services/reservation';
 import Nothing from '@/shared/components/ui/nothing';
 
 export default function ReservationSection() {
@@ -43,12 +43,9 @@ export default function ReservationSection() {
     refetchOnWindowFocus: true, // 윈도우 포커스 시 refetch
   });
 
-  console.log(data);
   // 모든 페이지의 예약 데이터를 평탄화
   const allReservations =
     data?.pages?.flatMap((page) => page.reservations) ?? [];
-
-  console.log(allReservations);
 
   return (
     <div>
