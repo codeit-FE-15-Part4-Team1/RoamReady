@@ -13,7 +13,10 @@ import type {
 import { signupRequestSchema } from '@/domain/Auth/schemas/request';
 import Button from '@/shared/components/Button';
 import Input from '@/shared/components/ui/input';
-import { OAUTH_ERROR_MESSAGES } from '@/shared/constants/routes';
+import {
+  DEFAULT_REDIRECT_ERROR_MESSAGE,
+  REDIRECT_ERROR_MESSAGES,
+} from '@/shared/constants/routes';
 import { useToast } from '@/shared/hooks/useToast';
 
 /**
@@ -49,17 +52,29 @@ export default function SignUpForm() {
     if (isUrlErrorHandled.current) return;
 
     const errorCode = searchParams.get('error');
+    const serverMessage = searchParams.get('message');
+
     if (!errorCode) return;
 
-    const message = OAUTH_ERROR_MESSAGES[errorCode];
-    showError(message);
+    let messageToDisplay = '';
+
+    if (serverMessage) {
+      messageToDisplay = serverMessage;
+    } else {
+      messageToDisplay =
+        (REDIRECT_ERROR_MESSAGES as Record<string, string>)[errorCode] ||
+        DEFAULT_REDIRECT_ERROR_MESSAGE;
+    }
+
+    showError(messageToDisplay);
+
     isUrlErrorHandled.current = true;
 
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    newSearchParams.delete('error');
-    router.replace(`?${newSearchParams.toString()}`);
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.delete('error');
+    newParams.delete('message');
+    router.replace(`${window.location.pathname}?${newParams.toString()}`);
   }, [searchParams, showError, router]);
-
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupRequestSchema),
     defaultValues: signupDefaultValues,
