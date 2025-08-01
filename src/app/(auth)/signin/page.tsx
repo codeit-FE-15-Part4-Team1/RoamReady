@@ -16,8 +16,8 @@ import { ROUTES } from '@/shared/constants/routes';
  * `useSearchParams`와 같은 클라이언트 훅을 사용하는 <SignInForm /> 컴포넌트가 서버에서 프리렌더링될 때 발생하는 오류를 방지하기 위해
  * <Suspense> 바운더리로 래핑합니다.
  */
-export default async function SignInPage() {
-  await new Promise((resolve) => setTimeout(resolve, 5000));
+export default function SignInPage() {
+  // await new Promise((resolve) => setTimeout(resolve, 5000));
 
   return (
     <div className='font-size-16 flex w-full max-w-640 flex-col items-center justify-center gap-30'>
@@ -25,10 +25,13 @@ export default async function SignInPage() {
         <UrlMessageToast />
       </Suspense>
 
-      <div className='flex flex-col items-center gap-23'>
+      <Link
+        href={ROUTES.ACTIVITIES.ROOT}
+        className='flex flex-col items-center gap-23'
+      >
         <LogoSymbol className='text-brand-2 size-144' />
         <LogoTextOneLine className='text-brand-2 aspect-[255/31] w-255' />
-      </div>
+      </Link>
 
       <Suspense fallback={null}>
         <SignInForm />
