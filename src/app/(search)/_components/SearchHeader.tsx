@@ -9,9 +9,9 @@ import CategorySelect from '@/domain/Activity/components/main/ActivityFilter/Cat
 import SortSelect from '@/domain/Activity/components/main/ActivityFilter/SortSelect';
 import ActivitySearchBar from '@/domain/Activity/components/main/ActivitySearch/ActivitySearchBar';
 import { GetActivitiesRequestQuery } from '@/domain/Activity/schemas/main';
+import { User } from '@/domain/Auth/schemas/response';
 import Logo from '@/shared/assets/logos/Logo';
 import { ROUTES } from '@/shared/constants/routes';
-import type { User } from '@/shared/slices/userSlice';
 import { useRoamReadyStore } from '@/shared/store';
 
 export type SortOption = NonNullable<GetActivitiesRequestQuery['sort']>;

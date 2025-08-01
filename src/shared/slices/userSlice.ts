@@ -1,23 +1,6 @@
 import type { StateCreator } from 'zustand';
 
-/**
- * @description API 서버로부터 받은 사용자 정보의 스키마입니다.
- *
- * - id: 사용자 고유 ID
- * - email: 사용자 이메일
- * - nickname: 사용자 닉네임
- * - profileImageUrl: 프로필 이미지 URL (없을 수 있으므로 nullable)
- *
- * @see /src/api/auth/auth.schemas.ts - userResponseSchema
- */
-export interface User {
-  id: number;
-  email: string;
-  nickname: string;
-  profileImageUrl: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { User } from '@/domain/Auth/schemas/response';
 
 /**
  * @description 사용자 상태와 사용자 정보를 변경하는 메서드를 포함한 상태 인터페이스입니다.
@@ -25,6 +8,8 @@ export interface User {
  * - user: 현재 로그인된 사용자 정보 (로그아웃 상태일 경우 null)
  * - setUser: 로그인 성공 시 사용자 정보를 스토어에 저장하는 메서드
  * - clearUser: 로그아웃 시 사용자 정보를 스토어에서 제거하는 메서드
+ *
+ * @see /src/domain/Auth/schemas/response - User type
  */
 export interface UserSlice {
   user: User | null;
