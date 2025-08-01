@@ -1,8 +1,6 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { useSignupMutation } from '@/domain/Auth/hooks/useSignupMutation';
@@ -13,11 +11,6 @@ import type {
 import { signupRequestSchema } from '@/domain/Auth/schemas/request';
 import Button from '@/shared/components/Button';
 import Input from '@/shared/components/ui/input';
-import {
-  DEFAULT_REDIRECT_ERROR_MESSAGE,
-  REDIRECT_ERROR_MESSAGES,
-} from '@/shared/constants/routes';
-import { useToast } from '@/shared/hooks/useToast';
 
 /**
  * @component SignUpForm
@@ -36,11 +29,6 @@ import { useToast } from '@/shared/hooks/useToast';
  * - **에러 핸들링**: `useSignupMutation` 훅 내부에서 `ky`의 `HTTPError`를 감지하여 네트워크 에러 메시지 및 서버 응답 에러를 사용자에게 보여줍니다.
  */
 export default function SignUpForm() {
-  const router = useRouter();
-  const { showError } = useToast();
-  const searchParams = useSearchParams();
-  const isUrlErrorHandled = useRef(false);
-
   const signupDefaultValues: SignupFormValues = {
     email: '',
     nickname: '',
@@ -48,33 +36,6 @@ export default function SignUpForm() {
     passwordConfirm: '',
   };
 
-  useEffect(() => {
-    if (isUrlErrorHandled.current) return;
-
-    const errorCode = searchParams.get('error');
-    const serverMessage = searchParams.get('message');
-
-    if (!errorCode) return;
-
-    let messageToDisplay = '';
-
-    if (serverMessage) {
-      messageToDisplay = serverMessage;
-    } else {
-      messageToDisplay =
-        (REDIRECT_ERROR_MESSAGES as Record<string, string>)[errorCode] ||
-        DEFAULT_REDIRECT_ERROR_MESSAGE;
-    }
-
-    showError(messageToDisplay);
-
-    isUrlErrorHandled.current = true;
-
-    const newParams = new URLSearchParams(searchParams.toString());
-    newParams.delete('error');
-    newParams.delete('message');
-    router.replace(`${window.location.pathname}?${newParams.toString()}`);
-  }, [searchParams, showError, router]);
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupRequestSchema),
     defaultValues: signupDefaultValues,

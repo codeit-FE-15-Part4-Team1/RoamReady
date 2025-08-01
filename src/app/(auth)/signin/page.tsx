@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
 
+import UrlMessageToast from '@/app/_components/UrlMessageToast';
 import OAuth from '@/domain/Auth/components/OAuth';
 import SignInForm from '@/domain/Auth/components/SignInForm';
 import LogoSymbol from '@/shared/assets/logos/LogoSymbol';
@@ -18,6 +19,10 @@ import { ROUTES } from '@/shared/constants/routes';
 export default function SignInPage() {
   return (
     <div className='font-size-16 flex w-full max-w-640 flex-col items-center justify-center gap-30'>
+      <Suspense fallback={null}>
+        <UrlMessageToast />
+      </Suspense>
+
       <div className='flex flex-col items-center gap-23'>
         <LogoSymbol className='text-brand-2 size-144' />
         <LogoTextOneLine className='text-brand-2 aspect-[255/31] w-255' />
