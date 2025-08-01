@@ -1,53 +1,125 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { fn } from 'storybook/test';
 
-import { Button } from './Button';
+import Button from '../shared/components/Button';
 
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
-  title: 'Example/Button',
+  title: 'Components/Button',
   component: Button,
   parameters: {
-    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
     layout: 'centered',
   },
-  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
-  // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {
-    backgroundColor: { control: 'color' },
+    variant: {
+      control: { type: 'select' },
+      options: ['default', 'outline', 'ghost', 'primary'],
+    },
+    size: {
+      control: { type: 'select' },
+      options: ['small', 'medium', 'large'],
+    },
+    selected: {
+      control: { type: 'boolean' },
+    },
+    loading: {
+      control: { type: 'boolean' },
+    },
+    disabled: {
+      control: { type: 'boolean' },
+    },
+    onClick: { action: 'clicked' },
   },
-  // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
-  args: { onClick: fn() },
+  args: {
+    children: 'Button',
+    onClick: fn(),
+  },
 } satisfies Meta<typeof Button>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Primary: Story = {
+// 기본 버튼
+export const Default: Story = {
   args: {
-    primary: true,
-    label: 'Button',
+    children: '기본 버튼',
   },
 };
 
-export const Secondary: Story = {
+// Primary 버튼
+export const Primary: Story = {
   args: {
-    label: 'Button',
+    variant: 'primary',
+    children: 'Primary 버튼',
+  },
+};
+
+// Outline 버튼
+export const Outline: Story = {
+  args: {
+    variant: 'outline',
+    children: 'Outline 버튼',
+  },
+};
+
+// Ghost 버튼
+export const Ghost: Story = {
+  args: {
+    variant: 'ghost',
+    children: 'Ghost 버튼',
+  },
+};
+
+// 크기별 버튼
+export const Small: Story = {
+  args: {
+    size: 'small',
+    children: '작은 버튼',
+  },
+};
+
+export const Medium: Story = {
+  args: {
+    size: 'medium',
+    children: '중간 버튼',
   },
 };
 
 export const Large: Story = {
   args: {
     size: 'large',
-    label: 'Button',
+    children: '큰 버튼',
   },
 };
 
-export const Small: Story = {
+// 선택된 버튼
+export const Selected: Story = {
   args: {
-    size: 'small',
-    label: 'Button',
+    selected: true,
+    children: '선택된 버튼',
+  },
+};
+
+// 로딩 상태 버튼
+export const Loading: Story = {
+  args: {
+    loading: true,
+    children: '로딩 중...',
+  },
+};
+
+// 비활성화된 버튼
+export const Disabled: Story = {
+  args: {
+    disabled: true,
+    children: '비활성화된 버튼',
+  },
+};
+
+// 아이콘이 있는 버튼
+export const WithIcon: Story = {
+  args: {
+    variant: 'primary',
+    children: '➕ 아이콘과 함께',
   },
 };
