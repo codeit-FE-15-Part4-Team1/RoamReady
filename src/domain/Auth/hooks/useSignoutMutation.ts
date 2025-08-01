@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 import { signout } from '@/domain/Auth/services';
-import { ROUTES } from '@/shared/constants/routes';
 import { useToast } from '@/shared/hooks/useToast';
 import { useRoamReadyStore } from '@/shared/store';
 
@@ -31,15 +30,15 @@ export const useSignoutMutation = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const clearUser = useRoamReadyStore((state) => state.clearUser);
-  const { showSuccess, showError } = useToast();
+  const { showError } = useToast();
 
   return useMutation({
     mutationFn: signout,
     onSuccess: () => {
       clearUser();
       queryClient.removeQueries({ queryKey: ['user', 'me'] });
-      showSuccess('로그아웃되었습니다. 안녕히 가세요!');
-      router.push(ROUTES.ACTIVITIES.ROOT);
+      // showSuccess('로그아웃되었습니다. 안녕히 가세요!');
+      router.refresh();
     },
     onError: (error: Error) => {
       console.error('로그아웃 실패:', error);
