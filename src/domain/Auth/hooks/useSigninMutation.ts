@@ -34,14 +34,14 @@ export const useSigninMutation = () => {
   const router = useRouter();
   const setUser = useRoamReadyStore((state) => state.setUser);
   const queryClient = useQueryClient();
-  const { showSuccess, showError } = useToast();
+  const { showError } = useToast();
 
   return useMutation({
     mutationFn: signin,
     onSuccess: (data: SigninResponse) => {
       setUser(data.user);
       queryClient.invalidateQueries({ queryKey: ['user', 'me'] });
-      showSuccess('로그인 되었습니다. 환영합니다!');
+      // showSuccess('로그인 되었습니다. 환영합니다!');
       router.push(ROUTES.ACTIVITIES.ROOT);
     },
 
