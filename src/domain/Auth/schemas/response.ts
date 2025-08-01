@@ -21,16 +21,16 @@ export const tokenRefreshResponseSchema = z.object({
 export type TokenRefreshResponse = z.infer<typeof tokenRefreshResponseSchema>;
 
 //
-// ───────────────────── 🎉 회원가입 (Sign Up) ─────────────────────
+// ───────────────────── 🎉 사용자  ─────────────────────
 //
 
 /**
  * @schema userResponseSchema
- * @description 사용자 정보 응답 스키마입니다. 회원가입/로그인/OAuth 응답 등에 공통적으로 사용됩니다.
+ * @description 공통적인 사용자 정보 응답 스키마입니다.
  */
 export const userResponseSchema = z.object({
   id: z.number(),
-  email: z.string().email(),
+  email: z.string().email().optional(),
   nickname: z.string(),
   profileImageUrl: z.string().nullable(),
   createdAt: z.string(), // ISO timestamp
@@ -38,10 +38,27 @@ export const userResponseSchema = z.object({
 });
 
 /**
- * @schema signupResponseSchema
- * @description 회원가입 성공 시 반환되는 사용자 정보 응답 스키마입니다.
+ * @type User
+ * @description 앱 전체에서 사용될 표준 사용자 정보 타입입니다.
  */
-export const signupResponseSchema = userResponseSchema;
+export type User = z.infer<typeof userResponseSchema>;
+
+//
+// ───────────────────── 🎉 회원가입 (Sign Up) ─────────────────────
+//
+
+/**
+ * @schema signupResponseSchema
+ * @description 회원가입 응답 스키마입니다.
+ */
+export const signupResponseSchema = z.object({
+  id: z.number(),
+  email: z.string().email(),
+  nickname: z.string(),
+  profileImageUrl: z.string().nullable(),
+  createdAt: z.string(), // ISO timestamp
+  updatedAt: z.string(), // ISO timestamp
+});
 
 /**
  * @type SignupResponse
@@ -74,28 +91,13 @@ export const authResponseSchema = z.object({
 export type SigninResponse = z.infer<typeof authResponseSchema>;
 
 /**
- * @schema oauthUserSchema
- * @description
- * 카카오 등 OAuth를 통해 받은 사용자 정보 스키마입니다.
- * 이메일은 사용자가 동의하지 않을 경우 null일 수 있으므로 nullable로 처리합니다.
- */
-export const oauthUserSchema = z.object({
-  id: z.number(),
-  email: z.string().email().nullable(), // 이메일이 null일 수 있는 경우를 처리
-  nickname: z.string(),
-  profileImageUrl: z.string().nullable(), // 프로필 이미지도 null일 수 있음
-  createdAt: z.string().datetime(), // ISO 8601 날짜 형식 검증
-  updatedAt: z.string().datetime(), // ISO 8601 날짜 형식 검증
-});
-
-/**
  * @schema oauthResponseSchema
  * @description
  * OAuth 로그인 또는 회원가입 성공 시, 백엔드로부터 받는 최종 응답 스키마입니다.
  * 사용자 정보와 함께 액세스/리프레시 토큰이 포함됩니다.
  */
 export const oauthResponseSchema = z.object({
-  user: oauthUserSchema,
+  user: userResponseSchema,
   accessToken: z.string(),
   refreshToken: z.string(),
 });
