@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import { useRouter } from 'next/navigation';
 
 import { reserveAction } from '@/domain/Activity/actions/detail/reserve';
 import { useReservationForm } from '@/domain/Activity/hooks/detail/useReservationForm';
@@ -30,8 +29,6 @@ export default function ReservationTablet({
   activity: Activity;
   reservation: ReturnType<typeof useReservationForm>;
 }) {
-  const router = useRouter();
-
   const { showSuccess, showError } = useToast();
 
   // 예약 상태 및 관련 핸들러 훅 호출
@@ -53,17 +50,18 @@ export default function ReservationTablet({
   const handleSubmit = async () => {
     if (!selectedDate || !selectedTime) return;
 
-    try {
-      await reserveAction(activity.id, selectedScheduleId, participantCount);
-      showSuccess('예약이 완료되었습니다!');
-      router.refresh();
-    } catch (err) {
-      showError(
-        err instanceof Error
-          ? err.message
-          : '예약 처리 중 오류가 발생했습니다.',
-      );
+    const result = await reserveAction(
+      activity.id,
+      selectedScheduleId,
+      participantCount,
+    );
+
+    if (result.statusCode !== 200) {
+      showError(result.message);
+      return;
     }
+
+    showSuccess(result.message);
   };
 
   return (

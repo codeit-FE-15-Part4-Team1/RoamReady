@@ -44,23 +44,21 @@ export default function ReservationPC({
     onMonthChange,
   } = reservation;
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     if (!selectedDate || !selectedTime) return;
 
-    try {
-      await reserveAction(activity.id, selectedScheduleId, participantCount);
-      showSuccess('예약이 완료되었습니다!');
-      setSelectedDate(null);
-      setSelectedTime(null);
-    } catch (err) {
-      showError(
-        err instanceof Error
-          ? err.message
-          : '예약 처리 중 오류가 발생했습니다.',
-      );
+    const result = await reserveAction(
+      activity.id,
+      selectedScheduleId,
+      participantCount,
+    );
+
+    if (result.statusCode !== 200) {
+      showError(result.message);
+      return;
     }
+
+    showSuccess(result.message);
   };
 
   return (

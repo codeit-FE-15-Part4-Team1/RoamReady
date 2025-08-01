@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import { useRouter } from 'next/navigation';
 
 import { reserveAction } from '@/domain/Activity/actions/detail/reserve';
 import { useReservationForm } from '@/domain/Activity/hooks/detail/useReservationForm';
@@ -30,8 +29,6 @@ export default function ReservationMobile({
   activity: Activity;
   reservation: ReturnType<typeof useReservationForm>;
 }) {
-  const router = useRouter();
-
   const { showSuccess, showError } = useToast();
 
   // 예약 상태 및 관련 핸들러 훅 호출
