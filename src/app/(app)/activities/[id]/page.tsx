@@ -59,6 +59,7 @@ export default async function ActivityDetailPage({ params }: PageParams) {
             bannerImage={activity.bannerImageUrl}
             subImages={activity.subImages}
           />
+
           <ActivitySummaryWrapper
             activity={activity}
             reviews={initialReviews}

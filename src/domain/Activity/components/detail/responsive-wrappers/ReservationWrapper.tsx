@@ -55,7 +55,7 @@ export default function ReservationWrapper({
         <div
           className='sticky top-30 flex flex-col gap-38'
           style={{
-            top: 300,
+            top: 120,
             height: heightValue,
           }}
         >
