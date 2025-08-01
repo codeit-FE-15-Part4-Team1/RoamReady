@@ -44,7 +44,9 @@ export default function ReservationPC({
     onMonthChange,
   } = reservation;
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     if (!selectedDate || !selectedTime) return;
 
     const result = await reserveAction(
@@ -55,6 +57,7 @@ export default function ReservationPC({
 
     if (result.statusCode !== 200) {
       showError(result.message);
+      setSelectedDate(null);
       return;
     }
 

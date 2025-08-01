@@ -58,6 +58,7 @@ export default function ReservationMobile({
 
     if (result.statusCode !== 200) {
       showError(result.message);
+      setSelectedDate(null);
       return;
     }
 
@@ -65,7 +66,7 @@ export default function ReservationMobile({
   };
 
   return (
-    <form
+    <section
       onSubmit={handleSubmit}
       className='fixed bottom-0 left-0 z-30 flex h-200 w-full flex-col justify-center gap-10 bg-white px-24 py-18'
     >
@@ -157,6 +158,7 @@ export default function ReservationMobile({
               </div>
               <BottomSheet.Footer>
                 <Button
+                  type='button'
                   variant='primary'
                   className='font-size-16 h-50 w-full'
                   disabled={!selectedDate || !selectedTime}
@@ -169,6 +171,6 @@ export default function ReservationMobile({
           </BottomSheet.Content>
         </BottomSheet.Root>
       </div>
-    </form>
+    </section>
   );
 }

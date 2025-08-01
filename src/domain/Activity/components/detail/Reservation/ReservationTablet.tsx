@@ -58,6 +58,7 @@ export default function ReservationTablet({
 
     if (result.statusCode !== 200) {
       showError(result.message);
+      setSelectedDate(null);
       return;
     }
 
@@ -65,7 +66,7 @@ export default function ReservationTablet({
   };
 
   return (
-    <form
+    <section
       // onSubmit={handleSubmit}
       className='fixed bottom-0 left-0 z-30 w-full bg-white px-24 py-18 pt-50'
     >
@@ -164,7 +165,7 @@ export default function ReservationTablet({
 
               <BottomSheet.Footer>
                 <Button
-                  type='submit'
+                  type='button'
                   onClick={handleSubmit}
                   variant='primary'
                   className='font-size-16 h-50 w-full'
@@ -177,6 +178,6 @@ export default function ReservationTablet({
           </BottomSheet.Content>
         </BottomSheet.Root>
       </div>
-    </form>
+    </section>
   );
 }

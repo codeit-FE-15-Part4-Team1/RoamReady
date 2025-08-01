@@ -1,6 +1,6 @@
 export default function ReservationSkeleton() {
   return (
-    <div className='animate=pulse brand-3 border-brand-1 h-fit w-400 rounded-4xl border-1 p-30'>
+    <div className='brand-3 border-brand-1 h-fit w-400 animate-pulse rounded-4xl border-1 p-30'>
       <div className='flex flex-col gap-24'>
         {/* 가격 정보 */}
         <div className='flex items-center gap-8'>
