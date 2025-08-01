@@ -116,7 +116,7 @@ export async function GET(request: NextRequest) {
 
     let responseData;
     if (intent === 'signup') {
-      const arbitraryNickname = `KakaoUser_${Date.now().toString().slice(-6)}`;
+      const arbitraryNickname = `KakaoUser_${crypto.randomUUID().slice(0, 8)}`;
       responseData = await handleOauthSignUp(code, arbitraryNickname);
     } else if (intent === 'signin') {
       responseData = await handleOauthSignIn(code);
@@ -138,7 +138,7 @@ export async function GET(request: NextRequest) {
     });
     return response;
   } catch (error: unknown) {
-    console.error('[Kakao Callback Error]', error);
+    console.error('[Kakao Callback Error]:', error);
 
     const errorStatus =
       error instanceof Error && 'status' in error

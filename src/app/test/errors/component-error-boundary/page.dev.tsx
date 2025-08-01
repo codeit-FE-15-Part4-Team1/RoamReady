@@ -31,7 +31,9 @@ const REVIEWS_PER_PAGE = 3;
 function FailingReviewCard({ review }: { review: Review }) {
   // 고의적으로 에러 발생
   if (review.id === 2) {
-    throw new Error('Test Error: This review card failed to render.');
+    if (process.env.NODE_ENV === 'development') {
+      throw new Error('Test Error: This review card failed to render.');
+    }
   }
 
   return (

@@ -58,7 +58,9 @@ export default function UrlMessageToast() {
       newSearchParams.delete('toast_message');
       newSearchParams.delete('error');
       newSearchParams.delete('message');
-      router.replace(`?${newSearchParams.toString()}`);
+
+      const newQuery = newSearchParams.toString();
+      router.replace(newQuery ? `?${newQuery}` : window.location.pathname);
     }
   }, [searchParams, showInfo, showError, router]);
 
