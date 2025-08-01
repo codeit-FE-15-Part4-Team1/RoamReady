@@ -1,17 +1,17 @@
-import ReservationStatusBadge from './ReservationStatusBadge';
-import ReservationActionButton from './ReservationActionButton';
-import { Reservation } from '@/domain/Reservation/schemas/reservation';
 import Image from 'next/image';
+
+import { Reservation } from '@/domain/Reservation/schemas/reservation';
+
+import ReservationActionButton from './ReservationActionButton';
+import ReservationStatusBadge from './ReservationStatusBadge';
 
 interface ReservationCardProps {
   reservation: Reservation;
-  onCancelReservation?: (reservationId: number) => void;
   onWriteReview?: (reservationId: number) => void;
 }
 
 export default function ReservationCard({
   reservation,
-  onCancelReservation,
   onWriteReview,
 }: ReservationCardProps) {
   return (
@@ -39,7 +39,6 @@ export default function ReservationCard({
             <div onClick={(e) => e.stopPropagation()}>
               <ReservationActionButton
                 reservation={reservation}
-                onCancelReservation={onCancelReservation}
                 onWriteReview={onWriteReview}
                 isDesktop={true}
               />
@@ -60,7 +59,6 @@ export default function ReservationCard({
       </article>
       <ReservationActionButton
         reservation={reservation}
-        onCancelReservation={onCancelReservation}
         onWriteReview={onWriteReview}
         isDesktop={false}
       />

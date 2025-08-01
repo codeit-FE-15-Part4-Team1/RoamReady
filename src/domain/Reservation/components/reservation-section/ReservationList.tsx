@@ -1,6 +1,7 @@
+import { useEffect, useRef } from 'react';
+
 import ReservationCard from '@/domain/Reservation/components/reservation-card/ReservationCard';
 import { Reservation } from '@/domain/Reservation/schemas/reservation';
-import { useEffect, useRef } from 'react';
 
 interface ReservationListProps {
   reservations: Reservation[];

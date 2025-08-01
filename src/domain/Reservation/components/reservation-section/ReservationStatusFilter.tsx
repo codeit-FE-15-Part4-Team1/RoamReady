@@ -1,7 +1,7 @@
 'use client';
 
-import { ReservationStatus } from '@/domain/Reservation/schemas/reservation';
 import { RESERVATION_STATUS_OPTIONS } from '@/domain/Reservation/constants';
+import { ReservationStatus } from '@/domain/Reservation/schemas/reservation';
 import { cn } from '@/shared/libs/cn';
 
 interface ReservationStatusFilterProps {

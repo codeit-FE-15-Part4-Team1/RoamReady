@@ -1,12 +1,11 @@
-import Button from '@/shared/components/Button';
 import { Reservation } from '@/domain/Reservation/schemas/reservation';
+import Button from '@/shared/components/Button';
+
 import CancelReservationModal from './CancelReservationModal';
 import WriteReviewModal from './WriteReviewModal';
-import { MouseEvent } from 'react';
 
 interface ReservationActionButtonProps {
   reservation: Reservation;
-  onCancelReservation?: (reservationId: number) => void;
   onWriteReview?: (reservationId: number) => void;
   isDesktop?: boolean;
 }
@@ -18,7 +17,6 @@ const RESERVATION_ACTIONS = {
 
 export default function ReservationActionButton({
   reservation,
-  onCancelReservation,
   onWriteReview,
   isDesktop = false,
 }: ReservationActionButtonProps) {
@@ -26,16 +24,6 @@ export default function ReservationActionButton({
   const responsiveClass = isDesktop
     ? 'desktop:block hidden'
     : 'desktop:hidden mt-10 w-full py-4';
-
-  const handleCancelReservation = (e: MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    onCancelReservation?.(reservation.id);
-  };
-
-  const handleWriteReview = (e: MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    onWriteReview?.(reservation.id);
-  };
 
   if (reservation.status === 'pending') {
     return (

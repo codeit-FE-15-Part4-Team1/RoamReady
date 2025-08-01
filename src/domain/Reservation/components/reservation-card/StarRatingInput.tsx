@@ -1,8 +1,9 @@
 'use client';
 
+import { useState } from 'react';
+
 import StarIcon from '@/domain/Reservation/components/reservation-card/StarIcon';
 import { cn } from '@/shared/libs/cn';
-import { useState } from 'react';
 
 interface StarRatingInputProps {
   rating: number;

@@ -1,5 +1,6 @@
-import { Activity } from '@/domain/Activity/schemas/main';
 import Image from 'next/image';
+
+import { Activity } from '@/domain/Activity/schemas/main';
 
 interface ExperienceCardProps {
   activity: Activity;

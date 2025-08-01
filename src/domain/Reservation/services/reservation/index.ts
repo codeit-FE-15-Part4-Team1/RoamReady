@@ -1,15 +1,16 @@
 import z from 'zod';
+
 import {
   GetMyReservationsRequest,
-  GetMyReservationsResponse,
   GetMyReservationsRequestSchema,
+  GetMyReservationsResponse,
   GetMyReservationsResponseSchema,
 } from '@/domain/Reservation/schemas/reservation';
 import {
   CreateReservationReview,
   CreateReservationReviewResponse,
-  createReservationReviewSchema,
   createReservationReviewResponseSchema,
+  createReservationReviewSchema,
 } from '@/domain/Reservation/schemas/review';
 import { API_ENDPOINTS } from '@/shared/constants/endpoints';
 import { apiClient } from '@/shared/libs/apiClient';
@@ -22,7 +23,7 @@ export const getMyReservation = async (
 
   // undefined 값을 필터링하여 실제 값이 있는 파라미터만 전송
   const filteredQuery = Object.fromEntries(
-    Object.entries(validatedQuery).filter(([_, value]) => value !== undefined),
+    Object.entries(validatedQuery).filter(([, value]) => value !== undefined),
   );
 
   const response = await apiClient
