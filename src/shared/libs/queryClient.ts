@@ -11,4 +11,14 @@ import { QueryClient } from '@tanstack/react-query';
  * 하위의 모든 `useQuery`, `useMutation` 등의 훅이 동일한 캐시를 공유하고 상호작용할 수 있도록 합니다.
  *
  */
-export const queryClient = new QueryClient();
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5분 동안 데이터를 fresh로 유지
+      gcTime: 10 * 60 * 1000, // 10분 동안 캐시 유지 (이전 cacheTime)
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: 1,
+    },
+  },
+});

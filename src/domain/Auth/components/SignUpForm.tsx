@@ -63,11 +63,12 @@ export default function SignUpForm() {
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupRequestSchema),
     defaultValues: signupDefaultValues,
+    mode: 'onChange',
   });
 
   const {
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isValid },
   } = form;
 
   const { mutate, isPending } = useSignupMutation(form);
@@ -122,11 +123,9 @@ export default function SignUpForm() {
           size='large'
           className='mt-10 w-full py-17.5'
           loading={isSubmitting || isPending}
-          disabled={isSubmitting || isPending}
+          disabled={!isValid}
         >
-          <span>
-            {isSubmitting || isPending ? '회원가입 중...' : '회원가입'}
-          </span>
+          회원가입
         </Button>
       </form>
     </FormProvider>

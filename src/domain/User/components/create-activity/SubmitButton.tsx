@@ -15,7 +15,7 @@ export default function SubmitButton({
         variant='primary'
         loading={isSubmitting}
         size='medium'
-        className='h-40'
+        className='font-size-16 h-40'
         type='submit'
       >
         {isEdit ? '수정하기' : '등록하기'}

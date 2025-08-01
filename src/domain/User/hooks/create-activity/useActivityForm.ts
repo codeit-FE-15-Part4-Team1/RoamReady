@@ -13,6 +13,7 @@ import {
   updateActivity,
   uploadActivityImages,
 } from '@/domain/User/services/create-activity';
+import { ROUTES } from '@/shared/constants/routes';
 
 // ✨ 타입 정의 추가
 interface SubImage {
@@ -255,8 +256,7 @@ export const useActivityForm = () => {
         await createActivity(finalFormData);
       }
 
-      methods.reset();
-      router.push('/');
+      router.push(ROUTES.ACTIVITIES.ROOT);
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : '서버 오류가 발생했습니다.';
