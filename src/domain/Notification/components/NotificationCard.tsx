@@ -3,7 +3,7 @@
 import { InfiniteData } from '@tanstack/react-query';
 import { Calendar, Timer, X } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useMemo, useRef } from 'react';
+import { createRef, useEffect, useMemo, useRef, useState } from 'react';
 
 import { getTimeAgo } from '@/domain/Activity/utils/getTimeAgo';
 import NotificationSkeleton from '@/domain/Notification/components/NotificationSkeleton';
@@ -60,6 +60,22 @@ export default function NotificationCard({
   isFetchingNextPage,
 }: NotificationCardProps) {
   const observerRef = useRef<HTMLDivElement | null>(null);
+  const scrollRef = useRef<HTMLUListElement | null>(null);
+  const [itemRefs, setItemRefs] = useState<React.RefObject<HTMLLIElement>[]>(
+    [],
+  );
+
+  const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const next = itemRefs[index + 1];
+      if (next?.current) next.current.focus();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const prev = itemRefs[index - 1];
+      if (prev?.current) prev.current.focus();
+    }
+  };
 
   const content = useMemo(() => {
     const all = notification?.pages.flatMap((page) => page.notifications) ?? [];
@@ -73,17 +89,21 @@ export default function NotificationCard({
 
   const totalCount = notification?.pages[0]?.totalCount ?? 0;
 
-  const sortedContent = useMemo(
-    () =>
-      [...content].sort(
-        (a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt),
-      ),
-    [content],
-  );
+  useEffect(() => {
+    // 항목 수만큼 ref 배열 새로 할당
+    setItemRefs((refs) =>
+      Array(content.length)
+        .fill(null)
+        .map((_, i) => refs[i] || createRef<HTMLLIElement>()),
+    );
+  }, [content.length]);
 
   useEffect(() => {
     const target = observerRef.current;
-    if (!target || !hasNextPage || isFetchingNextPage) return;
+    const scrollContainer = scrollRef.current;
+
+    if (!target || !scrollContainer || !hasNextPage || isFetchingNextPage)
+      return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -91,13 +111,15 @@ export default function NotificationCard({
           fetchNextPage();
         }
       },
-      { threshold: 1.0 },
+      {
+        root: scrollContainer,
+        threshold: 0.1, // 감지 민감도 증가
+      },
     );
 
     observer.observe(target);
 
     return () => {
-      observer.unobserve(target);
       observer.disconnect();
     };
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
@@ -113,8 +135,8 @@ export default function NotificationCard({
       </div>
 
       {/* 알림 리스트 */}
-      <ul className='scrollbar-none max-h-260 overflow-y-auto'>
-        {sortedContent.map((item) => {
+      <ul ref={scrollRef} className='scrollbar-none max-h-260 overflow-y-auto'>
+        {content.map((item, index) => {
           const time = getTimeAgo(item.updatedAt);
 
           // 알림 내용에서 상태(거절/승인) 판별
@@ -130,6 +152,9 @@ export default function NotificationCard({
 
           return (
             <li
+              ref={itemRefs[index]}
+              tabIndex={0}
+              onKeyDown={(e) => handleKeyDown(e, index)}
               key={item.id}
               className={`cursor-pointer p-3 ${
                 isRejected
@@ -166,17 +191,14 @@ export default function NotificationCard({
             </li>
           );
         })}
-
         {/* 무한스크롤 트리거용 sentinel */}
         {hasNextPage && (
           <li>
             <div ref={observerRef} className='h-10' />
           </li>
         )}
-
         {/* 로딩 표시 */}
         {isFetchingNextPage && <NotificationSkeleton />}
-
         {!hasNextPage && null}
       </ul>
     </div>
