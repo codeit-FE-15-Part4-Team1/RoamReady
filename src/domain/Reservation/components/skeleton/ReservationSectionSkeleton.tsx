@@ -59,7 +59,7 @@ export function ReservationListSkeleton() {
   );
 }
 
-export default function ReservationSectionSkeleton({}: {}) {
+export default function ReservationSectionSkeleton() {
   return (
     <>
       <ReservationStatusFilterSkeleton />
