@@ -133,7 +133,7 @@ export const useActivityForm = () => {
       };
       fetchActivity();
     }
-  }, [isEdit, id, methods, showError]);
+  }, [isEdit, id, methods]);
 
   const handleRemoveBannerImage = () => {
     setExistingImageUrls((prev) => ({
