@@ -30,10 +30,7 @@ export default function ReservationCalendarSkeleton() {
         {/* 날짜 그리드 스켈레톤 */}
         <div className='grid auto-rows-fr grid-cols-7' role='grid'>
           {Array.from({ length: 35 }).map((_, index) => (
-            <DayCellSkeleton
-              key={index}
-              isOutOfMonth={index < 3 || index > 30}
-            />
+            <DayCellSkeleton key={index} />
           ))}
         </div>
       </div>
