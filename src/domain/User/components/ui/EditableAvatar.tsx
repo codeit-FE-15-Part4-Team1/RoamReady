@@ -8,7 +8,6 @@ import { useImageCompression } from '@/shared/hooks/useImageCompression';
 import { cn } from '@/shared/libs/cn';
 
 import { useProfileImageMutation } from '../../hooks/useProfileImageMutation';
-import AvatarEditButton from './AvatarEditButton';
 
 /**
  * EditableAvatar 컴포넌트의 props
@@ -105,12 +104,6 @@ export default function EditableAvatar({
         size='lg'
         isLoading={isLoading}
       />
-      <div className='absolute right-0 bottom-[15%]'>
-        <AvatarEditButton
-          onFileChange={handleImageFileChange}
-          isLoading={isLoading}
-        />
-      </div>
     </div>
   );
 }

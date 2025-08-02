@@ -10,7 +10,10 @@ import EditUserInfoForm from '@/domain/User/components/form/EditUserInfoForm';
 export default function MyInfoPage() {
   return (
     <div>
-      <MyPageContentHeader title='내 정보' />
+      <MyPageContentHeader
+        title='내 정보'
+        description='회원 정보를 수정할 수 있습니다.'
+      />
 
       <EditUserInfoForm />
     </div>
