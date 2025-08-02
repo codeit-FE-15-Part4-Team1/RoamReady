@@ -2,7 +2,7 @@
 
 import { useMutation } from '@tanstack/react-query';
 import { memo, useCallback, useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import StarRatingInput from '@/domain/Reservation/components/reservation-card/StarRatingInput';
 import { Reservation } from '@/domain/Reservation/schemas/reservation';
@@ -15,8 +15,6 @@ import { queryClient } from '@/shared/libs/queryClient';
 
 // 별도 컴포넌트로 분리하여 불필요한 리렌더링 방지
 const ReviewTextarea = memo(() => {
-  const content = useWatch({ name: 'content' }) || '';
-
   return (
     <Input.Root name='content' type='textarea' maxLength={1000}>
       <Input.Label className='font-size-14 desktop:font-size-16 font-semibold text-neutral-800'>
