@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 import MyActivityCard from '@/domain/Reservation/components/my-activity-card/MyActivityCard';
+import { MyActivityListSkeleton } from '@/domain/Reservation/components/skeleton/MyActivitySectionSkeleton';
 import { Activity } from '@/domain/Reservation/schemas/activity';
 
 interface MyActivityListProps {
@@ -46,13 +47,8 @@ export default function MyActivityList({
         </div>
       ))}
       {hasNextPage && (
-        <div
-          ref={observerRef}
-          className='flex h-20 items-center justify-center'
-        >
-          {isFetchingNextPage && (
-            <div className='text-gray-500'>로딩 중...</div>
-          )}
+        <div ref={observerRef}>
+          {isFetchingNextPage && <MyActivityListSkeleton />}
         </div>
       )}
     </div>

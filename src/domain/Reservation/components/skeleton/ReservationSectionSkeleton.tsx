@@ -11,7 +11,7 @@ function ReservationStatusFilterSkeleton() {
   );
 }
 
-function ReservationCardSkeleton() {
+export function ReservationCardSkeleton() {
   return (
     <article className='border-brand-1 flex rounded-3xl border bg-white shadow-lg'>
       <section className='desktop:px-40 flex-1 p-20 py-30'>
@@ -25,7 +25,7 @@ function ReservationCardSkeleton() {
   );
 }
 
-function ReservationListSkeleton() {
+export function ReservationListSkeleton() {
   return (
     <div className='space-y-16'>
       {[1, 2, 3].map((i) => (

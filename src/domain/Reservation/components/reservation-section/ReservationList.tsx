@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 import ReservationCard from '@/domain/Reservation/components/reservation-card/ReservationCard';
+import { ReservationListSkeleton } from '@/domain/Reservation/components/skeleton/ReservationSectionSkeleton';
 import { Reservation } from '@/domain/Reservation/schemas/reservation';
 
 interface ReservationListProps {
@@ -43,13 +44,8 @@ export default function ReservationList({
         </div>
       ))}
       {hasNextPage && (
-        <div
-          ref={observerRef}
-          className='flex h-20 items-center justify-center'
-        >
-          {isFetchingNextPage && (
-            <div className='text-gray-500'>로딩 중...</div>
-          )}
+        <div ref={observerRef}>
+          {isFetchingNextPage && <ReservationListSkeleton />}
         </div>
       )}
     </div>
