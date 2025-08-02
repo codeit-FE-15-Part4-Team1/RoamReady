@@ -26,7 +26,7 @@
   .clamp-multiline {
     display: -webkit-box; /* flexbox와 비슷한 방식으로 요소를 줄 단위로 배치 */
     -webkit-box-orient: vertical; /* 박스의 방향을 수직으로 설정 (줄바꿈 가능) */
-    -webkit-line-clamp: 3; /* 최대 3줄까지만 표시하고 그 이후는 잘라냄 */
+    -webkit-line-clamp: 5; /* 최대 5줄까지만 표시하고 그 이후는 잘라냄 */
     overflow: hidden; /* 넘친 내용 숨김 */
     text-overflow: ellipsis; /* 잘린 부분을 ...으로 표시 */
   }

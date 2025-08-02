@@ -58,7 +58,7 @@ export default function ExpandableReview({ text }: ExpandableReviewProps) {
       {/* 리뷰 본문 텍스트 */}
       <p
         ref={contentRef}
-        className={`font-size-16 line-height-1.5 transition-height font-medium text-gray-950 duration-500 ease-in-out ${
+        className={`font-size-16 line-height-1.5 transition-height font-medium break-words whitespace-pre-line text-gray-950 duration-500 ease-in-out ${
           isExpanded ? 'clamp-none' : 'clamp-multiline'
         }`}
       >
