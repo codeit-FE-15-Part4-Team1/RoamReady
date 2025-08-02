@@ -9,7 +9,7 @@ export const ROUTES = {
     ROOT: '/mypage',
     EXPERIENCES: '/mypage/experiences',
     EXPERIENCES_DELETE: '/mypage/experiences/delete',
-    EXPERIENCES_EDIT: '/mypage/experiences/edit',
+    EXPERIENCES_EDIT: (id: number) => `/mypage/experiences/edit/${id}`,
     INFO: '/mypage/info',
     RESERVATIONS: '/mypage/reservations',
     RESERVATIONS_STATUS: '/mypage/reservations-status',

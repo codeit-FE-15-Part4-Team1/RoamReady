@@ -1,12 +1,13 @@
 'use client';
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 
 import { PopoverOpenEffect } from '@/domain/Notification/components/PopoverOpenEffect';
 import { useInfiniteNotifications } from '@/domain/Notification/hooks/useInfiniteNotifications';
 import type { Notification } from '@/domain/Notification/types/type';
 import Popover from '@/shared/components/ui/popover';
 import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
+import { useRoamReadyStore } from '@/shared/store';
 
 import NotificationCard from './NotificationCard';
 
@@ -28,47 +29,35 @@ export default function Notification() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteNotifications();
 
-  const [hasNewNotification, setHasNewNotification] = useState(false);
-  const hasSavedOnce = useRef(false);
+  const isNewNotification = useRoamReadyStore(
+    (state) => state.isNewNotification,
+  );
 
-  // 알림 데이터 처음 받아왔을 때 localStorage에 저장 (최초 1회만)
-  useEffect(() => {
-    if (!data || hasSavedOnce.current) return;
-    const allIds = data.pages.flatMap((page) =>
-      page.notifications.map((n) => n.id),
-    );
-    try {
-      localStorage.setItem('readNotifications', JSON.stringify(allIds));
-      hasSavedOnce.current = true;
-    } catch (error) {
-      console.warn('localStorage 저장 실패:', error);
-      // localStorage 사용 불가 시에도 기본 동작은 유지
-      hasSavedOnce.current = true;
-    }
-  }, [data]);
+  const hasNewNotification = useRoamReadyStore((s) => s.hasNewNotification);
+  const setHasNewNotification = useRoamReadyStore(
+    (s) => s.setHasNewNotification,
+  );
 
-  // polling 될 때마다 localStorage와 비교해서 새로운 알림 여부 체크
   useEffect(() => {
     if (!data) return;
-    const currentIds = data.pages.flatMap((page) =>
+
+    const ids = data.pages.flatMap((page) =>
       page.notifications.map((n) => n.id),
     );
-    let storedIds: number[] = [];
-    try {
-      const storedRaw = localStorage.getItem('readNotifications');
-      storedIds = storedRaw ? JSON.parse(storedRaw) : [];
 
-      // 배열이 아닌 경우 빈 배열로 초기화
-      if (!Array.isArray(storedIds)) {
-        storedIds = [];
-      }
-    } catch (error) {
-      console.warn('localStorage 읽기 실패:', error);
-      storedIds = [];
+    const result = isNewNotification(ids);
+    if (hasNewNotification !== result) {
+      setHasNewNotification(result);
     }
-    const newIds = currentIds.filter((id) => !storedIds.includes(id));
-    setHasNewNotification(newIds.length > 0);
-  }, [data]);
+  }, [data, isNewNotification, hasNewNotification, setHasNewNotification]);
+
+  useEffect(() => {
+    if (!data) return;
+    const ids = data.pages.flatMap((page) =>
+      page.notifications.map((n) => n.id),
+    );
+    setHasNewNotification(isNewNotification(ids));
+  }, [data, isNewNotification]);
 
   return (
     <Popover.Root>
@@ -84,10 +73,7 @@ export default function Notification() {
         position={isMobile ? 'bottom-center' : 'bottom-end'}
         className='scrollbar-none max-h-320 rounded-3xl border-none p-0 shadow-[0_4px_20px_rgba(0,0,0,0.1)]'
       >
-        <PopoverOpenEffect
-          data={data}
-          setHasNewNotification={setHasNewNotification}
-        />
+        <PopoverOpenEffect data={data} />
         <NotificationCard
           fetchNextPage={fetchNextPage}
           hasNextPage={hasNextPage}

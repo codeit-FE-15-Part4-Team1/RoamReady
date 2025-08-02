@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import { MouseEvent } from 'react';
 
 import { useDeleteNotification } from '@/domain/Notification/hooks/useDeleteNotification';
+import { useRoamReadyStore } from '@/shared/store';
 
 /**
  * NotificationDelete 컴포넌트
@@ -18,6 +19,7 @@ import { useDeleteNotification } from '@/domain/Notification/hooks/useDeleteNoti
  */
 export default function NotificationDelete({ id }: { id: number }) {
   const { mutate: deleteNotification } = useDeleteNotification();
+  const { removeReadId } = useRoamReadyStore();
 
   const handleDelete = async (e: MouseEvent<HTMLButtonElement>) => {
     console.log('삭제 버튼 클릭');
@@ -25,11 +27,7 @@ export default function NotificationDelete({ id }: { id: number }) {
     e.stopPropagation();
     deleteNotification(id);
 
-    // localStorage에서 제거
-    const storedRaw = localStorage.getItem('readNotifications');
-    const stored = storedRaw ? JSON.parse(storedRaw) : [];
-    const updated = stored.filter((storedId: number) => storedId !== id);
-    localStorage.setItem('readNotifications', JSON.stringify(updated));
+    removeReadId(id); // 알림 Id 제거
   };
 
   return (

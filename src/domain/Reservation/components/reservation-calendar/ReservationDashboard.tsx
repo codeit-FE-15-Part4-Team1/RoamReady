@@ -5,7 +5,9 @@ import { useState } from 'react';
 
 import ReservationCalendar from '@/domain/Reservation/components/reservation-calendar/ReservationCalendar';
 import ReservationSelect from '@/domain/Reservation/components/reservation-calendar/ReservationSelect';
+import ReservationSkeleton from '@/domain/Reservation/components/reservation-calendar/ReservationSkeleton';
 import { getReservationDashboard } from '@/domain/Reservation/services/reservation-calendar';
+import Nothing from '@/shared/components/ui/nothing';
 
 import type { Activity } from '../../types/reservation';
 
@@ -52,14 +54,14 @@ export default function ReservationDashboard({
     setCurrentDate(newDate);
   };
 
-  if (isLoading)
+  if (isLoading) return <ReservationSkeleton />;
+  if (isError) return <div> 오류가 발생했습니다.</div>;
+  if (!initialActivities.length)
     return (
-      //너무 짧아서 스켈레톤으로 해야할지 고민중..
-      <div className='flex h-full items-center justify-center'>
-        캘린더를 불러오는 중입니다..
+      <div>
+        <Nothing type='activity' />
       </div>
     );
-  if (isError) return <div> 오류가 발생했습니다.</div>;
 
   return (
     <>

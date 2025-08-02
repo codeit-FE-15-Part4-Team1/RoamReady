@@ -50,7 +50,7 @@ export default function LikeButton({ activity }: LikeButtonProps) {
       setLikes(newLikes);
       setFilled(!isLiked);
     },
-    [user, activityId],
+    [activityId],
   );
 
   return user ? (

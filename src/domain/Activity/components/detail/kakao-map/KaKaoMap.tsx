@@ -1,7 +1,10 @@
 'use client';
 
+import { Check, Copy } from 'lucide-react';
+
 import { useKakaoMap } from '@/domain/Activity/hooks/detail/useKakaoMap';
 import LogoSymbol from '@/shared/assets/logos/LogoSymbol';
+import { useClipboard } from '@/shared/hooks/useClipboard';
 import { cn } from '@/shared/libs/cn';
 
 import KaKaoMapSkeleton from '../skeleton/KaKaoMapSkeleton';
@@ -39,13 +42,39 @@ export default function KaKaoMap({
   address: string;
 }) {
   const { isLoading, error, finalAddress } = useKakaoMap(address);
+  const { copied, copy } = useClipboard();
 
   return (
     <div className='flex flex-col gap-8'>
-      {/* 지도 상단에 표시되는 주소 */}
-      <h3 className='font-size-14 text-base font-semibold text-gray-700'>
-        {finalAddress}
-      </h3>
+      {/* 지도 상단에 표시되는 주소 + 복사 버튼 */}
+      <div className='flex items-center gap-10'>
+        <h3 className='font-size-16 text-base font-semibold text-gray-700'>
+          {finalAddress}
+        </h3>
+
+        {/* 복사 버튼 영역 - 우측 상단에 위치 */}
+        <button
+          onClick={() => copy(finalAddress)}
+          className='flex cursor-pointer items-center text-gray-500 transition-colors hover:text-gray-950'
+          aria-label={copied ? '주소가 복사되었습니다' : '주소 복사하기'}
+        >
+          {copied ? (
+            // 복사 완료 상태 - 체크 아이콘과 피드백 텍스트
+            <>
+              <Check className='mr-2 h-13 w-13' />
+              <span className='sr-only'>복사됨</span>
+              <span className='font-size-12'>복사됨</span>
+            </>
+          ) : (
+            // 기본 상태 - 복사 아이콘과 안내 텍스트
+            <>
+              <Copy className='mr-2 h-13 w-13' />
+              <span className='sr-only'>복사</span>
+              <span className='font-size-12'>복사</span>
+            </>
+          )}
+        </button>
+      </div>
 
       {/* 로딩 중일 때 Skeleton UI */}
       {isLoading ? (
@@ -58,7 +87,7 @@ export default function KaKaoMap({
             className,
           )}
         >
-          <div className='flex flex-col items-center justify-center gap-20'>
+          <div className='flex-col-center gap-20'>
             <LogoSymbol className='h-130 w-130' />
             {error === 'map' && '지도를 불러오는 중 오류가 발생했습니다.'}
             {error === 'address' && '해당 위치를 찾을 수 없습니다.'}

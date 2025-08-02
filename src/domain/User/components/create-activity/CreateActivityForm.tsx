@@ -32,7 +32,12 @@ export default function CreateActivityForm({
     handleRemoveBannerImage,
   } = useActivityForm();
 
+  const {
+    formState: { errors },
+  } = methods;
   const { isDirty } = methods.formState;
+
+  console.log('errors', errors);
 
   useEffect(() => {
     if (onDirtyChange) {
@@ -92,6 +97,15 @@ export default function CreateActivityForm({
 
         <SubmitButton isSubmitting={isSubmitting} isEdit={isEdit} />
       </form>
+      {/* 전체 폼 에러 표시 */}
+      {(() => {
+        const scheduleError = errors.schedules?.root?.message;
+        return scheduleError ? (
+          <p className='font-size-16 text-red font-bold'>
+            {String(scheduleError)}
+          </p>
+        ) : null;
+      })()}
       {submittingError && (
         <p className='font-size-16 text-red font-bold'>{submittingError}</p>
       )}

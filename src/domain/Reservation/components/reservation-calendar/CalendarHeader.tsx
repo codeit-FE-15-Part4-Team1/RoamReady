@@ -14,7 +14,7 @@ export default function CalendarHeader({
   onNextMonth,
 }: CalendarHeaderProps) {
   return (
-    <div className='flex items-center justify-center gap-[1.5rem] py-20 text-3xl'>
+    <div className='flex-center gap-[1.5rem] py-20 text-3xl'>
       <button
         type='button'
         onClick={onPrevMonth}

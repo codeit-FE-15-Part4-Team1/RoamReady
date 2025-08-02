@@ -22,11 +22,21 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
 
   return (
     <ClientSessionProvider initialUser={user}>
-      <div className='flex min-h-screen flex-col'>
+      <div className='flex min-h-[100dvh] flex-col'>
         <Header user={user} />
-        <main className='flex-grow'>{children}</main>
+        <main className='tablet:px-32 desktop:px-40 mx-auto w-full max-w-1920 flex-1 px-24 py-20'>
+          {children}
+        </main>
         <Footer />
       </div>
     </ClientSessionProvider>
+
+    // <div className='flex min-h-[100dvh] flex-col'>
+    //   <Header />
+    //   <main className='tablet:px-32 desktop:px-40 mx-auto w-full max-w-1920 flex-1 px-24 py-20'>
+    //     <AuthStatusProvider>{children}</AuthStatusProvider>
+    //   </main>
+    //   <Footer />
+    // </div>
   );
 }

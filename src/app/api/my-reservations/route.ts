@@ -10,8 +10,20 @@ import { API_ENDPOINTS } from '@/shared/constants/endpoints';
 export const dynamic = 'force-dynamic';
 
 // GET 요청을 처리하는 함수
-export const GET = async () => {
+export const GET = async (request: Request) => {
   console.log('✅ /api/my-reservations GET 핸들러에 도달했습니다!');
+
+  // URL에서 쿼리 파라미터를 추출합니다
+  const { searchParams } = new URL(request.url);
+  const cursorId = searchParams.get('cursorId');
+  const size = searchParams.get('size');
+  const status = searchParams.get('status');
+
+  // 쿼리 파라미터를 URLSearchParams로 구성합니다
+  const queryParams = new URLSearchParams();
+  if (cursorId) queryParams.append('cursorId', cursorId);
+  if (size) queryParams.append('size', size);
+  if (status) queryParams.append('status', status);
 
   // 서버 컴포넌트나 라우트 핸들러에서 쿠키를 가져옵니다.
   const cookieStore = await cookies();
@@ -27,17 +39,16 @@ export const GET = async () => {
 
   try {
     // 외부 API로 요청을 보냅니다.
-    const response = await fetch(
-      // 환경 변수에서 API 기본 URL과 엔드포인트를 조합합니다.
-      `${process.env.API_BASE_URL}${API_ENDPOINTS.MY_RESERVATIONS.BASE}`,
-      {
-        method: 'GET',
-        headers: {
-          // Bearer 토큰 방식으로 인증 정보를 전달합니다.
-          Authorization: `Bearer ${accessToken}`,
-        },
+    const apiUrl = `${process.env.API_BASE_URL}${API_ENDPOINTS.MY_RESERVATIONS.BASE}${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    console.log('🔗 요청 URL:', apiUrl);
+
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        // Bearer 토큰 방식으로 인증 정보를 전달합니다.
+        Authorization: `Bearer ${accessToken}`,
       },
-    );
+    });
 
     // 외부 API로부터의 응답이 성공적이지 않은 경우 (상태 코드 200-299 범위 밖)
     if (!response.ok) {
@@ -57,6 +68,7 @@ export const GET = async () => {
 
     // 성공적으로 응답을 받으면 JSON 데이터를 파싱합니다.
     const data = await response.json();
+    console.log('📦 백엔드 응답 데이터:', JSON.stringify(data, null, 2));
 
     // 파싱된 데이터를 클라이언트에 반환합니다.
     return NextResponse.json(data);

@@ -13,6 +13,7 @@ import {
 import { BottomSheet } from '@/shared/components/ui/bottom-sheet';
 import Popover from '@/shared/components/ui/popover';
 import Tabs from '@/shared/components/ui/tabs';
+import { useToast } from '@/shared/hooks/useToast';
 
 import type {
   Reservation,
@@ -32,23 +33,6 @@ interface DayCellProps {
   displayMode?: 'popover' | 'bottomsheet'; // 🔥 UI 모드 선택
 }
 
-// // Popover 닫기 버튼
-// const PopoverCloseButton = () => {
-//   const { setIsOpen } = usePopover();
-//   return (
-//     <button type='button' onClick={() => setIsOpen(false)}>
-//       <X className='size-15 cursor-pointer font-bold' />
-//     </button>
-//   );
-// };
-
-// // BottomSheet 닫기 버튼
-// const BottomSheetCloseButton = ({ onClose }: { onClose: () => void }) => (
-//   <button type='button' onClick={onClose}>
-//     <X className='size-15 cursor-pointer font-bold' />
-//   </button>
-// );
-
 export default function DayCell({
   day,
   isCurrentMonth,
@@ -65,6 +49,7 @@ export default function DayCell({
 
   // BottomSheet용 상태
   const [isOpen, setIsOpen] = useState(false);
+  const { showSuccess } = useToast();
 
   const [activeTab, setActiveTab] = useState<
     'pending' | 'confirmed' | 'declined'
@@ -72,7 +57,7 @@ export default function DayCell({
 
   const styles = useMemo(() => {
     const cellClasses = `
-      relative flex min-w-[9rem] min-h-[12rem] cursor-pointer flex-col items-center py-12 cursor-pointer font-size-14
+      relative flex aspect-square cursor-pointer flex-col items-center justify-start p-1 md:p-2 text-center font-size-14
       hover:bg-gray-50 
       ${!isLastRow ? 'border-b-[0.05rem] border-gray-100' : ''} 
       ${!isCurrentMonth ? 'bg-neutral-200 text-gray-400 opacity-50' : ''} 
@@ -100,8 +85,6 @@ export default function DayCell({
       getSchedulesByDate(selectedActivityId!, day.format('YYYY-MM-DD')),
     enabled: !!selectedActivityId,
   });
-
-  console.log('schedules', schedules);
 
   // 스케줄 데이터가 로드되면 첫 번째 스케줄을 선택
   useEffect(() => {
@@ -205,16 +188,18 @@ export default function DayCell({
         (r) => r.scheduleId === scheduleId && r.id !== reservationId,
       );
       approveAndDecline({ reservationId, scheduleId, reservationsToDecline });
+      showSuccess('승인되었습니다.');
     },
-    [approveAndDecline, isApproving, reservationsByStatus.pending],
+    [approveAndDecline, isApproving, reservationsByStatus.pending, showSuccess],
   );
 
   const handleReject = useCallback(
     (reservationId: number) => {
       if (isRejecting) return;
       reject({ reservationId });
+      showSuccess('거절되었습니다.');
     },
-    [reject, isRejecting],
+    [reject, isRejecting, showSuccess],
   );
 
   const handleTimeSlotSelect = useCallback(async (scheduleId: number) => {
@@ -235,10 +220,6 @@ export default function DayCell({
       },
       { pending: 0, confirmed: 0, declined: 0 },
     ) ?? { pending: 0, confirmed: 0, declined: 0 };
-
-    if (day.isBefore(dayjs(), 'day')) {
-      counts.pending = 0;
-    }
 
     return counts;
   }, [schedules, day]);
@@ -270,28 +251,45 @@ export default function DayCell({
       className={styles.cellClasses}
       onClick={() => setIsOpen(true)}
     >
+      {/* 반응형 알림 점 */}
       {displayItems.length > 0 && (
-        <div className='absolute top-[10%] left-[60%] size-6 rounded-full bg-red-500' />
+        <div className='tablet:right-[25%] desktop:right-[30%] absolute top-5 right-[20%] size-4 rounded-full bg-red-500 md:size-5' />
       )}
-      <div className={`${styles.dateClasses} font-size-16`}>
+
+      {/* 반응형 날짜 폰트 */}
+      <div className={`${styles.dateClasses} font-size-14 md:font-size-16`}>
         {day.format('D')}
       </div>
-      <div className='mt-1 flex w-full flex-col items-center space-y-1'>
-        {displayItems.map((item, index) => (
-          <div
-            key={`${reservation?.date}-${item.status}-${index}`}
-            className={`font-size-14 w-[90%] truncate rounded-xl px-1 text-center font-medium ${getColorClassByStatus(item.status)}`}
-          >
-            {STATUS_LABELS[item.status]} {item.count}명
+
+      <div className='mt-1 flex w-full flex-col items-center space-y-1 overflow-hidden'>
+        {/* --- 모바일 뷰 (md 사이즈 미만) --- */}
+        {displayItems.length > 0 && (
+          <div className='w-full text-center md:hidden'>
+            <div
+              className={`font-size-10 inline-block w-[90%] truncate rounded-xl px-1 font-medium ${getColorClassByStatus(displayItems[0].status)}`}
+            >
+              {STATUS_LABELS[displayItems[0].status]} {displayItems[0].count}명
+            </div>
           </div>
-        ))}
+        )}
+
+        {/* --- 데스크톱 뷰 (md 사이즈 이상) --- */}
+        <div className='hidden w-full flex-col items-center space-y-1 md:flex'>
+          {displayItems.map((item, index) => (
+            <div
+              key={`${reservation?.date}-${item.status}-${index}-desktop`}
+              className={`font-size-12 md:font-size-14 w-[90%] truncate rounded-xl px-1 text-center font-medium ${getColorClassByStatus(item.status)}`}
+            >
+              {STATUS_LABELS[item.status]} {item.count}명
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
-
   // 공통 콘텐츠 UI
   const contentUI = (
-    <div className='tablet:min-w-[40rem] h-full space-y-3 p-10'>
+    <div className='tablet:min-w-[32rem] h-full space-y-3 p-10'>
       <div className='flex items-center justify-between'>
         <div className='flex items-end gap-5'>
           <h3 className='font-size-20 font-bold text-gray-900'>

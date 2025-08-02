@@ -7,15 +7,7 @@ import { API_ENDPOINTS } from './shared/constants/endpoints';
 
 const BACKEND_URL = process.env.API_BASE_URL;
 
-const protectedPageRoutes = [
-  ROUTES.MYPAGE.ROOT,
-  ROUTES.MYPAGE.EXPERIENCES,
-  ROUTES.MYPAGE.EXPERIENCES_DELETE,
-  ROUTES.MYPAGE.EXPERIENCES_EDIT,
-  ROUTES.MYPAGE.INFO,
-  ROUTES.MYPAGE.RESERVATIONS,
-  ROUTES.MYPAGE.RESERVATIONS_STATUS,
-];
+const protectedPageRoutes = [ROUTES.MYPAGE.ROOT];
 
 /**
  * @file middleware.ts - 페이지 보호, API 요청 프록시 및 인증 토큰 관리 미들웨어
