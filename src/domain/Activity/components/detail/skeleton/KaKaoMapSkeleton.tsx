@@ -8,7 +8,7 @@ export default function KaKaoMapSkeleton({
   return (
     <div
       className={cn(
-        'h-300 w-full animate-pulse rounded-3xl border-none bg-gray-100',
+        'tablet:h-450 bg-brand-1 h-250 w-full animate-pulse rounded-3xl border-none',
         className,
       )}
     />

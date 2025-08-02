@@ -21,6 +21,21 @@
   .scrollbar-none::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
   }
+
+  /* 여러 줄 텍스트를 3줄로 줄임 처리하기 위한 클래스 */
+  .clamp-multiline {
+    display: -webkit-box; /* flexbox와 비슷한 방식으로 요소를 줄 단위로 배치 */
+    -webkit-box-orient: vertical; /* 박스의 방향을 수직으로 설정 (줄바꿈 가능) */
+    -webkit-line-clamp: 5; /* 최대 5줄까지만 표시하고 그 이후는 잘라냄 */
+    overflow: hidden; /* 넘친 내용 숨김 */
+    text-overflow: ellipsis; /* 잘린 부분을 ...으로 표시 */
+  }
+
+  /* 텍스트를 전부 보여주기 위한 클래스 */
+  .clamp-none {
+    display: block; /* 기본 블록 요소로 표시 */
+    overflow: visible; /* 넘친 내용도 모두 표시 */
+  }
 }
 
 @layer base {

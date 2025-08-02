@@ -60,27 +60,26 @@ export default function ActivityImg({
     setIsOpen(true);
   };
 
-  // 이미지가 없을 경우 렌더링하지 않음
-  if (!subImages || subImages.length === 0) return null;
+  if (!bannerImage || bannerImage.trim() === '') return null;
 
   // 이미지가 1장일 경우: 전체 너비 이미지 하나만 렌더링
-  if (subImages.length === 1) {
+  if (images.length === 1 && images[0]) {
     return (
       <div className='tablet:h-400 relative h-220 w-full overflow-hidden rounded-xl'>
         <Image
-          src={subImages[0].imageUrl}
+          src={images[0]}
           alt='Activity Image'
           fill
           className={COMMON_IMAGE_CLASS}
           priority
           role='button'
           aria-label='이미지 확대 보기'
-          onClick={() => handleClick(1)}
+          onClick={() => handleClick(0)}
         />
         {isOpen && (
           <ImageModal
             images={images}
-            initialIndex={1}
+            initialIndex={0}
             onClose={() => setIsOpen(false)}
           />
         )}
@@ -89,27 +88,25 @@ export default function ActivityImg({
   }
 
   // 이미지가 2장일 경우: 나란히 두 개 렌더링
-  if (subImages.length === 2) {
+  if (images.length === 2) {
     return (
       <div className='flex gap-4'>
-        {[bannerImage, ...subImages.map((img) => img.imageUrl)]
-          .slice(0, 3)
-          .map((src, index) => (
-            <div
-              key={index}
-              className='tablet:h-400 relative h-220 w-full overflow-hidden rounded-xl'
-              onClick={() => handleClick(index)}
-              role='button'
-              aria-label={`이미지 ${index + 1} 확대 보기`}
-            >
-              <Image
-                src={src}
-                alt='Activity Image'
-                fill
-                className={COMMON_IMAGE_CLASS}
-              />
-            </div>
-          ))}
+        {images.slice(0, 3).map((src, index) => (
+          <div
+            key={index}
+            className='tablet:h-400 relative h-220 w-full overflow-hidden rounded-xl'
+            onClick={() => handleClick(index)}
+            role='button'
+            aria-label={`이미지 ${index + 1} 확대 보기`}
+          >
+            <Image
+              src={src}
+              alt='Activity Image'
+              fill
+              className={COMMON_IMAGE_CLASS}
+            />
+          </div>
+        ))}
         {isOpen && (
           <ImageModal
             images={images}
@@ -122,7 +119,7 @@ export default function ActivityImg({
   }
 
   // 이미지가 3장일 경우: 1개는 왼쪽 세로, 2개는 오른쪽 세로로 나열
-  if (subImages.length === 3) {
+  if (images.length === 3) {
     return (
       <div className='flex gap-4'>
         {/* 첫 번째 이미지는 큰 영역 차지 */}
@@ -171,43 +168,41 @@ export default function ActivityImg({
   }
 
   // 이미지가 4장이상일 경우: 2행 2열의 그리드로 배치, 마지막 이미지에 나머지 수 표시
-  if (subImages.length >= 4) {
+  if (images.length >= 4) {
     return (
       <div
         className='tablet:h-410 grid h-220 w-full grid-cols-2 grid-rows-2 gap-4'
         role='list'
         aria-label='이미지 미리보기 목록'
       >
-        {[bannerImage, ...subImages.map((img) => img.imageUrl)]
-          .slice(0, 4)
-          .map((src, index) => (
-            <div
-              key={index}
-              className='relative h-full w-full cursor-pointer overflow-hidden rounded-xl'
-              onClick={() => handleClick(index)}
-              role='button'
-              aria-label={`이미지 ${index + 1} 확대 보기`}
-            >
-              <Image
-                src={src}
-                alt='Activity Image'
-                fill
-                className={COMMON_IMAGE_CLASS}
-              />
-              {index === 3 && subImages.length > 3 && (
-                <div className='flex'>
-                  <span
-                    role='button'
-                    aria-label={`추가 이미지 ${subImages.length - 3}장 더 보기`}
-                    className='font-size-24 absolute inset-0 flex items-center justify-center bg-black/50 font-bold text-white hover:bg-black/60'
-                  >
-                    <Plus className='h-20 w-20' aria-hidden='true' />{' '}
-                    {subImages.length - 3}
-                  </span>
-                </div>
-              )}
-            </div>
-          ))}
+        {images.slice(0, 4).map((src, index) => (
+          <div
+            key={index}
+            className='relative h-full w-full cursor-pointer overflow-hidden rounded-xl'
+            onClick={() => handleClick(index)}
+            role='button'
+            aria-label={`이미지 ${index + 1} 확대 보기`}
+          >
+            <Image
+              src={src}
+              alt='Activity Image'
+              fill
+              className={COMMON_IMAGE_CLASS}
+            />
+            {index === 3 && subImages.length > 3 && (
+              <div className='flex'>
+                <span
+                  role='button'
+                  aria-label={`추가 이미지 ${subImages.length - 3}장 더 보기`}
+                  className='font-size-24 flex-center absolute inset-0 bg-black/50 font-bold text-white hover:bg-black/60'
+                >
+                  <Plus className='h-20 w-20' aria-hidden='true' />{' '}
+                  {subImages.length - 3}
+                </span>
+              </div>
+            )}
+          </div>
+        ))}
         {isOpen && (
           <ImageModal
             images={images}

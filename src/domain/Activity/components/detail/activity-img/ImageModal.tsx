@@ -79,7 +79,7 @@ export default function ImageModal({
 
   return (
     <div
-      className='fixed inset-0 z-50 flex items-center justify-center bg-black/80'
+      className='flex-center fixed inset-0 z-50 bg-black/80'
       role='dialog'
       aria-modal='true'
       aria-label='이미지 상세 보기 모달'

@@ -32,16 +32,22 @@ export default function AuthMenu() {
   }
 
   return (
-    <div className='flex items-center justify-center gap-20'>
+    <div className='flex-center gap-20'>
       <Notification />
-      <div className='flex items-center justify-center gap-15'>
+      <div className='flex-center gap-15'>
         {/* 세로 구분선 */}
         <div className='h-20 w-1 self-center bg-gray-100' />
 
         {/* 프로필 아바타*/}
         <Dropdown.Root>
           <Dropdown.Trigger>
-            <Avatar profileImageUrl={user.profileImageUrl ?? ''} />
+            <div className='flex-center gap-15'>
+              <Avatar profileImageUrl={user.profileImageUrl ?? ''} />
+              {/* 유저 이름 */}
+              <span className='tablet:inline font-size-14 hidden'>
+                {user.nickname}
+              </span>
+            </div>
           </Dropdown.Trigger>
           <Dropdown.Menu menuClassName='top-40'>
             <Dropdown.Item onClick={onSignout}>로그아웃</Dropdown.Item>
@@ -50,9 +56,6 @@ export default function AuthMenu() {
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown.Root>
-
-        {/* 유저 이름 */}
-        <span className='font-size-14'>{user.nickname}</span>
       </div>
     </div>
   );

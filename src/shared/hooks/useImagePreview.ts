@@ -60,7 +60,7 @@ import { Control, FieldValues, Path, useWatch } from 'react-hook-form';
  * </Input.Root>
  *
  * <Input.Root name="profileImage" type="file">
- * <Input.Trigger triggerType="file-upload" className="w-full h-32 border flex items-center justify-center cursor-pointer">
+ * <Input.Trigger triggerType="file-upload" className="w-full h-32 border flex-center cursor-pointer">
  * {previewUrl ? (
  * <img src={previewUrl} alt="미리보기" className="max-w-full max-h-full object-contain"/>
  * ) : (

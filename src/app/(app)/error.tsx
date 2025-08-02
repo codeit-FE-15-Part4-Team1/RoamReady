@@ -47,8 +47,8 @@ export default function SegmentError({ error, reset }: ErrorPageProps) {
   }, [error]);
 
   return (
-    <div className='flex flex-col items-center justify-center gap-8 bg-white py-50 text-center text-gray-800'>
-      <h2 className='font-size-20 tablet:font-size-30 flex items-center justify-center font-bold'>
+    <div className='flex-col-center gap-8 bg-white py-50 text-center text-gray-800'>
+      <h2 className='font-size-20 tablet:font-size-30 flex-center font-bold'>
         <TriangleAlert className='mr-8 size-30' />
         콘텐츠를 불러오지 못했습니다.
       </h2>

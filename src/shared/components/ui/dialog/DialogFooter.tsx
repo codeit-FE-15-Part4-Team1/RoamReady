@@ -173,7 +173,7 @@ export function DialogFooter({ children, variant }: DialogFooterProps) {
 
     // 해당 버튼이 로딩 중일 때만 스피너 표시
     return (
-      <span className='flex items-center justify-center gap-2'>
+      <span className='flex-center gap-2'>
         <LoadingSpinner />
         <span className='sr-only'>처리중...</span>
       </span>

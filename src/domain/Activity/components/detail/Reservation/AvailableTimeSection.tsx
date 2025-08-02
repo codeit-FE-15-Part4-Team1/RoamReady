@@ -1,4 +1,7 @@
+'use client';
+
 import dayjs from 'dayjs';
+import { useEffect } from 'react';
 
 import Button from '@/shared/components/Button';
 import { cn } from '@/shared/libs/cn';
@@ -41,6 +44,13 @@ export default function AvailableTimeSection({
 }: AvailableTimeSectionProps) {
   const now = dayjs();
 
+  useEffect(() => {
+    if (timeSlots.length > 0 && !selectedTime) {
+      const firstSlot = `${timeSlots[0].startTime}-${timeSlots[0].endTime}`;
+      onTimeSelect(firstSlot);
+    }
+  }, [timeSlots, selectedTime, onTimeSelect]);
+
   // 선택된 날짜가 있을 경우, 현재 시간 기준으로 지난 시간대 제외
   const filteredSlots =
     selectedDate !== null
@@ -75,10 +85,12 @@ export default function AvailableTimeSection({
                   <Button
                     key={id}
                     type='button'
-                    variant='outline'
                     selected={selectedTime === timeLabel}
                     onClick={() => onTimeSelect(timeLabel)}
-                    className='font-size-16 min-h-50 w-full border-2 font-medium'
+                    className={cn(
+                      'font-size-16 border-brand-2 hover:bg-brand-2 text-brand-2 min-h-50 w-full border-2 font-medium hover:text-white',
+                      selectedTime === timeLabel && 'bg-brand-2 text-white',
+                    )}
                   >
                     {timeLabel}
                   </Button>
