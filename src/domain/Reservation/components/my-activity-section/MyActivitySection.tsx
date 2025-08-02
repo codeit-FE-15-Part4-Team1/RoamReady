@@ -58,7 +58,7 @@ export default function MyActivitySection() {
             />
           ) : (
             <div className='flex-center my-200 flex-1'>
-              <Nothing type='activity' />
+              <Nothing type='activity' hideButton />
             </div>
           )}
         </>

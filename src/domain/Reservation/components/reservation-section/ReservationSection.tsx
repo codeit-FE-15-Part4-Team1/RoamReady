@@ -70,7 +70,11 @@ export default function ReservationSection() {
             />
           ) : (
             <div className='flex-center my-200 flex-1'>
-              <Nothing type='reservation' />
+              <Nothing
+                type='reservation'
+                description='내역이 없습니다.'
+                hideButton
+              />
             </div>
           )}
         </>
