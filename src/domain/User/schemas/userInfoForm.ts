@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import type { User } from '@/shared/slices/userSlice';
+import type { User } from '@/domain/Auth/schemas/response';
 
 /**
  * 사용자 정보 폼 스키마

@@ -29,7 +29,7 @@ export default function ToastContainer() {
   }
 
   return createPortal(
-    <div className='fixed top-5 right-5 z-[1000] flex flex-col items-end gap-3'>
+    <div className='fixed top-110 right-10 z-[1000] flex flex-col items-end gap-3'>
       {toasts.map((toast) => (
         <Toast key={toast.id} toast={toast} />
       ))}

@@ -89,7 +89,7 @@ export default function InputField(props: FieldProps) {
   const { className, placeholder, leftIcon, rightIcon, ...rest } = props;
 
   const baseStyle = cn(
-    'font-size-16 w-full rounded border rounded-2xl px-20 py-17.5',
+    'font-size-16 w-full border rounded-2xl px-20 py-17.5',
     isError ? 'border-red' : 'border-gray-100',
     disabled ? 'cursor-not-allowed' : 'cursor-text',
   );

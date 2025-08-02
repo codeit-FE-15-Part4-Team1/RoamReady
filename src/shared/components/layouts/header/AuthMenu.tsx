@@ -1,11 +1,15 @@
 import { useRouter } from 'next/navigation';
 
 import { useSignoutMutation } from '@/domain/Auth/hooks/useSignoutMutation';
+import type { User } from '@/domain/Auth/schemas/response';
 import Notification from '@/domain/Notification/components/Notification';
 import Avatar from '@/shared/components/ui/avatar';
 import Dropdown from '@/shared/components/ui/dropdown';
 import { ROUTES } from '@/shared/constants/routes';
-import { useRoamReadyStore } from '@/shared/store';
+
+interface AuthMenuProps {
+  user: User;
+}
 
 /**
  * AuthMenu 컴포넌트 입니다.
@@ -15,11 +19,8 @@ import { useRoamReadyStore } from '@/shared/store';
  * (현재는 더미 데이터로 구성되어 있으며, 추후 유저 정보를 props로 받을 수 있도록 확장할 예정입니다.)
  *
  */
-
-export default function AuthMenu() {
-  const user = useRoamReadyStore((state) => state.user);
+export default function AuthMenu({ user }: AuthMenuProps) {
   const router = useRouter();
-  // 새로 만든 useSignoutMutation 훅을 사용합니다.
   const { mutate: handleSignout, isPending } = useSignoutMutation();
 
   const onSignout = () => {

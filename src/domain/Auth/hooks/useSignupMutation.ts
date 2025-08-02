@@ -30,7 +30,7 @@ import { useRoamReadyStore } from '@/shared/store';
  * - `error` (Error): 발생한 에러 객체입니다. 이 `error.message`는 `formatErrorResponseHooks`에 의해 이미 사용자 친화적인 메시지로 가공되어 있습니다.
  * - 에러가 `HTTPError` 인스턴스인 경우, HTTP 상태 코드를 확인하여 특정 에러를 처리합니다.
  * - 특히 `409 Conflict` (예: 이메일 중복) 에러일 경우,  `form.setError('email', { message: error.message });`를 사용하여 이메일 입력 필드에 직접 에러 메시지를 표시합니다.
- * - 전역적으로 `handleErrorByStatus`에서 이미 처리된 401, 5xx 에러를 제외한 나머지 에러는 `error.message`를 사용하여 일반적인 에러 토스트 메시지를 표시합니다.
+ * - 전역적으로 `getErrorMessageByStatus`에서 이미 처리된 401, 5xx 에러를 제외한 나머지 에러는 `error.message`를 사용하여 일반적인 에러 토스트 메시지를 표시합니다.
  *
  * @returns {object} Tanstack Query의 `UseMutationResult` 객체.
  */

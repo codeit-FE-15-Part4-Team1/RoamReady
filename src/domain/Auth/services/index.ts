@@ -1,11 +1,10 @@
 import { BRIDGE_API } from '@/shared/constants/bridgeEndpoints';
 import { API_ENDPOINTS } from '@/shared/constants/endpoints';
 import { apiClient } from '@/shared/libs/apiClient';
-import type { User } from '@/shared/slices/userSlice';
 
 import { authApiClient } from '../libs/authApiClient';
 import type { SigninRequest, SignupRequest } from '../schemas/request';
-import type { SigninResponse, SignupResponse } from '../schemas/response';
+import type { SigninResponse, SignupResponse, User } from '../schemas/response';
 
 /**
  * @function signup

@@ -44,7 +44,7 @@ const testApiClient = ky.create({
  * - **409 (Conflict) 에러**:
  * - `formatErrorResponseHooks`에 의해 에러 메시지가 가공된 후, `catch` 블록에서 `showError`를 호출하여 사용자 친화적인 토스트 메시지를 표시합니다. (예: 이메일 중복)
  * - **500 (Internal Server Error) 에러**:
- * - `formatErrorResponseHooks`를 통해 `handleErrorByStatus` (전역 에러 핸들러)가 호출되어 토스트 메시지를 표시합니다.
+ * - `formatErrorResponseHooks`를 통해 `getErrorMessageByStatus` (전역 에러 핸들러)가 호출되어 토스트 메시지를 표시합니다.
  * - `testApiClient`의 `retry: 0` 설정 덕분에 토스트 중복 표시가 발생하지 않습니다.
  * - **기타 에러**:
  * - `HTTPError` 인스턴스가 아니거나, 위에서 명시적으로 처리되지 않은 HTTP 에러(예: 400, 404)의 경우, `formatErrorResponseHooks`에서 가공된 메시지를 `showError`를 통해 토스트로 표시합니다.
