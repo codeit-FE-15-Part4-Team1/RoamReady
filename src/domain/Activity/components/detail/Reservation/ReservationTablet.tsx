@@ -62,6 +62,7 @@ export default function ReservationTablet({
       return;
     }
 
+    setSelectedDate(null);
     showSuccess(result.message);
   };
 

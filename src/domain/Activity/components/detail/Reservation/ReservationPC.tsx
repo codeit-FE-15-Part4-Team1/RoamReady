@@ -61,6 +61,7 @@ export default function ReservationPC({
       return;
     }
 
+    setSelectedDate(null);
     showSuccess(result.message);
   };
 
