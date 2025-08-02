@@ -15,9 +15,9 @@ import { useDialogContext } from './DialogRoot';
  * Dialog variant별 패딩 스타일 매핑
  */
 const DIALOG_PADDING_CLASSNAME = {
-  complete: 'px-[30px] py-[34px] md:px-[40px] md:py-[40px]',
-  cancel: 'px-[30px] py-[30px]',
-  review: 'px-[24px] py-[20px] md:px-[30px] md:py-[24px]',
+  complete: 'px-30 py-34 md:px-40 md:py-40',
+  cancel: 'px-30 py-30',
+  review: 'px-24 pt-50 pb-20 md:px-30 md:pt-60 md:pb-24',
 };
 
 /**
@@ -460,7 +460,10 @@ export function DialogContent({ variant, children }: DialogContentProps) {
             <motion.div
               ref={dialogRef}
               className={cn(
-                'relative z-50 w-fit max-w-420 min-w-320 rounded-4xl bg-white',
+                'relative z-50 w-fit rounded-4xl bg-white',
+                variant === 'review'
+                  ? 'desktop:max-w-720 max-w-[90dvw] min-w-320 md:max-w-600 md:min-w-480'
+                  : 'max-w-420 min-w-320',
                 DIALOG_PADDING_CLASSNAME[variant],
               )}
               tabIndex={-1}
@@ -489,7 +492,7 @@ export function DialogContent({ variant, children }: DialogContentProps) {
                   )}
                   onClick={handleCloseClick}
                   onKeyDown={handleCloseKeyDown}
-                  tabIndex={loading ? -1 : 0}
+                  tabIndex={-1}
                   role='button'
                   aria-label='Dialog 닫기'
                   aria-disabled={loading}

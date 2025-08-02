@@ -22,7 +22,7 @@ const ReviewTextarea = memo(() => {
       </Input.Label>
       <Input.Field
         placeholder='소중한 경험을 들려주세요'
-        className='!min-h-150 resize-none !p-12'
+        className='!min-h-200 resize-none !p-12'
       />
       <Input.Helper className='font-size-12 mt-8 text-right text-neutral-400' />
     </Input.Root>

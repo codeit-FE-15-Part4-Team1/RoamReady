@@ -51,6 +51,12 @@ export const TIME_SLOTS = [
 
 export const RESERVATION_STATUS_OPTIONS = [
   {
+    value: undefined,
+    label: '전체',
+    backgroundColor: 'bg-neutral-200',
+    textColor: 'text-neutral-800',
+  },
+  {
     value: 'pending',
     label: '예약 완료',
     backgroundColor: 'bg-green-100',

@@ -1,22 +1,26 @@
 import Link from 'next/link';
 
+import MyPageContentHeader from '@/domain/Reservation/components/header';
 import MyActivitySection from '@/domain/Reservation/components/my-activity-section/MyActivitySection';
+import { ROUTES } from '@/shared/constants/routes';
 
 export default function MyExperiencePage() {
   return (
     <div>
-      <div className='mb-20 flex items-center justify-between'>
-        <div>
-          <h1 className='font-size-18 font-bold text-neutral-900'>
-            내 체험 관리
-          </h1>
-          <p className='font-size-16 font-medium text-neutral-500'>
-            체험을 등록하거나 수정 및 삭제할 수 있습니다.
-          </p>
-        </div>
-        <Link href='/mypage/experiences/create'>
-          <button className='bg-brand-2 font-size-16 hover:bg-brand-2/80 cursor-pointer rounded-3xl px-12 py-12 font-semibold text-white'>
-            체험 등록하기
+      <div className='flex justify-between'>
+        <MyPageContentHeader
+          title='내 체험 관리'
+          description='체험을 등록하거나 수정 및 삭제가 가능합니다.'
+        />
+        <Link
+          href={ROUTES.MYPAGE.EXPERIENCES_CREATE}
+          className='tablet:block hidden cursor-auto'
+        >
+          <button
+            type='button'
+            className='font-size-16 bg-brand-2 flex-center hover:bg-brand-2/80 mt-10 cursor-pointer rounded-3xl px-14 py-8 font-semibold text-white'
+          >
+            체험 등록
           </button>
         </Link>
       </div>

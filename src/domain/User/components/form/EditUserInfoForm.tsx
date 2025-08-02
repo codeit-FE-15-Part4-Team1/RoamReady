@@ -1,11 +1,12 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Pencil } from 'lucide-react';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import EditUserInfoFormField from '@/domain/User/components/form/EditUserInfoFormField';
-import AvatarEditButton from '@/domain/User/components/ui/AvatarEditButton';
 import { useProfileImageMutation } from '@/domain/User/hooks/useProfileImageMutation';
 import { useUserInfoMutation } from '@/domain/User/hooks/useUserInfoMutation';
 import {
@@ -16,11 +17,14 @@ import Button from '@/shared/components/Button';
 import { PROFILE_AVATAR_OPTIONS } from '@/shared/components/constants/image';
 import Avatar from '@/shared/components/ui/avatar';
 import { LoadingSpinner } from '@/shared/components/ui/loading-spinner';
+import Popover from '@/shared/components/ui/popover';
+import { usePopover } from '@/shared/components/ui/popover/PopoverContext';
 import { useImageCompression } from '@/shared/hooks/useImageCompression';
 import { useRoamReadyStore } from '@/shared/store';
 
 export default function EditUserInfoForm() {
   const { user } = useRoamReadyStore();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // 프로필 이미지 상태 관리
   const [profileImageUrl, setProfileImageUrl] = useState<string>(
@@ -100,6 +104,25 @@ export default function EditUserInfoForm() {
   );
 
   /**
+   * 파일 선택 대화상자 열기
+   */
+  const handleImageChange = () => {
+    fileInputRef.current?.click();
+  };
+
+  /**
+   * 프로필 이미지를 기본 이미지로 변경
+   */
+  const handleResetToDefault = () => {
+    setProfileImageUrl('');
+  };
+
+  /**
+   * 현재 이미지가 기본 이미지인지 판단
+   */
+  const isDefaultImage = !profileImageUrl || profileImageUrl.trim() === '';
+
+  /**
    * 폼 제출 시 호출되는 핸들러
    * 유효성 검사를 통과한 폼 데이터를 서버로 전송합니다.
    */
@@ -110,21 +133,84 @@ export default function EditUserInfoForm() {
 
   const isLoading = isCompressing || isImageUploading || isFormSubmitting;
 
+  /**
+   * Popover 내부 버튼 컴포넌트
+   * usePopover 훅을 사용하여 Popover를 닫을 수 있습니다.
+   */
+  const PopoverButtons = () => {
+    const { setIsOpen } = usePopover();
+
+    const handleImageChangeWithClose = () => {
+      handleImageChange();
+      setIsOpen(false);
+    };
+
+    const handleResetToDefaultWithClose = () => {
+      handleResetToDefault();
+      setIsOpen(false);
+    };
+
+    return (
+      <div className='w-120 space-y-1'>
+        <button
+          type='button'
+          onClick={handleImageChangeWithClose}
+          disabled={isCompressing || isImageUploading}
+          className='font-size-14 hover:bg-brand-1 flex w-full items-center gap-3 rounded-xl p-8 text-left text-sm disabled:cursor-not-allowed disabled:opacity-50'
+        >
+          이미지 변경
+        </button>
+
+        {!isDefaultImage && (
+          <>
+            <div className='px-6'>
+              <div className='h-1 w-full bg-neutral-200' />
+            </div>
+            <button
+              type='button'
+              onClick={handleResetToDefaultWithClose}
+              disabled={isCompressing || isImageUploading}
+              className='font-size-14 hover:bg-brand-1 flex w-full items-center gap-3 rounded-xl p-8 text-left text-sm disabled:cursor-not-allowed disabled:opacity-50'
+            >
+              기본 이미지로 변경
+            </button>
+          </>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className='flex flex-col gap-4'>
       {/* 프로필 이미지 섹션 */}
       <div className='tablet:py-16 desktop:py-24 relative mx-auto w-fit py-24'>
-        <Avatar
-          profileImageUrl={profileImageUrl}
-          size='lg'
-          isLoading={isCompressing || isImageUploading}
+        <Popover.Root>
+          <Popover.Trigger>
+            <div className='relative'>
+              <Avatar
+                profileImageUrl={profileImageUrl}
+                size='lg'
+                isLoading={isCompressing || isImageUploading}
+                clickable
+              />
+              <div className='flex-center bg-brand-1 absolute right-[5%] bottom-0 size-25 rounded-full shadow-lg'>
+                <Pencil className='text-brand-2 size-15' />
+              </div>
+            </div>
+          </Popover.Trigger>
+          <Popover.Content position='bottom-end' className='ml-100'>
+            <PopoverButtons />
+          </Popover.Content>
+        </Popover.Root>
+
+        {/* 숨겨진 파일 입력 */}
+        <input
+          ref={fileInputRef}
+          type='file'
+          accept='image/*'
+          onChange={handleImageFileChange}
+          className='hidden'
         />
-        <div className='absolute right-0 bottom-[15%]'>
-          <AvatarEditButton
-            onFileChange={handleImageFileChange}
-            isLoading={isCompressing || isImageUploading}
-          />
-        </div>
       </div>
 
       {/* 사용자 정보 폼 섹션 */}
