@@ -24,9 +24,7 @@ export default function MyPageContentHeader({
           {title}
         </h1>
       </div>
-      <p className='hideen tablet:block font-size-16 mb-30 text-neutral-700'>
-        {description}
-      </p>
+      <p className='font-size-16 mb-30 text-neutral-700'>{description}</p>
     </div>
   );
 }
