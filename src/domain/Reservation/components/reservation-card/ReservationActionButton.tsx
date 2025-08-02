@@ -1,5 +1,6 @@
 import { Reservation } from '@/domain/Reservation/schemas/reservation';
 import Button from '@/shared/components/Button';
+import { cn } from '@/shared/libs/cn';
 
 import CancelReservationModal from './CancelReservationModal';
 import WriteReviewModal from './WriteReviewModal';
@@ -12,7 +13,8 @@ interface ReservationActionButtonProps {
 
 const RESERVATION_ACTIONS = {
   CANCEL: '예약 취소',
-  WRITE_REVIEW: '후기작성',
+  WRITE_REVIEW: '후기 작성',
+  REVIEW_WRITTEN: '후기 작성 완료',
 } as const;
 
 export default function ReservationActionButton({
@@ -30,9 +32,9 @@ export default function ReservationActionButton({
       <CancelReservationModal reservationId={reservation.id}>
         <Button
           type='button'
-          size='small'
-          variant='outline'
-          className={`${baseClassName} ${responsiveClass} bg-neutral-200 text-neutral-600`}
+          className={cn(
+            `${baseClassName} ${responsiveClass} bg-neutral-200 text-neutral-600`,
+          )}
         >
           {RESERVATION_ACTIONS.CANCEL}
         </Button>
@@ -41,16 +43,26 @@ export default function ReservationActionButton({
   }
 
   if (reservation.status === 'completed') {
-    return (
+    return reservation.reviewSubmitted ? (
+      <Button
+        type='button'
+        className={cn(
+          `${baseClassName} ${responsiveClass} bg-brand-1 hover:bg-brand-1 text-brand-2 cursor-auto`,
+        )}
+      >
+        {RESERVATION_ACTIONS.REVIEW_WRITTEN}
+      </Button>
+    ) : (
       <WriteReviewModal
         reservation={reservation}
         onSubmit={() => onWriteReview?.(reservation.id)}
       >
         <Button
           type='button'
-          size='small'
           variant='primary'
-          className={`${baseClassName} ${responsiveClass} bg-brand-2 text-white`}
+          className={cn(
+            `${baseClassName} ${responsiveClass} bg-brand-2 text-white`,
+          )}
         >
           {RESERVATION_ACTIONS.WRITE_REVIEW}
         </Button>

@@ -2,42 +2,41 @@
 
 import { useMutation } from '@tanstack/react-query';
 import { memo, useCallback, useState } from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import StarRatingInput from '@/domain/Reservation/components/reservation-card/StarRatingInput';
 import { Reservation } from '@/domain/Reservation/schemas/reservation';
 import { writeReview } from '@/domain/Reservation/services/reservation';
+import Button from '@/shared/components/Button';
 import { Dialog } from '@/shared/components/ui/dialog';
+import Input from '@/shared/components/ui/input';
 import { useToast } from '@/shared/hooks/useToast';
 import { queryClient } from '@/shared/libs/queryClient';
 
 // 별도 컴포넌트로 분리하여 불필요한 리렌더링 방지
-const ReviewTextarea = memo(
-  ({
-    content,
-    onChange,
-  }: {
-    content: string;
-    onChange: (value: string) => void;
-  }) => {
-    return (
-      <>
-        <textarea
-          className='h-[100px] w-full resize-none rounded-[8px] border border-gray-200 p-[12px] text-[14px] placeholder:text-gray-400'
-          placeholder='체험에서 느낀 경험을 자유롭게 남겨주세요'
-          value={content}
-          onChange={(e) => onChange(e.target.value)}
-          maxLength={1000}
-          autoFocus
-        />
-        <div className='mt-[8px] text-right text-[12px] text-gray-400'>
-          {content.length}/1000
-        </div>
-      </>
-    );
-  },
-);
+const ReviewTextarea = memo(() => {
+  const content = useWatch({ name: 'content' }) || '';
+
+  return (
+    <Input.Root name='content' type='textarea' maxLength={1000}>
+      <Input.Label className='font-size-14 desktop:font-size-16 font-semibold text-neutral-800'>
+        리뷰 작성
+      </Input.Label>
+      <Input.Field
+        placeholder='소중한 경험을 들려주세요'
+        className='!min-h-150 resize-none !p-12'
+      />
+      <Input.Helper className='font-size-12 mt-8 text-right text-neutral-400' />
+    </Input.Root>
+  );
+});
 
 ReviewTextarea.displayName = 'ReviewTextarea';
+
+interface ReviewFormData {
+  rating: number;
+  content: string;
+}
 
 interface WriteReviewModalProps {
   reservation: Reservation;
@@ -50,29 +49,35 @@ export default function WriteReviewModal({
   onSubmit,
   children,
 }: WriteReviewModalProps) {
-  const [rating, setRating] = useState(0);
-  const [content, setContent] = useState('');
   const [open, setOpen] = useState(false);
   const { showSuccess, showError } = useToast();
 
-  const handleRatingChange = useCallback((newRating: number) => {
-    setRating(newRating);
-  }, []);
+  const methods = useForm<ReviewFormData>({
+    defaultValues: {
+      rating: 0,
+      content: '',
+    },
+  });
 
-  const handleContentChange = useCallback((newContent: string) => {
-    setContent(newContent);
-  }, []);
+  const { handleSubmit, watch, reset } = methods;
+  const rating = watch('rating');
+
+  const handleRatingChange = useCallback(
+    (newRating: number) => {
+      methods.setValue('rating', newRating);
+    },
+    [methods],
+  );
 
   const handleOpenChange = useCallback(
     (isOpen: boolean) => {
       setOpen(isOpen);
       if (!isOpen) {
         // 모달이 닫힐 때 상태 초기화
-        handleRatingChange(0);
-        handleContentChange('');
+        reset();
       }
     },
-    [handleRatingChange, handleContentChange],
+    [reset],
   );
 
   const reservationStartTime = reservation.startTime
@@ -104,66 +109,67 @@ export default function WriteReviewModal({
     },
   });
 
-  const handleSubmit = useCallback(() => {
-    if (rating === 0 || content.trim() === '') {
-      showError('별점과 리뷰 내용을 모두 입력해주세요.');
-      return;
-    }
+  const onFormSubmit = useCallback(
+    (data: ReviewFormData) => {
+      if (data.rating === 0 || data.content.trim() === '') {
+        showError('별점과 리뷰 내용을 모두 입력해주세요.');
+        return;
+      }
 
-    mutate(
-      { reservationId: reservation.id, review: { rating, content } },
-      {
-        onSuccess: () => {
-          onSubmit();
-          setOpen(false);
+      mutate(
+        {
+          reservationId: reservation.id,
+          review: { rating: data.rating, content: data.content },
         },
-      },
-    );
-  }, [rating, content, showError, mutate, reservation.id, onSubmit]);
+        {
+          onSuccess: () => {
+            onSubmit();
+            setOpen(false);
+          },
+        },
+      );
+    },
+    [showError, mutate, reservation.id, onSubmit],
+  );
 
   return (
     <Dialog.Root open={open} onOpenChange={handleOpenChange}>
       <Dialog.Trigger>{children}</Dialog.Trigger>
       <Dialog.Content variant='review'>
-        <form
-          key={`review-form-${reservation.id}`}
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSubmit();
-          }}
-        >
-          <div className='flex-col-center'>
-            <h3 className='text-[16px] font-bold text-gray-900 md:text-[18px]'>
-              {reservation.activity.title}
-            </h3>
-            <p className='font-size-14 font-medium text-neutral-400'>
-              {reservation.date} / {reservationStartTime} - {reservationEndTime}{' '}
-              ({reservation.headCount}명)
-            </p>
-          </div>
+        <FormProvider {...methods}>
+          <form
+            key={`review-form-${reservation.id}`}
+            onSubmit={handleSubmit(onFormSubmit)}
+          >
+            <div className='flex-col-center'>
+              <h3 className='font-size-16 font-semibold text-neutral-800'>
+                {reservation.activity.title}
+              </h3>
+              <p className='font-size-14 font-medium text-neutral-400'>
+                {reservation.date} / {reservationStartTime} -{' '}
+                {reservationEndTime} ({reservation.headCount}명)
+              </p>
+            </div>
 
-          <div className='flex-center gap-2'>
-            <StarRatingInput
-              rating={rating}
-              onRatingChange={handleRatingChange}
-            />
-          </div>
+            <div className='flex-center py-24'>
+              <StarRatingInput
+                rating={rating}
+                onRatingChange={handleRatingChange}
+              />
+            </div>
 
-          <h4 className='mb-[12px] text-[14px] font-bold text-gray-900 md:text-[16px]'>
-            소중한 경험을 들려주세요
-          </h4>
+            <ReviewTextarea />
 
-          <ReviewTextarea content={content} onChange={handleContentChange} />
-
-          <Dialog.Footer variant='review'>
-            <button
-              className='bg-brand-2 hover:bg-brand-2/90 disabled:hover:bg-brand-2 aria-disabled:hover:bg-brand-2 w-full rounded-[8px] px-[16px] py-[12px] text-[14px] font-medium text-white transition-colors disabled:opacity-50 aria-disabled:opacity-50 md:text-[16px]'
-              type='submit'
-            >
-              제출하기
-            </button>
-          </Dialog.Footer>
-        </form>
+            <Dialog.Footer variant='review'>
+              <Button
+                className='bg-brand-2 hover:bg-brand-2/90 disabled:hover:bg-brand-2 aria-disabled:hover:bg-brand-2 w-full rounded-[8px] border-none px-[16px] py-[12px] text-[14px] font-medium text-white transition-colors disabled:opacity-50 aria-disabled:opacity-50 md:text-[16px]'
+                type='submit'
+              >
+                제출하기
+              </Button>
+            </Dialog.Footer>
+          </form>
+        </FormProvider>
       </Dialog.Content>
     </Dialog.Root>
   );

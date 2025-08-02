@@ -70,7 +70,7 @@ export const API_ENDPOINTS = {
     BASE: 'my-reservations',
     DETAIL: (reservationId: number) => `my-reservations/${reservationId}`,
     REVIEW: (reservationId: number) =>
-      `my-reservations/${reservationId}/review`,
+      `my-reservations/${reservationId}/reviews`,
   },
 
   USERS: {
