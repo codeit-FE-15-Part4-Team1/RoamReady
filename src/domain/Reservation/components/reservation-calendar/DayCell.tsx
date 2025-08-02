@@ -221,10 +221,6 @@ export default function DayCell({
       { pending: 0, confirmed: 0, declined: 0 },
     ) ?? { pending: 0, confirmed: 0, declined: 0 };
 
-    if (day.isBefore(dayjs(), 'day')) {
-      counts.pending = 0;
-    }
-
     return counts;
   }, [schedules, day]);
 
