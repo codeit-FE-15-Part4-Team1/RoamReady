@@ -39,6 +39,7 @@ export default function ReservationTablet({
     reservableDates,
     timeSlots,
     selectedScheduleId,
+    setParticipantCount,
     setSelectedDate,
     setSelectedTime,
     handleTimeSelect,
@@ -59,9 +60,11 @@ export default function ReservationTablet({
     if (result.statusCode !== 200) {
       showError(result.message);
       setSelectedDate(null);
+      setParticipantCount(1);
       return;
     }
 
+    setParticipantCount(1);
     setSelectedDate(null);
     showSuccess(result.message);
   };

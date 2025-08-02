@@ -36,6 +36,7 @@ export default function ReservationPC({
     timeSlots,
     totalPrice,
     selectedScheduleId,
+    setParticipantCount,
     setSelectedDate,
     setSelectedTime,
     handleTimeSelect,
@@ -58,9 +59,11 @@ export default function ReservationPC({
     if (result.statusCode !== 200) {
       showError(result.message);
       setSelectedDate(null);
+      setParticipantCount(1);
       return;
     }
 
+    setParticipantCount(1);
     setSelectedDate(null);
     showSuccess(result.message);
   };
