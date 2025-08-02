@@ -7,6 +7,7 @@ import ReservationCalendar from '@/domain/Reservation/components/reservation-cal
 import ReservationSelect from '@/domain/Reservation/components/reservation-calendar/ReservationSelect';
 import ReservationSkeleton from '@/domain/Reservation/components/reservation-calendar/ReservationSkeleton';
 import { getReservationDashboard } from '@/domain/Reservation/services/reservation-calendar';
+import Nothing from '@/shared/components/ui/nothing';
 
 import type { Activity } from '../../types/reservation';
 
@@ -55,6 +56,12 @@ export default function ReservationDashboard({
 
   if (isLoading) return <ReservationSkeleton />;
   if (isError) return <div> 오류가 발생했습니다.</div>;
+  if (!initialActivities.length)
+    return (
+      <div>
+        <Nothing type='activity' />
+      </div>
+    );
 
   return (
     <>
