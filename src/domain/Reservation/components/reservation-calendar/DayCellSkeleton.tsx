@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function DayCellSkeleton() {
   const baseCellClasses =
-    'relative border border-neutral-200 bg-brand-1 h-full flex aspect-square flex-col items-center justify-start p-1 md:p-2 animate-pulse';
+    'relative border border-neutral-200 <bg-brand-1></bg-brand-1> h-full flex aspect-square flex-col items-center justify-start p-1 md:p-2 animate-pulse';
 
   return (
     <div className={`${baseCellClasses}`}>
