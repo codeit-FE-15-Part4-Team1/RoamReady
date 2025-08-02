@@ -69,7 +69,7 @@ export default function ReviewSection({
   if (data.totalCount === 0) {
     return (
       <section className='flex-col-center desktop:gap-50 w-full gap-30'>
-        <div className='flex items-center justify-start gap-5'>
+        <div className='flex w-full items-center justify-start gap-5'>
           <h2 className='font-size-18 leading-none font-bold'>체험 후기</h2>
           <span className='font-size-16 text-gray-550 leading-none font-bold'>
             0개
@@ -86,7 +86,7 @@ export default function ReviewSection({
 
   return (
     <section className='flex-col-center w-full gap-30'>
-      <div className='flex flex-col gap-15'>
+      <div className='flex w-full flex-col gap-15'>
         {/* 헤더: "체험 후기" 제목 + 총 개수 */}
         <div className='flex items-center justify-start gap-5'>
           <h2 className='font-size-18 leading-none font-bold'>체험 후기</h2>
