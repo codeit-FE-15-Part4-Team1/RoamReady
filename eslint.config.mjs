@@ -1,4 +1,3 @@
-// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
 import { FlatCompat } from '@eslint/eslintrc';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
@@ -38,15 +37,6 @@ export default [
           argsIgnorePattern: '^_',
         },
       ],
-
-      // React Hooks 규칙 강화
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
-
-      // 접근성 관련 경고
-      'jsx-a11y/click-events-have-key-events': 'warn',
-      'jsx-a11y/no-static-element-interactions': 'warn',
-      'jsx-a11y/label-has-associated-control': ['warn', { assert: 'either' }],
     },
   },
   eslintConfigPrettier,

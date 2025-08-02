@@ -48,3 +48,36 @@ export const TIME_SLOTS = [
   '23:00 - 23:30',
   '23:30 - 24:00',
 ];
+
+export const RESERVATION_STATUS_OPTIONS = [
+  {
+    value: 'pending',
+    label: '예약 완료',
+    backgroundColor: 'bg-green-100',
+    textColor: 'text-green-600',
+  },
+  {
+    value: 'confirmed',
+    label: '예약 승인',
+    backgroundColor: 'bg-sky-100',
+    textColor: 'text-sky-600',
+  },
+  {
+    value: 'canceled',
+    label: '예약 취소',
+    backgroundColor: 'bg-neutral-200',
+    textColor: 'text-neutral-800',
+  },
+  {
+    value: 'declined',
+    label: '예약 거절',
+    backgroundColor: 'bg-red-100',
+    textColor: 'text-red-500',
+  },
+  {
+    value: 'completed',
+    label: '체험 완료',
+    backgroundColor: 'bg-brand-1',
+    textColor: 'text-brand-2',
+  },
+] as const;
