@@ -116,7 +116,6 @@ export default function SelectItem({
         'h-fit w-full cursor-pointer px-12 py-6 text-left transition-colors hover:bg-gray-100',
         disabled && 'cursor-not-allowed opacity-50 hover:bg-transparent',
         isSelected && 'bg-gray-50',
-        isFocused && 'bg-blue-50',
         className,
       )}
     >
