@@ -9,9 +9,9 @@ import CategorySelect from '@/domain/Activity/components/main/ActivityFilter/Cat
 import SortSelect from '@/domain/Activity/components/main/ActivityFilter/SortSelect';
 import ActivitySearchBar from '@/domain/Activity/components/main/ActivitySearch/ActivitySearchBar';
 import { GetActivitiesRequestQuery } from '@/domain/Activity/schemas/main';
+import { User } from '@/domain/Auth/schemas/response';
 import Logo from '@/shared/assets/logos/Logo';
 import { ROUTES } from '@/shared/constants/routes';
-import type { User } from '@/shared/slices/userSlice';
 import { useRoamReadyStore } from '@/shared/store';
 
 export type SortOption = NonNullable<GetActivitiesRequestQuery['sort']>;
@@ -68,14 +68,14 @@ function SearchHeaderContent() {
           {/* 오른쪽 메뉴 */}
           <nav>
             {user ? (
-              <div className='flex items-center justify-center gap-20'>
+              <div className='flex-center gap-20'>
                 <Image
                   src='/icons/bell.svg'
                   alt='알림 아이콘'
                   width={24}
                   height={24}
                 />
-                <div className='flex items-center justify-center gap-15'>
+                <div className='flex-center gap-15'>
                   <div className='h-20 w-1 self-center bg-gray-100' />
                   <div className='h-30 w-30 rounded-full bg-black' />
                   <span className='font-size-14'>닉네임</span>

@@ -1,5 +1,6 @@
 'use client';
 
+import Header from '@/shared/components/layouts/header/Header';
 import ToastExample from '@/shared/components/ui/toast/ToastExample';
 
 /**
@@ -8,8 +9,11 @@ import ToastExample from '@/shared/components/ui/toast/ToastExample';
  */
 export default function ToastTestPage() {
   return (
-    <main className='flex min-h-screen w-full items-center justify-center bg-gray-100'>
-      <ToastExample />
-    </main>
+    <>
+      <Header user={null} />
+      <main className='flex min-h-screen w-full items-center justify-center bg-gray-100'>
+        <ToastExample />
+      </main>
+    </>
   );
 }

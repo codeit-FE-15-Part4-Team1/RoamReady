@@ -34,8 +34,9 @@ interface OAuthProps {
  * @function handleKakaoAuth
  * 카카오 인증 프로세스를 시작하는 내부 핸들러 함수입니다.
  * 1. `.env` 파일에 저장된 `NEXT_PUBLIC_KAKAO_REST_API_KEY`와 `NEXT_PUBLIC_KAKAO_REDIRECT_URI` 환경 변수를 가져옵니다.
- * 2. 카카오 인가 코드를 요청할 URL을 동적으로 생성합니다. 이 URL은 로그인과 회원가입 모두 동일한 구조를 가집니다.
- * 3. 생성된 URL로 사용자를 리디렉션하여 카카오 인증 페이지로 이동시킵니다.
+ * 2. 카카오 인가 코드를 요청할 URL을 동적으로 생성합니다.
+ * 3. `pageType`이 'signup'일 경우, `prompt=consent` 파라미터를 추가하여 항상 동의 화면이 표시되도록 합니다.
+ * 4. 생성된 URL로 사용자를 리디렉션하여 카카오 인증 페이지로 이동시킵니다.
  */
 export default function OAuth({ pageType }: OAuthProps) {
   const buttonText =
@@ -50,7 +51,11 @@ export default function OAuth({ pageType }: OAuthProps) {
       return;
     }
 
-    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&state=${pageType}`;
+    let kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&state=${pageType}`;
+
+    if (pageType === 'signup') {
+      kakaoAuthUrl += '&prompt=consent';
+    }
 
     window.location.href = kakaoAuthUrl;
   };

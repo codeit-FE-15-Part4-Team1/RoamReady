@@ -15,7 +15,7 @@ import { cn } from '../libs/cn';
  */
 const buttonVariants = {
   /** 모든 버튼에 공통으로 적용되는 기본 스타일 */
-  base: 'w-fit h-fit border rounded-2xl flex items-center justify-center cursor-pointer',
+  base: 'w-fit h-fit border rounded-2xl flex-center cursor-pointer',
 
   /** 버튼 스타일 variant */
   variants: {
@@ -64,7 +64,7 @@ const buttonVariants = {
  * @example
  * ```typescript
  * getButtonClasses('primary', 'large', false, false, true)
- * // returns: 'w-fit h-fit border rounded-2xl flex items-center justify-center w-full h-40 text-lg bg-brand-2 text-white opacity-70 cursor-not-allowed hover:opacity-70 relative overflow-hidden'
+ * // returns: 'w-fit h-fit border rounded-2xl flex-center w-full h-40 text-lg bg-brand-2 text-white opacity-70 cursor-not-allowed hover:opacity-70 relative overflow-hidden'
  * ```
  */
 function getButtonClasses(
@@ -250,7 +250,7 @@ export default function Button({
       aria-busy={loading}
     >
       {loading && (
-        <div className='absolute inset-0 flex items-center justify-center'>
+        <div className='flex-center absolute inset-0'>
           <LoaderCircle className='size-10 animate-spin' />
         </div>
       )}

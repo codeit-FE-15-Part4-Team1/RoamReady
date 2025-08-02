@@ -1,6 +1,11 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import {
+  createNotificationSlice,
+  NotificationSlice,
+} from '@/shared/slices/notificationSlice';
+
 import type { ToastSlice } from '../slices/toastSlice';
 import { createToastSlice } from '../slices/toastSlice';
 import type { UserSlice } from '../slices/userSlice';
@@ -10,7 +15,7 @@ import { createUserSlice } from '../slices/userSlice';
  * 모든 Slice들을 통합한 전체 상태 타입
  * 이 타입을 통해 스토어의 모든 상태와 액션에 접근할 수 있습니다.
  */
-export type BoundState = ToastSlice & UserSlice;
+export type BoundState = ToastSlice & UserSlice & NotificationSlice;
 
 /**
  * @description
@@ -29,10 +34,14 @@ export const useRoamReadyStore = create<BoundState>()(
     (...args) => ({
       ...createUserSlice(...args),
       ...createToastSlice(...args),
+      ...createNotificationSlice(...args),
     }),
     {
       name: 'RoamReady-storage',
-      partialize: (state) => ({ user: state.user }),
+      partialize: (state) => ({
+        user: state.user,
+        readNotificationIds: state.readNotificationIds,
+      }),
     },
   ),
 );

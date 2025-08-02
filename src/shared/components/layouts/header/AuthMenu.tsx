@@ -1,11 +1,15 @@
 import { useRouter } from 'next/navigation';
 
 import { useSignoutMutation } from '@/domain/Auth/hooks/useSignoutMutation';
+import type { User } from '@/domain/Auth/schemas/response';
 import Notification from '@/domain/Notification/components/Notification';
 import Avatar from '@/shared/components/ui/avatar';
 import Dropdown from '@/shared/components/ui/dropdown';
 import { ROUTES } from '@/shared/constants/routes';
-import { useRoamReadyStore } from '@/shared/store';
+
+interface AuthMenuProps {
+  user: User;
+}
 
 /**
  * AuthMenu 컴포넌트 입니다.
@@ -15,11 +19,8 @@ import { useRoamReadyStore } from '@/shared/store';
  * (현재는 더미 데이터로 구성되어 있으며, 추후 유저 정보를 props로 받을 수 있도록 확장할 예정입니다.)
  *
  */
-
-export default function AuthMenu() {
-  const user = useRoamReadyStore((state) => state.user);
+export default function AuthMenu({ user }: AuthMenuProps) {
   const router = useRouter();
-  // 새로 만든 useSignoutMutation 훅을 사용합니다.
   const { mutate: handleSignout, isPending } = useSignoutMutation();
 
   const onSignout = () => {
@@ -32,16 +33,22 @@ export default function AuthMenu() {
   }
 
   return (
-    <div className='flex items-center justify-center gap-20'>
+    <div className='flex-center gap-20'>
       <Notification />
-      <div className='flex items-center justify-center gap-15'>
+      <div className='flex-center gap-15'>
         {/* 세로 구분선 */}
         <div className='h-20 w-1 self-center bg-gray-100' />
 
         {/* 프로필 아바타*/}
         <Dropdown.Root>
           <Dropdown.Trigger>
-            <Avatar profileImageUrl={user.profileImageUrl ?? ''} />
+            <div className='flex-center gap-15'>
+              <Avatar profileImageUrl={user.profileImageUrl ?? ''} />
+              {/* 유저 이름 */}
+              <span className='tablet:inline font-size-14 hidden'>
+                {user.nickname}
+              </span>
+            </div>
           </Dropdown.Trigger>
           <Dropdown.Menu menuClassName='top-40'>
             <Dropdown.Item onClick={onSignout}>로그아웃</Dropdown.Item>
@@ -50,9 +57,6 @@ export default function AuthMenu() {
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown.Root>
-
-        {/* 유저 이름 */}
-        <span className='font-size-14'>{user.nickname}</span>
       </div>
     </div>
   );

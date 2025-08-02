@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
 
+import UrlMessageToast from '@/app/_components/UrlMessageToast';
 import OAuth from '@/domain/Auth/components/OAuth';
 import SignInForm from '@/domain/Auth/components/SignInForm';
 import LogoSymbol from '@/shared/assets/logos/LogoSymbol';
@@ -16,14 +17,23 @@ import { ROUTES } from '@/shared/constants/routes';
  * <Suspense> 바운더리로 래핑합니다.
  */
 export default function SignInPage() {
+  // await new Promise((resolve) => setTimeout(resolve, 5000));
+
   return (
     <div className='font-size-16 flex w-full max-w-640 flex-col items-center justify-center gap-30'>
-      <div className='flex flex-col items-center gap-23'>
+      <Suspense fallback={null}>
+        <UrlMessageToast />
+      </Suspense>
+
+      <Link
+        href={ROUTES.ACTIVITIES.ROOT}
+        className='flex flex-col items-center gap-23'
+      >
         <LogoSymbol className='text-brand-2 size-144' />
         <LogoTextOneLine className='text-brand-2 aspect-[255/31] w-255' />
-      </div>
+      </Link>
 
-      <Suspense fallback={<div>스켈레톤UI넣을예정...</div>}>
+      <Suspense fallback={null}>
         <SignInForm />
       </Suspense>
 

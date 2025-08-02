@@ -21,16 +21,16 @@ export const tokenRefreshResponseSchema = z.object({
 export type TokenRefreshResponse = z.infer<typeof tokenRefreshResponseSchema>;
 
 //
-// ───────────────────── 🎉 회원가입 (Sign Up) ─────────────────────
+// ───────────────────── 🎉 사용자  ─────────────────────
 //
 
 /**
  * @schema userResponseSchema
- * @description 사용자 정보 응답 스키마입니다. 회원가입/로그인/OAuth 응답 등에 공통적으로 사용됩니다.
+ * @description 공통적인 사용자 정보 응답 스키마입니다.
  */
 export const userResponseSchema = z.object({
   id: z.number(),
-  email: z.string().email(),
+  email: z.string().email().optional(),
   nickname: z.string(),
   profileImageUrl: z.string().nullable(),
   createdAt: z.string(), // ISO timestamp
@@ -38,10 +38,27 @@ export const userResponseSchema = z.object({
 });
 
 /**
- * @schema signupResponseSchema
- * @description 회원가입 성공 시 반환되는 사용자 정보 응답 스키마입니다.
+ * @type User
+ * @description 앱 전체에서 사용될 표준 사용자 정보 타입입니다.
  */
-export const signupResponseSchema = userResponseSchema;
+export type User = z.infer<typeof userResponseSchema>;
+
+//
+// ───────────────────── 🎉 회원가입 (Sign Up) ─────────────────────
+//
+
+/**
+ * @schema signupResponseSchema
+ * @description 회원가입 응답 스키마입니다.
+ */
+export const signupResponseSchema = z.object({
+  id: z.number(),
+  email: z.string().email(),
+  nickname: z.string(),
+  profileImageUrl: z.string().nullable(),
+  createdAt: z.string(), // ISO timestamp
+  updatedAt: z.string(), // ISO timestamp
+});
 
 /**
  * @type SignupResponse
@@ -56,7 +73,7 @@ export type SignupResponse = z.infer<typeof signupResponseSchema>;
 /**
  * @schema authResponseSchema
  * @description
- * 일반 로그인, 회원가입 후 자동 로그인, OAuth 등 모든 인증 성공 시
+ * 일반 로그인, 회원가입 후 자동 로그인 인증 성공 시
  * BFF 서버가 클라이언트에게 최종적으로 반환하는 공통 응답 스키마입니다.
  * 사용자 정보와 함께 액세스/리프레시 토큰이 포함됩니다.
  */
@@ -74,8 +91,20 @@ export const authResponseSchema = z.object({
 export type SigninResponse = z.infer<typeof authResponseSchema>;
 
 /**
+ * @schema oauthResponseSchema
+ * @description
+ * OAuth 로그인 또는 회원가입 성공 시, 백엔드로부터 받는 최종 응답 스키마입니다.
+ * 사용자 정보와 함께 액세스/리프레시 토큰이 포함됩니다.
+ */
+export const oauthResponseSchema = z.object({
+  user: userResponseSchema,
+  accessToken: z.string(),
+  refreshToken: z.string(),
+});
+
+/**
  * @type OAuthResponse
  * @description OAuth 회원가입, 로그인 응답 타입입니다.
  * @note authResponseSchema를 기반으로 하며, 일반 로그인과 동일한 구조입니다.
  */
-export type OAuthResponse = z.infer<typeof authResponseSchema>;
+export type OAuthResponse = z.infer<typeof oauthResponseSchema>;

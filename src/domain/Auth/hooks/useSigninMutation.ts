@@ -24,7 +24,7 @@ import { useRoamReadyStore } from '@/shared/store';
  * @property {Function} onError - `mutationFn`이 실패했을 때 실행되는 콜백 함수입니다.
  * - `error` (Error): 발생한 에러 객체입니다. 이 `error.message`는 `formatErrorResponseHooks`에 의해 이미 사용자 친화적인 메시지로 가공되어 있습니다.
  * - 에러가 `HTTPError` 인스턴스인 경우, HTTP 상태 코드를 확인하여 특정 에러를 처리합니다.
- * - 특히 400 (Bad Request) 또는 401 (Unauthorized)과 같은 로그인 실패 관련 에러는 전역 `handleErrorByStatus`에서 처리되지 않으므로, 여기서 `showError` 토스트 메시지(`로그인 실패: ${error.message}`)를 표시하여 사용자에게 피드백을 제공합니다.
+ * - 특히 400 (Bad Request) 또는 401 (Unauthorized)과 같은 로그인 실패 관련 에러는 전역 `getErrorMessageByStatus`에서 처리되지 않으므로, 여기서 `showError` 토스트 메시지(`로그인 실패: ${error.message}`)를 표시하여 사용자에게 피드백을 제공합니다.
  * - 그 외의 모든 에러는 개발자 콘솔에 로그를 남기고 `error.message`를 사용하여 일반적인 에러 토스트 메시지를 표시합니다.
  *
  * @returns {object} Tanstack Query의 `UseMutationResult` 객체.
@@ -34,14 +34,14 @@ export const useSigninMutation = () => {
   const router = useRouter();
   const setUser = useRoamReadyStore((state) => state.setUser);
   const queryClient = useQueryClient();
-  const { showSuccess, showError } = useToast();
+  const { showError } = useToast();
 
   return useMutation({
     mutationFn: signin,
     onSuccess: (data: SigninResponse) => {
       setUser(data.user);
       queryClient.invalidateQueries({ queryKey: ['user', 'me'] });
-      showSuccess('로그인 되었습니다. 환영합니다!');
+      // showSuccess('로그인 되었습니다. 환영합니다!');
       router.push(ROUTES.ACTIVITIES.ROOT);
     },
 

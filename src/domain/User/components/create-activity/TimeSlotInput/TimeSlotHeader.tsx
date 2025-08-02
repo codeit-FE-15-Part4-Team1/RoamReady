@@ -42,7 +42,7 @@ export default function TimeSlotHeader({ onAdd }: TimeSlotHeaderProps) {
             </Select.Trigger>
           </Select.Root>
         </div>
-        <div className='flex items-center justify-center pt-30'>
+        <div className='flex-center pt-30'>
           <button
             type='button'
             className='bg-brand-2 cursor-pointer rounded-full p-15 text-white'

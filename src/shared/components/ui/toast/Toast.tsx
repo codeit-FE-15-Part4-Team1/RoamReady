@@ -101,8 +101,8 @@ export default function Toast({
   return (
     <div
       className={cn(
-        'flex items-center justify-between rounded-sm bg-white shadow-lg',
-        'py-5 pr-9 pl-6',
+        'flex items-center justify-between bg-white shadow-lg',
+        'py-15 pr-9 pl-6',
         'max-w-400 min-w-300',
         'transform transition-all duration-500 ease-in-out',
         isVisible ? 'translate-x-0' : 'translate-x-[calc(100%+30px)]',
@@ -111,11 +111,11 @@ export default function Toast({
       )}
       role='alert'
     >
-      <div className='flex items-center gap-2'>
+      <div className='flex items-center gap-4'>
         {currentTypeStyle.icon && (
           <div
             className={cn(
-              'flex size-20 items-center justify-center rounded-full p-1',
+              'flex size-24 items-center justify-center rounded-full p-1',
               currentTypeStyle.color,
               'text-white',
             )}
@@ -124,16 +124,16 @@ export default function Toast({
           </div>
         )}
         <div className='mx-5 flex flex-col'>
-          <span className='text-md font-bold text-gray-800'>
+          <span className='font-size-15 font-bold text-gray-800'>
             {currentTypeStyle.title}
           </span>
-          <span className='text-lg text-gray-800'>{message}</span>
+          <span className='font-size-13 text-gray-800'>{message}</span>
         </div>
       </div>
 
       <Button
         className={cn(
-          'absolute top-2.5 right-4 opacity-50',
+          'absolute top-4 right-5 opacity-50',
           'border-0 bg-transparent hover:bg-transparent',
           'rounded-full p-1',
         )}
@@ -142,7 +142,7 @@ export default function Toast({
           handleClose();
         }}
       >
-        <CloseIcon className='size-15' />
+        <CloseIcon className='size-16' />
       </Button>
 
       <ToastTimer

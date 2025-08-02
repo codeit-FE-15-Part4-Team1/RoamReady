@@ -1,7 +1,7 @@
 import { API_ENDPOINTS } from '@/shared/constants/endpoints';
 import { apiClient } from '@/shared/libs/apiClient';
 
-export interface ActivityPayload {
+export interface ActivityResponse {
   title: string;
   category: string;
   description: string;
@@ -17,6 +17,21 @@ export interface ActivityPayload {
     id: number;
     imageUrl: string;
   }[];
+}
+
+export interface ActivityRequest {
+  title: string;
+  category: string;
+  description: string;
+  address: string;
+  price: number;
+  schedules: {
+    date: string;
+    startTime: string;
+    endTime: string;
+  }[];
+  bannerImageUrl: string;
+  subImageUrls: string[];
 }
 
 export interface UpdateActivityRequest {
@@ -50,7 +65,7 @@ export const uploadActivityImages = async (file: File) => {
   return response.json<{ activityImageUrl: string }>();
 };
 
-export const createActivity = async (data: ActivityPayload) => {
+export const createActivity = async (data: ActivityRequest) => {
   const response = await apiClient.post(API_ENDPOINTS.ACTIVITIES.BASE, {
     json: data,
   });
@@ -59,7 +74,7 @@ export const createActivity = async (data: ActivityPayload) => {
 
 export const getActivity = async (
   activityId: number,
-): Promise<ActivityPayload> => {
+): Promise<ActivityResponse> => {
   const response = await apiClient.get(
     API_ENDPOINTS.ACTIVITIES.DETAIL(activityId),
   );
