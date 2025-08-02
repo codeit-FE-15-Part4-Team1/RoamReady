@@ -16,7 +16,7 @@ import {
 import { ROUTES } from '@/shared/constants/routes';
 import { useToast } from '@/shared/hooks/useToast';
 
-// ✨ 타입 정의 추가
+// 타입 정의 추가
 interface SubImage {
   id: number;
   imageUrl: string;
@@ -169,6 +169,21 @@ export const useActivityForm = () => {
     }
   };
 
+  const hasScheduleChanges = (currentSchedules: Schedule[]) => {
+    if (currentSchedules.length !== originalSchedules.length) return true;
+
+    return currentSchedules.some((currentSchedule, index) => {
+      const originalSchedule = originalSchedules[index];
+      if (!originalSchedule) return true;
+
+      return (
+        currentSchedule.date !== originalSchedule.date ||
+        currentSchedule.startTime !== originalSchedule.startTime ||
+        currentSchedule.endTime !== originalSchedule.endTime
+      );
+    });
+  };
+
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     setSubmittingError(null);
@@ -191,7 +206,6 @@ export const useActivityForm = () => {
         throw new Error('배너 이미지를 등록해주세요.');
       }
 
-      // ✅ 변경: 수정/등록 모드 완전 분리
       if (isEdit) {
         // 수정 모드: 기존 이미지 + 새 이미지 추가 처리
         let subImageUrlsToAdd: string[] = [];
@@ -204,6 +218,8 @@ export const useActivityForm = () => {
           subImageUrlsToAdd = responses.map((res) => res.activityImageUrl);
         }
 
+        const hasChanges = hasScheduleChanges(data.schedules);
+
         // 수정 모드 API 호출
         const finalFormData = {
           title: data.title,
@@ -214,9 +230,13 @@ export const useActivityForm = () => {
           bannerImageUrl,
           subImageIdsToRemove: removedSubImageIds,
           subImageUrlsToAdd,
-          scheduleIdsToRemove: getScheduleIdsToRemove(data.schedules),
-          schedulesToAdd: getSchedulesToAdd(data.schedules),
+          scheduleIdsToRemove: hasChanges
+            ? getScheduleIdsToRemove(data.schedules)
+            : [],
+          schedulesToAdd: hasChanges ? getSchedulesToAdd(data.schedules) : [],
         };
+
+        console.log('🔥 finalFormData:', finalFormData);
 
         await updateActivity(id, finalFormData);
         router.push(ROUTES.ACTIVITIES.DETAIL(id));
@@ -246,10 +266,9 @@ export const useActivityForm = () => {
         };
 
         await createActivity(finalFormData);
+        router.push(ROUTES.ACTIVITIES.ROOT);
+        showSuccess('체험 등록이 완료되었습니다.');
       }
-
-      router.push(ROUTES.ACTIVITIES.ROOT);
-      showSuccess('체험 등록이 완료되었습니다.');
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : '서버 오류가 발생했습니다.';
@@ -260,11 +279,11 @@ export const useActivityForm = () => {
     }
   };
 
-  // 헬퍼 함수들 (기존 로직을 분리)
   const getScheduleIdsToRemove = (currentSchedules: Schedule[]) => {
     const existingScheduleIds = originalSchedules
       .map((s: Schedule) => s.id)
       .filter((id): id is number => id !== undefined);
+
     const currentScheduleIds = currentSchedules
       .filter((s: Schedule) => s.id)
       .map((s: Schedule) => s.id)
@@ -276,7 +295,23 @@ export const useActivityForm = () => {
   };
 
   const getSchedulesToAdd = (currentSchedules: Schedule[]) => {
-    return currentSchedules.filter((schedule: Schedule) => !schedule.id);
+    return currentSchedules.filter((currentSchedule: Schedule) => {
+      // ID가 있으면 기존 스케줄이므로 추가하지 않음
+      if (currentSchedule.id) {
+        return false;
+      }
+
+      // ID가 없는 스케줄 중에서도 기존 스케줄과 내용이 동일한지 확인
+      const isDuplicateOfExisting = originalSchedules.some(
+        (originalSchedule: Schedule) =>
+          originalSchedule.date === currentSchedule.date &&
+          originalSchedule.startTime === currentSchedule.startTime &&
+          originalSchedule.endTime === currentSchedule.endTime,
+      );
+
+      // 기존 스케줄과 내용이 다른 새로운 스케줄만 추가
+      return !isDuplicateOfExisting;
+    });
   };
 
   return {
