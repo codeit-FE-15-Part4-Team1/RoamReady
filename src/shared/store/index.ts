@@ -34,7 +34,7 @@ export const useRoamReadyStore = create<BoundState>()(
     (...args) => ({
       ...createUserSlice(...args),
       ...createToastSlice(...args),
-      ...createNotificationSlice(args[0], args[1], args[2]),
+      ...createNotificationSlice(...args),
     }),
     {
       name: 'RoamReady-storage',
