@@ -1,5 +1,3 @@
-'use client';
-
 import { reserveAction } from '@/domain/Activity/actions/detail/reserve';
 import { useReservationForm } from '@/domain/Activity/hooks/detail/useReservationForm';
 import { Activity } from '@/domain/Activity/types/detail/types';
@@ -51,24 +49,26 @@ export default function ReservationPC({
 
     if (!selectedDate || !selectedTime) return;
 
-    try {
-      await reserveAction(activity.id, selectedScheduleId, participantCount);
-      showSuccess('예약이 완료되었습니다!');
+    const result = await reserveAction(
+      activity.id,
+      selectedScheduleId,
+      participantCount,
+    );
+
+    if (result.statusCode !== 200) {
+      showError(result.message);
       setSelectedDate(null);
-      setSelectedTime(null);
-    } catch (err) {
-      showError(
-        err instanceof Error
-          ? err.message
-          : '예약 처리 중 오류가 발생했습니다.',
-      );
+      return;
     }
+
+    setSelectedDate(null);
+    showSuccess(result.message);
   };
 
   return (
     <aside
       aria-label='예약 정보'
-      className='h-fit max-h-950 w-400 rounded-4xl border-1 border-gray-50 bg-white p-30 shadow-[0_4px_20px_rgba(0,0,0,0.05)]'
+      className='h-fit max-h-950 w-full rounded-4xl border-1 border-gray-50 bg-white p-30 shadow-[0_4px_20px_rgba(0,0,0,0.05)]'
     >
       {/* Todo: form action 연결 */}
       <form className='flex flex-col gap-24' onSubmit={handleSubmit}>

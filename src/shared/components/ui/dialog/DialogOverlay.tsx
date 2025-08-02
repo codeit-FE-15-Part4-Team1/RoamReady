@@ -70,7 +70,7 @@ export function DialogOverlay({ children }: { children: ReactNode }) {
    * - cancel, review: backdrop blur 효과 적용
    */
   const overlayStyles = cn(
-    'fixed inset-0 z-40 flex items-center justify-center bg-black/50',
+    'fixed inset-0 z-40 flex-center bg-black/50',
     variant === 'complete' || variant === 'review'
       ? '' // backdrop 없음
       : 'backdrop-blur-md', // backdrop blur 효과
