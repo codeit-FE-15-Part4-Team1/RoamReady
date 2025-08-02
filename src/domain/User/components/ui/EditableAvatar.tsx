@@ -1,8 +1,7 @@
 'use client';
 
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { PROFILE_AVATAR_OPTIONS } from '@/shared/components/constants/image';
 import Avatar from '@/shared/components/ui/avatar';
 import { useImageCompression } from '@/shared/hooks/useImageCompression';
 import { cn } from '@/shared/libs/cn';
@@ -53,7 +52,7 @@ export default function EditableAvatar({
   }, [initialImageUrl]);
 
   // 이미지 압축 커스텀 훅
-  const { compressImage, isCompressing } = useImageCompression();
+  const { isCompressing } = useImageCompression();
 
   // 이미지 업로드(Mutation) 커스텀 훅 (Tasntack-Query 기반)
   const { mutate, isPending: isUploading } = useProfileImageMutation({
@@ -66,33 +65,6 @@ export default function EditableAvatar({
    * 이미지가 압축 중이거나 업로드 중일 때를 모두 포함하는 통합 로딩 상태.
    */
   const isLoading = isCompressing || isUploading;
-
-  /**
-   * 파일 input의 변경 이벤트를 받아 이미지 처리 플로우 전체를 실행하는 핸들러.
-   */
-  const handleImageFileChange = useCallback(
-    async (e: ChangeEvent<HTMLInputElement>) => {
-      // 1. 사용자가 디바이스에서 선택한 파일 가져오기
-      const file = e.target.files?.[0];
-      if (!file) return;
-
-      try {
-        // 2. 이미지 압축 실행 (압축이 끝날 때까지 기다림)
-        const compressedFile = await compressImage(
-          file,
-          PROFILE_AVATAR_OPTIONS,
-        );
-
-        // 3. 압축된 파일을 즉시 서버에 업로드
-        mutate(compressedFile);
-      } catch (error) {
-        // 압축 과정에서 에러 발생 시 처리
-        console.error('이미지 처리 중 오류가 발생했습니다:', error);
-        alert('이미지 처리 중 오류가 발생했습니다.');
-      }
-    },
-    [compressImage, mutate],
-  );
 
   // 메모리 해제는 useProfileImageMutation에서 처리함 (낙관적 업데이트)
 
