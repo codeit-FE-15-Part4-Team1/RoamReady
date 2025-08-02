@@ -16,7 +16,7 @@ export const createNotificationSlice: StateCreator<
   [],
   [],
   NotificationSlice
-> = (set, get, store) => ({
+> = (set, get, _store) => ({
   readNotificationIds: [],
   markAsRead: (ids) =>
     set(() => ({
