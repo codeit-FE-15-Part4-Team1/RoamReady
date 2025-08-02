@@ -442,7 +442,7 @@ export function DialogContent({ variant, children }: DialogContentProps) {
         {isOpen && (
           <motion.div
             className={cn(
-              'fixed inset-0 z-40 flex items-center justify-center bg-black/50',
+              'flex-center fixed inset-0 z-40 bg-black/50',
               variant === 'complete' || variant === 'review'
                 ? ''
                 : 'backdrop-blur-md',

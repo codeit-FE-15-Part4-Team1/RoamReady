@@ -34,11 +34,6 @@ export default function MapMarker({ address }: MapMarkerProps) {
         </div>
         {address}
       </div>
-
-      {/* 꼬리 부분: 삼각형 */}
-      <div className='absolute top-full left-1/2 h-0 w-0 -translate-x-1/2 border-t-[16px] border-r-[12px] border-l-[12px] border-t-[#2D8CFF]'>
-        <div className='absolute -top-[19px] -left-[11px] h-0 w-0 border-t-[16px] border-r-[12px] border-l-[12px] border-t-white' />
-      </div>
     </div>
   );
 }

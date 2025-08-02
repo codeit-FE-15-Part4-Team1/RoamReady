@@ -69,7 +69,7 @@ export default function ReviewSection({
   if (data.totalCount === 0) {
     return (
       <section className='flex-col-center desktop:gap-50 w-full gap-30'>
-        <div className='flex items-center justify-start gap-5'>
+        <div className='flex w-full items-center justify-start gap-5'>
           <h2 className='font-size-18 leading-none font-bold'>체험 후기</h2>
           <span className='font-size-16 text-gray-550 leading-none font-bold'>
             0개
@@ -86,7 +86,7 @@ export default function ReviewSection({
 
   return (
     <section className='flex-col-center w-full gap-30'>
-      <div className='flex flex-col gap-15'>
+      <div className='flex w-full flex-col gap-15'>
         {/* 헤더: "체험 후기" 제목 + 총 개수 */}
         <div className='flex items-center justify-start gap-5'>
           <h2 className='font-size-18 leading-none font-bold'>체험 후기</h2>
@@ -97,7 +97,7 @@ export default function ReviewSection({
 
         {/* 평균 평점 시각화: 숫자 + 이모지 + 메시지 */}
         <div className='flex flex-col gap-6'>
-          <div className='flex flex-col items-center justify-center'>
+          <div className='flex-col-center'>
             <span className='font-size-32 font-bold'>
               {averageRating.toFixed(1)}
             </span>
@@ -108,7 +108,7 @@ export default function ReviewSection({
           </div>
 
           {/* 별 아이콘과 총 후기 개수 표시 */}
-          <div className='flex items-center justify-center gap-2'>
+          <div className='flex-center gap-2'>
             <Star size={13} className='fill-[#FFCB02] stroke-[#FFCB02]' />
             <span className='font-size-14 text-gray-550 font-medium'>
               {totalCount.toLocaleString()}개 후기

@@ -160,7 +160,7 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
             value={endTime || ''}
           />
 
-          <div className='flex items-center justify-center'>
+          <div className='flex-center'>
             <button
               type='button'
               className='cursor-pointer rounded-full bg-gray-500 p-15 text-white'

@@ -1,6 +1,7 @@
 import { FlatCompat } from '@eslint/eslintrc';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
+import storybook from 'eslint-plugin-storybook';
 import unusedImportsPlugin from 'eslint-plugin-unused-imports';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -14,7 +15,7 @@ const compat = new FlatCompat({
 
 export default [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
-
+  // Prettier와 충돌 방지
   {
     plugins: {
       'simple-import-sort': simpleImportSortPlugin,
@@ -36,11 +37,9 @@ export default [
           argsIgnorePattern: '^_',
         },
       ],
-
-      // Next.js에서 이미 제공하는 규칙들은 제거
-      // react-hooks, jsx-a11y 규칙들은 next/core-web-vitals에 포함됨
     },
   },
-
-  eslintConfigPrettier, // Prettier와 충돌 방지
+  eslintConfigPrettier,
+  ...storybook.configs['flat/recommended'],
+  ...storybook.configs['flat/recommended'],
 ];

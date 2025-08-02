@@ -166,7 +166,7 @@ export default function Pagination({
           disabled={currentPage === 1}
           onClick={() => onPageChange(currentPage - 1)}
           className={cn(
-            'flex items-center justify-center',
+            'flex-center',
             currentPage === 1
               ? 'cursor-not-allowed text-gray-400'
               : 'cursor-pointer',
@@ -213,7 +213,7 @@ export default function Pagination({
           disabled={currentPage === totalPages}
           onClick={() => onPageChange(currentPage + 1)}
           className={cn(
-            'flex items-center justify-center',
+            'flex-center',
             currentPage === totalPages
               ? 'cursor-not-allowed text-gray-400'
               : 'cursor-pointer',
