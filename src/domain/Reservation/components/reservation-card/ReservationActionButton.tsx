@@ -1,5 +1,4 @@
 import { Reservation } from '@/domain/Reservation/schemas/reservation';
-import Button from '@/shared/components/Button';
 import { cn } from '@/shared/libs/cn';
 
 import CancelReservationModal from './CancelReservationModal';
@@ -22,50 +21,56 @@ export default function ReservationActionButton({
   onWriteReview,
   isDesktop = false,
 }: ReservationActionButtonProps) {
-  const baseClassName = 'font-size-14 border-none py-4';
+  const baseClassName =
+    'font-size-14 font-semibold rounded-2xl border-none px-12 py-6 w-full';
   const responsiveClass = isDesktop
     ? 'desktop:block hidden'
-    : 'desktop:hidden mt-10 w-full py-4';
+    : 'desktop:hidden mt-10 w-full';
 
   if (reservation.status === 'pending') {
     return (
       <CancelReservationModal reservationId={reservation.id}>
-        <Button
+        <button
           type='button'
           className={cn(
-            `${baseClassName} ${responsiveClass} bg-neutral-200 text-neutral-600`,
+            baseClassName,
+            'cursor-pointer bg-neutral-200 text-neutral-600 hover:bg-neutral-200/70',
+            responsiveClass,
           )}
         >
           {RESERVATION_ACTIONS.CANCEL}
-        </Button>
+        </button>
       </CancelReservationModal>
     );
   }
 
   if (reservation.status === 'completed') {
     return reservation.reviewSubmitted ? (
-      <Button
+      <button
         type='button'
         className={cn(
-          `${baseClassName} ${responsiveClass} bg-brand-1 hover:bg-brand-1 text-brand-2 cursor-auto`,
+          baseClassName,
+          'bg-brand-1 text-brand-2',
+          responsiveClass,
         )}
       >
         {RESERVATION_ACTIONS.REVIEW_WRITTEN}
-      </Button>
+      </button>
     ) : (
       <WriteReviewModal
         reservation={reservation}
         onSubmit={() => onWriteReview?.(reservation.id)}
       >
-        <Button
+        <button
           type='button'
-          variant='primary'
           className={cn(
-            `${baseClassName} ${responsiveClass} bg-brand-2 text-white`,
+            baseClassName,
+            'bg-brand-2 hover:bg-brand-2/80 cursor-pointer text-white',
+            responsiveClass,
           )}
         >
           {RESERVATION_ACTIONS.WRITE_REVIEW}
-        </Button>
+        </button>
       </WriteReviewModal>
     );
   }

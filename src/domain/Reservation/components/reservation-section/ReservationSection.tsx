@@ -33,7 +33,7 @@ export default function ReservationSection() {
       getMyReservation({
         status: selectedStatus,
         cursorId: pageParam,
-        size: 10,
+        size: 5,
       }),
     initialPageParam: undefined as number | undefined,
     getNextPageParam: (lastPage) => lastPage.cursorId || undefined,

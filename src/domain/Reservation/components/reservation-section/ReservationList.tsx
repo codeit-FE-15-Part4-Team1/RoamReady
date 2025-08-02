@@ -39,7 +39,7 @@ export default function ReservationList({
   return (
     <div>
       {reservations.map((reservation) => (
-        <div key={reservation.id} className='mb-16'>
+        <div key={reservation.id} className='mb-30'>
           <ReservationCard reservation={reservation} />
         </div>
       ))}
