@@ -1,3 +1,5 @@
+import { StateCreator } from 'zustand';
+
 import { BoundState } from '@/shared/store';
 
 export interface NotificationSlice {
@@ -9,10 +11,12 @@ export interface NotificationSlice {
   setHasNewNotification: (value: boolean) => void;
 }
 
-export const createNotificationSlice = (
-  set: (partial: any) => void,
-  get: () => BoundState,
-): NotificationSlice => ({
+export const createNotificationSlice: StateCreator<
+  BoundState,
+  [],
+  [],
+  NotificationSlice
+> = (set, get, store) => ({
   readNotificationIds: [],
   markAsRead: (ids) =>
     set(() => ({
