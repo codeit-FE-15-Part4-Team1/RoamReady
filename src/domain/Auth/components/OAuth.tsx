@@ -31,6 +31,11 @@ interface OAuthProps {
  * 회원가입 페이지에서 사용 시:
  * <OAuth pageType="signup" />
  *
+ * @function generateRandomState
+ * CSRF 공격을 방지하기 위해 OAuth 요청에 사용되는 고유한 `state` 값을 생성합니다.
+ * 이 `state`는 현재 페이지 타입(`signin` 또는 `signup`)과 난수로 구성되며, (예: 'signin:xyz123')
+ * OAuth 인증 후 콜백에서 해당 요청의 정당성을 검증하는 데 사용됩니다.
+ *
  * @function handleKakaoAuth
  * 카카오 인증 프로세스를 시작하는 내부 핸들러 함수입니다.
  * 1. `.env` 파일에 저장된 `NEXT_PUBLIC_KAKAO_REST_API_KEY`와 `NEXT_PUBLIC_KAKAO_REDIRECT_URI` 환경 변수를 가져옵니다.
@@ -42,6 +47,12 @@ export default function OAuth({ pageType }: OAuthProps) {
   const buttonText =
     pageType === 'signin' ? '카카오 로그인' : '카카오 회원가입';
 
+  const generateRandomState = (pageType: 'signin' | 'signup') => {
+    const randomId = crypto.getRandomValues(new Uint32Array(1))[0].toString(36);
+    const state = `${pageType}:${randomId}`;
+    return state;
+  };
+
   const handleKakaoAuth = () => {
     const KAKAO_CLIENT_ID = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
     const KAKAO_REDIRECT_URI = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
@@ -51,11 +62,9 @@ export default function OAuth({ pageType }: OAuthProps) {
       return;
     }
 
-    let kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&state=${pageType}`;
+    const state = generateRandomState(pageType);
 
-    if (pageType === 'signup') {
-      kakaoAuthUrl += '&prompt=consent';
-    }
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&state=${state}`;
 
     window.location.href = kakaoAuthUrl;
   };

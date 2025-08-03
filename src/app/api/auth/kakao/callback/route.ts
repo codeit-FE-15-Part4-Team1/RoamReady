@@ -106,7 +106,7 @@ async function handleOauthSignIn(
 export async function GET(request: NextRequest) {
   try {
     const code = request.nextUrl.searchParams.get('code');
-    const intent = request.nextUrl.searchParams.get('state');
+    const state = request.nextUrl.searchParams.get('state');
 
     if (!code) {
       throw Object.assign(new Error('카카오 인증 코드가 없습니다.'), {
@@ -114,9 +114,17 @@ export async function GET(request: NextRequest) {
       });
     }
 
+    if (!state) {
+      throw Object.assign(new Error('OAuth state 파라미터가 없습니다.'), {
+        status: 400,
+      });
+    }
+
+    const [intent] = state.split(':');
+
     let responseData;
     if (intent === 'signup') {
-      const arbitraryNickname = `KakaoUser_${crypto.randomUUID().slice(0, 8)}`;
+      const arbitraryNickname = `K_${crypto.randomUUID().replace(/-/g, '').slice(0, 7)}`;
       responseData = await handleOauthSignUp(code, arbitraryNickname);
     } else if (intent === 'signin') {
       responseData = await handleOauthSignIn(code);
