@@ -32,9 +32,20 @@ export default function ActivitySearchForm({
     else setActiveField(null);
   }, []);
 
+  const handleFormSubmit = (data: ActivitySearchFormValues) => {
+    // 빈 값이 아닌 데이터만 필터링
+    const searchData = {
+      keyword: data.keyword || undefined,
+      date: data.date || undefined,
+      address: data.address || undefined,
+    };
+
+    onSubmit(searchData);
+  };
+
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(handleFormSubmit)}
       className='relative flex h-auto w-full max-w-800 items-center rounded-full bg-white shadow-lg ring-1 ring-neutral-200'
     >
       {/* Keyword 필드 */}
