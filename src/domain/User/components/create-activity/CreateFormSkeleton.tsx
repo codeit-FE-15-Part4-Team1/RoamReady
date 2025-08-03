@@ -15,98 +15,114 @@ export default function CreateActivityFormSkeleton() {
         {/* 1. TitleInput Skeleton */}
         <div className='flex flex-col gap-10'>
           <div className='bg-brand-1 h-30 w-40'></div>
-          <div className='h-60 w-full' />
+          <div className='bg-brand-1 w-full' style={{ height: '60px' }} />
+        </div>
+
+        {/* 1. TitleInput Skeleton */}
+        <div className='flex flex-col gap-10'>
+          <div className='bg-brand-1 h-30 w-80'></div>
+          <div className='bg-brand-1 w-full' style={{ height: '60px' }} />
         </div>
 
         {/* 2. CategoryInput Skeleton */}
         <div className='flex flex-col gap-10'>
-          <div className='bg-brand-1 h-30 w-80'></div>
-          <div className='h-276 w-full'></div>
+          <div className='bg-brand-1 h-30 w-40'></div>
+          <div className='bg-brand-1 w-full' style={{ height: '276px' }}></div>
         </div>
 
-        {/* 3. DescriptionInput Skeleton (textarea) */}
-        <div className='flex flex-col gap-2'>
-          <div className='h-30 w-40' />
-          <div className='h-48 w-full' />
+        {/* 1. TitleInput Skeleton */}
+        <div className='flex flex-col gap-10'>
+          <div className='bg-brand-1 h-30 w-40'></div>
+          <div className='bg-brand-1 w-full' style={{ height: '60px' }} />
         </div>
 
-        {/* 4. PriceInput Skeleton */}
-        <div className='flex flex-col gap-2'>
-          <div className='h-5 w-16' />
-          <div className='h-12 w-full' />
+        {/* 1. TitleInput Skeleton */}
+        <div className='flex flex-col gap-10'>
+          <div className='bg-brand-1 h-30 w-40'></div>
+          <div className='bg-brand-1 w-full' style={{ height: '60px' }} />
         </div>
 
-        {/* 5. LocationInput Skeleton */}
-        <div className='flex flex-col gap-2'>
-          <div className='h-5 w-16' />
-          <div className='h-12 w-full' />
-        </div>
-
-        {/* 6. TimeSlotInput Skeleton (상세 코드 반영하여 수정) */}
-        <div className='flex flex-col gap-4'>
-          <div className='h-5 w-48' />
-          {/* TimeSlotHeader Skeleton */}
-          <div className='grid grid-cols-10 gap-x-10'>
-            <div className='col-span-6'>
-              <div className='h-4 w-12' /> {/* 날짜 라벨 */}
-              <div className='mt-2 h-12 w-full' />
+        <div className='flex flex-col gap-10'>
+          <div className='bg-brand-1 h-30 w-150'></div>
+          <div className='flex gap-10'>
+            <div style={{ width: '60%' }}>
+              <div className='flex w-full flex-col gap-10'>
+                <div className='bg-brand-1 h-15 w-40'></div>
+                <div
+                  className='bg-brand-1 w-full'
+                  style={{ height: '60px', width: '100%' }}
+                />
+              </div>
             </div>
-            <div className='col-span-4 flex items-end gap-x-10'>
-              <div className='flex-1'>
-                <div className='h-4 w-20' /> {/* 시작 시간 라벨 */}
-                <div className='mt-2 h-12 w-full' />
+            <div style={{ width: '15%' }}>
+              <div className='flex w-full flex-col gap-10'>
+                <div className='bg-brand-1 h-15 w-40'></div>
+                <div
+                  className='bg-brand-1 w-full'
+                  style={{ height: '60px', width: '100%' }}
+                />
               </div>
-              <div className='flex-1'>
-                <div className='h-4 w-20' /> {/* 종료 시간 라벨 */}
-                <div className='mt-2 h-12 w-full' />
+            </div>
+            <div className='pt-50'>
+              <div className='bg-brand-1 h-10 w-20' />
+            </div>
+            <div style={{ width: '15%' }}>
+              <div className='flex w-full flex-col gap-10'>
+                <div className='bg-brand-1 h-15 w-40'></div>
+                <div
+                  className='bg-brand-1 w-full'
+                  style={{ height: '60px', width: '100%' }}
+                />
               </div>
-              <div className='h-[50px] w-[50px] rounded-full' />{' '}
-              {/* 추가 버튼 */}
+            </div>
+            <div className='pt-30'>
+              <div className='bg-brand-1 size-50 rounded-full' />
             </div>
           </div>
-          <div className='h-px w-full' />
-          {/* TimeSlotRow Skeleton (2개 예시) */}
-          {[1, 2].map((i) => (
-            <div key={i} className='grid grid-cols-10 gap-x-10'>
-              <div className='col-span-6'>
-                <div className='h-12 w-full' />
-              </div>
-              <div className='col-span-4 flex items-center gap-x-10'>
-                <div className='h-12 flex-1' />
-                <div className='text-gray-200'>-</div>
-                <div className='h-12 flex-1' />
-                <div className='h-[50px] w-[50px] rounded-full' />{' '}
-                {/* 삭제 버튼 */}
-              </div>
-            </div>
-          ))}
         </div>
 
         {/* 7. BannerImageInput Skeleton (상세 코드 반영하여 수정) */}
         <div className='flex flex-col gap-3'>
-          <div className='h-5 w-36' /> {/* 배너 이미지 등록 라벨 */}
+          <div className='bg-brand-1 h-5 w-36' /> {/* 배너 이미지 등록 라벨 */}
           <div className='flex items-center gap-20'>
             {/* 이미지 추가 버튼 */}
-            <div className='h-[112px] w-[112px] rounded-lg' />
+            <div
+              className='bg-brand-1 w-[112px] rounded-lg'
+              style={{ height: '112px' }}
+            />
             {/* 미리보기 이미지 예시 */}
-            <div className='h-[112px] w-[112px] rounded-lg' />
+            <div
+              className='bg-brand-1 w-[112px] rounded-lg'
+              style={{ height: '112px' }}
+            />
           </div>
         </div>
 
         {/* 8. IntroImageInput Skeleton (상세 코드 반영하여 수정) */}
         <div className='flex flex-col gap-3'>
-          <div className='h-5 w-40' /> {/* 소개 이미지 등록 라벨 */}
+          <div className='bg-brand-1 h-5 w-40' /> {/* 소개 이미지 등록 라벨 */}
           <div className='flex flex-wrap items-center gap-20'>
             {/* 이미지 추가 버튼 */}
-            <div className='h-[112px] w-[112px] rounded-lg' />
+            <div
+              className='bg-brand-1 w-[112px] rounded-lg'
+              style={{ height: '112px' }}
+            />
             {/* 미리보기 이미지 예시 (2개) */}
-            <div className='h-[112px] w-[112px] rounded-lg' />
-            <div className='h-[112px] w-[112px] rounded-lg' />
+            <div
+              className='bg-brand-1 w-[112px] rounded-lg'
+              style={{ height: '112px' }}
+            />
+            <div
+              className='bg-brand-1 w-[112px] rounded-lg'
+              style={{ height: '112px' }}
+            />
           </div>
         </div>
 
         {/* 9. SubmitButton Skeleton */}
-        <div className='mt-4 h-14 w-full' />
+        <div className='flex w-full justify-center'>
+          <div className='bg-brand-1 mt-4 h-40 w-120 rounded-2xl' />
+        </div>
       </div>
     </div>
   );

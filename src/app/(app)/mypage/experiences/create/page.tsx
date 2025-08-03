@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 import CreateActivityForm from '@/domain/User/components/create-activity/CreateActivityForm';
-import CreateActivityFormSkeleton from '@/domain/User/components/create-activity/CreateFormSkeleton';
 import { LeaveConfirmDialog } from '@/domain/User/components/create-activity/LeaveConfirmDialog';
 
 export default function CreateExperiencePage() {
@@ -60,7 +59,6 @@ export default function CreateExperiencePage() {
       <div className='mb-[3.4rem] max-w-[120rem]'>
         <h1 className='font-size-18 py-20 font-bold'>내 체험 등록</h1>
         <CreateActivityForm onDirtyChange={setIsFormDirty} />
-        <CreateActivityFormSkeleton />
       </div>
 
       <LeaveConfirmDialog
