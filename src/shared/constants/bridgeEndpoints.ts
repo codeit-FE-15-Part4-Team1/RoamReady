@@ -19,6 +19,7 @@
 export const BRIDGE_API = {
   PREFIX: '/api',
   AUTH_PREFIX: '/api/auth',
+  TEST_PREFIX: '/api/test',
 
   AUTH: {
     SIGNUP: 'signup',

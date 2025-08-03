@@ -15,8 +15,6 @@ import Input from '@/shared/components/ui/input';
  * 이메일/비밀번호를 이용한 로그인 폼의 UI와 상태 관리, 제출 로직을 담당하는 클라이언트 컴포넌트입니다.
  * 로그인 성공 시, 전역 상태를 업데이트하고 메인 페이지로 이동합니다.
  *
- * @see /src/app/api/auth/signin/route.ts - 로그인을 처리하는 API 라우트
- *
  * @feature
  * - **폼 관리**: `react-hook-form`의 `useForm`을 사용하여 폼의 상태를 관리합니다.
  * - **유효성 검사**: `zodResolver`를 이용해 클라이언트 측 유효성 검사를 실시간으로 수행합니다.
@@ -24,6 +22,8 @@ import Input from '@/shared/components/ui/input';
  * - **전역 상태 업데이트**: 로그인 성공 시, 전역 Zustand 스토어에 사용자 정보를 저장하고 관련 캐시를 무효화합니다.
  * - **사용자 피드백**: `useToast` 훅을 통해 로그인 성공 또는 실패에 대한 명확한 피드백(토스트 메시지)을 제공합니다. OAuth 관련 에러는 URL 쿼리 파라미터를 통해 받아 처리합니다.
  * - **에러 핸들링**: `useSigninMutation` 훅 내부에서 `ky`의 `HTTPError`를 감지하여 네트워크 에러 메시지 및 서버 응답 에러를 사용자에게 보여줍니다.
+ *
+ * @see /src/app/api/auth/signin/route.ts - 로그인을 처리하는 API 라우트
  */
 export default function SignInForm() {
   const { mutate, isPending } = useSigninMutation();
