@@ -9,9 +9,15 @@ import Button from '../../Button';
 
 interface NothingProps {
   type: 'review' | 'activity' | 'reservation';
+  description?: string;
+  hideButton?: boolean;
 }
 
-export default function Nothing({ type }: NothingProps) {
+export default function Nothing({
+  type,
+  description,
+  hideButton,
+}: NothingProps) {
   const router = useRouter();
 
   const message =
@@ -30,8 +36,8 @@ export default function Nothing({ type }: NothingProps) {
   return (
     <div className='flex h-fit shrink-0 flex-col items-center justify-center gap-10 text-center'>
       <LogoSymbol className='text-brand-2 h-100 w-100' />
-      <p className='font-size-13 text-gray-500'>{message}</p>
-      {buttonText && (
+      <p className='font-size-13 text-gray-500'>{description || message}</p>
+      {buttonText && !hideButton && (
         <Button
           type='button'
           variant='primary'

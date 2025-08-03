@@ -5,24 +5,33 @@ import { cn } from '@/shared/libs/cn';
 /**
  * Avatar 컴포넌트의 props
  */
-
-/**
- * 표시할 프로필 이미지의 URL.
- * 빈 문자열을 전달하면 기본 로고가 표시됩니다.
- */
 interface AvatarProps {
+  /**
+   * 표시할 프로필 이미지의 URL.
+   * 빈 문자열을 전달하면 기본 로고가 표시됩니다.
+   */
+  profileImageUrl: string;
   /**
    * 아바타 크기 프리셋. (기본값: 'sm')
    * - `sm`: 30px
    * - `lg`: 70px (태블릿), 120px (데스크탑)
    */
-  profileImageUrl: string;
+  size?: 'sm' | 'lg';
   /**
    * 로딩 상태 여부.
    * true일 경우 로딩 UI(어두운 오버레이)가 표시됩니다.
    */
-  size?: 'sm' | 'lg';
   isLoading?: boolean;
+  /**
+   * 클릭 가능 여부.
+   * true일 경우 포인터 커서와 호버 효과가 적용되고 onClick 이벤트가 활성화됩니다.
+   */
+  clickable?: boolean;
+  /**
+   * 아바타 클릭 시 호출되는 이벤트 핸들러.
+   * clickable이 true일 때만 작동합니다.
+   */
+  onClick?: () => void;
 }
 
 /**
@@ -34,8 +43,8 @@ const avatarSizeStyles = {
     sizes: '30px',
   },
   lg: {
-    className: 'size-120 tablet:size-70 desktop:size-120',
-    sizes: '(min-width: 1024px) 120px, (min-width: 768px) 70px, 120px',
+    className: 'size-120 tablet:size-100 desktop:size-120',
+    sizes: '(min-width: 1024px) 120px, (min-width: 768px) 100px, 120px',
   },
 };
 
@@ -56,6 +65,8 @@ export default function Avatar({
   profileImageUrl,
   size = 'sm',
   isLoading = false,
+  clickable = false,
+  onClick,
 }: AvatarProps) {
   // profileImageUrl이 빈 문자열(''), null, undefined이면 기본 이미지를 표시합니다.
   const isDefaultImage = !profileImageUrl || profileImageUrl.trim() === '';
@@ -66,7 +77,14 @@ export default function Avatar({
   // 기본 이미지를 표시해야 할 경우
   if (isDefaultImage) {
     return (
-      <div className={cn('bg-brand-2 relative rounded-full', className)}>
+      <div
+        className={cn(
+          'bg-brand-2 relative rounded-full',
+          className,
+          clickable && 'cursor-pointer transition-opacity hover:opacity-80',
+        )}
+        onClick={clickable ? onClick : undefined}
+      >
         <div className='flex h-full w-full items-center justify-center p-4'>
           {/* 기본 유령 심볼 로고 렌더링 */}
           <LogoSymbol className='-rotate-30 text-white' />
@@ -82,7 +100,14 @@ export default function Avatar({
   return (
     // 부모 div: next/image의 fill prop을 위해 상대 위치(relative)를 설정하고,
     // 자식 이미지가 부모를 벗어나지 않도록 overflow-hidden 및 반응형 크기 클래스를 적용합니다.
-    <div className={cn('relative overflow-hidden rounded-full', className)}>
+    <div
+      className={cn(
+        'relative overflow-hidden rounded-full',
+        className,
+        clickable && 'cursor-pointer transition-opacity hover:opacity-80',
+      )}
+      onClick={clickable ? onClick : undefined}
+    >
       <Image
         src={profileImageUrl}
         // `fill` prop: 부모 요소의 크기를 꽉 채우도록 설정. width/height prop과 함께 사용할 수 없음.
