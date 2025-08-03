@@ -74,7 +74,7 @@ export default function ReservationPC({
       className='h-fit max-h-950 w-full rounded-4xl border-1 border-gray-50 bg-white p-30 shadow-[0_4px_20px_rgba(0,0,0,0.05)]'
     >
       {/* Todo: form action 연결 */}
-      <form className='flex flex-col gap-24' onSubmit={handleSubmit}>
+      <form className='flex flex-col gap-15' onSubmit={handleSubmit}>
         {/* 가격 정보 */}
         <section aria-labelledby='pricing'>
           <div className='flex items-center gap-8'>
@@ -109,7 +109,7 @@ export default function ReservationPC({
           timeSlots={timeSlots}
           selectedTime={selectedTime}
           onTimeSelect={handleTimeSelect}
-          className='max-h-250'
+          className='max-h-150'
         />
 
         {/* 총 합계 및 예약 버튼 */}
