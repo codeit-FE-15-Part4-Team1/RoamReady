@@ -15,6 +15,7 @@ interface ReservationDetailProps {
   onReject: (reservationId: number, scheduleId: number) => void;
   onTimeSlotSelect?: (scheduleId: number) => Promise<void>;
   isLoading?: boolean;
+  status?: 'pending' | 'confirmed' | 'declined'; // 새로 추가된 prop
 }
 
 interface ReservationItem {
@@ -44,50 +45,62 @@ export default function ReservationDetail({
   onApprove,
   onReject,
   onTimeSlotSelect,
+  status, // 새로 추가된 prop
 }: ReservationDetailProps) {
   const [selectedScheduleId, setSelectedScheduleId] = useState<string>('');
 
-  // 스케줄에서 고유한 시간대 추출
+  // 상태별로 필터링된 예약 목록
+  const filteredReservationsByStatus = useMemo(() => {
+    if (!status) return reservations;
+    return reservations.filter((reservation) => reservation.status === status);
+  }, [reservations, status]);
+
+  // 상태별 예약이 있는 스케줄 ID들만 추출
+  const scheduleIdsWithReservations = useMemo(() => {
+    return new Set(filteredReservationsByStatus.map((res) => res.scheduleId));
+  }, [filteredReservationsByStatus]);
+
+  // 해당 상태의 예약이 있는 시간대만 추출
   const availableTimeSlots = useMemo(() => {
-    const uniqueSchedules = schedules.reduce(
-      (acc, schedule) => {
-        const timeSlotKey = `${schedule.startTime}-${schedule.endTime}`;
-        if (!acc.has(timeSlotKey)) {
-          acc.set(timeSlotKey, {
-            scheduleId: schedule.scheduleId,
-            startTime: schedule.startTime,
-            endTime: schedule.endTime,
-            displayText: `${schedule.startTime} - ${schedule.endTime}`,
-          });
-        }
-        return acc;
-      },
-      new Map<
-        string,
-        {
-          scheduleId: number;
-          startTime: string;
-          endTime: string;
-          displayText: string;
-        }
-      >(),
-    );
+    const uniqueSchedules = schedules
+      .filter((schedule) =>
+        scheduleIdsWithReservations.has(schedule.scheduleId),
+      )
+      .reduce(
+        (acc, schedule) => {
+          const timeSlotKey = `${schedule.startTime}-${schedule.endTime}`;
+          if (!acc.has(timeSlotKey)) {
+            acc.set(timeSlotKey, {
+              scheduleId: schedule.scheduleId,
+              startTime: schedule.startTime,
+              endTime: schedule.endTime,
+              displayText: `${schedule.startTime} - ${schedule.endTime}`,
+            });
+          }
+          return acc;
+        },
+        new Map<
+          string,
+          {
+            scheduleId: number;
+            startTime: string;
+            endTime: string;
+            displayText: string;
+          }
+        >(),
+      );
 
     return Array.from(uniqueSchedules.values());
-  }, [schedules]);
-
-  console.log('selectedScheduleId', selectedScheduleId);
+  }, [schedules, scheduleIdsWithReservations]);
 
   const filteredReservations = useMemo(() => {
     if (!selectedScheduleId) {
-      return null; // 선택 안 하면 빈 배열 반환
+      return null; // 선택 안 하면 null 반환
     }
-    return reservations.filter(
+    return filteredReservationsByStatus.filter(
       (res) => res.scheduleId.toString() === selectedScheduleId,
     );
-  }, [reservations, selectedScheduleId]);
-
-  console.log('filteredReservations', filteredReservations);
+  }, [filteredReservationsByStatus, selectedScheduleId]);
 
   // 시간대 선택 핸들러
   const handleTimeSlotChange = useCallback(
@@ -105,7 +118,7 @@ export default function ReservationDetail({
       (slot) => slot.scheduleId.toString() === selectedScheduleId,
     )?.displayText ?? '예약 시간 선택';
 
-  if (reservations.length === 0) {
+  if (filteredReservationsByStatus.length === 0) {
     return (
       <p className='flex h-full flex-col items-center justify-center py-4 text-center text-gray-500'>
         {emptyMessage}

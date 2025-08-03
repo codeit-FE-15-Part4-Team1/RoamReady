@@ -14,7 +14,6 @@ export function useCalendar(
 ) {
   const today = useMemo(() => dayjs(), []);
 
-  // 날짜별 예약 데이터 맵 : 예약 정보를 찾을 때 key 값으로 찾아 find로 찾는 것보다 더 빠름
   const reservationsByDate = useMemo(() => {
     const map: Record<string, MonthlyReservation> = {};
     monthlyReservations.forEach((reservation) => {

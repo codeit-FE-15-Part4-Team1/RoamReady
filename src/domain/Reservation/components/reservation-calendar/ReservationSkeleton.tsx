@@ -9,7 +9,7 @@ const WEEKDAY_SKELETONS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 export default function ReservationCalendarSkeleton() {
   return (
     <div className='flex flex-col gap-10'>
-      <div className='border-neural-200 h-30 w-full animate-pulse rounded-2xl bg-neutral-200'></div>
+      <div className='bg-brand-1 h-30 w-full animate-pulse rounded-2xl'></div>
       <div
         className='w-full overflow-hidden rounded-2xl border border-gray-200 bg-white font-bold'
         role='status'
@@ -22,7 +22,7 @@ export default function ReservationCalendarSkeleton() {
         <div className='grid grid-cols-7 gap-1 border-b border-gray-100 py-10'>
           {WEEKDAY_SKELETONS.map((_, index) => (
             <div key={index} className='flex justify-center'>
-              <div className='h-10 w-15 rounded-md bg-neutral-200' />
+              <div className='bg-brand-1 h-10 w-15 rounded-md' />
             </div>
           ))}
         </div>
