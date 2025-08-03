@@ -14,5 +14,11 @@ export default async function ActivityCarousel() {
     sort: 'most_reviewed',
   });
 
-  return <ActivityCarouselClient activities={data.activities} />;
+  const activities = data.activities.map((apiActivity) => ({
+    ...apiActivity,
+    subImages: [],
+    schedules: [],
+  }));
+
+  return <ActivityCarouselClient activities={activities} />;
 }
