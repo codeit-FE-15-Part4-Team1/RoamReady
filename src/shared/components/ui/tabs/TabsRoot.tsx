@@ -21,6 +21,7 @@ export interface TabsProps {
  * controlled/uncontrolled 모드를 지원합니다.
  *
  * @example
+ * ```tsx
  * <Tabs.Root defaultValue="tab1">
  *   <Tabs.List>
  *     <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
@@ -29,6 +30,7 @@ export interface TabsProps {
  *   <Tabs.Content value="tab1">Content 1</Tabs.Content>
  *   <Tabs.Content value="tab2">Content 2</Tabs.Content>
  * </Tabs.Root>
+ * ```
  */
 
 export default function TabsRoot({
