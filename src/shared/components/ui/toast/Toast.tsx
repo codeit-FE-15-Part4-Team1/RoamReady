@@ -105,7 +105,7 @@ export default function Toast({
         'py-15 pr-9 pl-6',
         'max-w-400 min-w-300',
         'transform transition-all duration-500 ease-in-out',
-        isVisible ? 'translate-x-0' : 'translate-x-[calc(100%+30px)]',
+        isVisible ? 'translate-y-0' : '-translate-y-[calc(100%+30px)]',
         'border-l-8',
         currentTypeStyle.border,
       )}

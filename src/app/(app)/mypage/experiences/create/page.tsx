@@ -11,53 +11,49 @@ export default function CreateExperiencePage() {
   const [isFormDirty, setIsFormDirty] = useState(false);
   const [showLeaveDialog, setShowLeaveDialog] = useState(false);
   const isLeavingRef = useRef(false);
-  const originalHistoryLength = useRef(0);
 
-  // 컴포넌트 마운트 시 히스토리 길이 저장
   useEffect(() => {
-    originalHistoryLength.current = window.history.length;
-  }, []);
-
-  // popstate 이벤트 처리 - 더 간단한 방식
-  useEffect(() => {
-    const handlePopState = (e: PopStateEvent) => {
+    const handlePopState = () => {
+      // 이미 나가는 중이면 무시
       if (isLeavingRef.current) {
         return;
       }
 
       if (isFormDirty) {
-        // 뒤로가기를 방지하기 위해 다시 현재 페이지로 이동
-        e.preventDefault();
-        window.history.pushState(null, '', window.location.href);
         setShowLeaveDialog(true);
       }
     };
 
-    // 폼이 더러워지면 현재 상태를 히스토리에 추가
-    if (isFormDirty) {
-      window.history.pushState(null, '', window.location.href);
-    }
-
     window.addEventListener('popstate', handlePopState);
+
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
   }, [isFormDirty]);
 
+  useEffect(() => {
+    if (isFormDirty && !isLeavingRef.current) {
+      window.history.pushState(null, '', window.location.href);
+    }
+  }, [isFormDirty]);
+
   const handleConfirmLeave = () => {
-    // 다이얼로그 닫기
+    isLeavingRef.current = true;
+
     setShowLeaveDialog(false);
 
-    // 폼 상태 정리
     setIsFormDirty(false);
 
+    // 페이지 이동
     router.push('/mypage/experiences');
   };
 
   const handleCancelLeave = () => {
-    console.log('나가기 취소됨');
     setShowLeaveDialog(false);
+
+    window.history.pushState(null, '', window.location.href);
   };
+
   return (
     <>
       <div className='mb-[3.4rem] max-w-[120rem]'>

@@ -30,13 +30,5 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
         <Footer />
       </div>
     </ClientSessionProvider>
-
-    // <div className='flex min-h-[100dvh] flex-col'>
-    //   <Header />
-    //   <main className='tablet:px-32 desktop:px-40 mx-auto w-full max-w-1920 flex-1 px-24 py-20'>
-    //     <AuthStatusProvider>{children}</AuthStatusProvider>
-    //   </main>
-    //   <Footer />
-    // </div>
   );
 }

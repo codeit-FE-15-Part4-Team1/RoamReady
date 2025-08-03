@@ -110,6 +110,11 @@ export default function Pagination({
     if (isInvalid) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      const modalIsOpen = document.querySelector(
+        '[role="dialog"][aria-modal="true"]',
+      );
+      if (modalIsOpen) return;
+
       let nextPage = currentPage;
 
       if (e.key === 'ArrowLeft' && currentPage > 1) {

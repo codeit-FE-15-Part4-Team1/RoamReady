@@ -57,7 +57,16 @@ export function useInfiniteActivities({
 
   // 모든 activities 합치기
   const activities: Activity[] = useMemo(
-    () => (data ? data.pages.flatMap((page) => page.activities) : []),
+    () =>
+      data
+        ? data.pages.flatMap((page) =>
+            page.activities.map((apiActivity) => ({
+              ...apiActivity,
+              subImages: [],
+              schedules: [],
+            })),
+          )
+        : [],
     [data],
   );
 

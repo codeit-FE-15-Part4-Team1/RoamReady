@@ -14,7 +14,7 @@ interface ActivitySearchFormProps {
   onSubmit: (data: ActivitySearchFormValues) => void;
 }
 
-type ActiveField = 'keyword' | 'date' | 'location';
+type ActiveField = 'keyword' | 'date' | 'address';
 
 export default function ActivitySearchForm({
   onSubmit,
@@ -28,7 +28,7 @@ export default function ActivitySearchForm({
 
   const goToNextField = useCallback((currentField: ActiveField) => {
     if (currentField === 'keyword') setActiveField('date');
-    else if (currentField === 'date') setActiveField('location');
+    else if (currentField === 'date') setActiveField('address');
     else setActiveField(null);
   }, []);
 
@@ -46,11 +46,13 @@ export default function ActivitySearchForm({
         isOpen={activeField === 'keyword'}
         onOpenChange={(open) => setActiveField(open ? 'keyword' : null)}
         onClick={() => setActiveField('keyword')}
+        onClear={() => setValue('keyword', '', { shouldValidate: true })}
       >
         <DebouncedInput
           name='keyword'
           placeholder='액티비티 제목, 지역 등 검색'
           onConfirm={() => goToNextField('keyword')}
+          isOpen={activeField === 'keyword'}
         />
       </ActivitySearchField>
 
@@ -63,6 +65,7 @@ export default function ActivitySearchForm({
         isOpen={activeField === 'date'}
         onOpenChange={(open) => setActiveField(open ? 'date' : null)}
         onClick={() => setActiveField('date')}
+        onClear={() => setValue('date', undefined, { shouldValidate: true })}
       >
         <DatePicker.Root
           selectedDate={date}
@@ -77,20 +80,22 @@ export default function ActivitySearchForm({
         </DatePicker.Root>
       </ActivitySearchField>
 
-      {/* Location 필드 */}
+      {/* Address 필드 */}
       <ActivitySearchField
         label='위치'
-        displayValue={watch('location')}
+        displayValue={watch('address')}
         placeholder='지역 검색'
         popoverPosition='bottom-end'
-        isOpen={activeField === 'location'}
-        onOpenChange={(open) => setActiveField(open ? 'location' : null)}
-        onClick={() => setActiveField('location')}
+        isOpen={activeField === 'address'}
+        onOpenChange={(open) => setActiveField(open ? 'address' : null)}
+        onClick={() => setActiveField('address')}
+        onClear={() => setValue('address', '', { shouldValidate: true })}
       >
         <DebouncedInput
-          name='location'
+          name='address'
           placeholder='지역, 주소 검색'
-          onConfirm={() => goToNextField('location')}
+          onConfirm={() => goToNextField('address')}
+          isOpen={activeField === 'address'}
         />
       </ActivitySearchField>
 

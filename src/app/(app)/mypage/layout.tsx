@@ -8,11 +8,13 @@ interface MyPageLayoutProps {
 
 export default function MyPageLayout({ children }: MyPageLayoutProps) {
   return (
-    <div className='tablet:gap-20 desktop:gap-20 mx-auto flex w-full max-w-1200 py-20'>
+    <div className='tablet:gap-20 desktop:gap-20 mx-auto flex w-full max-w-1200'>
       {/* 메뉴(사이드바) */}
-      <MyPageMenu />
+      <aside className='tablet:block hidden'>
+        <MyPageMenu />
+      </aside>
       {/* 컨텐츠 */}
-      <main className='flex-1'>{children}</main>
+      <main className='min-w-0 flex-1'>{children}</main>
     </div>
   );
 }

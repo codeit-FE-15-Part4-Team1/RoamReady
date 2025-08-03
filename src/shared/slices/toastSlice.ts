@@ -68,7 +68,7 @@ export const createToastSlice: StateCreator<ToastSlice, [], [], ToastSlice> = (
   get,
 ) => ({
   toasts: [],
-  addToast: ({ message, type = 'info', duration = 3000 }) => {
+  addToast: ({ message, type = 'info', duration = 2000 }) => {
     const id = crypto.randomUUID();
     const newToast: ToastState = { id, message, type, duration };
     set((state) => ({

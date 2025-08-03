@@ -7,12 +7,9 @@ import { handleApiError } from '@/shared/utils/errors/handleApiError';
 
 /**
  * @file /api/auth/signup/route.ts
- * @description 클라이언트의 회원가입 요청을 처리하고, 성공 시 자동 로그인시키는 API 라우트 핸들러입니다.
- * @see /src/app/(auth)/signup/page.tsx - 이 API를 호출하는 클라이언트 페이지
- * @see /src/shared/constants/endpoints.ts - `API_ENDPOINTS` 상수 정의
  *
  * @description
- * 클라이언트의 회원가입 요청을 BFF(Backend for Frontend) 서버에서 처리합니다.
+ * 클라이언트의 회원가입 요청을 BFF(Backend for Frontend) 서버에서 처리하고, 성공 시 자동 로그인시키는 API 라우트 핸들러입니다.
  * 백엔드 API가 회원가입 시 토큰을 반환하지 않으므로, 회원가입 성공 후 즉시 로그인 API를 호출하여 토큰을 받아옵니다.
  *
  * ### 주요 로직:
@@ -40,6 +37,9 @@ import { handleApiError } from '@/shared/utils/errors/handleApiError';
  *
  * @param {NextRequest} request - 클라이언트의 요청 객체. `email`, `password`, `nickname`을 포함합니다.
  * @returns {Promise<NextResponse>} 처리 결과에 따른 응답 객체.
+ *
+ * @see /src/app/(auth)/signup/page.tsx - 이 API를 호출하는 클라이언트 페이지
+ * @see /src/shared/constants/endpoints.ts - `API_ENDPOINTS` 상수 정의
  */
 export async function POST(request: NextRequest) {
   try {

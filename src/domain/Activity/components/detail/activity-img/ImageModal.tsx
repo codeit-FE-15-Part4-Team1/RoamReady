@@ -94,13 +94,17 @@ export default function ImageModal({
       </button>
 
       {/* 이전 이미지 버튼 */}
-      <button
-        className='absolute left-4 z-10 cursor-pointer text-5xl text-white'
-        onClick={() => setIndex((i) => (i - 1 + images.length) % images.length)}
-        aria-label='이전 이미지 보기'
-      >
-        &#8592;
-      </button>
+      {images.length > 1 && (
+        <button
+          className='absolute left-4 z-10 cursor-pointer text-5xl text-white'
+          onClick={() =>
+            setIndex((i) => (i - 1 + images.length) % images.length)
+          }
+          aria-label='이전 이미지 보기'
+        >
+          &#8592;
+        </button>
+      )}
 
       {/* 이미지 표시 영역 */}
       <div
@@ -122,13 +126,15 @@ export default function ImageModal({
       </div>
 
       {/* 다음 이미지 버튼 */}
-      <button
-        className='absolute right-4 z-10 cursor-pointer text-5xl text-white'
-        onClick={() => setIndex((i) => (i + 1) % images.length)}
-        aria-label='다음 이미지 보기'
-      >
-        &#8594;
-      </button>
+      {images.length > 1 && (
+        <button
+          className='absolute right-4 z-10 cursor-pointer text-5xl text-white'
+          onClick={() => setIndex((i) => (i + 1) % images.length)}
+          aria-label='다음 이미지 보기'
+        >
+          &#8594;
+        </button>
+      )}
     </div>
   );
 }

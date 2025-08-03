@@ -120,6 +120,7 @@ export const useReservationForm = (
     totalPrice,
 
     // 상태 제어 함수 반환
+    setParticipantCount,
     setSelectedDate,
     setSelectedTime,
     handleTimeSelect,

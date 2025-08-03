@@ -6,12 +6,7 @@ import { handleApiError } from '@/shared/utils/errors/handleApiError';
 
 /**
  * @file /api/auth/signin/route.ts
- * @description 클라이언트의 로그인 요청을 처리하고, 성공 시 인증 쿠키를 발급하는 API 라우트 핸들러입니다.
- * @see /src/app/(auth)/signin/page.tsx - 이 API를 호출하는 클라이언트 페이지
- * @see /src/shared/constants/endpoints.ts - `API_ENDPOINTS` 상수 정의
- *
- * @description
- * 클라이언트의 로그인 요청을 BFF(Backend for Frontend) 서버에서 처리합니다.
+ * @description 클라이언트의 로그인 요청을 BFF(Backend for Frontend) 서버에서 처리하고, 성공 시 인증 쿠키를 발급하는 API 라우트 핸들러입니다.
  *
  * ### 주요 로직:
  * 1.  클라이언트로부터 `email`, `password`의 유효성을 Zod 스키마로 검사합니다.
@@ -38,6 +33,9 @@ import { handleApiError } from '@/shared/utils/errors/handleApiError';
  *
  * @param {NextRequest} request - 클라이언트의 요청 객체. `email`, `password`를 포함합니다.
  * @returns {Promise<NextResponse>} 처리 결과에 따른 응답 객체.
+ *
+ * @see /src/app/(auth)/signin/page.tsx - 이 API를 호출하는 클라이언트 페이지
+ * @see /src/shared/constants/endpoints.ts - `API_ENDPOINTS` 상수 정의
  */
 export async function POST(request: NextRequest) {
   try {

@@ -11,7 +11,7 @@ import { apiClient } from '@/shared/libs/apiClient';
  */
 export const getNotifications = async ({
   cursorId,
-  size = 10,
+  size = 3,
 }: {
   cursorId?: number;
   size?: number;
