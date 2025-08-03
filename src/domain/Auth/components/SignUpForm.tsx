@@ -50,14 +50,19 @@ export default function SignUpForm() {
   } = form;
 
   useEffect(() => {
-    const saved = sessionStorage.getItem('signup-form');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      form.reset({
-        ...form.getValues(),
-        email: parsed.email || '',
-        nickname: parsed.nickname || '',
-      });
+    try {
+      const saved = sessionStorage.getItem('signup-form');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        form.reset({
+          ...form.getValues(),
+          email: parsed.email || '',
+          nickname: parsed.nickname || '',
+        });
+      }
+    } catch (error) {
+      console.warn('[Session Storage Error]:', error);
+      sessionStorage.removeItem('signup-form');
     }
   }, []);
 
@@ -93,7 +98,7 @@ export default function SignUpForm() {
 
         <Input.Root id='nickname' name='nickname' type='text'>
           <Input.Label>닉네임</Input.Label>
-          <Input.Field placeholder='닉네임을 작성해주세요' />
+          <Input.Field placeholder='닉네임을 작성해주세요' maxLength={11} />
           <Input.Helper />
         </Input.Root>
 
