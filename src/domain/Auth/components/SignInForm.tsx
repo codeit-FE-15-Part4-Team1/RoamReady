@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { useSigninMutation } from '@/domain/Auth/hooks/useSigninMutation';
@@ -8,6 +9,7 @@ import type { SigninRequest } from '@/domain/Auth/schemas/request';
 import { signinRequestSchema } from '@/domain/Auth/schemas/request';
 import Button from '@/shared/components/Button';
 import Input from '@/shared/components/ui/input';
+import { useRoamReadyStore } from '@/shared/store';
 
 /**
  * @component SignInForm
@@ -20,13 +22,14 @@ import Input from '@/shared/components/ui/input';
  * - **유효성 검사**: `zodResolver`를 이용해 클라이언트 측 유효성 검사를 실시간으로 수행합니다.
  * - **제출 중 로딩 상태 관리**: `isSubmitting` 및 `isPending` 상태를 활용하여 API 요청 중에는 버튼을 비활성화하고 로딩 상태를 표시합니다.
  * - **전역 상태 업데이트**: 로그인 성공 시, 전역 Zustand 스토어에 사용자 정보를 저장하고 관련 캐시를 무효화합니다.
- * - **사용자 피드백**: `useToast` 훅을 통해 로그인 성공 또는 실패에 대한 명확한 피드백(토스트 메시지)을 제공합니다. OAuth 관련 에러는 URL 쿼리 파라미터를 통해 받아 처리합니다.
  * - **에러 핸들링**: `useSigninMutation` 훅 내부에서 `ky`의 `HTTPError`를 감지하여 네트워크 에러 메시지 및 서버 응답 에러를 사용자에게 보여줍니다.
+ * - **최근 로그인 이메일 자동 입력**: Zustand 스토어의 사용자 정보에서 이메일을 가져와 기본값으로 자동 입력 (로그아웃 후에도 유지됨)
  *
  * @see /src/app/api/auth/signin/route.ts - 로그인을 처리하는 API 라우트
  */
 export default function SignInForm() {
   const { mutate, isPending } = useSigninMutation();
+  const user = useRoamReadyStore((state) => state.user);
 
   const signinDefaultValues: SigninRequest = {
     email: '',
@@ -42,7 +45,14 @@ export default function SignInForm() {
   const {
     handleSubmit,
     formState: { isSubmitting, isValid },
+    setValue,
   } = form;
+
+  useEffect(() => {
+    if (user?.email) {
+      setValue('email', user.email);
+    }
+  }, [user?.email, setValue]);
 
   const onSubmit = (data: SigninRequest) => {
     mutate(data);

@@ -17,6 +17,7 @@ import { ROUTES } from '@/shared/constants/routes';
  * <Suspense> 바운더리로 래핑합니다.
  */
 export default function SignInPage() {
+  // 아래는 스켈레톤 확인용
   // await new Promise((resolve) => setTimeout(resolve, 5000));
 
   return (
