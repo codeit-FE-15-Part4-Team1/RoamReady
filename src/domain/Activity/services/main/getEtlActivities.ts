@@ -5,6 +5,17 @@ import {
 } from '@/domain/Activity/schemas/main';
 import { apiClient } from '@/shared/libs/apiClient';
 
+/**
+ * 날짜를 YYYY-MM-DD 형식의 문자열로 변환합니다.
+ * 로컬 시간대를 고려하여 정확한 날짜를 반환합니다.
+ */
+const formatDateToYYYYMMDD = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 export const getEtlActivities = async (
   searchParams?: ActivitySearchFormValues,
 ): Promise<EtlResponse> => {
@@ -20,7 +31,8 @@ export const getEtlActivities = async (
       params.append('address', searchParams.address);
     }
     if (searchParams?.date) {
-      params.append('date', searchParams.date.toISOString().split('T')[0]);
+      // 로컬 시간대를 고려한 날짜 변환 사용
+      params.append('date', formatDateToYYYYMMDD(searchParams.date));
     }
 
     if (params.toString()) {

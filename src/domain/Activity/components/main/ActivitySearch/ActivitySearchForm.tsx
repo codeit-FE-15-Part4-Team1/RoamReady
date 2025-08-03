@@ -46,7 +46,7 @@ export default function ActivitySearchForm({
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
-      className='relative flex h-auto w-full max-w-800 items-center rounded-full bg-white shadow-lg ring-1 ring-neutral-200'
+      className='relative flex h-auto w-full max-w-800 items-center overflow-hidden rounded-full bg-white shadow-lg ring-1 ring-neutral-200'
     >
       {/* Keyword 필드 */}
       <ActivitySearchField
@@ -55,6 +55,8 @@ export default function ActivitySearchForm({
         placeholder='액티비티 검색'
         popoverPosition='bottom-start'
         isOpen={activeField === 'keyword'}
+        isActive={activeField === 'keyword'}
+        hasActiveField={activeField !== null}
         onOpenChange={(open) => setActiveField(open ? 'keyword' : null)}
         onClick={() => setActiveField('keyword')}
         onClear={() => setValue('keyword', '', { shouldValidate: true })}
@@ -67,6 +69,9 @@ export default function ActivitySearchForm({
         />
       </ActivitySearchField>
 
+      {/* 구분선 */}
+      <div className='h-32 w-px bg-neutral-200' />
+
       {/* Date 필드 */}
       <ActivitySearchField
         label='날짜'
@@ -74,6 +79,8 @@ export default function ActivitySearchForm({
         placeholder='날짜 선택'
         popoverPosition='bottom-center'
         isOpen={activeField === 'date'}
+        isActive={activeField === 'date'}
+        hasActiveField={activeField !== null}
         onOpenChange={(open) => setActiveField(open ? 'date' : null)}
         onClick={() => setActiveField('date')}
         onClear={() => setValue('date', undefined, { shouldValidate: true })}
@@ -91,6 +98,9 @@ export default function ActivitySearchForm({
         </DatePicker.Root>
       </ActivitySearchField>
 
+      {/* 구분선 */}
+      <div className='h-32 w-px bg-neutral-200' />
+
       {/* Address 필드 */}
       <ActivitySearchField
         label='위치'
@@ -98,6 +108,8 @@ export default function ActivitySearchForm({
         placeholder='지역 검색'
         popoverPosition='bottom-end'
         isOpen={activeField === 'address'}
+        isActive={activeField === 'address'}
+        hasActiveField={activeField !== null}
         onOpenChange={(open) => setActiveField(open ? 'address' : null)}
         onClick={() => setActiveField('address')}
         onClear={() => setValue('address', '', { shouldValidate: true })}

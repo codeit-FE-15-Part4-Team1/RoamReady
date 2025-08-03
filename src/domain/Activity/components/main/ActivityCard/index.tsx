@@ -24,10 +24,11 @@ export default function ActivityCard({
   const [hasImageError, setHasImageError] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(true);
 
+  // 이미지 URL이 변경되거나 컴포넌트가 리렌더링될 때 상태 초기화
   useEffect(() => {
     setHasImageError(false);
     setIsImageLoading(true);
-  }, [bannerImageUrl]);
+  }, [bannerImageUrl, id]); // id도 의존성에 추가하여 컴포넌트 리렌더링 시 상태 초기화
 
   return (
     <Link href={`/activities/${id}`}>
