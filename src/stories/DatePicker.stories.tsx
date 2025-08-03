@@ -49,20 +49,6 @@ export default meta;
 
 type Story = StoryObj;
 
-/** 예약 가능 날짜 예시 */
-const reservableDates = [
-  '2025-07-05',
-  '2025-07-20',
-  '2025-07-25',
-  '2025-07-30',
-  '2025-07-31',
-  '2025-08-01',
-  '2025-08-02',
-  '2025-08-03',
-  '2025-08-13',
-  '2025-08-15',
-];
-
 export const LargeWithReservableDates: Story = {
   name: 'Large / 예약 가능 날짜 포함',
   render: () => {
