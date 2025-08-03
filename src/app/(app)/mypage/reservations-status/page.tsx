@@ -5,6 +5,7 @@ import Nothing from '@/shared/components/ui/nothing';
 
 export default async function MyReservationStatusPage() {
   const initialActivities = await getMyActivities();
+
   return (
     <div className='flex w-full flex-col gap-16'>
       <MyPageContentHeader
