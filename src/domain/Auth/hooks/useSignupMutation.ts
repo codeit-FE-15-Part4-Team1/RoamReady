@@ -62,7 +62,8 @@ export const useSignupMutation = (
       setUser(data);
       queryClient.invalidateQueries({ queryKey: ['user', 'me'] });
       showSuccess('회원가입이 완료되었습니다! 환영합니다.');
-      router.push(ROUTES.ACTIVITIES.ROOT);
+      // router.push(ROUTES.ACTIVITIES.ROOT);
+      window.location.href = ROUTES.ACTIVITIES.ROOT;
     },
 
     onError: (error: Error) => {

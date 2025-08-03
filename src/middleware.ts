@@ -47,7 +47,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const accessToken = request.cookies.get('accessToken')?.value;
 
-  if (!pathname.startsWith('/api/')) {
+  if (!pathname.startsWith(`${BRIDGE_API.PREFIX}/`)) {
     const isProtectedRoute = protectedPageRoutes.some((route) =>
       pathname.startsWith(route),
     );
@@ -66,7 +66,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (pathname.startsWith('/api/test/')) {
+  if (pathname.startsWith(`${BRIDGE_API.TEST_PREFIX}/`)) {
     return NextResponse.next();
   }
 
