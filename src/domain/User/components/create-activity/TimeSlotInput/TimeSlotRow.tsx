@@ -71,7 +71,11 @@ export default function TimeSlotRow({ index, onRemove }: TimeSlotRowProps) {
               <Popover.Trigger>
                 <button
                   type='button'
-                  onClick={() => setShowDatePicker(!showDatePicker)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    setShowDatePicker(!showDatePicker);
+                  }}
                   className='absolute top-20 right-10 p-1 text-gray-600 hover:text-gray-900'
                 >
                   <Calendar size={20} />
