@@ -10,7 +10,8 @@ import ToastExample from '@/shared/components/ui/toast/ToastExample';
 export default function ToastTestPage() {
   return (
     <>
-      <Header user={null} />
+      {/* <Header user={null} /> */}
+      <Header />
       <main className='flex min-h-screen w-full items-center justify-center bg-gray-100'>
         <ToastExample />
       </main>
