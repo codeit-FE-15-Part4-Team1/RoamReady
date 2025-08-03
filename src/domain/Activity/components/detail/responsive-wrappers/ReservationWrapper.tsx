@@ -72,16 +72,18 @@ export default function ReservationWrapper({
     // 일반 사용자 (PC, 로그인, 소유자 아님) → 예약 폼 노출
     return (
       <div
-        className='sticky flex flex-col gap-38'
+        className='sticky'
         style={{
           top: 120,
           height: heightValue,
         }}
       >
-        <div className='w-400'>
-          <ActivitySummary activity={activity} review={reviews} />
+        <div className='scrollbar-none flex h-full flex-col gap-30 overflow-y-auto'>
+          <div className='w-400'>
+            <ActivitySummary activity={activity} review={reviews} />
+          </div>
+          <ReservationPC activity={activity} reservation={reservation} />
         </div>
-        <ReservationPC activity={activity} reservation={reservation} />
       </div>
     );
   }

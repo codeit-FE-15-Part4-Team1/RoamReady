@@ -109,7 +109,7 @@ export default function AvailableTimeSection({
         </div>
 
         {/* 흐림 효과: 타임 슬롯이 많아 스크롤이 필요한 경우 하단 fade 효과 표시 */}
-        {filteredSlots.length >= 3 && (
+        {filteredSlots.length >= 4 && (
           <div className='pointer-events-none absolute bottom-0 left-0 h-20 w-full bg-gradient-to-t from-white to-transparent' />
         )}
       </div>
