@@ -295,7 +295,7 @@ export default function DayCell({
             <div
               className={`font-size-10 inline-block w-[90%] truncate rounded-xl px-1 font-medium ${getColorClassByStatus(displayItems[0].status)}`}
             >
-              {STATUS_LABELS[displayItems[0].status]} {displayItems[0].count}명
+              {STATUS_LABELS[displayItems[0].status]} {displayItems[0].count}건
             </div>
           </div>
         )}

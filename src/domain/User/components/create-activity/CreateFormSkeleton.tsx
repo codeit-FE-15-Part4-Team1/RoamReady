@@ -12,31 +12,26 @@ export default function CreateActivityFormSkeleton() {
       <div className='bg-brand-1 mb-20 w-140 py-15 font-bold'></div>
       <div className='bg-brand-1'></div>
       <div className='flex flex-col gap-[2.4rem]'>
-        {/* 1. TitleInput Skeleton */}
         <div className='flex flex-col gap-10'>
           <div className='bg-brand-1 h-30 w-40'></div>
           <div className='bg-brand-1 w-full' style={{ height: '60px' }} />
         </div>
 
-        {/* 1. TitleInput Skeleton */}
         <div className='flex flex-col gap-10'>
           <div className='bg-brand-1 h-30 w-80'></div>
           <div className='bg-brand-1 w-full' style={{ height: '60px' }} />
         </div>
 
-        {/* 2. CategoryInput Skeleton */}
         <div className='flex flex-col gap-10'>
           <div className='bg-brand-1 h-30 w-40'></div>
           <div className='bg-brand-1 w-full' style={{ height: '276px' }}></div>
         </div>
 
-        {/* 1. TitleInput Skeleton */}
         <div className='flex flex-col gap-10'>
           <div className='bg-brand-1 h-30 w-40'></div>
           <div className='bg-brand-1 w-full' style={{ height: '60px' }} />
         </div>
 
-        {/* 1. TitleInput Skeleton */}
         <div className='flex flex-col gap-10'>
           <div className='bg-brand-1 h-30 w-40'></div>
           <div className='bg-brand-1 w-full' style={{ height: '60px' }} />
@@ -81,7 +76,6 @@ export default function CreateActivityFormSkeleton() {
           </div>
         </div>
 
-        {/* 7. BannerImageInput Skeleton (상세 코드 반영하여 수정) */}
         <div className='flex flex-col gap-3'>
           <div className='bg-brand-1 h-5 w-36' /> {/* 배너 이미지 등록 라벨 */}
           <div className='flex items-center gap-20'>
@@ -98,7 +92,6 @@ export default function CreateActivityFormSkeleton() {
           </div>
         </div>
 
-        {/* 8. IntroImageInput Skeleton (상세 코드 반영하여 수정) */}
         <div className='flex flex-col gap-3'>
           <div className='bg-brand-1 h-5 w-40' /> {/* 소개 이미지 등록 라벨 */}
           <div className='flex flex-wrap items-center gap-20'>
@@ -119,7 +112,6 @@ export default function CreateActivityFormSkeleton() {
           </div>
         </div>
 
-        {/* 9. SubmitButton Skeleton */}
         <div className='flex w-full justify-center'>
           <div className='bg-brand-1 mt-4 h-40 w-120 rounded-2xl' />
         </div>
