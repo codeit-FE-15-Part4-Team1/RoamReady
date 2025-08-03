@@ -21,7 +21,7 @@ const baseSignupRequestSchema = z.object({
     .min(8, { message: '비밀번호는 최소 8자 이상이어야 합니다.' }),
   passwordConfirm: z
     .string()
-    .min(8, { message: '비밀번호 확인을 입력해주세요.' }),
+    .min(8, { message: '비밀번호는 최소 8자 이상이어야 합니다.' }),
 });
 
 /**
