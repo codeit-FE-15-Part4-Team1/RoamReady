@@ -1,6 +1,6 @@
 'use client';
 
-import LogoTextTwoline from '@/shared/assets/logos/LogoTextTwoline';
+import { CircleAlert } from 'lucide-react';
 
 /**
  * @description
@@ -11,9 +11,9 @@ import LogoTextTwoline from '@/shared/assets/logos/LogoTextTwoline';
  */
 const ErrorFallback = () => {
   return (
-    <div className='flex-col-center w-full gap-8 rounded-lg border border-red-300 bg-red-50 text-center text-gray-600'>
-      <div className='flex-center gap-14'>
-        <LogoTextTwoline className='font-size-15 size-100 text-red-700' />
+    <div className='flex-col-center w-full gap-8 rounded-lg border border-red-300 bg-red-50 p-8 text-center text-gray-600'>
+      <div className='flex-center gap-10'>
+        <CircleAlert className='font-size-15 size-30 text-red-700' />
         <h2 className='font-size-20 font-bold'>
           예상치 못한 문제가 발생했습니다.
         </h2>
