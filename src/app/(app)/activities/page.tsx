@@ -23,7 +23,9 @@ export default async function ActivityPage({
           <h1 className='font-size-24 tablet:font-size-30 font-bold text-neutral-800'>
             무엇을 체험하고 싶으신가요?
           </h1>
-          <ResponsiveSearchBar />
+          <div className='mx-auto w-full max-w-800'>
+            <ResponsiveSearchBar />
+          </div>
         </div>
 
         {/* 검색 조건에 따른 캐러셀 표시/숨김을 실시간으로 제어 */}

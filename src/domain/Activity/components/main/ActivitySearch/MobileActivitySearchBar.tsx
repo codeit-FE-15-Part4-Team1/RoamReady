@@ -57,9 +57,7 @@ interface MobileActivitySearchFormProps {
 }
 
 function MobileActivitySearchForm({ onSubmit }: MobileActivitySearchFormProps) {
-  const { register, handleSubmit, watch, setValue } =
-    useFormContext<MobileSearchFormValues>();
-  const keyword = watch('keyword');
+  const { register, handleSubmit } = useFormContext<MobileSearchFormValues>();
 
   const handleFormSubmit = (data: MobileSearchFormValues) => {
     const searchData = {

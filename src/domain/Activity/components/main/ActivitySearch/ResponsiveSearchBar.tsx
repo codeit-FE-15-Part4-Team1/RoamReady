@@ -9,7 +9,7 @@ export default function ResponsiveSearchBar() {
       <div className='tablet:hidden w-full'>
         <MobileActivitySearchBar />
       </div>
-      <div className='tablet:block hidden w-full'>
+      <div className='tablet:flex hidden'>
         <ActivitySearchBar />
       </div>
     </>
