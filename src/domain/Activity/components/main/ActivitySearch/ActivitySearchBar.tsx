@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import ActivitySearchBarForm from '@/domain/Activity/components/main/ActivitySearch/ActivitySearchForm';
@@ -9,36 +9,55 @@ import {
   ActivitySearchFormValues,
   activitySearchSchema,
 } from '@/domain/Activity/schemas/main';
-import { formatDateForAPI } from '@/shared/utils/formatDate';
 
 export default function ActivitySearchBar() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const methods = useForm<ActivitySearchFormValues>({
     resolver: zodResolver(activitySearchSchema),
     defaultValues: {
-      keyword: '',
-      date: undefined,
-      location: '',
+      keyword: searchParams.get('keyword') || '',
+      date: searchParams.get('date')
+        ? new Date(searchParams.get('date')!)
+        : undefined,
+      address: searchParams.get('address') || '',
     },
   });
 
-  const onSubmit = (data: ActivitySearchFormValues) => {
-    const params = new URLSearchParams();
-    if (data.keyword) {
-      params.append('keyword', data.keyword);
-    }
-    if (data.date) {
-      params.append('date', formatDateForAPI(data.date));
-    }
-    if (data.location) {
-      params.append('location', data.location);
-    }
-    const queryString = params.toString();
-    const url = `/search?${queryString}`;
+  const onSubmit = async (data: ActivitySearchFormValues) => {
+    try {
+      // URL 파라미터 업데이트
+      const params = new URLSearchParams(searchParams.toString());
 
-    // 검색 페이지로 이동
-    router.push(url);
+      if (data.keyword) {
+        params.set('keyword', data.keyword);
+      } else {
+        params.delete('keyword');
+      }
+
+      if (data.date) {
+        params.set('date', data.date.toISOString().split('T')[0]);
+      } else {
+        params.delete('date');
+      }
+
+      if (data.address) {
+        params.set('address', data.address);
+      } else {
+        params.delete('address');
+      }
+
+      // 페이지 초기화
+      params.delete('page');
+
+      const queryString = params.toString();
+      const url = `/activities?${queryString}`;
+
+      router.push(url, { scroll: false });
+    } catch (error) {
+      console.error('검색 중 오류 발생:', error);
+    }
   };
 
   return (
