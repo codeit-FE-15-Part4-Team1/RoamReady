@@ -51,10 +51,10 @@ export default function AuthMenu({ user }: AuthMenuProps) {
             </div>
           </Dropdown.Trigger>
           <Dropdown.Menu menuClassName='top-40'>
-            <Dropdown.Item onClick={onSignout}>로그아웃</Dropdown.Item>
             <Dropdown.Item onClick={() => router.push(ROUTES.MYPAGE.INFO)}>
               마이페이지
             </Dropdown.Item>
+            <Dropdown.Item onClick={onSignout}>로그아웃</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown.Root>
       </div>

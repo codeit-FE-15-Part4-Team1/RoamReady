@@ -1,4 +1,7 @@
+'use client';
+
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { Reservation } from '@/domain/Reservation/schemas/reservation';
 
@@ -14,10 +17,19 @@ export default function ReservationCard({
   reservation,
   onWriteReview,
 }: ReservationCardProps) {
+  const router = useRouter();
+
+  const handleCardClick = () => {
+    router.push(`/activities/${reservation.activity.id}`);
+  };
+
   return (
-    <>
-      <article className='border-brand-1 flex rounded-3xl border bg-white shadow-lg'>
-        <section className='desktop:px-40 flex-1 p-20 py-30'>
+    <div className='mx-auto flex w-full max-w-full flex-col'>
+      <article
+        className='border-brand-1 flex w-full cursor-pointer rounded-3xl border bg-white shadow-lg transition-shadow hover:shadow-xl'
+        onClick={handleCardClick}
+      >
+        <section className='desktop:px-40 flex-1 p-12 py-20 sm:p-16 sm:py-24 md:p-20 md:py-30 lg:px-32 lg:py-30'>
           <div>
             <ReservationStatusBadge status={reservation.status} />
           </div>
@@ -45,13 +57,13 @@ export default function ReservationCard({
             </div>
           </div>
         </section>
-        <figure className='desktop:w-181 relative aspect-square w-136 p-12'>
+        <figure className='desktop:max-w-250 aspect-video w-full max-w-136'>
           <div className='relative h-full w-full select-none'>
             <Image
               src={reservation.activity.bannerImageUrl}
               alt={reservation.activity.title}
               fill
-              className='rounded-3xl object-cover'
+              className='rounded-tr-3xl rounded-br-3xl object-cover'
               draggable={false}
             />
           </div>
@@ -62,6 +74,6 @@ export default function ReservationCard({
         onWriteReview={onWriteReview}
         isDesktop={false}
       />
-    </>
+    </div>
   );
 }
