@@ -13,9 +13,8 @@ const config: StorybookConfig = {
     name: '@storybook/nextjs-vite',
     options: {},
   },
-  staticDirs: ['../public'], // ← 경로 구분자 슬래시(`/`)로!
+  staticDirs: ['../public'],
   async viteFinal(config, { configType }) {
-    // Production build 시 base 경로 설정
     if (configType === 'PRODUCTION') {
       config.base = '/storybook/';
     }
