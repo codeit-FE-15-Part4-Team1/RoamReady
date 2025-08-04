@@ -4,6 +4,8 @@ import { signinRequestSchema } from '@/domain/Auth/schemas/request';
 import handleSignin from '@/domain/Auth/utils/handleSignin';
 import { handleApiError } from '@/shared/utils/errors/handleApiError';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * @file /api/auth/signin/route.ts
  * @description 클라이언트의 로그인 요청을 BFF(Backend for Frontend) 서버에서 처리하고, 성공 시 인증 쿠키를 발급하는 API 라우트 핸들러입니다.
@@ -37,6 +39,7 @@ import { handleApiError } from '@/shared/utils/errors/handleApiError';
  * @see /src/app/(auth)/signin/page.tsx - 이 API를 호출하는 클라이언트 페이지
  * @see /src/shared/constants/endpoints.ts - `API_ENDPOINTS` 상수 정의
  */
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
