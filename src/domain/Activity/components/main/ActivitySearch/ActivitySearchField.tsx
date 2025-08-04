@@ -2,6 +2,7 @@ import { X } from 'lucide-react';
 import { ReactNode } from 'react';
 
 import Popover from '@/shared/components/ui/popover';
+import { cn } from '@/shared/libs/cn';
 
 interface ActivitySearchFieldProps {
   label: string;
@@ -72,7 +73,10 @@ export default function ActivitySearchField({
           {displayValue && onClear && (
             <div
               onClick={handleClear}
-              className='ml-8 flex-shrink-0 cursor-pointer rounded-full bg-neutral-200/50 p-4 text-neutral-400 hover:text-neutral-600'
+              className={cn(
+                'ml-8 flex-shrink-0 cursor-pointer rounded-full bg-neutral-200 p-4 text-neutral-400 hover:text-neutral-600',
+                label === '위치' && 'mr-100',
+              )}
             >
               <X className='size-14' />
             </div>
