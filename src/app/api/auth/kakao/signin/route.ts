@@ -80,16 +80,8 @@ export async function GET(request: NextRequest) {
     }
 
     const responseData = await handleOauthSignIn(code);
-    // const response = NextResponse.redirect(
-    //   new URL(ROUTES.ACTIVITIES.ROOT, request.url),
-    // );
-    const response = new NextResponse(null, {
-      status: 302,
-      statusText: 'Found',
-    });
-    response.headers.set(
-      'Location',
-      new URL(ROUTES.ACTIVITIES.ROOT, request.url).toString(),
+    const response = NextResponse.redirect(
+      new URL(ROUTES.ACTIVITIES.ROOT, request.url),
     );
 
     setAuthCookies(response, {

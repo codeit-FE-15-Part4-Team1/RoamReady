@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "app/api/auth/kakao/signin/route.ts": {
+      "maxDuration": 30
+    }
+  }
+}
