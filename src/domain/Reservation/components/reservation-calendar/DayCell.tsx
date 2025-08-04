@@ -86,14 +86,17 @@ export default function DayCell({
     enabled: !!selectedActivityId,
   });
 
-  // 스케줄 데이터가 로드되면 첫 번째 스케줄을 선택
   useEffect(() => {
     if (schedules && schedules.length > 0 && !selectedScheduleId) {
-      setSelectedScheduleId(schedules[0].scheduleId);
+      // pending 예약이 있는 첫 번째 스케줄 찾기
+      const scheduleWithPending = schedules.find((s) => s.count.pending > 0);
+      // pending이 있으면 그것을, 없으면 첫 번째 스케줄 선택
+      const targetSchedule = scheduleWithPending || schedules[0];
+      setSelectedScheduleId(targetSchedule.scheduleId);
     }
   }, [schedules, selectedScheduleId]);
 
-  //  2. 선택된 시간대의 예약 목록 조회 (useQuery)
+  //  2. 모든 스케줄의 예약 목록 조회 (통합 버전)
   const {
     data: reservationsByStatus = { pending: [], confirmed: [], declined: [] },
   } = useQuery<{
@@ -102,35 +105,58 @@ export default function DayCell({
     declined: ReservationItem[];
   }>({
     queryKey: [
-      'reservationsBySchedule',
-      selectedScheduleId,
+      'allReservationsByDate',
+      selectedActivityId,
       day.format('YYYY-MM-DD'),
     ],
     queryFn: async () => {
-      const [pending, confirmed, declined] = await Promise.all([
+      if (!schedules || schedules.length === 0) {
+        return { pending: [], confirmed: [], declined: [] };
+      }
+
+      // 모든 스케줄의 예약을 병렬로 조회
+      const allPendingPromises = schedules.map((schedule) =>
         getReservationsBySchedule(
           selectedActivityId!,
-          selectedScheduleId!,
+          schedule.scheduleId,
           'pending',
         ),
+      );
+      const allConfirmedPromises = schedules.map((schedule) =>
         getReservationsBySchedule(
           selectedActivityId!,
-          selectedScheduleId!,
+          schedule.scheduleId,
           'confirmed',
         ),
+      );
+      const allDeclinedPromises = schedules.map((schedule) =>
         getReservationsBySchedule(
           selectedActivityId!,
-          selectedScheduleId!,
+          schedule.scheduleId,
           'declined',
         ),
-      ]);
+      );
+
+      const [pendingResults, confirmedResults, declinedResults] =
+        await Promise.all([
+          Promise.all(allPendingPromises),
+          Promise.all(allConfirmedPromises),
+          Promise.all(allDeclinedPromises),
+        ]);
+
       return {
-        pending: pending || [],
-        confirmed: confirmed || [],
-        declined: declined || [],
+        pending: pendingResults
+          .flat()
+          .filter((item): item is ReservationItem => item !== null),
+        confirmed: confirmedResults
+          .flat()
+          .filter((item): item is ReservationItem => item !== null),
+        declined: declinedResults
+          .flat()
+          .filter((item): item is ReservationItem => item !== null),
       };
     },
-    enabled: !!selectedScheduleId,
+    enabled: !!selectedActivityId && !!schedules?.length,
   });
 
   // 3. '하나 승인 후 나머지 거절' 비즈니스 로직을 처리하는 전용 뮤테이션
@@ -157,7 +183,13 @@ export default function DayCell({
       );
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['reservationsBySchedule'] });
+      queryClient.invalidateQueries({
+        queryKey: [
+          'allReservationsByDate',
+          selectedActivityId,
+          day.format('YYYY-MM-DD'),
+        ],
+      });
       queryClient.invalidateQueries({ queryKey: ['schedules'] });
       queryClient.invalidateQueries({ queryKey: ['reservationDashboard'] });
     },
@@ -185,7 +217,8 @@ export default function DayCell({
     (reservationId: number, scheduleId: number) => {
       if (isApproving) return;
       const reservationsToDecline = reservationsByStatus.pending.filter(
-        (r) => r.scheduleId === scheduleId && r.id !== reservationId,
+        (r: ReservationItem) =>
+          r.scheduleId === scheduleId && r.id !== reservationId,
       );
       approveAndDecline({ reservationId, scheduleId, reservationsToDecline });
       showSuccess('승인되었습니다.');
@@ -268,7 +301,7 @@ export default function DayCell({
             <div
               className={`font-size-10 inline-block w-[90%] truncate rounded-xl px-1 font-medium ${getColorClassByStatus(displayItems[0].status)}`}
             >
-              {STATUS_LABELS[displayItems[0].status]} {displayItems[0].count}명
+              {STATUS_LABELS[displayItems[0].status]} {displayItems[0].count}건
             </div>
           </div>
         )}
@@ -280,7 +313,7 @@ export default function DayCell({
               key={`${reservation?.date}-${item.status}-${index}-desktop`}
               className={`font-size-12 md:font-size-14 w-[90%] truncate rounded-xl px-1 text-center font-medium ${getColorClassByStatus(item.status)}`}
             >
-              {STATUS_LABELS[item.status]} {item.count}명
+              {STATUS_LABELS[item.status]} {item.count}건
             </div>
           ))}
         </div>
@@ -334,6 +367,8 @@ export default function DayCell({
             onReject={handleReject}
             onTimeSlotSelect={handleTimeSlotSelect}
             isLoading={isApproving || isRejecting}
+            status='pending'
+            setIsOpen={setIsOpen}
           />
         </Tabs.Content>
 
@@ -348,6 +383,8 @@ export default function DayCell({
             onReject={handleReject}
             onTimeSlotSelect={handleTimeSlotSelect}
             isLoading={isApproving || isRejecting}
+            status='confirmed'
+            setIsOpen={setIsOpen}
           />
         </Tabs.Content>
 
@@ -362,6 +399,8 @@ export default function DayCell({
             onReject={handleReject}
             onTimeSlotSelect={handleTimeSlotSelect}
             isLoading={isApproving || isRejecting}
+            status='declined'
+            setIsOpen={setIsOpen}
           />
         </Tabs.Content>
       </Tabs.Root>

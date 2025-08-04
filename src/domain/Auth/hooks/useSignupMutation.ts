@@ -24,7 +24,7 @@ import { useRoamReadyStore } from '@/shared/store';
  * - `data`에 `message` 속성이 존재할 경우 (예: "회원가입 성공! 로그인 페이지로 이동합니다."), 이는 자동 로그인 실패와 같은 '부분 성공' 케이스로 간주하여 해당 메시지를 표시하고 로그인 페이지(`ROUTES.SIGNIN`)로 이동합니다.
  * - 전역 Zustand 스토어의 `setUser` 함수를 통해 로그인된 사용자 정보(`data`)를 업데이트합니다.
  * - `queryClient.invalidateQueries({ queryKey: ['user', 'me'] })`를 호출하여 'user', 'me' 쿼리 키에 해당하는 캐시를 무효화합니다. 이는 회원가입 후 사용자 정보가 변경되었을 수 있으므로 최신 정보를 다시 가져오도록 합니다.
- * - `showSuccess` 토스트 메시지('회원가입이 완료되었습니다! 환영합니다.')를 표시하고 메인 페이지(`ROUTES.ACTIVITIES.ROOT`)로 리다이렉트합니다.
+ * - 메인 페이지(`ROUTES.ACTIVITIES.ROOT`)로 리다이렉트합니다.
  *
  * @property {Function} onError - `mutationFn`이 실패했을 때 실행되는 콜백 함수입니다.
  * - `error` (Error): 발생한 에러 객체입니다. 이 `error.message`는 `formatErrorResponseHooks`에 의해 이미 사용자 친화적인 메시지로 가공되어 있습니다.
@@ -61,8 +61,9 @@ export const useSignupMutation = (
 
       setUser(data);
       queryClient.invalidateQueries({ queryKey: ['user', 'me'] });
-      showSuccess('회원가입이 완료되었습니다! 환영합니다.');
-      router.push(ROUTES.ACTIVITIES.ROOT);
+      // showSuccess('회원가입이 완료되었습니다! 환영합니다.');
+      // router.replace(ROUTES.ACTIVITIES.ROOT);
+      window.location.href = ROUTES.ACTIVITIES.ROOT;
     },
 
     onError: (error: Error) => {

@@ -18,10 +18,13 @@ const baseSignupRequestSchema = z.object({
     .max(10, { message: '닉네임은 10자 이하로 입력해주세요.' }),
   password: z
     .string()
-    .min(8, { message: '비밀번호는 최소 8자 이상이어야 합니다.' }),
+    .min(8, { message: '비밀번호는 최소 8자 이상이어야 합니다.' })
+    .regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\W_]+$/, {
+      message: '비밀번호는 영문, 숫자, 특수문자를 모두 포함해야 합니다.',
+    }),
   passwordConfirm: z
     .string()
-    .min(8, { message: '비밀번호 확인을 입력해주세요.' }),
+    .min(8, { message: '비밀번호는 최소 8자 이상이어야 합니다.' }),
 });
 
 /**

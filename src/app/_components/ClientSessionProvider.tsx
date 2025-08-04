@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useEffect, useRef } from 'react';
+import { ReactNode, useEffect, useState } from 'react'; // useState 추가
 
 import type { User } from '@/domain/Auth/schemas/response';
 import { useRoamReadyStore } from '@/shared/store';
@@ -19,28 +19,34 @@ interface Props {
 /**
  * @component ClientSessionProvider
  * @description
- * 서버에서 전달받은 초기 사용자 정보를 클라이언트 Zustand 스토어에 동기화하는 역할을 하는 컴포넌트입니다.
- * 이 동기화는 컴포넌트가 처음 마운트될 때 단 한 번만 실행되며, 클라이언트 상태와 서버 상태의 일관성을 유지합니다.
- * `initialUser`가 존재할 경우에만 스토어의 `user` 상태를 업데이트합니다.
+ * 클라이언트에서 Zustand 스토어와 서버로부터 받은 초기 사용자 정보를 동기화하는 Provider 컴포넌트입니다.
  *
- * @param {Props} props - 컴포넌트의 props.
- * @returns {JSX.Element} 자식 요소를 렌더링하는 React 요소.
+ * - **역할**: SSR 시점에 받은 `initialUser`를 클라이언트 Zustand 상태에 반영합니다.
+ * - **Hydration 안전성 확보**: 클라이언트 상태 초기화 전까지는 자식 컴포넌트를 렌더링하지 않아 클라이언트와 서버 간 hydration mismatch 문제를 예방합니다.
+ * - **조건부 초기화**: `initialUser`가 존재하는 경우에만 상태를 설정합니다.
+ *
+ * @param {User | null} initialUser - 서버 측에서 받아온 사용자 정보
+ * @param {ReactNode} children - Provider 내부에 렌더링될 React 자식 요소
+ *
+ * @returns 자식 컴포넌트를 감싸는 Provider 요소 (스토어 초기화 전까지는 렌더링되지 않음)
  */
 export default function ClientSessionProvider({
   initialUser,
   children,
 }: Props) {
   const setUser = useRoamReadyStore((state) => state.setUser);
-  const didInitialize = useRef(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    if (!didInitialize.current) {
-      if (initialUser) {
-        setUser(initialUser);
-      }
-      didInitialize.current = true;
+    if (initialUser) {
+      setUser(initialUser);
     }
+    setIsHydrated(true);
   }, [initialUser, setUser]);
+
+  if (!isHydrated) {
+    return null;
+  }
 
   return <>{children}</>;
 }

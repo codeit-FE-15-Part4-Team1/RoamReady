@@ -1,11 +1,13 @@
 'use client';
 
+import { useQueryClient } from '@tanstack/react-query';
 import { EllipsisVertical } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import DeleteModalContent from '@/domain/Activity/components/detail/activity-summary/DeleteModalContent';
 import { useDeleteMyActivity } from '@/domain/Activity/hooks/detail/useDeleteMyActivity';
+import { activitiesKeys } from '@/domain/Activity/libs/main/queryKeys';
 import Button from '@/shared/components/Button';
 import { Dialog } from '@/shared/components/ui/dialog';
 import Dropdown from '@/shared/components/ui/dropdown';
@@ -31,6 +33,7 @@ export default function ActivityDropdown({
   ownerId,
 }: ActivityDropdownProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   // 전역 상태에서 현재 로그인한 사용자 정보 가져오기
   const user = useRoamReadyStore((state) => state.user);
@@ -53,6 +56,7 @@ export default function ActivityDropdown({
   const handleDelete = async () => {
     try {
       await deleteActivity(id);
+      queryClient.invalidateQueries({ queryKey: activitiesKeys.all });
       router.push('/activities');
     } catch (e) {
       console.error(e);

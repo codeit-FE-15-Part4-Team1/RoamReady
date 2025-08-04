@@ -2,11 +2,9 @@ import { NextResponse } from 'next/server';
 
 /**
  * @file /api/auth/signout/route.ts
- * @description 사용자의 로그아웃 요청을 처리하여 인증 쿠키를 삭제하는 API 라우트 핸들러입니다.
- * @see /src/shared/hooks/useSignout.ts - 이 API를 호출하는 클라이언트 훅
  *
  * @description
- * 클라이언트의 로그아웃 요청을 받아 서버에 저장된 인증 관련 쿠키를 삭제합니다.
+ * 클라이언트의 로그아웃 요청을 받아 서버에 저장된 인증 관련 쿠키를 삭제하는 API 라우트 핸들러입니다.
  * 이 API는 멱등성(Idempotency)을 가집니다. 즉, 여러 번 호출해도 결과는 항상 동일한 '로그아웃 상태'가 됩니다.
  *
  * ### 주요 로직:
@@ -28,6 +26,8 @@ import { NextResponse } from 'next/server';
  * 6.  **`onError` 콜백**: 바로 이곳에서 `toast.show(error.message, { type: 'error' })` 코드가 실행되어, 최종적으로 사용자에게 토스트 메시지가 보이게 됩니다.
  *
  * @returns {Promise<NextResponse>} 처리 결과에 따른 응답 객체.
+ *
+ * @see /src/shared/hooks/useSignout.ts - 이 API를 호출하는 클라이언트 훅
  */
 export async function POST() {
   try {

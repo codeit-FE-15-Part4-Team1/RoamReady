@@ -37,8 +37,6 @@ export default function CreateActivityForm({
   } = methods;
   const { isDirty } = methods.formState;
 
-  console.log('errors', errors);
-
   useEffect(() => {
     if (onDirtyChange) {
       onDirtyChange(isDirty);

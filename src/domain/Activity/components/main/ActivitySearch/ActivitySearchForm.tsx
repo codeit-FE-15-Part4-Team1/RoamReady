@@ -100,7 +100,6 @@ export default function ActivitySearchForm({
 
       {/* 구분선 */}
       <div className='h-32 w-px bg-neutral-200' />
-
       {/* Address 필드 */}
       <ActivitySearchField
         label='위치'
