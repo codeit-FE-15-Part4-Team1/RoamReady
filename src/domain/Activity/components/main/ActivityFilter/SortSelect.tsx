@@ -37,7 +37,9 @@ export default function SortSelect({
   return (
     <Select.Root value={value} onValueChange={handleValueChange}>
       <Select.Trigger className='font-size-15 w-180 shrink-0 cursor-pointer rounded-full border border-gray-100 bg-white px-12 py-4 text-gray-800 transition duration-100 hover:border-gray-800 active:scale-90'>
-        <Select.Value placeholder='정렬 기준 선택' />
+        <Select.Value placeholder='정렬 기준 선택'>
+          {labels[value]}
+        </Select.Value>
       </Select.Trigger>
       <Select.Content className='font-size-15'>
         {sortOptions.map((option) => (

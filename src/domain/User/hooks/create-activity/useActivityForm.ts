@@ -169,19 +169,47 @@ export const useActivityForm = () => {
     }
   };
 
-  const hasScheduleChanges = (currentSchedules: Schedule[]) => {
-    if (currentSchedules.length !== originalSchedules.length) return true;
+  // ✅ 수정: 더 정교한 스케줄 변경사항 처리
+  const getScheduleChanges = (currentSchedules: Schedule[]) => {
+    const scheduleIdsToRemove: number[] = [];
+    const schedulesToAdd: Omit<Schedule, 'id'>[] = [];
 
-    return currentSchedules.some((currentSchedule, index) => {
-      const originalSchedule = originalSchedules[index];
-      if (!originalSchedule) return true;
-
-      return (
-        currentSchedule.date !== originalSchedule.date ||
-        currentSchedule.startTime !== originalSchedule.startTime ||
-        currentSchedule.endTime !== originalSchedule.endTime
+    // 1. 삭제할 스케줄 찾기 (원본에는 있지만 현재에는 없는 것들)
+    originalSchedules.forEach((original) => {
+      const isStillExist = currentSchedules.some(
+        (current) =>
+          current.date === original.date &&
+          current.startTime === original.startTime &&
+          current.endTime === original.endTime,
       );
+
+      if (!isStillExist && original.id) {
+        scheduleIdsToRemove.push(original.id);
+      }
     });
+
+    // 2. 추가할 스케줄 찾기 (현재에는 있지만 원본에는 없는 것들)
+    currentSchedules.forEach((current) => {
+      const isNewSchedule = !originalSchedules.some(
+        (original) =>
+          current.date === original.date &&
+          current.startTime === original.startTime &&
+          current.endTime === original.endTime,
+      );
+
+      if (isNewSchedule) {
+        const { ...scheduleWithoutId } = current;
+        schedulesToAdd.push(scheduleWithoutId);
+      }
+    });
+
+    console.log('🔍 [DEBUG] scheduleIdsToRemove:', scheduleIdsToRemove);
+    console.log('🔍 [DEBUG] schedulesToAdd:', schedulesToAdd);
+
+    return {
+      scheduleIdsToRemove,
+      schedulesToAdd,
+    };
   };
 
   const onSubmit = async (data: FormValues) => {
@@ -218,7 +246,8 @@ export const useActivityForm = () => {
           subImageUrlsToAdd = responses.map((res) => res.activityImageUrl);
         }
 
-        const hasChanges = hasScheduleChanges(data.schedules);
+        // ✅ 수정: 전체 교체 방식으로 스케줄 처리
+        const scheduleChanges = getScheduleChanges(data.schedules);
 
         // 수정 모드 API 호출
         const finalFormData = {
@@ -230,13 +259,9 @@ export const useActivityForm = () => {
           bannerImageUrl,
           subImageIdsToRemove: removedSubImageIds,
           subImageUrlsToAdd,
-          scheduleIdsToRemove: hasChanges
-            ? getScheduleIdsToRemove(data.schedules)
-            : [],
-          schedulesToAdd: hasChanges ? getSchedulesToAdd(data.schedules) : [],
+          scheduleIdsToRemove: scheduleChanges.scheduleIdsToRemove,
+          schedulesToAdd: scheduleChanges.schedulesToAdd,
         };
-
-        console.log('🔥 finalFormData:', finalFormData);
 
         await updateActivity(id, finalFormData);
         router.push(ROUTES.ACTIVITIES.DETAIL(id));
@@ -277,41 +302,6 @@ export const useActivityForm = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const getScheduleIdsToRemove = (currentSchedules: Schedule[]) => {
-    const existingScheduleIds = originalSchedules
-      .map((s: Schedule) => s.id)
-      .filter((id): id is number => id !== undefined);
-
-    const currentScheduleIds = currentSchedules
-      .filter((s: Schedule) => s.id)
-      .map((s: Schedule) => s.id)
-      .filter((id): id is number => id !== undefined);
-
-    return existingScheduleIds.filter(
-      (id: number) => !currentScheduleIds.includes(id),
-    );
-  };
-
-  const getSchedulesToAdd = (currentSchedules: Schedule[]) => {
-    return currentSchedules.filter((currentSchedule: Schedule) => {
-      // ID가 있으면 기존 스케줄이므로 추가하지 않음
-      if (currentSchedule.id) {
-        return false;
-      }
-
-      // ID가 없는 스케줄 중에서도 기존 스케줄과 내용이 동일한지 확인
-      const isDuplicateOfExisting = originalSchedules.some(
-        (originalSchedule: Schedule) =>
-          originalSchedule.date === currentSchedule.date &&
-          originalSchedule.startTime === currentSchedule.startTime &&
-          originalSchedule.endTime === currentSchedule.endTime,
-      );
-
-      // 기존 스케줄과 내용이 다른 새로운 스케줄만 추가
-      return !isDuplicateOfExisting;
-    });
   };
 
   return {
