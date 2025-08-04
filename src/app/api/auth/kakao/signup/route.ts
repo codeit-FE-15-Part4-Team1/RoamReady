@@ -10,11 +10,14 @@ import { ERROR_CODES, ROUTES } from '@/shared/constants/routes';
 
 /**
  * @function handleOauthSignUp
- * @description OAuth 회원가입을 처리하는 헬퍼 함수입니다. 백엔드 서버에 카카오 인가 코드와 닉네임을 전달하여 회원가입을 시도합니다.
- * @param {string} kakaoAuthCode - 카카오로부터 받은 인가 코드.
- * @param {string} nickname - 회원가입 시 사용할 임의의 닉네임.
- * @returns {Promise<OAuthSignupResponse>} 성공 시, Zod 스키마로 유효성이 검증된 사용자 정보와 토큰을 포함한 응답 객체를 반환합니다.
- * @throws {Error} 백엔드 API 요청이 실패하거나(예: 409 Conflict) 응답 데이터의 형식이 스키마와 일치하지 않을 경우, `status` 속성이 추가된 에러를 던집니다.
+ * @description
+ * 백엔드에 카카오 인가 코드와 랜덤 닉네임을 전달하여 회원가입을 시도합니다.
+ * 실패 시 HTTP 상태 코드와 함께 오류를 던집니다.
+ *
+ * @param kakaoAuthCode - 카카오로부터 받은 인가 코드
+ * @param nickname - 자동 생성된 임의 닉네임
+ * @returns 백엔드 응답 (accessToken, refreshToken 등 포함)
+ * @throws 백엔드 API 실패 또는 응답 스키마 불일치 시 에러 발생
  */
 async function handleOauthSignUp(
   kakaoAuthCode: string,
@@ -55,24 +58,19 @@ async function handleOauthSignUp(
 /**
  * @function GET
  * @description
- * 카카오 OAuth 회원가입 콜백을 처리하는 GET 요청 핸들러입니다.
+ * 카카오 OAuth 회원가입 콜백을 처리하는 라우트입니다.
  *
- * 1. 쿼리 파라미터에서 카카오 인가 코드(`code`)를 추출합니다.
- * 2. 해당 코드를 백엔드로 전달하여 회원가입을 시도합니다.
- *    - 이때 사용자의 닉네임은 자동으로 랜덤 생성됩니다. (예: `K_x7kd12a`)
- * 3. 회원가입 성공 시 토큰을 쿠키에 저장한 뒤 메인 페이지(`/activities`)로 리디렉션합니다.
+ * 1. 인가 코드(code)를 쿼리에서 추출
+ * 2. 자동 생성된 랜덤 닉네임으로 회원가입 시도
+ * 3. 성공 시 토큰을 쿠키에 저장하고 `/activities`로 이동
+ * 4. 실패 시 상태에 따라 리디렉션 분기
  *
- * ### 에러 처리 및 리디렉션
- * - 인가 코드가 누락되었거나, 백엔드 응답이 실패한 경우 적절한 에러 페이지로 리디렉션합니다.
- * - 백엔드가 400 또는 409를 반환한 경우 → 이미 가입된 사용자로 간주하고 `/signin` 페이지로 리디렉션합니다.
- * - 그 외 모든 에러는 `/signup` 페이지로 리디렉션하며, URL 쿼리로 `error`, `message`를 함께 전달해 클라이언트에서 토스트로 처리할 수 있도록 합니다.
+ * ### 리디렉션 분기
+ * - 409 또는 400: 이미 가입된 사용자 → `/kakao/transition?status=already-exists`
+ * - 기타 오류: `/signup?error=...&message=...` 으로 리디렉션 (토스트 처리용)
  *
- * ### 클라이언트에서의 토스트 처리 흐름
- * 1. 서버에서 발생한 에러 메시지를 URL 쿼리 파라미터(`?error=...&message=...`)에 담아 전달합니다.
- * 2. 클라이언트 회원가입 폼 컴포넌트(`SignUpForm`)가 URL을 읽고 적절한 메시지를 토스트로 표시합니다.
- *
- * @param {NextRequest} request - Next.js 요청 객체입니다. 쿼리 파라미터와 URL 정보를 포함합니다.
- * @returns {Promise<NextResponse>} 응답 객체 (리디렉션)
+ * @param request - Next.js GET 요청 객체
+ * @returns 리디렉션 응답
  */
 export async function GET(request: NextRequest) {
   try {
@@ -86,9 +84,11 @@ export async function GET(request: NextRequest) {
 
     const arbitraryNickname = `K_${crypto.randomUUID().replace(/-/g, '').slice(0, 7)}`;
     const responseData = await handleOauthSignUp(code, arbitraryNickname);
+
     const response = NextResponse.redirect(
       new URL(ROUTES.ACTIVITIES.ROOT, request.url),
     );
+
     setAuthCookies(response, {
       accessToken: responseData.accessToken,
       refreshToken: responseData.refreshToken,
@@ -98,21 +98,25 @@ export async function GET(request: NextRequest) {
   } catch (error: unknown) {
     console.error('[Kakao Signup Error]:', error);
 
-    const errorStatus =
-      error instanceof Error && 'status' in error
-        ? (error as Error & { status: number }).status
-        : undefined;
+    // const errorStatus =
+    //   error instanceof Error && 'status' in error
+    //     ? (error as Error & { status: number }).status
+    //     : undefined;
 
-    if (errorStatus === 409 || errorStatus === 400) {
-      const redirectUrl = new URL(
-        `${ROUTES.SIGNIN}?error=${ERROR_CODES.OAUTH_ALREADY_EXISTS}`,
-        request.url,
-      );
-      if (error instanceof Error) {
-        redirectUrl.searchParams.append('message', error.message);
-      }
-      return NextResponse.redirect(redirectUrl);
-    }
+    // if (errorStatus === 409 || errorStatus === 400) {
+    //   const redirectToTransition = new URL(
+    //     '/kakao/transition',
+    //     request.nextUrl.origin,
+    //   );
+    //   redirectToTransition.searchParams.set('status', 'already-exists');
+    //   redirectToTransition.searchParams.set(
+    //     'message',
+    //     error instanceof Error
+    //       ? error.message
+    //       : '이미 가입된 회원입니다. 로그인해주세요.',
+    //   );
+    //   return NextResponse.redirect(redirectToTransition);
+    // }
 
     const defaultErrorUrl = new URL(
       `${ROUTES.SIGNUP}?error=${ERROR_CODES.OAUTH_KAKAO_FAILED}`,
