@@ -15,14 +15,17 @@ import { useSelect } from './SelectContext';
 export default function SelectValue({
   placeholder = '선택해주세요.',
   className,
+  children,
 }: {
   placeholder?: string;
   className?: string;
+  children?: string;
 }) {
   const { value } = useSelect();
+
   return (
     <span className={cn(value ? 'text-black' : 'text-gray-400', className)}>
-      {value || placeholder}
+      {children?.trim() ? children : value || placeholder}
     </span>
   );
 }

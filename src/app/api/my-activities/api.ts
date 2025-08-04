@@ -9,7 +9,9 @@ interface MyActivitiesResponse {
   activities: Activity[];
 }
 
-export const getMyActivities = async (): Promise<Activity[] | null> => {
+export const getMyActivities = async (
+  size: number = 100,
+): Promise<Activity[] | null> => {
   // 1. 서버 환경이므로 next/headers의 cookies()로 직접 토큰에 접근
   const cookieStore = await cookies();
   const accessToken = cookieStore.get('accessToken')?.value;
@@ -20,18 +22,19 @@ export const getMyActivities = async (): Promise<Activity[] | null> => {
   }
 
   try {
-    // 2. 외부 백엔드 API로 직접 fetch 요청
-    const response = await fetch(
+    const url = new URL(
       `${process.env.API_BASE_URL}${API_ENDPOINTS.MY_ACTIVITIES.BASE}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        // 서버 컴포넌트의 데이터 요청은 기본적으로 캐시되므로, 실시간 데이터는 no-store 옵션 필요
-        cache: 'no-store',
-      },
     );
+    url.searchParams.set('size', size.toString());
+    // 2. 외부 백엔드 API로 직접 fetch 요청
+    const response = await fetch(url.toString(), {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      // 서버 컴포넌트의 데이터 요청은 기본적으로 캐시되므로, 실시간 데이터는 no-store 옵션 필요
+      cache: 'no-store',
+    });
 
     if (!response.ok) {
       // 응답이 실패했을 경우 에러 처리
