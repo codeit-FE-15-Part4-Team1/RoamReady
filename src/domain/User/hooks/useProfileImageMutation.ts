@@ -1,5 +1,7 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Dispatch, SetStateAction } from 'react';
+
+import { useRoamReadyStore } from '@/shared/store';
 
 import {
   uploadProfileImage,
@@ -36,6 +38,9 @@ export const useProfileImageMutation = ({
   initialImageUrl,
   onImageChange,
 }: MutationHookProp) => {
+  const queryClient = useQueryClient();
+  const { user, setUser } = useRoamReadyStore();
+
   return useMutation<UploadProfileImageResponse, Error, File, MutationContext>({
     mutationFn: uploadProfileImage,
 
@@ -57,6 +62,15 @@ export const useProfileImageMutation = ({
 
     // 업로드 성공 시 실행: 실제 서버 URL로 교체
     onSuccess: (data, _variables, context?: MutationContext) => {
+      // 기존 user 객체의 다른 정보는 유지한 채, profileImageUrl만 업데이트합니다.
+      if (user) {
+        const updatedUser = { ...user, profileImageUrl: data.profileImageUrl };
+        setUser(updatedUser);
+      }
+
+      // Tanstack Query 캐시 무효화는 그대로 유지합니다.
+      queryClient.invalidateQueries({ queryKey: ['user', 'me'] });
+
       // API로부터 받은 실제 이미지 URL로 상태 업데이트
       setProfileImageUrl(data.profileImageUrl);
       // 상위 컴포넌트에 최종 이미지 변경을 알림
