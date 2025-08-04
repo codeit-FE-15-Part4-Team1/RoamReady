@@ -40,7 +40,8 @@ export default function CategoryInput() {
               <input
                 type='hidden'
                 name={field.name}
-                value={field.value || ''}
+                value={field.value}
+                placeholder='카테고리를 선택해 주세요.'
               />
 
               <Select.Helper name={field.name} />

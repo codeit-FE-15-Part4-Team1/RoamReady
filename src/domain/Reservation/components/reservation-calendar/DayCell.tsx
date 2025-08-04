@@ -183,7 +183,13 @@ export default function DayCell({
       );
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['reservationsBySchedule'] });
+      queryClient.invalidateQueries({
+        queryKey: [
+          'allReservationsByDate',
+          selectedActivityId,
+          day.format('YYYY-MM-DD'),
+        ],
+      });
       queryClient.invalidateQueries({ queryKey: ['schedules'] });
       queryClient.invalidateQueries({ queryKey: ['reservationDashboard'] });
     },
@@ -362,6 +368,7 @@ export default function DayCell({
             onTimeSlotSelect={handleTimeSlotSelect}
             isLoading={isApproving || isRejecting}
             status='pending'
+            setIsOpen={setIsOpen}
           />
         </Tabs.Content>
 
@@ -377,6 +384,7 @@ export default function DayCell({
             onTimeSlotSelect={handleTimeSlotSelect}
             isLoading={isApproving || isRejecting}
             status='confirmed'
+            setIsOpen={setIsOpen}
           />
         </Tabs.Content>
 
@@ -392,6 +400,7 @@ export default function DayCell({
             onTimeSlotSelect={handleTimeSlotSelect}
             isLoading={isApproving || isRejecting}
             status='declined'
+            setIsOpen={setIsOpen}
           />
         </Tabs.Content>
       </Tabs.Root>
