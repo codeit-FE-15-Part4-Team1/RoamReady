@@ -205,7 +205,13 @@ export default function DayCell({
         status: 'declined',
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['reservationsBySchedule'] });
+      queryClient.invalidateQueries({
+        queryKey: [
+          'allReservationsByDate',
+          selectedActivityId,
+          day.format('YYYY-MM-DD'),
+        ],
+      });
       queryClient.invalidateQueries({ queryKey: ['schedules'] });
       queryClient.invalidateQueries({ queryKey: ['reservationDashboard'] });
     },

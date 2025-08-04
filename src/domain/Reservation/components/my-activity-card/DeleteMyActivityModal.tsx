@@ -29,6 +29,7 @@ export default function DeleteMyActivityModal({
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['my-activities'] });
+      queryClient.invalidateQueries({ queryKey: ['carousel-activities'] });
     },
   });
 

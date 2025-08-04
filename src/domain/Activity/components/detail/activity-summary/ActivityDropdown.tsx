@@ -57,6 +57,7 @@ export default function ActivityDropdown({
     try {
       await deleteActivity(id);
       queryClient.invalidateQueries({ queryKey: activitiesKeys.all });
+      queryClient.invalidateQueries({ queryKey: ['carousel-activities'] });
       router.push('/activities');
     } catch (e) {
       console.error(e);
