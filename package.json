@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build && storybook build -o public/storybook",
+    "build": "next build && storybook build -o public/storybook --base-url /storybook",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
