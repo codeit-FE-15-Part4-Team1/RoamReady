@@ -48,7 +48,7 @@ export default function GlobalError({ error, reset }: ErrorPageProps) {
   }, [error]);
 
   return (
-    <div className='flex-col-center gap-8 bg-red-50 p-50 text-center text-red-800'>
+    <div className='flex-col-center min-h-screen gap-8 bg-red-50 p-50 text-center text-red-800'>
       <h1 className='font-size-25 tablet:font-size-30 flex-center font-bold'>
         <ErrorIcon className='mr-8 size-30' />
         문제가 발생했습니다.
