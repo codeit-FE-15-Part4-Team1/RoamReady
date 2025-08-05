@@ -31,13 +31,13 @@ export default function OAuth() {
     const KAKAO_CLIENT_ID = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
     const KAKAO_SIGNIN_REDIRECT_URI =
       process.env.NEXT_PUBLIC_KAKAO_SIGNIN_REDIRECT_URI;
-    const KAKAO_SIGNUP_REDIRECT_URI =
-      process.env.NEXT_PUBLIC_KAKAO_SIGNUP_REDIRECT_URI;
+    // const KAKAO_SIGNUP_REDIRECT_URI =
+    //   process.env.NEXT_PUBLIC_KAKAO_SIGNUP_REDIRECT_URI;
 
     if (
       !KAKAO_CLIENT_ID ||
-      !KAKAO_SIGNIN_REDIRECT_URI ||
-      !KAKAO_SIGNUP_REDIRECT_URI
+      !KAKAO_SIGNIN_REDIRECT_URI
+      // || !KAKAO_SIGNUP_REDIRECT_URI
     ) {
       console.error('카카오 OAuth 환경 변수가 설정되지 않았습니다.');
       return;
