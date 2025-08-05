@@ -1,11 +1,11 @@
 <p align="center"><a href="https://roam-ready-rho.vercel.app/activities">
-
-<img width="200" height="100" alt="logo-text" src="https://github.com/user-attachments/assets/9a67d384-e9c8-4c40-a328-46f02d66f44b" />
+<img width="300" height="200" alt="logo-text" src="https://github.com/user-attachments/assets/9a67d384-e9c8-4c40-a328-46f02d66f44b" />
 <img width="60" height="50" alt="logo-symbol-blue" src="https://github.com/user-attachments/assets/5c210ec4-0916-44c3-83ba-991f139fb8c4" />
-
 </a></p>
 
 > **떠날 준비, 지금 바로, RoamReady – 즉흥의 설렘을 예약하세요.**
+
+
 
 **롬레디 (RoamReady)**는 Roam과 Ready의 결합어로, 언제든지 떠날 준비가 된 여행자와 체험가를 위한 액티비티 예약 플랫폼입니다.
 즉흥적인 여행, 자유로운 탐험, 감각적인 경험을 추구하는 당신을 위해 감성적이면서도 실용적인 디자인, 빠르고 유연한 예약 흐름, 그리고 글로벌 확장을 고려한 구조로 설계되었습니다.
@@ -50,14 +50,14 @@
   <tr>
     <td><strong>공통 컴포넌트, <br> 공통 로직</strong></td>
     <td>- Button<br>- SelectBox<br>- Tabs</td>
-    <td>- Input<br>- Toast<br>- OAuth<br>- 인증시스템<br>- 에러처리 시스템</td>
+    <td>- Input<br>- Toast<br>- OAuth<br>- 인증시스템<br>- 에러처리시스템</td>
     <td>- Dropdown<br>- Pagination<br>- Header<br>- Footer</td>
     <td>- BottomSheet<br>- Modal<br>- Profile </td>
   </tr>
   <tr>
     <td><strong>프로젝트 설정</strong></td>
     <td>- 배포</td>
-    <td>- </td>
+    <td> </td>
     <td></td>
     <td>- ESLint, Pretter 설정<br>- Lefthook 설정</td>
   </tr>
@@ -123,39 +123,32 @@
   <thead>
     <tr>
       <th>문제 상황</th>
-      <th>해결 방법</th>
       <th>작성자</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td><a href="https://github.com/codeit-FE-15-Part4-Team1/RoamReady/discussions/134">로컬스토리지 → HTTP-only 쿠키: 인증 보안을 위해 아키텍처 개선</a></td>
-      <td></td>
       <td>송시은</td>
     </tr>
     <tr>
       <td><a href="https://github.com/codeit-FE-15-Part4-Team1/RoamReady/discussions/443">배포 환경에서 Server Component 에러 메시지 미노출 이슈 </a></td>
-      <td></td>
       <td>김서연</td>
     </tr>
     <tr>
       <td><a href="https://github.com/codeit-FE-15-Part4-Team1/RoamReady/discussions/250">React Hook Form + Custom Input</a></td>
-      <td></td>
       <td>유용민</td>
     </tr>
     <tr>
       <td><a href="https://github.com/codeit-FE-15-Part4-Team1/RoamReady/discussions/116">Dialog, BottomSheet 활성화 시 레이아웃 깨짐 없이 스크롤 막기</a></td>
-      <td></td>
       <td>박재현</td>
     </tr>
     <tr>
       <td><a href="https://github.com/codeit-FE-15-Part4-Team1/RoamReady/discussions/281">Next.js App Router에서 테스트 전용 페이지와 API 라우트를 프로덕션 빌드에서 안전하게 제외하는 방법</a></td>
-      <td></td>
       <td>송시은</td>
     </tr>
     <tr>
       <td><a href="https://github.com/codeit-FE-15-Part4-Team1/RoamReady/discussions/527">Next.js Image 배포 환경에서 이미지가 깨지는 문제 해결 (Vercel 402 PAYMENT_REQUIRED)</a></td>
-      <td></td>
       <td>박재현</td>
     </tr>
   </tbody>
@@ -228,34 +221,28 @@
   <thead>
     <tr>
       <th>주제</th>
-      <th>요약</th>
       <th>작성자</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td><a href="https://github.com/codeit-FE-15-Part4-Team1/RoamReady/discussions/205">API 요청 및 인증 아키텍처 가이드</a></td>
-      <td></td>
       <td>송시은</td>
     </tr>
     <tr>
       <td><a href="https://github.com/codeit-FE-15-Part4-Team1/RoamReady/discussions/104">Slot 패턴과 해당 패턴 사용을 위한 cloneElement</a></td>
-      <td></td>
       <td>유용민</td>
     </tr>
     <tr>
       <td><a href="https://github.com/codeit-FE-15-Part4-Team1/RoamReady/discussions/441">체험 상세 페이지 캐싱 전략</a></td>
-      <td></td>
       <td>김서연</td>
     </tr>
     <tr>
       <td><a href="https://github.com/codeit-FE-15-Part4-Team1/RoamReady/discussions/484">URL Query 기반의 필터, 정렬, 페이지네이션 구현하기</a></td>
-      <td></td>
       <td>박재현</td>
     </tr>
     <!-- <tr>
       <td><a href="https://github.com/Kabana-FE/Kabana/discussions/112">404 응답 상황 구분 및 처리 범위</a></td>
-      <td></td>
       <td>송시은</td>
     </tr> -->
   </tbody>
@@ -329,6 +316,6 @@
 
 #### 👻 팀 회고
 
-- [팀 회고 보러 가기](https://github.com/Kabana-FE/Kabana/discussions/categories/retrospect)
+- [팀 회고 보러 가기](https://github.com/codeit-FE-15-Part4-Team1/RoamReady/discussions/categories/retrospective)
 
 ---
