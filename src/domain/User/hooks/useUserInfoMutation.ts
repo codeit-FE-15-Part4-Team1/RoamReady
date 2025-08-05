@@ -28,10 +28,9 @@ export const useUserInfoMutation = (currentProfileImageUrl: string) => {
         throw new Error('사용자 정보를 찾을 수 없습니다.');
       }
 
-      // 이미지 URL 처리: 빈 문자열이면 null로 변환, 그렇지 않으면 현재 이미지 또는 기존 사용자 이미지 사용
-      const profileImageUrl = currentProfileImageUrl
-        ? currentProfileImageUrl
-        : user.profileImageUrl;
+      // 이미지 URL 처리: 빈 문자열이면 null로 변환 (기본 이미지), 그렇지 않으면 현재 이미지 사용
+      const profileImageUrl =
+        currentProfileImageUrl.trim() === '' ? null : currentProfileImageUrl;
 
       const requestData: UpdateUserInfoRequest = {
         nickname: data.nickname,

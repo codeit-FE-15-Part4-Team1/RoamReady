@@ -102,6 +102,8 @@ export default function ActivitySectionClient({
     refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
     enabled: !hasSearchConditions, // 검색 조건이 없을 때만 API 호출
+    // 캐시 무효화를 위한 추가 설정
+    gcTime: 0,
   });
 
   // 로딩 상태 결정
@@ -302,7 +304,10 @@ export default function ActivitySectionClient({
           <>
             <div className='grid grid-cols-2 gap-24 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7'>
               {activities.map((activity) => (
-                <ActivityCard key={activity.id} activity={activity} />
+                <ActivityCard
+                  key={`${activity.id}-${internalParams.sort}-${internalParams.category}`}
+                  activity={activity}
+                />
               ))}
             </div>
 

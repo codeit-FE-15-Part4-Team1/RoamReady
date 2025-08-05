@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const etlApiUrl = process.env.API_ETL_URL;
     if (!etlApiUrl) {
@@ -10,7 +10,17 @@ export async function GET() {
         { status: 500 },
       );
     }
-    const response = await fetch(etlApiUrl, {
+
+    // 검색 파라미터를 ETL API에 전달
+    const { searchParams } = new URL(request.url);
+    const etlUrl = new URL(etlApiUrl);
+
+    // 검색 파라미터 복사
+    searchParams.forEach((value, key) => {
+      etlUrl.searchParams.set(key, value);
+    });
+
+    const response = await fetch(etlUrl.toString(), {
       headers: {
         'Content-Type': 'application/json',
       },
