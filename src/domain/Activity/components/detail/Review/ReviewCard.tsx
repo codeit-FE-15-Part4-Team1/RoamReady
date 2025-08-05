@@ -1,6 +1,6 @@
 import { Star } from 'lucide-react';
 
-import ExpandableReview from '@/domain/Activity/components/detail/Review/ExpandableReview';
+import ExpandableText from '@/domain/Activity/components/detail/Review/ExpandableText';
 import Avatar from '@/shared/components/ui/avatar';
 
 import { Review } from '../../../types/detail/types';
@@ -63,7 +63,7 @@ export default function ReviewCard(review: Review) {
           })}
         </div>
       </div>
-      <ExpandableReview text={content} />
+      <ExpandableText text={content} />
     </article>
   );
 }

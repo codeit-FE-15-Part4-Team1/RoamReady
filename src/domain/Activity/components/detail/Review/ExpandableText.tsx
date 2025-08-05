@@ -6,9 +6,13 @@ import TriangleArrow from '@/shared/assets/icons/TriangleArrow';
 
 interface ExpandableReviewProps {
   text: string;
+  maxHeight?: number;
 }
 
-export default function ExpandableReview({ text }: ExpandableReviewProps) {
+export default function ExpandableText({
+  text,
+  maxHeight = 1000,
+}: ExpandableReviewProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showToggle, setShowToggle] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -45,15 +49,12 @@ export default function ExpandableReview({ text }: ExpandableReviewProps) {
       <div
         ref={contentRef}
         className={`font-size-16 relative overflow-hidden font-medium break-words whitespace-pre-line text-gray-950 transition-all duration-900 ease-in-out ${
-          isExpanded ? 'max-h-[1000px] opacity-80' : 'max-h-[120px] opacity-100'
+          isExpanded
+            ? `max-h-[${maxHeight}px] opacity-80`
+            : `max-h-[120px] opacity-100`
         }`}
       >
         {text}
-
-        {/* 말줄임용 그라디언트 */}
-        {!isExpanded && showToggle && (
-          <div className='pointer-events-none absolute bottom-0 left-0 h-10 w-full bg-gradient-to-t from-white via-white/100 to-transparent transition-opacity duration-500' />
-        )}
       </div>
 
       {/* 더보기 버튼 */}
