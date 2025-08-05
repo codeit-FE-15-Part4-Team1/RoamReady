@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
       );
     case '409':
       return NextResponse.json(
-        { message: '이미 사용 중인 이름입니다.' },
+        { message: '이미 사용 중인 이메일입니다.' },
         { status: 409 },
       );
     case '500':
