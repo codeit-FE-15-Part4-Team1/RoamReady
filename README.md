@@ -26,13 +26,13 @@
       <img src="https://github.com/user-attachments/assets/22121479-f424-476e-b56d-15855534680e" alt="용민" width="700" />
     </td>
     <td>
-      <img src="https://github.com/user-attachments/assets/510ac20c-de7d-462e-b3fa-586f317ca93b" alt="시은" width="550" />
+      <img src="https://github.com/user-attachments/assets/510ac20c-de7d-462e-b3fa-586f317ca93b" alt="시은" width="700" />
     </td>
     <td>
-      <img src="https://github.com/user-attachments/assets/707cb36c-0373-4642-80e8-3391d1157d1f" alt="서연" width="750" />
+      <img src="https://github.com/user-attachments/assets/707cb36c-0373-4642-80e8-3391d1157d1f" alt="서연" width="700" />
     </td>
     <td>
-      <img src="https://github.com/user-attachments/assets/5419e3ed-ecf8-4190-81da-5964c27c6e25" alt="재현" width="750"/>
+      <img src="https://github.com/user-attachments/assets/5419e3ed-ecf8-4190-81da-5964c27c6e25" alt="재현" width="650"/>
     </td>
   </tr>
   <tr>
@@ -297,7 +297,6 @@
 - [RoamReady 디자인(Figma)](https://www.figma.com/design/x6to2PaVbAuEErnUEikXpD/RoamReady?node-id=2-63300&t=j0HmtLVRmXgcE4J8-0)<br>
 - [기반 디자인(Figma) Global Nomad](https://www.figma.com/design/KROZeaQGQncl3HalZmnRc2/-CCC-GlobalNomad?node-id=0-1&p=f&t=OZ7EcJ25ZmjifaSP-0)<br>
 - [Docs (스타일 가이드, 브랜치 전략 등)](https://github.com/codeit-FE-15-Part4-Team1/RoamReady/discussions/categories/docs-convention-r-r-etc)<br>
-- [전체 프로젝트 문서(Notion)](https://brazen-gopher-e81.notion.site/Kabana-1f4692e2f1d0800a979fce7058096a33?source=copy_link)<br>
 
 ---
 
