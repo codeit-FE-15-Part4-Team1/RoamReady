@@ -7,8 +7,9 @@
 
 
 
-**롬레디 (RoamReady)**는 Roam과 Ready의 결합어로, 언제든지 떠날 준비가 된 여행자와 체험가를 위한 액티비티 예약 플랫폼입니다.
-즉흥적인 여행, 자유로운 탐험, 감각적인 경험을 추구하는 당신을 위해 감성적이면서도 실용적인 디자인, 빠르고 유연한 예약 흐름, 그리고 글로벌 확장을 고려한 구조로 설계되었습니다.
+**롬레디 (RoamReady)** 는 Roam과 Ready의 결합어로, 언제든지 떠날 준비가 된 여행자와 체험가를 위한 액티비티 예약 플랫폼입니다.
+<br> 즉흥적인 여행, 자유로운 탐험, 감각적인 경험을 추구하는 당신을 위해 감성적이면서도 실용적인 디자인, 빠르고 유연한 예약 흐름, 그리고 글로벌 확장을 고려한 구조로 설계했습니다.
+
 **Next.js**와 **TypeScript** 기반의 안정적인 기술 스택 위에 BFF 아키텍처를 도입해 사용자 경험과 보안을 강화하였으며,
 **Zustand**를 통한 상태 관리, **ky**와 **TanStack Query**를 활용한 API 요청 및 캐싱으로 깔끔하고 효율적인 사용자 경험을 제공합니다.
 
@@ -36,10 +37,10 @@
   </tr>
   <tr>
     <th>R&R</th>
-    <td><a href="https://github.com/leeetaesik" >유용민</a></td>
+    <td><a href="https://github.com/Yongmin0423" >유용민</a></td>
     <td><a href="https://github.com/sgoldenbird" >송시은</a></td>
-    <td><a href="https://github.com/pappaya109" >김서현</a></td>
-    <td><a href="https://github.com/HarrySeop" >박재현</a></td>
+    <td><a href="https://github.com/Seon-K" >김서연</a></td>
+    <td><a href="https://github.com/justhighway" >박재현</a></td>
   </tr>
   <tr>
     <td><strong>페이지</strong></td>
@@ -74,7 +75,7 @@
 
 ## 👻 기술 스택
 
-### Core
+#### Core
 
 | 기술           | 버전 / 도구             | 설명                                      |
 | -------------- | ----------------------- | ----------------------------------------- |
@@ -82,20 +83,20 @@
 | **React**      | React 19.0.0            | 최신 기능 활용한 UI 구성                  |
 | **Next.js**    | Next.js 15 (App Router) | 파일 기반 라우팅과 SSR, SEO에 강함        |
 
-### Runtime & Package Manager
+#### Runtime & Package Manager
 
 | 기술        | 버전          | 설명                              |
 | ----------- | ------------- | --------------------------------- |
 | **Node.js** | 22.17.0 (LTS) | 안정적인 런타임 환경              |
 | **pnpm**    | 10.x          | 빠른 설치 속도와 모듈 중복 최소화 |
 
-### Styling
+#### Styling
 
 | 기술               | 설명                  |
 | ------------------ | --------------------- |
 | **Tailwind CSS 4** | 빠르고 일관된 UI 구성 |
 
-### API & State Management
+#### API & State Management
 
 | 기술               | 설명                                                     |
 | ------------------ | -------------------------------------------------------- |
@@ -103,7 +104,7 @@
 | **Zustand**        | 간단한 전역 상태 관리                                    |
 | **TanStack Query** | 서버 상태와 캐싱을 효율적으로 관리                       |
 
-### Development Tools
+#### Development Tools
 
 | 기술                        | 설명                                                                               |
 | --------------------------- | ---------------------------------------------------------------------------------- |
@@ -291,7 +292,7 @@
 
 ---
 
-#### 👻 프로젝트 문서 & 디자인
+### 👻 프로젝트 문서 & 디자인
 
 - [RoamReady 디자인(Figma)](https://www.figma.com/design/x6to2PaVbAuEErnUEikXpD/RoamReady?node-id=2-63300&t=j0HmtLVRmXgcE4J8-0)<br>
 - [기반 디자인(Figma) Global Nomad](https://www.figma.com/design/KROZeaQGQncl3HalZmnRc2/-CCC-GlobalNomad?node-id=0-1&p=f&t=OZ7EcJ25ZmjifaSP-0)<br>
@@ -300,7 +301,7 @@
 
 ---
 
-#### 👻 프로젝트 관리
+### 👻 프로젝트 관리
 
 애자일 + 워터폴의 장점을 섞은 협업 방식을 기반으로 코드 품질과 작업 효율을 높였습니다.
 <br>다양한 커뮤니케이션과 GitHub Projects를 적극 활용하며 이슈 기반으로 작업을 관리했습니다.
@@ -314,7 +315,7 @@
 
 ---
 
-#### 👻 팀 회고
+### 👻 팀 회고
 
 - [팀 회고 보러 가기](https://github.com/codeit-FE-15-Part4-Team1/RoamReady/discussions/categories/retrospective)
 
