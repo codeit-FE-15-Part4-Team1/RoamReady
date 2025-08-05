@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/storybook",
+      "destination": "/_next/static/storybook/index.html"
+    }
+  ]
+}
