@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import setAuthCookies from '@/domain/Auth/utils/setAuthCookies';
 import { ERROR_CODES, ROUTES } from '@/shared/constants/routes';
 
 import { BRIDGE_API } from './shared/constants/bridgeEndpoints';
@@ -139,21 +140,14 @@ export async function middleware(request: NextRequest) {
           signal: AbortSignal.timeout(30000),
         });
 
-        const finalResponse = new NextResponse(response.body, {
-          status: response.status,
-          statusText: response.statusText,
-          headers: response.headers,
-        });
-
-        finalResponse.cookies.set('accessToken', newAccessToken, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          path: '/',
-          maxAge: 60 * 60,
-          sameSite: 'lax',
-        });
-
-        return finalResponse;
+        return setAuthCookies(
+          new NextResponse(response.body, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: response.headers,
+          }),
+          tokens,
+        );
       } else {
         console.log(
           '[Middleware] Refresh Token 만료 또는 갱신 실패. 로그인 페이지로 리다이렉트합니다.',

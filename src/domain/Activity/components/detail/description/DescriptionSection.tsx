@@ -1,3 +1,5 @@
+import ExpandableText from '@/domain/Activity/components/detail/Review/ExpandableText';
+
 /**
  * DescriptionSection
  * 체험 상세 페이지에서 체험 설명을 보여주는 컴포넌트
@@ -16,9 +18,7 @@ export default function DescriptionSection({
   return (
     <section className='flex w-full flex-col gap-8 border-b border-gray-100 pb-40'>
       <h2 className='font-size-18 font-bold'>체험 설명</h2>
-      <p className='font-size-16 font-medium break-words whitespace-pre-line'>
-        {description}
-      </p>
+      <ExpandableText text={description} />
     </section>
   );
 }
