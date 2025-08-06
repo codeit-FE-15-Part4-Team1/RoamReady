@@ -44,7 +44,7 @@ export default function SignUpPage() {
         </span>
       </div>
 
-      <OAuth pageType='signup' />
+      <OAuth />
 
       <div className='flex justify-center gap-4'>
         <span className='text-gray-400'>이미 회원이신가요?</span>
