@@ -34,8 +34,10 @@ export default function setAuthCookies<T>(
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
+
     // maxAge: 60 * 60, //! 테스트를 위해 15초로
     maxAge: 10,
+
   });
 
   response.cookies.set({
