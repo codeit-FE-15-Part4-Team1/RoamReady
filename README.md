@@ -14,7 +14,7 @@
 🎬 [바로 보기(YouTube에서 재생됩니다)](https://www.youtube.com/watch?v=ikNrX0suphQ)<br>
 
 <details>
-<summary><h1>Preview (GIF)</h1></summary>
+<summary>Preview (GIF)</summary>
 
 #### 회원가입/로그인
 
@@ -55,6 +55,10 @@
 
 ![my-activity-edit-delete.gif](./gifs/my-activity-edit-delete.gif)
 
+#### 마이페이지 내 예약 현황
+
+![my-reservation-list.gif](./gifs/my-reservation-list.gif)
+
 ---
 
 #### 상세페이지
@@ -63,7 +67,10 @@
 
 ---
 
-####
+#### 체험 등록
+
+![create-activity1.gif](./gifs/create-activity1.gif)
+![create-activity2.gif](./gifs/create-activity2.gif)
 
 </details>
 

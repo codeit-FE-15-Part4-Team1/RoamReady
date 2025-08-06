@@ -107,6 +107,7 @@ export async function middleware(request: NextRequest) {
       signal: AbortSignal.timeout(30000),
     });
 
+    //! 여기서 분명히 갱신했는데 개발서버에서는 갱신이 되는데... 배포하면 안됨..
     if (response.status === 401 && request.cookies.get('refreshToken')?.value) {
       const refreshToken = request.cookies.get('refreshToken')!.value;
       const refreshResponse = await fetch(

@@ -2,11 +2,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { HTTPError } from 'ky';
 import { useRouter } from 'next/navigation';
 
-import type { SigninResponse } from '@/domain/Auth/schemas/response';
 import { signin } from '@/domain/Auth/services';
 import { ROUTES } from '@/shared/constants/routes';
 import { useToast } from '@/shared/hooks/useToast';
-import { useRoamReadyStore } from '@/shared/store';
+// import { useRoamReadyStore } from '@/shared/store';
 
 /**
  * @function useSigninMutation
@@ -33,15 +32,16 @@ import { useRoamReadyStore } from '@/shared/store';
  */
 export const useSigninMutation = () => {
   const router = useRouter();
-  const setUser = useRoamReadyStore((state) => state.setUser);
+  // const setUser = useRoamReadyStore((state) => state.setUser);
   const queryClient = useQueryClient();
   const { showError } = useToast();
 
   return useMutation({
     mutationFn: signin,
-    onSuccess: (data: SigninResponse) => {
+    onSuccess: () => {
+      // onSuccess: (data: SigninResponse) => {
       sessionStorage.removeItem('signup-form');
-      setUser(data.user);
+      // setUser(data.user);
       queryClient.invalidateQueries({ queryKey: ['user', 'me'] });
       // showSuccess('로그인 되었습니다. 환영합니다!');
       router.push(ROUTES.ACTIVITIES.ROOT);
