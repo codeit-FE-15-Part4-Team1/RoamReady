@@ -1,7 +1,5 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { Dispatch, SetStateAction } from 'react';
-
-import { useRoamReadyStore } from '@/shared/store';
 
 import {
   uploadProfileImage,
@@ -35,45 +33,16 @@ interface MutationContext {
  */
 export const useProfileImageMutation = ({
   setProfileImageUrl,
-  initialImageUrl,
   onImageChange,
 }: MutationHookProp) => {
-  const queryClient = useQueryClient();
-  const { user, setUser } = useRoamReadyStore();
-
   return useMutation<UploadProfileImageResponse, Error, File, MutationContext>({
     mutationFn: uploadProfileImage,
 
-    // 낙관적 업데이트: 업로드 시작 전 즉시 미리보기 표시
-    onMutate: async (imageFile: File): Promise<MutationContext> => {
-      // 롤백을 위해 이전 이미지 URL 저장
-      const previousImageUrl = initialImageUrl;
-
-      // 즉시 미리보기를 위한 임시 URL 생성
-      const previewUrl = URL.createObjectURL(imageFile);
-
-      // UI를 즉시 업데이트하여 사용자에게 반응성 제공
-      setProfileImageUrl(previewUrl);
-      onImageChange?.(previewUrl);
-
-      // 컨텍스트로 이전 상태와 임시 URL 반환
-      return { previousImageUrl, previewUrl };
-    },
-
     // 업로드 성공 시 실행: 실제 서버 URL로 교체
     onSuccess: (data, _variables, context?: MutationContext) => {
-      // 기존 user 객체의 다른 정보는 유지한 채, profileImageUrl만 업데이트합니다.
-      if (user) {
-        const updatedUser = { ...user, profileImageUrl: data.profileImageUrl };
-        setUser(updatedUser);
-      }
-
-      // Tanstack Query 캐시 무효화는 그대로 유지합니다.
-      queryClient.invalidateQueries({ queryKey: ['user', 'me'] });
-
-      // API로부터 받은 실제 이미지 URL로 상태 업데이트
+      // 서버에서 받은 실제 이미지 URL로 상태를 업데이트합니다.
       setProfileImageUrl(data.profileImageUrl);
-      // 상위 컴포넌트에 최종 이미지 변경을 알림
+      // 상위 컴포넌트에 최종 이미지 변경을 알립니다.
       onImageChange?.(data.profileImageUrl);
 
       // 미리보기 URL 메모리 해제
