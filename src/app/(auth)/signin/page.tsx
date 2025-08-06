@@ -45,7 +45,7 @@ export default function SignInPage() {
         </span>
       </div>
 
-      <OAuth pageType='signin' />
+      <OAuth />
 
       <div className='flex justify-center gap-4'>
         <span className='text-gray-400'>아직 계정이 없으신가요?</span>
