@@ -75,10 +75,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (pathname.startsWith('/api/etl')) {
-    return NextResponse.next();
-  }
-
   const path = pathname.replace(BRIDGE_API.PREFIX, '');
   const correctedPath = path.startsWith('/') ? path.substring(1) : path;
   const destinationUrl = new URL(correctedPath, BACKEND_URL);
