@@ -5,8 +5,6 @@
 
 > **떠날 준비, 지금 바로, RoamReady – 즉흥의 설렘을 예약하세요.**
 
-
-
 **롬레디 (RoamReady)** 는 Roam과 Ready의 결합어로, 언제든지 떠날 준비가 된 여행자와 체험가를 위한 액티비티 예약 플랫폼입니다.
 <br> 즉흥적인 여행, 자유로운 탐험, 감각적인 경험을 추구하는 당신을 위해 감성적이면서도 실용적인 디자인, 빠르고 유연한 예약 흐름, 그리고 글로벌 확장을 고려한 구조로 설계했습니다.
 
@@ -14,6 +12,60 @@
 **Zustand**를 통한 상태 관리, **ky**와 **TanStack Query**를 활용한 API 요청 및 캐싱으로 깔끔하고 효율적인 사용자 경험을 제공합니다.
 
 🎬 [바로 보기(YouTube에서 재생됩니다)](https://www.youtube.com/watch?v=ikNrX0suphQ)<br>
+
+<details>
+<summary><h1>Preview (GIF)</h1></summary>
+
+#### 회원가입/로그인
+
+![auth1.gif](./gifs/auth1.gif)
+![auth2.gif](./gifs/auth2.gif)
+![auth3.gif](./gifs/auth3.gif)
+
+#### OAuth(kakao)
+
+![kakao.gif](./gifs/kakao.gif)
+
+---
+
+#### 메인페이지 캐러셀
+
+![main-carousel.gif](./gifs/main-carousel.gif)
+
+#### 메인페이지 리스트
+
+![main-list-filter.gif](./gifs/main-list-filter.gif)
+![main-list-pagination.gif](./gifs/main-list-pagination.gif)
+
+#### 메인페이지 검색
+
+![main-search.gif](./gifs/main-search.gif)
+
+---
+
+#### 마이페이지 내 정보 수정
+
+![my-info.gif](./gifs/my-info.gif)
+
+#### 마이페이지 예약 관리
+
+![my-reservation.gif](./gifs/my-reservation.gif)
+
+#### 마이페이지 내 체험 관리
+
+![my-activity-edit-delete.gif](./gifs/my-activity-edit-delete.gif)
+
+---
+
+#### 상세페이지
+
+![detail.gif](./gifs/detail.gif)
+
+---
+
+####
+
+</details>
 
 ---
 
@@ -29,10 +81,10 @@
       <img src="https://github.com/user-attachments/assets/510ac20c-de7d-462e-b3fa-586f317ca93b" alt="시은" width="700" />
     </td>
     <td>
-      <img src="https://github.com/user-attachments/assets/707cb36c-0373-4642-80e8-3391d1157d1f" alt="서연" width="700" />
+      <img src="https://github.com/user-attachments/assets/707cb36c-0373-4642-80e8-3391d1157d1f" alt="서연" width="650" />
     </td>
     <td>
-      <img src="https://github.com/user-attachments/assets/5419e3ed-ecf8-4190-81da-5964c27c6e25" alt="재현" width="650"/>
+      <img src="https://github.com/user-attachments/assets/5419e3ed-ecf8-4190-81da-5964c27c6e25" alt="재현" width="600"/>
     </td>
   </tr>
   <tr>
@@ -47,7 +99,7 @@
     <td>- 체험 등록 페이지<br>- 체험 수정 페이지<br>- 예약 현황 페이지</td>
     <td>- 로그인 페이지<br>- 회원가입 페이지<br>- 404페이지</td>
     <td>- 체험 상세 페이지 </td>
-    <td>- 메인 페이지<br>- 마이페이지</td>
+    <td>- 메인페이지<br>- 마이페이지</td>
   <tr>
     <td><strong>공통 컴포넌트, <br> 공통 로직</strong></td>
     <td>- Button<br>- SelectBox<br>- Tabs</td>

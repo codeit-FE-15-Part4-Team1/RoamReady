@@ -15,6 +15,7 @@
 
 # next.js
 /.next/
+.next/
 /out/
 
 # production
@@ -42,3 +43,5 @@ next-env.d.ts
 
 *storybook.log
 storybook-static
+
+local-assets/
