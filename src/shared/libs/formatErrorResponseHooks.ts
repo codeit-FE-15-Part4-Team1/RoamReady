@@ -2,6 +2,7 @@ import type { Hooks } from 'ky';
 import { HTTPError } from 'ky';
 
 import { ERROR_CODES, ROUTES } from '@/shared/constants/routes';
+import { queryClient } from '@/shared/libs/queryClient';
 import { errorResponseSchema } from '@/shared/schemas/error';
 import { useRoamReadyStore } from '@/shared/store';
 import getErrorMessageByStatus from '@/shared/utils/errors/getErrorMessageByStatus';
@@ -15,20 +16,25 @@ const beforeErrorHook = async (error: HTTPError) => {
     console.error('클라이언트 측에서 401 에러 감지. 세션이 만료되었습니다.');
     const { clearUser } = useRoamReadyStore.getState();
     clearUser();
-  }
 
-  const currentPathname = window.location.pathname;
-  const isCurrentlyOnProtectedPage = protectedPageRoutes.some((route) =>
-    currentPathname.startsWith(route),
-  );
+    queryClient.invalidateQueries({ queryKey: ['user', 'me'] });
 
-  if (response.status === 401 && isCurrentlyOnProtectedPage) {
-    console.error(
-      '클라이언트 측에서 401 에러 감지. 보호된 페이지에서 세션이 만료되었습니다.',
+    const currentPathname = window.location.pathname;
+    const isCurrentlyOnProtectedPage = protectedPageRoutes.some((route) =>
+      currentPathname.startsWith(route),
     );
-    const redirectUrl = new URL(ROUTES.ACTIVITIES.ROOT, window.location.origin);
-    redirectUrl.searchParams.set('error', ERROR_CODES.SESSION_EXPIRED);
-    window.location.href = redirectUrl.toString();
+
+    if (response.status === 401 && isCurrentlyOnProtectedPage) {
+      console.error(
+        '클라이언트 측에서 401 에러 감지. 보호된 페이지에서 세션이 만료되었습니다.',
+      );
+      const redirectUrl = new URL(
+        ROUTES.ACTIVITIES.ROOT,
+        window.location.origin,
+      );
+      redirectUrl.searchParams.set('error', ERROR_CODES.SESSION_EXPIRED);
+      window.location.href = redirectUrl.toString();
+    }
   }
 
   try {
