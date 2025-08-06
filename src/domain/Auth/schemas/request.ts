@@ -125,3 +125,22 @@ export const oauthSigninRequestSchema = z.object({
  * @description OAuth 로그인 요청에 사용되는 타입입니다.
  */
 export type OAuthSigninRequest = z.infer<typeof oauthSigninRequestSchema>;
+
+/**
+ * @schema transitionNicknameSchema
+ * @description 카카오 전환 페이지에서 사용할 닉네임 입력값에 대한 유효성 검사 스키마입니다.
+ */
+export const transitionNicknameSchema = z.object({
+  nickname: z
+    .string()
+    .min(1, { message: '닉네임을 입력해주세요.' })
+    .max(10, { message: '닉네임은 10자 이하로 입력해주세요.' }),
+});
+
+/**
+ * @type TransitionNicknameFormValues
+ * @description 카카오 전환 페이지 폼의 데이터 타입입니다.
+ */
+export type TransitionNicknameFormValues = z.infer<
+  typeof transitionNicknameSchema
+>;

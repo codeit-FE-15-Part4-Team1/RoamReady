@@ -105,7 +105,7 @@ export async function GET(request: NextRequest) {
       redirectToTransition.searchParams.set('status', 'need-signup');
       redirectToTransition.searchParams.set(
         'message',
-        error instanceof Error ? error.message : '회원가입 먼저 해주세요.',
+        error instanceof Error ? error.message : '등록되지 않은 사용자입니다.',
       );
       return NextResponse.redirect(redirectToTransition);
     }
@@ -117,6 +117,7 @@ export async function GET(request: NextRequest) {
     if (error instanceof Error) {
       defaultErrorUrl.searchParams.append('message', error.message);
     }
+
     return NextResponse.redirect(defaultErrorUrl);
   }
 }
