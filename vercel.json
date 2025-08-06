@@ -1,8 +1,16 @@
 {
+
+  "functions": {
+    "app/api/auth/kakao/signin/route.ts": {
+      "maxDuration": 30
+    }
+  },
+
   "rewrites": [
     {
       "source": "/storybook",
       "destination": "/_next/static/storybook/index.html"
     }
   ]
+
 }

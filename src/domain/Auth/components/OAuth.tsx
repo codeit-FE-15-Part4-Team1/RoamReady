@@ -5,68 +5,47 @@ import Image from 'next/image';
 import Button from '@/shared/components/Button';
 
 /**
- * @property {'signin' | 'signup'} pageType - 현재 페이지의 종류를 나타냅니다.
- * 'signin'은 로그인 페이지를, 'signup'은 회원가입 페이지를 의미하며,
- * 이에 따라 OAuth 버튼의 텍스트 및 관련 로직이 변경됩니다.
- */
-interface OAuthProps {
-  pageType: 'signin' | 'signup';
-}
-
-/**
  * @component OAuth
  * @description
- * 소셜 로그인(OAuth) 버튼 UI와 관련 로직을 담당하는 재사용 가능한 클라이언트 컴포넌트입니다.
- * 이 컴포넌트는 `pageType` prop에 따라 버튼의 텍스트가 '카카오 로그인' 또는 '카카오 회원가입'으로 변경되며, 카카오 OAuth 인증 흐름을 시작합니다.
+ * 카카오 소셜 로그인을 시작하는 버튼 컴포넌트입니다.
  *
- * @param {object} props - 컴포넌트의 props입니다.
- * @param {'signin' | 'signup'} props.pageType - 현재 페이지의 종류를 나타냅니다.
- * - `'signin'`은 로그인 페이지를, `'signup'`은 회원가입 페이지를 의미합니다.
- * - 이 값은 카카오 인증 URL의 `state` 파라미터로 전달되어, 인증 완료 후 리디렉션될 때 어떤 종류의 인증 요청이었는지(로그인 또는 회원가입) 식별하는 데 사용됩니다.
+ * 이 컴포넌트는 클릭 시 로그인 전용 redirect URI로 이동하여 카카오 인가 코드를 요청합니다.
+ * 이후 백엔드는 해당 인가 코드를 사용해 로그인 시도를 하며,
+ * 회원가입이 필요할 경우 자동으로 `/kakao/transition` 페이지로 리디렉션합니다.
  *
- * @example
- * 로그인 페이지에서 사용 시:
- * <OAuth pageType="signin" />
+ * ⚠️ 인가 코드는 한 번만 사용할 수 있으므로,
+ * 로그인 실패 후 회원가입 시도는 반드시 새로운 인가 코드를 통해 이루어집니다.
  *
- * 회원가입 페이지에서 사용 시:
- * <OAuth pageType="signup" />
+ * @remarks
+ * 환경 변수:
+ * - `NEXT_PUBLIC_KAKAO_REST_API_KEY`: 카카오 REST API 키
+ * - `NEXT_PUBLIC_KAKAO_SIGNIN_REDIRECT_URI`: 로그인 전용 redirect URI
  *
- * @function generateRandomState
- * CSRF 공격을 방지하기 위해 OAuth 요청에 사용되는 고유한 `state` 값을 생성합니다.
- * 이 `state`는 현재 페이지 타입(`signin` 또는 `signup`)과 난수로 구성되며, (예: 'signin:xyz123')
- * OAuth 인증 후 콜백에서 해당 요청의 정당성을 검증하는 데 사용됩니다.
- * 현재는 CSRF 방어 목적이 아닌, 인증 흐름 구분용으로만(회원가입인지 로그인인지) 사용되고 있습니다.
- * 실제 CSRF 방어가 필요하다면, state에 포함된 랜덤 ID를 클라이언트에 저장하고,
- * 콜백에서 이를 검증하는 추가 로직이 필요합니다.
  *
  * @function handleKakaoAuth
- * 카카오 인증 프로세스를 시작하는 내부 핸들러 함수입니다.
- * 1. `.env` 파일에 저장된 `NEXT_PUBLIC_KAKAO_REST_API_KEY`와 `NEXT_PUBLIC_KAKAO_REDIRECT_URI` 환경 변수를 가져옵니다.
- * 2. 카카오 인가 코드를 요청할 URL을 동적으로 생성합니다.
- * 3. 생성된 URL로 사용자를 리디렉션하여 카카오 인증 페이지로 이동시킵니다.
+ * 클릭 시 카카오 인증 페이지로 이동합니다.
+ * 인증 완료 후 로그인용 redirect URI로 돌아옵니다.
  */
-export default function OAuth({ pageType }: OAuthProps) {
-  const buttonText =
-    pageType === 'signin' ? '카카오 로그인' : '카카오 회원가입';
-
-  const generateRandomState = (pageType: 'signin' | 'signup') => {
-    const randomId = crypto.randomUUID();
-    const state = `${pageType}:${randomId}`;
-    return state;
-  };
-
+export default function OAuth() {
   const handleKakaoAuth = () => {
     const KAKAO_CLIENT_ID = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
-    const KAKAO_REDIRECT_URI = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
+    const KAKAO_SIGNIN_REDIRECT_URI =
+      process.env.NEXT_PUBLIC_KAKAO_SIGNIN_REDIRECT_URI;
+    // const KAKAO_SIGNUP_REDIRECT_URI =
+    //   process.env.NEXT_PUBLIC_KAKAO_SIGNUP_REDIRECT_URI;
 
-    if (!KAKAO_CLIENT_ID || !KAKAO_REDIRECT_URI) {
+    if (
+      !KAKAO_CLIENT_ID ||
+      !KAKAO_SIGNIN_REDIRECT_URI
+      // || !KAKAO_SIGNUP_REDIRECT_URI
+    ) {
       console.error('카카오 OAuth 환경 변수가 설정되지 않았습니다.');
       return;
     }
 
-    const state = generateRandomState(pageType);
+    const redirectUri = KAKAO_SIGNIN_REDIRECT_URI;
 
-    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&state=${state}`;
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${redirectUri}`;
 
     window.location.href = kakaoAuthUrl;
   };
@@ -85,7 +64,7 @@ export default function OAuth({ pageType }: OAuthProps) {
           width={24}
           height={24}
         />
-        <span className='text-gray-700'>{buttonText}</span>
+        <span className='text-gray-700'>Kakao로 시작하기</span>
       </div>
     </Button>
   );
