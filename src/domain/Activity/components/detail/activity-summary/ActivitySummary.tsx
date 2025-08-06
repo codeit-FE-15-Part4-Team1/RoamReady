@@ -28,12 +28,14 @@ export default function ActivitySummary({
     <section className='flex w-full flex-col items-start gap-8'>
       {/* 상단: 카테고리, 제목, 드롭다운 */}
       <div className='flex w-full items-start justify-between'>
-        <div className='flex flex-col gap-8'>
+        <div className='flex w-full flex-col gap-8'>
           {/* 체험 카테고리 */}
           <span className='font-size-14 font-medium'>{activity.category}</span>
 
           {/* 체험 제목 */}
-          <h1 className='font-size-24 font-bold'>{activity.title}</h1>
+          <div className='scrollbar-none h-[30px] max-w-full overflow-hidden overflow-x-auto whitespace-nowrap'>
+            <h1 className='font-size-24 font-bold'>{activity.title}</h1>
+          </div>
         </div>
 
         {/* 체험 드롭다운 메뉴 (수정/삭제) */}
