@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { ReactNode } from 'react';
 
-import ClientProviders from './_components/ClientProvider';
+import ClientProvider from './_components/ClientProvider';
 
 export const metadata: Metadata = {
   title: {
@@ -30,7 +30,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang='ko'>
       <body className={pretendard.className}>
         <div id='portal-root'></div>
-        <ClientProviders>{children}</ClientProviders>
+        <ClientProvider>{children}</ClientProvider>
       </body>
     </html>
   );

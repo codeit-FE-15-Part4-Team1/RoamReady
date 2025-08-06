@@ -26,8 +26,7 @@ const nextConfig: NextConfig = {
       },
     ],
 
-    // unoptimized: true,
-
+    unoptimized: true,
   },
 };
 

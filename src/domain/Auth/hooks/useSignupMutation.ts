@@ -8,7 +8,7 @@ import type { SignupResponse } from '@/domain/Auth/schemas/response';
 import { signup } from '@/domain/Auth/services';
 import { ROUTES } from '@/shared/constants/routes';
 import { useToast } from '@/shared/hooks/useToast';
-import { useRoamReadyStore } from '@/shared/store';
+// import { useRoamReadyStore } from '@/shared/store';
 
 /**
  * @function useSignupMutation
@@ -38,7 +38,7 @@ export const useSignupMutation = (
   form: UseFormReturn<SignupFormValues, undefined, SignupFormValues>,
 ) => {
   const router = useRouter();
-  const setUser = useRoamReadyStore((state) => state.setUser);
+  // const setUser = useRoamReadyStore((state) => state.setUser);
   const queryClient = useQueryClient();
   const { showSuccess, showError } = useToast();
 
@@ -59,7 +59,7 @@ export const useSignupMutation = (
         return;
       }
 
-      setUser(data);
+      // setUser(data);
       queryClient.invalidateQueries({ queryKey: ['user', 'me'] });
       // showSuccess('회원가입이 완료되었습니다! 환영합니다.');
       // router.replace(ROUTES.ACTIVITIES.ROOT);
