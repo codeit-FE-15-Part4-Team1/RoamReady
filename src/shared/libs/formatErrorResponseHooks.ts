@@ -1,13 +1,35 @@
-import type { Hooks, Options } from 'ky';
+import type { Hooks } from 'ky';
 import { HTTPError } from 'ky';
 
 import { ERROR_CODES, ROUTES } from '@/shared/constants/routes';
 import { errorResponseSchema } from '@/shared/schemas/error';
+import { useRoamReadyStore } from '@/shared/store';
 import getErrorMessageByStatus from '@/shared/utils/errors/getErrorMessageByStatus';
 
 const beforeErrorHook = async (error: HTTPError) => {
   const { response } = error;
+  const protectedPageRoutes = [ROUTES.MYPAGE.ROOT];
   let formattedMessage = null;
+
+  if (response.status === 401) {
+    console.error('클라이언트 측에서 401 에러 감지. 세션이 만료되었습니다.');
+    const { clearUser } = useRoamReadyStore.getState();
+    clearUser();
+  }
+
+  const currentPathname = window.location.pathname;
+  const isCurrentlyOnProtectedPage = protectedPageRoutes.some((route) =>
+    currentPathname.startsWith(route),
+  );
+
+  if (response.status === 401 && isCurrentlyOnProtectedPage) {
+    console.error(
+      '클라이언트 측에서 401 에러 감지. 보호된 페이지에서 세션이 만료되었습니다.',
+    );
+    const redirectUrl = new URL(ROUTES.ACTIVITIES.ROOT, window.location.origin);
+    redirectUrl.searchParams.set('error', ERROR_CODES.SESSION_EXPIRED);
+    window.location.href = redirectUrl.toString();
+  }
 
   try {
     const contentType = response.headers.get('content-type');
@@ -47,31 +69,6 @@ const beforeErrorHook = async (error: HTTPError) => {
   return error;
 };
 
-const protectedPageRoutes = [ROUTES.MYPAGE.ROOT];
-
-// afterResponse 훅을 별도로 정의합니다.
-const afterResponseHook = async (
-  request: Request,
-  options: Options,
-  response: Response,
-) => {
-  const currentPathname = window.location.pathname;
-
-  // 현재 페이지가 보호된 라우트 중 하나로 시작하는지 확인합니다.
-  const isCurrentlyOnProtectedPage = protectedPageRoutes.some((route) =>
-    currentPathname.startsWith(route),
-  );
-
-  // 401 에러가 발생했고, 현재 페이지가 보호된 페이지인 경우에만 메인페이지로 리다이렉션합니다.
-  if (response.status === 401 && isCurrentlyOnProtectedPage) {
-    console.error('클라이언트 측에서 401 에러 감지. 세션이 만료되었습니다.');
-
-    const redirectUrl = new URL(ROUTES.ACTIVITIES.ROOT, window.location.origin);
-    redirectUrl.searchParams.set('error', ERROR_CODES.SESSION_EXPIRED);
-    window.location.href = redirectUrl.toString();
-  }
-};
-
 /**
  * @description API 에러 응답을 가로채 사용자 친화적인 메시지로 포맷팅하고 전역적으로 토스트를 표시하는 공용 `ky` 훅입니다.
  * 이 훅은 `ky` 요청 실패 시 호출되어 다음과 같은 로직으로 에러를 처리합니다.
@@ -87,11 +84,13 @@ const afterResponseHook = async (
  * - `AbortError` 또는 `Timeout`과 같은 네트워크 오류 발생 시: '요청 시간이 초과되었습니다.'라는 사용자 친화적인 메시지를 설정합니다.
  * - 그 외의 파싱 오류 또는 네트워크 오류의 경우: 응답 상태를 포함한 일반적인 통신 오류 메시지를 설정합니다.
  *
+ * 3. **인증 에러(`401`) 전역 처리**:
+ * - API 요청이 `401 Unauthorized`를 반환하면, 클라이언트의 전역 사용자 상태(`useRoamReadyStore`)를 즉시 초기화하여 헤더 UI가 로그아웃 상태로 변경되도록 합니다.
+ * - 또한, 현재 페이지가 `mypage`와 같은 보호된 라우트일 경우, 사용자를 메인 페이지로 리디렉션하여 세션 만료를 알립니다.
+ *
  * @param {HTTPError} error - `ky` 라이브러리에서 발생한 HTTP 에러 객체입니다.
  * @returns {Promise<HTTPError>} - 처리되고 메시지가 포맷팅된 HTTP 에러 객체를 반환합니다.
  */
 export const formatErrorResponseHooks: Hooks = {
-  // 별도로 정의된 훅들을 배열에 담아 할당합니다.
   beforeError: [beforeErrorHook],
-  afterResponse: [afterResponseHook],
 };
