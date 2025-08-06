@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   // 빌드 환경에서 console.log 제거
   compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
+    // removeConsole: process.env.NODE_ENV === 'production',
   },
   images: {
     remotePatterns: [

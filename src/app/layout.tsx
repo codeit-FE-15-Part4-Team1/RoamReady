@@ -2,7 +2,7 @@ import './global.css';
 
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import { ReactNode } from 'react';
+import { ReactNode, Suspense } from 'react';
 
 import ClientProvider from './_components/ClientProvider';
 
@@ -30,7 +30,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang='ko'>
       <body className={pretendard.className}>
         <div id='portal-root'></div>
-        <ClientProvider>{children}</ClientProvider>
+        <Suspense>
+          <ClientProvider>{children}</ClientProvider>
+        </Suspense>
       </body>
     </html>
   );

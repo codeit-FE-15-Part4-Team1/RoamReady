@@ -30,7 +30,7 @@ export const API_ENDPOINTS = {
   AUTH: {
     SIGNUP: '/users',
     SIGNIN: '/auth/login',
-    REFRESH_TOKEN: '/auth/tokens',
+    NEW_TOKEN: '/auth/tokens',
   },
 
   OAUTH: {

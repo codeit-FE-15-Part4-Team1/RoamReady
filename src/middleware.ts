@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import setAuthCookies from '@/domain/Auth/utils/setAuthCookies';
-import { ERROR_CODES, ROUTES } from '@/shared/constants/routes';
+import { ROUTES } from '@/shared/constants/routes';
 
 import { BRIDGE_API } from './shared/constants/bridgeEndpoints';
 import { API_ENDPOINTS } from './shared/constants/endpoints';
@@ -24,7 +24,6 @@ const protectedPageRoutes = [ROUTES.MYPAGE.ROOT];
  * - `/api/`로 시작하지만 `/api/auth/`가 아닌 모든 요청을 가로채 백엔드 서버로 안전하게 전달합니다.
  * - 브라우저가 보낸 HttpOnly 쿠키에서 `accessToken`을 추출하여 `Authorization` 헤더에 담아 백엔드로 요청을 보냅니다.
  * - 백엔드에서 `401 Unauthorized` 에러를 받으면 `refreshToken`을 사용해 `accessToken`을 자동으로 갱신합니다.
- * - 토큰 갱신마저 실패하면 로그인 페이지로 리다이렉션하여 세션 만료를 사용자에게 알립니다.
  *
  * ### 토큰 생명주기 (Token Lifecycle):
  * - **로그인 시**: `api/auth/signin` 또는 `api/auth/signup`을 통해 완전히 새로운 토큰 세트(Access/Refresh)가 발급됩니다.
@@ -107,11 +106,22 @@ export async function middleware(request: NextRequest) {
       signal: AbortSignal.timeout(30000),
     });
 
-    //! 여기서 분명히 갱신했는데 개발서버에서는 갱신이 되는데... 배포하면 안됨..
+    // if (response.status === 401) {
+    //   console.log('--- 미들웨어 디버깅 ---');
+    //   console.log('응답 상태:', response.status);
+    //   console.log(
+    //     'refreshToken 쿠키 존재 여부:',
+    //     !!request.cookies.get('refreshToken')?.value,
+    //   );
+    //   console.log('보호된 라우트 여부:', isProtectedRoute);
+    //   console.log('-----------------------');
+    // }
+
     if (response.status === 401 && request.cookies.get('refreshToken')?.value) {
       const refreshToken = request.cookies.get('refreshToken')!.value;
-      const refreshResponse = await fetch(
-        `${BACKEND_URL}${API_ENDPOINTS.AUTH.REFRESH_TOKEN}`,
+      console.log(refreshToken);
+      const newTokenResponse = await fetch(
+        `${BACKEND_URL}${API_ENDPOINTS.AUTH.NEW_TOKEN}`,
         {
           method: 'POST',
           headers: {
@@ -121,8 +131,8 @@ export async function middleware(request: NextRequest) {
         },
       );
 
-      if (refreshResponse.ok) {
-        const tokens = await refreshResponse.json();
+      if (newTokenResponse.ok) {
+        const tokens = await newTokenResponse.json();
         const newAccessToken = tokens.accessToken;
         console.log('[Middleware] 새로운 Access Token 발급 성공');
 
@@ -146,12 +156,7 @@ export async function middleware(request: NextRequest) {
           tokens,
         );
       } else {
-        console.log(
-          '[Middleware] Refresh Token 만료 또는 갱신 실패. 로그인 페이지로 리다이렉트합니다.',
-        );
-        const redirectUrl = new URL(ROUTES.SIGNIN, request.url);
-        redirectUrl.searchParams.set('error', ERROR_CODES.SESSION_EXPIRED);
-        return NextResponse.redirect(redirectUrl);
+        console.log('[Middleware] Refresh Token 만료 또는 갱신 실패');
       }
     }
 
@@ -172,5 +177,3 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 };
-
-// 테스트 커밋
