@@ -61,7 +61,7 @@ async function handleOauthSignUp(
  * 카카오 OAuth 회원가입 콜백을 처리하는 라우트입니다.
  *
  * 1. 인가 코드(code)를 쿼리에서 추출
- * 2. 자동 생성된 랜덤 닉네임으로 회원가입 시도
+ * 2. 사용자로부터 받은 닉네임으로 회원가입 시도
  * 3. 성공 시 토큰을 쿠키에 저장하고 `/activities`로 이동
  * 4. 실패 시 상태에 따라 리디렉션 분기
  *
@@ -75,6 +75,7 @@ async function handleOauthSignUp(
 export async function GET(request: NextRequest) {
   try {
     const code = request.nextUrl.searchParams.get('code');
+    const state = request.nextUrl.searchParams.get('state');
 
     if (!code) {
       throw Object.assign(new Error('카카오 인증 코드가 없습니다.'), {
@@ -82,8 +83,17 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const arbitraryNickname = `K_${crypto.randomUUID().replace(/-/g, '').slice(0, 7)}`;
-    const responseData = await handleOauthSignUp(code, arbitraryNickname);
+    const nickname = state ? decodeURIComponent(state) : null;
+
+    if (!nickname) {
+      throw Object.assign(
+        new Error('회원가입에 필요한 닉네임 정보가 없습니다.'),
+        { status: 400 },
+      );
+    }
+
+    // const arbitraryNickname = `K_${crypto.randomUUID().replace(/-/g, '').slice(0, 7)}`;
+    const responseData = await handleOauthSignUp(code, nickname);
 
     const response = NextResponse.redirect(
       new URL(ROUTES.ACTIVITIES.ROOT, request.url),
