@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@hookform/resolvers": "5.1.1",
-    "@storybook/nextjs": "9.1.0",
     "@tanstack/react-query": "5.81.5",
     "browser-image-compression": "2.0.2",
     "class-variance-authority": "0.7.1",
@@ -42,6 +41,7 @@
     "@storybook/addon-docs": "9.1.0",
     "@storybook/addon-onboarding": "9.1.0",
     "@storybook/addon-vitest": "9.1.0",
+    "@storybook/nextjs": "9.1.0",
     "@storybook/nextjs-vite": "^9.1.0",
     "@tailwindcss/postcss": "4",
     "@types/node": "20",
