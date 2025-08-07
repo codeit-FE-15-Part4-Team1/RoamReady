@@ -14,26 +14,30 @@ const beforeErrorHook = async (error: HTTPError) => {
 
   if (response.status === 401) {
     console.error('클라이언트 측에서 401 에러 감지. 세션이 만료되었습니다.');
-    const { clearUser } = useRoamReadyStore.getState();
-    clearUser();
+    const { user, clearUser } = useRoamReadyStore.getState();
 
-    queryClient.invalidateQueries({ queryKey: ['user', 'me'] });
+    if (user) {
+      console.error('세션 만료 처리 시작');
+      clearUser();
+      queryClient.invalidateQueries({ queryKey: ['user', 'me'] });
 
-    const currentPathname = window.location.pathname;
-    const isCurrentlyOnProtectedPage = protectedPageRoutes.some((route) =>
-      currentPathname.startsWith(route),
-    );
-
-    if (response.status === 401 && isCurrentlyOnProtectedPage) {
-      console.error(
-        '클라이언트 측에서 401 에러 감지. 보호된 페이지에서 세션이 만료되었습니다.',
+      const currentPathname = window.location.pathname;
+      const isCurrentlyOnProtectedPage = protectedPageRoutes.some((route) =>
+        currentPathname.startsWith(route),
       );
-      const redirectUrl = new URL(
-        ROUTES.ACTIVITIES.ROOT,
-        window.location.origin,
-      );
-      redirectUrl.searchParams.set('error', ERROR_CODES.SESSION_EXPIRED);
-      window.location.href = redirectUrl.toString();
+
+      if (isCurrentlyOnProtectedPage) {
+        const redirectUrl = new URL(
+          ROUTES.ACTIVITIES.ROOT,
+          window.location.origin,
+        );
+        redirectUrl.searchParams.set('error', ERROR_CODES.SESSION_EXPIRED);
+        window.location.href = redirectUrl.toString();
+      } else {
+        window.location.reload();
+      }
+    } else {
+      console.log('[401] 로그인 안된 상태에서 발생한 요청이므로 무시');
     }
   }
 

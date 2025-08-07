@@ -57,7 +57,8 @@ export const useUser = () => {
     queryKey: ['user', 'me'],
     queryFn: getMe,
     retry: 1,
-    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 
   // 2. useEffect를 사용하여 쿼리 결과에 따른 부가 작업을 처리합니다.

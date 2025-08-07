@@ -35,9 +35,8 @@ export default function setAuthCookies<T>(
     sameSite: 'lax',
     path: '/',
 
-    // maxAge: 60 * 60, //! 테스트를 위해 15초로
+    // maxAge: 60 * 60,
     maxAge: 10,
-
   });
 
   response.cookies.set({
