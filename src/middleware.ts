@@ -127,6 +127,7 @@ export async function middleware(request: NextRequest) {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${refreshToken}`,
+            Cookie: `refreshToken=${refreshToken}`,
           },
         },
       );
@@ -147,14 +148,15 @@ export async function middleware(request: NextRequest) {
           signal: AbortSignal.timeout(30000),
         });
 
-        return setAuthCookies(
-          new NextResponse(response.body, {
-            status: response.status,
-            statusText: response.statusText,
-            headers: response.headers,
-          }),
-          tokens,
-        );
+        const responseText = await response.text();
+
+        const finalResponse = new NextResponse(responseText, {
+          status: response.status,
+          statusText: response.statusText,
+          headers: response.headers,
+        });
+
+        return setAuthCookies(finalResponse, tokens);
       } else {
         console.log('[Middleware] Refresh Token 만료 또는 갱신 실패');
       }

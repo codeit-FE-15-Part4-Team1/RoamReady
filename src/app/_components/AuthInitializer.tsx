@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import { useUser } from '@/domain/Auth/hooks/useUser';
 
 /**
@@ -10,7 +12,12 @@ import { useUser } from '@/domain/Auth/hooks/useUser';
  * 이 컴포넌트는 UI를 렌더링하지 않습니다.
  */
 export default function AuthInitializer() {
-  useUser();
+  const { refetch } = useUser(); // 쿼리 객체를 받아서
+
+  useEffect(() => {
+    // 앱 로드시 강제로 한번 요청 실행
+    refetch();
+  }, [refetch]);
 
   return null;
 }

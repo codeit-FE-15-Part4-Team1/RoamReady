@@ -33,6 +33,6 @@ export const apiClient = ky.create({
   headers: {
     'Content-Type': 'application/json',
   },
-
+  credentials: 'same-origin',
   hooks: formatErrorResponseHooks,
 });
