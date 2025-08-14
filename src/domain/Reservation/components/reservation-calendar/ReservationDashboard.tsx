@@ -54,7 +54,6 @@ export default function ReservationDashboard({
     setCurrentDate(newDate);
   };
 
-  if (isLoading) return <ReservationSkeleton />;
   if (isError) return <div> 오류가 발생했습니다.</div>;
   if (!initialActivities.length)
     return (
@@ -73,12 +72,16 @@ export default function ReservationDashboard({
         />
       </div>
       <div className='w-full'>
-        <ReservationCalendar
-          currentDate={currentDate}
-          monthlyReservations={monthlyReservations || []}
-          selectedActivityId={selectedActivityId ?? 0}
-          onMonthChange={handleMonthChange}
-        />
+        {isLoading ? (
+          <ReservationSkeleton />
+        ) : (
+          <ReservationCalendar
+            currentDate={currentDate}
+            monthlyReservations={monthlyReservations || []}
+            selectedActivityId={selectedActivityId ?? 0}
+            onMonthChange={handleMonthChange}
+          />
+        )}
       </div>
     </>
   );
