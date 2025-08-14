@@ -1,23 +1,17 @@
 'use client';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { X } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { useDayCellStyles } from '@/domain/Reservation/hooks/useDayCellStyles';
 import { useReservationCounts } from '@/domain/Reservation/hooks/useReservationCounts';
-import {
-  getReservationsBySchedule,
-  getSchedulesByDate,
-  type ScheduleItem,
-  updateReservationStatus,
-} from '@/domain/Reservation/services/reservation-calendar';
+import { useReservationMutations } from '@/domain/Reservation/hooks/useReservationMutations';
+import { useReservationQueries } from '@/domain/Reservation/hooks/useReservationQueries';
 import { BottomSheet } from '@/shared/components/ui/bottom-sheet';
 import Popover from '@/shared/components/ui/popover';
 import Tabs from '@/shared/components/ui/tabs';
-import { useToast } from '@/shared/hooks/useToast';
 
-import type { Reservation, ReservationItem } from '../../types/reservation';
+import type { Reservation } from '../../types/reservation';
 import { getColorClassByStatus, STATUS_LABELS } from '../../utils/reservation';
 import ReservationDetail from './ReservationDetail';
 
@@ -40,14 +34,8 @@ export default function DayCell({
   selectedActivityId,
   displayMode = 'popover', // 🔥 기본값은 popover
 }: DayCellProps) {
-  const queryClient = useQueryClient();
-  const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
-    null,
-  );
-
   // BottomSheet용 상태
   const [isOpen, setIsOpen] = useState(false);
-  const { showSuccess } = useToast();
 
   const [activeTab, setActiveTab] = useState<
     'pending' | 'confirmed' | 'declined'
@@ -55,169 +43,21 @@ export default function DayCell({
 
   const styles = useDayCellStyles({ day, isCurrentMonth, isToday, isLastRow });
 
-  //  1. 날짜별 스케줄 조회 (useQuery)
-  const { data: schedules = [] } = useQuery<ScheduleItem[] | null>({
-    queryKey: ['schedules', selectedActivityId, day.format('YYYY-MM-DD')],
-    queryFn: () =>
-      getSchedulesByDate(selectedActivityId!, day.format('YYYY-MM-DD')),
-    enabled: !!selectedActivityId,
-  });
-
-  useEffect(() => {
-    if (schedules && schedules.length > 0 && !selectedScheduleId) {
-      // pending 예약이 있는 첫 번째 스케줄 찾기
-      const scheduleWithPending = schedules.find((s) => s.count.pending > 0);
-      // pending이 있으면 그것을, 없으면 첫 번째 스케줄 선택
-      const targetSchedule = scheduleWithPending || schedules[0];
-      setSelectedScheduleId(targetSchedule.scheduleId);
-    }
-  }, [schedules, selectedScheduleId]);
-
-  //  2. 모든 스케줄의 예약 목록 조회 (통합 버전)
   const {
-    data: reservationsByStatus = { pending: [], confirmed: [], declined: [] },
-  } = useQuery<{
-    pending: ReservationItem[];
-    confirmed: ReservationItem[];
-    declined: ReservationItem[];
-  }>({
-    queryKey: [
-      'allReservationsByDate',
-      selectedActivityId,
-      day.format('YYYY-MM-DD'),
-    ],
-    queryFn: async () => {
-      if (!schedules || schedules.length === 0) {
-        return { pending: [], confirmed: [], declined: [] };
-      }
-
-      // 모든 스케줄의 예약을 병렬로 조회
-      const allPendingPromises = schedules.map((schedule) =>
-        getReservationsBySchedule(
-          selectedActivityId!,
-          schedule.scheduleId,
-          'pending',
-        ),
-      );
-      const allConfirmedPromises = schedules.map((schedule) =>
-        getReservationsBySchedule(
-          selectedActivityId!,
-          schedule.scheduleId,
-          'confirmed',
-        ),
-      );
-      const allDeclinedPromises = schedules.map((schedule) =>
-        getReservationsBySchedule(
-          selectedActivityId!,
-          schedule.scheduleId,
-          'declined',
-        ),
-      );
-
-      const [pendingResults, confirmedResults, declinedResults] =
-        await Promise.all([
-          Promise.all(allPendingPromises),
-          Promise.all(allConfirmedPromises),
-          Promise.all(allDeclinedPromises),
-        ]);
-
-      return {
-        pending: pendingResults
-          .flat()
-          .filter((item): item is ReservationItem => item !== null),
-        confirmed: confirmedResults
-          .flat()
-          .filter((item): item is ReservationItem => item !== null),
-        declined: declinedResults
-          .flat()
-          .filter((item): item is ReservationItem => item !== null),
-      };
-    },
-    enabled: !!selectedActivityId && !!schedules?.length,
+    schedules,
+    reservationsByStatus,
+    selectedScheduleId,
+    setSelectedScheduleId,
+  } = useReservationQueries({
+    selectedActivityId,
+    day,
   });
 
-  // 3. '하나 승인 후 나머지 거절' 비즈니스 로직을 처리하는 전용 뮤테이션
-  const { mutate: approveAndDecline, isPending: isApproving } = useMutation({
-    mutationFn: async (variables: {
-      reservationId: number;
-      scheduleId: number;
-      reservationsToDecline: ReservationItem[];
-    }) => {
-      const { reservationId, reservationsToDecline } = variables;
-      await updateReservationStatus({
-        activityId: selectedActivityId!,
-        reservationId,
-        status: 'confirmed',
-      });
-      await Promise.all(
-        reservationsToDecline.map((r) =>
-          updateReservationStatus({
-            activityId: selectedActivityId!,
-            reservationId: r.id,
-            status: 'declined',
-          }),
-        ),
-      );
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [
-          'allReservationsByDate',
-          selectedActivityId,
-          day.format('YYYY-MM-DD'),
-        ],
-      });
-      queryClient.invalidateQueries({ queryKey: ['schedules'] });
-      queryClient.invalidateQueries({ queryKey: ['reservationDashboard'] });
-    },
-    onError: (error) => console.error('예약 승인 처리 중 오류:', error),
+  const { handleApprove, handleReject, isLoading } = useReservationMutations({
+    selectedActivityId,
+    day,
+    reservationsByStatus,
   });
-
-  // 4. '단일 거절' 로직을 처리하는 뮤테이션
-  const { mutate: reject, isPending: isRejecting } = useMutation({
-    mutationFn: (variables: { reservationId: number }) =>
-      updateReservationStatus({
-        activityId: selectedActivityId!,
-        reservationId: variables.reservationId,
-        status: 'declined',
-      }),
-    onSuccess: () => {
-      showSuccess('거절되었습니다.');
-      queryClient.invalidateQueries({
-        queryKey: [
-          'allReservationsByDate',
-          selectedActivityId,
-          day.format('YYYY-MM-DD'),
-        ],
-      });
-      queryClient.invalidateQueries({ queryKey: ['schedules'] });
-      queryClient.invalidateQueries({ queryKey: ['reservationDashboard'] });
-    },
-    onError: (error) => console.error('거절 실패:', error),
-  });
-
-  // 핸들러 함수들
-  const handleApprove = useCallback(
-    (reservationId: number, scheduleId: number) => {
-      if (isApproving) return;
-      const reservationsToDecline = reservationsByStatus.pending.filter(
-        (r: ReservationItem) =>
-          r.scheduleId === scheduleId && r.id !== reservationId,
-      );
-      approveAndDecline({ reservationId, scheduleId, reservationsToDecline });
-      showSuccess('승인되었습니다.');
-    },
-    [approveAndDecline, isApproving, reservationsByStatus.pending, showSuccess],
-  );
-
-  const handleReject = useCallback(
-    (reservationId: number) => {
-      if (isRejecting) return;
-      reject({ reservationId });
-      showSuccess('거절되었습니다.');
-    },
-    [reject, isRejecting, showSuccess],
-  );
 
   const handleTimeSlotSelect = useCallback(async (scheduleId: number) => {
     setSelectedScheduleId(scheduleId);
@@ -323,7 +163,7 @@ export default function DayCell({
             onApprove={handleApprove}
             onReject={handleReject}
             onTimeSlotSelect={handleTimeSlotSelect}
-            isLoading={isApproving || isRejecting}
+            isLoading={isLoading}
             status='pending'
             setIsOpen={setIsOpen}
           />
@@ -339,7 +179,7 @@ export default function DayCell({
             onApprove={handleApprove}
             onReject={handleReject}
             onTimeSlotSelect={handleTimeSlotSelect}
-            isLoading={isApproving || isRejecting}
+            isLoading={isLoading}
             status='confirmed'
             setIsOpen={setIsOpen}
           />
@@ -355,7 +195,7 @@ export default function DayCell({
             onApprove={handleApprove}
             onReject={handleReject}
             onTimeSlotSelect={handleTimeSlotSelect}
-            isLoading={isApproving || isRejecting}
+            isLoading={isLoading}
             status='declined'
             setIsOpen={setIsOpen}
           />
