@@ -2,8 +2,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { X } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
+import { useDayCellStyles } from '@/domain/Reservation/hooks/useDayCellStyles';
+import { useReservationCounts } from '@/domain/Reservation/hooks/useReservationCounts';
 import {
   getReservationsBySchedule,
   getSchedulesByDate,
@@ -15,11 +17,7 @@ import Popover from '@/shared/components/ui/popover';
 import Tabs from '@/shared/components/ui/tabs';
 import { useToast } from '@/shared/hooks/useToast';
 
-import type {
-  Reservation,
-  ReservationItem,
-  ReservationStatus,
-} from '../../types/reservation';
+import type { Reservation, ReservationItem } from '../../types/reservation';
 import { getColorClassByStatus, STATUS_LABELS } from '../../utils/reservation';
 import ReservationDetail from './ReservationDetail';
 
@@ -55,28 +53,7 @@ export default function DayCell({
     'pending' | 'confirmed' | 'declined'
   >('pending');
 
-  const styles = useMemo(() => {
-    const cellClasses = `
-      relative flex aspect-square cursor-pointer flex-col items-center justify-start p-1 md:p-2 text-center font-size-14
-      hover:bg-gray-50 
-      ${!isLastRow ? 'border-b-[0.05rem] border-gray-100' : ''} 
-      ${!isCurrentMonth ? 'bg-neutral-200 text-gray-400 opacity-50' : ''} 
-      ${isToday ? 'border-blue-300 bg-blue-100' : ''}
-    `;
-
-    const dayOfWeek = day.day();
-    const dateClasses = `font-size-14 ${
-      dayOfWeek === 0
-        ? 'text-red-500'
-        : dayOfWeek === 6
-          ? 'text-blue-500'
-          : isCurrentMonth
-            ? 'text-gray-900'
-            : ''
-    }`;
-
-    return { cellClasses, dateClasses };
-  }, [day, isCurrentMonth, isToday, isLastRow]);
+  const styles = useDayCellStyles({ day, isCurrentMonth, isToday, isLastRow });
 
   //  1. 날짜별 스케줄 조회 (useQuery)
   const { data: schedules = [] } = useQuery<ScheduleItem[] | null>({
@@ -205,6 +182,7 @@ export default function DayCell({
         status: 'declined',
       }),
     onSuccess: () => {
+      showSuccess('거절되었습니다.');
       queryClient.invalidateQueries({
         queryKey: [
           'allReservationsByDate',
@@ -249,38 +227,11 @@ export default function DayCell({
     setIsOpen(false);
   }, []);
 
-  const reservationCounts = useMemo(() => {
-    const counts = schedules?.reduce(
-      (acc, schedule) => {
-        acc.pending += schedule.count.pending;
-        acc.confirmed += schedule.count.confirmed;
-        acc.declined += schedule.count.declined;
-        return acc;
-      },
-      { pending: 0, confirmed: 0, declined: 0 },
-    ) ?? { pending: 0, confirmed: 0, declined: 0 };
-
-    return counts;
-  }, [schedules, day]);
-
-  const displayItems = useMemo(() => {
-    const items: { status: ReservationStatus; count: number }[] = [];
-    if (reservationCounts.pending > 0) {
-      items.push({ status: 'pending', count: reservationCounts.pending });
-    }
-    if (reservationCounts.confirmed > 0) {
-      items.push({ status: 'confirmed', count: reservationCounts.confirmed });
-    }
-    if (reservationCounts.declined > 0) {
-      items.push({ status: 'declined', count: reservationCounts.declined });
-    }
-    return items;
-  }, [reservationCounts]);
-
-  const totalReservations =
-    reservationCounts.pending +
-    reservationCounts.confirmed +
-    reservationCounts.declined;
+  const { reservationCounts, displayItems, totalReservations } =
+    useReservationCounts({
+      schedules,
+      day,
+    });
 
   // 공통 셀 UI
   const cellContent = (
