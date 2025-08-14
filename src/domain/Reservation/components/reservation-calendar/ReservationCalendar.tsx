@@ -27,8 +27,11 @@ export default function ReservationCalendar({
   // 🔥 미디어쿼리 결과에 따라 displayMode 결정
   const displayMode = isDesktop ? 'popover' : 'bottomsheet';
 
-  const { today, days, getReservationForDate, prevMonth, nextMonth } =
-    useCalendar(monthlyReservations, currentDate, onMonthChange);
+  const { today, days, prevMonth, nextMonth } = useCalendar(
+    monthlyReservations,
+    currentDate,
+    onMonthChange,
+  );
 
   return (
     <div
@@ -61,7 +64,6 @@ export default function ReservationCalendar({
             isCurrentMonth={day.isSame(currentDate, 'month')}
             isToday={day.isSame(today, 'day')}
             isLastRow={index >= days.length - 7}
-            reservation={getReservationForDate(day)}
             selectedActivityId={selectedActivityId}
             displayMode={displayMode} // 🔥 displayMode prop 추가
           />
