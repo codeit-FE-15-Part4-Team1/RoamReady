@@ -42,7 +42,7 @@ const initialFormValues: FormValues = {
   price: 0,
   address: '',
   schedules: [{ date: '', startTime: '', endTime: '' }],
-  bannerImages: null,
+  bannerImages: new DataTransfer().files, // 빈 FileList로 초기화
   subImages: [],
 };
 
@@ -140,7 +140,7 @@ export const useActivityForm = () => {
       ...prev,
       bannerImageUrl: '',
     }));
-    methods.setValue('bannerImages', null);
+    methods.setValue('bannerImages', new DataTransfer().files);
   };
 
   // 수정된 이미지 삭제 핸들러 - ID 추적 추가

@@ -32,19 +32,19 @@ export default function BannerImageInput({
 
   useEffect(() => {
     if (value instanceof FileList && value.length > 0) {
-      // 1. 새로운 파일이 들어온 경우 (FileList)
+      // 새로운 파일이 들어온 경우 (FileList)
       const file = value[0];
       const url = URL.createObjectURL(file);
       setPreviewUrl(url);
       return () => URL.revokeObjectURL(url);
     } else if (typeof value === 'string') {
-      // 2. 기존 이미지 URL이 RHF의 값으로 들어온 경우 (string)
+      // 기존 이미지 URL이 RHF의 값으로 들어온 경우 (string)
       setPreviewUrl(value);
     } else if (existingImageUrl) {
-      // 3. RHF 값은 없지만 표시해야 할 기존 이미지가 있는 경우 (초기 로드)
+      // RHF 값은 없지만 표시해야 할 기존 이미지가 있는 경우 (초기 로드)
       setPreviewUrl(existingImageUrl);
     } else {
-      // 4. 모든 값이 없는 경우
+      // 모든 값이 없는 경우
       setPreviewUrl(null);
     }
   }, [value, existingImageUrl]);
