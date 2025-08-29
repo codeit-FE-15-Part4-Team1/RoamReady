@@ -9,13 +9,12 @@ import { useRoamReadyStore } from '@/shared/store';
  * @description
  * 현재 로그인된 사용자의 정보를 가져와 클라이언트의 전역 상태(Zustand)와 동기화하는 커스텀 훅입니다.
  *
- * 이 훅은 Tanstack Query의 `useQuery`를 사용하여 `getMe` 서비스 함수를 호출하고,
- * `useEffect`를 통해 쿼리의 결과(성공 또는 실패)에 따라 전역 상태를 업데이트합니다.
- *
+ * @feature
+ * - Zustand 스토어에 사용자 정보가 존재할 때만(`enabled: !!userInStore`) API를 호출하여 세션을 검증합니다.
+ * - 이를 통해 로그아웃 상태의 사용자가 불필요한 API를 호출하여 401 에러가 발생하는 것을 방지합니다.
+ * - `useEffect`를 통해 쿼리의 결과(성공 또는 실패)에 따라 전역 상태를 업데이트합니다.
  * - **조회 성공 시 (`isSuccess`)**: `setUser` 액션을 호출하여 전역 스토어에 최신 사용자 정보를 저장합니다.
  * - **조회 실패 시 (`isError`)**: `clearUser` 액션을 호출하여 전역 스토어와 localStorage의 사용자 정보를 제거합니다.
- *
- * 이 방식은 앱이 시작될 때(`AuthInitializer` 내부에서 호출) 실제 서버의 인증 상태와 UI 상태의 불일치를 방지하는 핵심적인 역할을 수행합니다.
  *
  * @returns {object} Tanstack Query의 `useQueryResult` 객체. 포함하는 주요 속성은 다음과 같습니다:
  * - `data`: 성공 시 가져온 사용자 정보 (`User` 타입).
@@ -25,37 +24,21 @@ import { useRoamReadyStore } from '@/shared/store';
  *
  * @property {Array<string>} queryKey - Tanstack Query가 이 데이터를 식별하고 캐싱하는 고유한 키 (`['user', 'me']`).
  * @property {Function} queryFn - 실제 데이터를 가져오는 비동기 함수 (`getMe`).
+ * @property {boolean} enabled - 스토어에 사용자 정보가 있을 때만 쿼리를 활성화하는 조건부 플래그.
  * @property {number} retry - 쿼리 실패 시 재시도 횟수 (1회).
- * @property {number} staleTime - 데이터를 'fresh' 상태로 유지하는 시간 (5분).
+ * @property {boolean} refetchOnWindowFocus - 창이 다시 포커스될 때 쿼리를 다시 가져올지 여부.
+ * @property {boolean} refetchOnReconnect - 네트워크가 다시 연결될 때 쿼리를 다시 가져올지 여부.
  *
- * @example
- * ```typescript
- * import { useUser } from '@/domain/Auth/hooks/useUser';
- *
- * function UserProfile() {
- * const { data: user, isLoading, isError } = useUser();
- *
- * if (isLoading) {
- * return <span>로딩 중...</span>;
- * }
- *
- * if (isError) {
- * 이 컴포넌트가 렌더링될 시점에는 AuthInitializer가 이미
- * 로그아웃 처리를 완료했으므로, 보통 이 분기는 보이지 않습니다.
- * return <span>로그인이 필요합니다.</span>;
- * }
- *
- * return <h1>안녕하세요, {user.nickname}님!</h1>;
- * }
- * ```
  */
 export const useUser = () => {
   const setUser = useRoamReadyStore((state) => state.setUser);
   const clearUser = useRoamReadyStore((state) => state.clearUser);
+  const user = useRoamReadyStore((state) => state.user);
 
   const queryResult = useQuery({
     queryKey: ['user', 'me'],
     queryFn: getMe,
+    enabled: !!user,
     retry: 1,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
