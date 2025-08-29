@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 
 import { useUser } from '@/domain/Auth/hooks/useUser';
+import { useRoamReadyStore } from '@/shared/store';
 
 /**
  * @component AuthInitializer
@@ -13,11 +14,15 @@ import { useUser } from '@/domain/Auth/hooks/useUser';
  */
 export default function AuthInitializer() {
   const { refetch } = useUser(); // 쿼리 객체를 받아서
+  const user = useRoamReadyStore((state) => state.user);
 
   useEffect(() => {
-    // 앱 로드시 강제로 한번 요청 실행
-    refetch();
-  }, [refetch]);
+    // 스토어에 사용자 정보가 있을 경우 (즉, 이전에 로그인했을 경우)에만
+    // 세션 유효성 검사를 위해 refetch를 실행합니다.
+    if (user) {
+      refetch();
+    }
+  }, [refetch, user]);
 
   return null;
 }
