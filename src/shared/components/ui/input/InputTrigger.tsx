@@ -62,7 +62,7 @@ export default function InputTrigger({
         onClick={togglePasswordVisibility}
         disabled={disabled}
         className={cn(
-          'absolute inset-y-0 right-0 flex cursor-pointer items-center',
+          'absolute right-0 flex cursor-pointer items-center',
           className,
         )}
         {...props}
