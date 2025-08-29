@@ -1,3 +1,4 @@
+// 이 라우트는 최종 통합된 버전에서는 사용하지 않습니다.
 import { NextRequest, NextResponse } from 'next/server';
 
 import type { OAuthResponse } from '@/domain/Auth/schemas/response';

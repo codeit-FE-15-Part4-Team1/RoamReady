@@ -192,8 +192,16 @@
       <td>송시은</td>
     </tr>
     <tr>
-      <td><a href="https://github.com/codeit-FE-15-Part4-Team1/RoamReady/discussions/443">배포 환경에서 Server Component 에러 메시지 미노출 이슈 </a></td>
+      <td><a href="https://github.com/codeit-FE-15-Part4-Team1/RoamReady/discussions/443">배포 환경에서 Server Component 에러 메시지 미노출 이슈</a></td>
       <td>김서연</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/codeit-FE-15-Part4-Team1/RoamReady/discussions/500">카카오 소셜 로그인, 회원가입 흐름 설계 전략: 인가코드 일회성 · 분리된 백엔드 · UX 혼란 해결</a></td>
+      <td>송시은</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/codeit-FE-15-Part4-Team1/RoamReady/discussions/306">Next.js BFF 환경에서 카카오 OAuth 인가 코드와 닉네임을 동시에 전달할 수 없는 문제 해결</a></td>
+      <td>송시은</td>
     </tr>
     <tr>
       <td><a href="https://github.com/codeit-FE-15-Part4-Team1/RoamReady/discussions/250">React Hook Form + Custom Input</a></td>
@@ -301,10 +309,6 @@
       <td><a href="https://github.com/codeit-FE-15-Part4-Team1/RoamReady/discussions/484">URL Query 기반의 필터, 정렬, 페이지네이션 구현하기</a></td>
       <td>박재현</td>
     </tr>
-    <!-- <tr>
-      <td><a href="https://github.com/Kabana-FE/Kabana/discussions/112">404 응답 상황 구분 및 처리 범위</a></td>
-      <td>송시은</td>
-    </tr> -->
   </tbody>
 </table>
 
@@ -341,7 +345,7 @@
     <tr>
       <td>
         <a href="https://github.com/codeit-FE-15-Part4-Team1/RoamReady/discussions/83">
-          Tailwind v4 @theme과 @utility
+          Tailwind v4 @theme · @utility · @layer utilities
         </a>
       </td>
       <td>송시은</td>
